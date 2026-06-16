@@ -1,0 +1,22 @@
+{
+  "nombreComercial": "ARENAS MOTOCICLETAS",
+  "ciudad": "Cusco",
+  "pais": "Perú",
+  "slogan": "La A que acelera",
+  "conceptoMarca": "Concesionario premium con enfoque deportivo, oscuro y confiable.",
+  "whatsapp": "+51987654321",
+  "correo": "contacto@arenasmotos.pe",
+  "urlTemporal": "https://arenasweb.github.io",
+  "redesSociales": {
+    "facebook": "pendiente",
+    "instagram": "pendiente",
+    "tiktok": "pendiente"
+  },
+  "sedes": [
+    {
+      "nombre": "Sucursal principal",
+      "direccion": "Av. Sol 123, Cusco",
+      "horario": "Lun a Vie 09:00 - 19:00"
+    }
+  ]
+}

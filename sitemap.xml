@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://arenasweb.github.io/</loc>
+    <priority>1.00</priority>
+  </url>
+  <url>
+    <loc>https://arenasweb.github.io/legales/privacidad.html</loc>
+    <priority>0.50</priority>
+  </url>
+  <url>
+    <loc>https://arenasweb.github.io/legales/terminos.html</loc>
+    <priority>0.50</priority>
+  </url>
+  <url>
+    <loc>https://arenasweb.github.io/legales/cookies.html</loc>
+    <priority>0.50</priority>
+  </url>
+  <url>
+    <loc>https://arenasweb.github.io/legales/datos-personales.html</loc>
+    <priority>0.50</priority>
+  </url>
+  <url>
+    <loc>https://arenasweb.github.io/legales/libro-reclamaciones.html</loc>
+    <priority>0.50</priority>
+  </url>
+  <url>
+    <loc>https://arenasweb.github.io/legales/condiciones-financiamiento.html</loc>
+    <priority>0.50</priority>
+  </url>
+</urlset>
