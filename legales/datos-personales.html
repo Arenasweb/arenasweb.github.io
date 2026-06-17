@@ -3,17 +3,111 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, follow" />
     <title>Datos Personales — ARENAS MOTOCICLETAS</title>
     <link rel="stylesheet" href="../style.css" />
   </head>
   <body>
-    <main class="app-shell">
-      <section class="section">
-        <h1>Datos Personales</h1>
-        <p>Contenido pendiente de revisión legal.</p>
-        <p>Esta página sirve para el apartado de protección de datos personales en el futuro.</p>
-        <a href="../index.html" class="btn btn-secondary">Volver al inicio</a>
-      </section>
-    </main>
+    <div class="app-shell">
+
+      <header class="site-header" role="banner">
+        <a href="../index.html" class="brand" aria-label="Volver al inicio de ARENAS MOTOCICLETAS">
+          <span class="brand-mark" aria-hidden="true">A</span>
+          <div>
+            <p class="brand-name">ARENAS MOTOCICLETAS</p>
+            <p class="brand-tag">Cusco &bull; La A que acelera</p>
+          </div>
+        </a>
+        <a href="../index.html" class="btn btn-ghost">&larr; Volver al inicio</a>
+      </header>
+
+      <main class="page-content" role="main">
+        <article class="section" aria-labelledby="datos-heading">
+
+          <div class="legal-notice" role="note">
+            <strong>Aviso:</strong> Documento provisional pendiente de revisión legal profesional conforme a la Ley N.° 29733 del Perú y su reglamento.
+          </div>
+
+          <div class="section-header">
+            <span class="eyebrow">Documento legal</span>
+            <h1 id="datos-heading">Tratamiento de Datos Personales</h1>
+          </div>
+
+          <div class="legal-content">
+            <p>
+              ARENAS MOTOCICLETAS cumple con la <strong>Ley N.° 29733, Ley de Protección de Datos
+              Personales del Perú</strong>, y garantiza que los datos personales proporcionados por los
+              usuarios son tratados con transparencia, seguridad y solo para los fines informados.
+            </p>
+
+            <h2>1. Banco de datos personales</h2>
+            <p>
+              <strong>Nombre del banco:</strong> Clientes y prospectos ARENAS MOTOCICLETAS<br />
+              <strong>Responsable:</strong> ARENAS MOTOCICLETAS (razón social PENDIENTE)<br />
+              <strong>Inscripción RNPDP:</strong> PENDIENTE de inscripción en el Registro Nacional
+              de Protección de Datos Personales de la Autoridad Nacional de Protección de Datos (ANDPD).
+            </p>
+
+            <h2>2. Datos recopilados y finalidad</h2>
+            <ul>
+              <li><strong>Nombre completo</strong> — identificación del solicitante</li>
+              <li><strong>Teléfono / WhatsApp</strong> — contacto para cotización y atención</li>
+              <li><strong>Modelo de interés</strong> — atender la consulta específica del usuario</li>
+              <li><strong>Mensaje libre</strong> — comprender la necesidad del usuario</li>
+            </ul>
+
+            <h2>3. Consentimiento</h2>
+            <p>El tratamiento de datos se realiza únicamente con el consentimiento expreso del titular, manifestado al marcar la casilla de autorización en el formulario de cotización.</p>
+
+            <h2>4. Derechos ARCO</h2>
+            <p>El titular de los datos tiene derecho a:</p>
+            <ul>
+              <li><strong>Acceso:</strong> Conocer qué datos tenemos sobre usted.</li>
+              <li><strong>Rectificación:</strong> Corregir datos inexactos o incompletos.</li>
+              <li><strong>Cancelación:</strong> Solicitar la eliminación de sus datos.</li>
+              <li><strong>Oposición:</strong> Oponerse al tratamiento de sus datos.</li>
+            </ul>
+            <p>Para ejercer estos derechos, escribir a: <strong>contacto@arenasmotos.pe</strong></p>
+
+            <h2>5. Transferencia internacional</h2>
+            <p>
+              Los mensajes enviados vía WhatsApp son procesados por Meta Platforms Inc. (EE.UU.),
+              bajo sus propias políticas de privacidad. <strong>PENDIENTE: revisar implicancias con asesor legal.</strong>
+            </p>
+
+            <h2>6. Plazo de conservación</h2>
+            <p><strong>PENDIENTE: definir período máximo de conservación con asesoría legal.</strong></p>
+
+            <p class="legal-date">Texto provisional — junio 2026. Pendiente de inscripción RNPDP y revisión legal.</p>
+          </div>
+
+          <nav class="legal-nav" aria-label="Otras páginas legales">
+            <a href="privacidad.html" class="btn btn-ghost">Política de privacidad</a>
+            <a href="terminos.html" class="btn btn-ghost">Términos y condiciones</a>
+            <a href="cookies.html" class="btn btn-ghost">Política de cookies</a>
+          </nav>
+
+          <div class="legal-back">
+            <a href="../index.html" class="btn btn-secondary">&larr; Volver al inicio</a>
+          </div>
+
+        </article>
+      </main>
+
+      <footer class="site-footer" role="contentinfo">
+        <p class="footer-copy">&copy; 2026 ARENAS MOTOCICLETAS &bull; Cusco, Perú</p>
+      </footer>
+    </div>
+
+    <style>
+      .legal-notice { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); color: #f59e0b; font-size: var(--text-sm); margin-bottom: var(--space-8); }
+      .legal-content { display: grid; gap: var(--space-6); max-width: 740px; }
+      .legal-content h2 { font-size: var(--text-base); margin-top: var(--space-4); color: var(--color-white); }
+      .legal-content ul { list-style: disc; padding-left: var(--space-6); display: grid; gap: var(--space-2); }
+      .legal-content ul li { color: var(--color-silver); font-size: var(--text-sm); }
+      .legal-date { font-size: var(--text-xs); color: var(--color-muted); border-top: var(--border-subtle); padding-top: var(--space-4); margin-top: var(--space-4); }
+      .legal-nav { display: flex; flex-wrap: wrap; gap: var(--space-4); margin-top: var(--space-8); padding-top: var(--space-6); border-top: var(--border-subtle); }
+      .legal-back { margin-top: var(--space-6); }
+    </style>
   </body>
 </html>

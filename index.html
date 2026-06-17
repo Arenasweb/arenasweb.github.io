@@ -3,173 +3,674 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="ARENAS MOTOCICLETAS en Cusco: catálogo de motos, financiamiento y servicio técnico para pilotos urbanos y deportivos." />
-    <title>ARENAS MOTOCICLETAS | Cusco</title>
+
+    <!-- SEO base -->
+    <meta name="description" content="ARENAS MOTOCICLETAS en Cusco: catálogo de motos, financiamiento flexible y servicio técnico especializado. Pulsar, Dominar, Boxer y CT." />
+    <meta name="keywords" content="motos Cusco, motocicletas Cusco, Bajaj Cusco, Pulsar NS400, Dominar 400, concesionario motos Perú, financiamiento motos Cusco" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="ARENAS MOTOCICLETAS" />
+    <meta name="theme-color" content="#050608" />
+
+    <!-- Open Graph (imágenes definitivas pendientes) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_PE" />
+    <meta property="og:title" content="ARENAS MOTOCICLETAS | Cusco" />
+    <meta property="og:description" content="Catálogo de motos, financiamiento y servicio técnico en Cusco, Perú." />
+    <meta property="og:url" content="https://arenasweb.github.io/" />
+    <meta property="og:site_name" content="ARENAS MOTOCICLETAS" />
+    <!-- og:image pendiente de imagen oficial -->
+    <meta property="og:image" content="assets/og/arenas-og-cover.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="ARENAS MOTOCICLETAS — Concesionario en Cusco" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ARENAS MOTOCICLETAS | Cusco" />
+    <meta name="twitter:description" content="Catálogo de motos, financiamiento y servicio técnico en Cusco, Perú." />
+    <!-- twitter:image pendiente de imagen oficial -->
+    <meta name="twitter:image" content="assets/og/arenas-og-cover.jpg" />
+
+    <title>ARENAS MOTOCICLETAS | Concesionario y Servicio en Cusco</title>
+
+    <!-- Favicon placeholder — reemplazar con logo oficial -->
+    <link rel="icon" href="assets/favicon/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="assets/favicon/apple-touch-icon.png" />
+
     <link rel="stylesheet" href="style.css" />
+    <link rel="canonical" href="https://arenasweb.github.io/" />
   </head>
+
   <body>
+    <!-- ============================================================
+         APP SHELL — contenedor principal de toda la página
+    ============================================================ -->
     <div class="app-shell">
-      <header class="site-header">
-        <div class="brand">
-          <span class="brand-mark">A</span>
+
+      <!-- ============================================================
+           HEADER — navegación principal fija en la parte superior
+      ============================================================ -->
+      <header class="site-header" role="banner">
+        <div class="brand" aria-label="ARENAS MOTOCICLETAS inicio">
+          <!-- brand-mark: placeholder A hasta tener logo SVG oficial -->
+          <span class="brand-mark" aria-hidden="true">A</span>
           <div>
             <p class="brand-name">ARENAS MOTOCICLETAS</p>
-            <p class="brand-tag">Cusco • La A que acelera</p>
+            <p class="brand-tag">Cusco &bull; La A que acelera</p>
           </div>
         </div>
-        <nav class="site-nav" aria-label="Navegación principal">
-          <a href="#hero">Inicio</a>
-          <a href="#catalogo">Catálogo</a>
-          <a href="#servicio">Servicio</a>
-          <a href="#cotizacion">Cotización</a>
+
+        <!-- Botón hamburguesa para móvil -->
+        <button
+          class="nav-toggle"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="Abrir menú de navegación"
+        >
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+        </button>
+
+        <nav id="site-nav" class="site-nav" aria-label="Navegación principal">
+          <a href="#hero" class="nav-link">Inicio</a>
+          <a href="#catalogo" class="nav-link">Catálogo</a>
+          <a href="#financiamiento" class="nav-link">Financiamiento</a>
+          <a href="#servicio" class="nav-link">Servicio</a>
+          <a href="#tiendas" class="nav-link">Tiendas</a>
+          <a href="#cotizacion" class="nav-link btn btn-primary nav-cta">Cotizar</a>
         </nav>
       </header>
 
-      <main class="page-content">
-        <section id="hero" class="section hero-section">
+      <!-- ============================================================
+           MAIN — contenido principal de la página
+      ============================================================ -->
+      <main id="main-content" class="page-content" role="main">
+
+        <!-- ============================================================
+             SECCIÓN 1: HERO
+             Introducción de marca, headline principal y CTAs primarios.
+             DISEÑO FINAL PENDIENTE — no cerrar estética hasta sesión de diseño.
+        ============================================================ -->
+        <section id="hero" class="section hero-section reveal-section" aria-labelledby="hero-heading">
           <div class="section-intro">
-            <span class="eyebrow">Concesionario premium</span>
-            <h1>ARENAS MOTOCICLETAS</h1>
-            <p>Encuentra tu próxima moto en Cusco. Catálogo, financiamiento y respaldo técnico pensado para pilotos modernos.</p>
+            <span class="eyebrow">Concesionario premium · Cusco, Perú</span>
+            <h1 id="hero-heading">ARENAS MOTOCICLETAS</h1>
+            <p class="hero-description">
+              Encuentra tu próxima moto en Cusco. Catálogo completo, financiamiento flexible
+              y respaldo técnico para pilotos exigentes.
+            </p>
             <div class="hero-actions">
-              <a href="#catalogo" class="btn btn-primary">Ver catálogo</a>
-              <a href="#cotizacion" class="btn btn-secondary">Pedir cotización</a>
+              <a href="#catalogo" class="btn btn-primary" aria-label="Ver catálogo de motos">Ver catálogo</a>
+              <a href="#cotizacion" class="btn btn-secondary" aria-label="Solicitar cotización personalizada">Pedir cotización</a>
+            </div>
+          </div>
+          <!-- Zona reservada para imagen hero o video cinematic futuro -->
+          <div class="hero-media" aria-hidden="true">
+            <!-- PENDIENTE: imagen o video del hero definitivo -->
+            <div class="hero-media-placeholder"></div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             SECCIÓN 2: BUSCADOR DE MOTO IDEAL
+             Filtros interactivos por línea, cilindrada y uso.
+             JS conectado en script.js → inicializarBuscador()
+        ============================================================ -->
+        <section id="buscador" class="section search-section reveal-section" aria-labelledby="buscador-heading">
+          <div class="section-header">
+            <span class="eyebrow">Busca tu moto ideal</span>
+            <h2 id="buscador-heading">Selecciona tu estilo</h2>
+            <p>Filtra por línea, tipo de uso y cilindrada para encontrar tu modelo.</p>
+          </div>
+
+          <!-- Buscador funcional — renderizado por JS -->
+          <div id="search-controls" class="search-controls" role="search" aria-label="Filtros de catálogo">
+            <div class="search-filters">
+              <label for="filtro-linea" class="filter-label">Línea</label>
+              <select id="filtro-linea" class="filter-select" aria-label="Filtrar por línea de moto">
+                <option value="">Todas las líneas</option>
+                <option value="Pulsar">Pulsar</option>
+                <option value="Dominar">Dominar</option>
+                <option value="Boxer">Boxer</option>
+                <option value="CT">CT</option>
+              </select>
+
+              <label for="filtro-uso" class="filter-label">Uso</label>
+              <select id="filtro-uso" class="filter-select" aria-label="Filtrar por tipo de uso">
+                <option value="">Todos los usos</option>
+                <option value="deportivo">Deportivo</option>
+                <option value="urbano">Urbano</option>
+                <option value="trabajo">Trabajo</option>
+                <option value="touring">Touring</option>
+              </select>
+
+              <label for="filtro-cilindrada" class="filter-label">Cilindrada</label>
+              <select id="filtro-cilindrada" class="filter-select" aria-label="Filtrar por cilindrada">
+                <option value="">Cualquier cilindrada</option>
+                <option value="100-150">100–150 cc</option>
+                <option value="150-250">150–250 cc</option>
+                <option value="250-400">250–400 cc</option>
+                <option value="400+">Más de 400 cc</option>
+              </select>
+
+              <button id="btn-buscar" class="btn btn-primary" type="button" aria-label="Aplicar filtros de búsqueda">
+                Buscar moto
+              </button>
             </div>
           </div>
         </section>
 
-        <section id="buscador" class="section search-section">
+        <!-- ============================================================
+             SECCIÓN 3: CATÁLOGO DESTACADO
+             Tarjetas generadas dinámicamente desde data/catalogo.json.
+             JS conectado en script.js → renderizarCatalogo()
+        ============================================================ -->
+        <section id="catalogo" class="section catalog-section reveal-section" aria-labelledby="catalogo-heading">
           <div class="section-header">
-            <p class="eyebrow">Busca tu moto ideal</p>
-            <h2>Selecciona tu estilo y encuentra el modelo adecuado</h2>
+            <span class="eyebrow">Catálogo destacado</span>
+            <h2 id="catalogo-heading">Modelos para Cusco</h2>
+            <p>Selección curada de motos disponibles en tienda con financiamiento y stock real.</p>
           </div>
-          <div class="placeholder-card">
-            <p>Aquí irá un buscador de modelo, línea y tipo de uso.</p>
+
+          <!-- Zona de tarjetas — JS inserta aquí el catálogo dinámico -->
+          <div id="catalog-grid" class="catalog-grid" role="list" aria-label="Catálogo de motos disponibles">
+            <!-- Las tarjetas se generan con renderizarCatalogo() desde script.js -->
+            <div class="catalog-loading" role="status" aria-live="polite" aria-label="Cargando catálogo">
+              <span>Cargando catálogo...</span>
+            </div>
+          </div>
+
+          <div class="catalog-footer">
+            <button id="btn-ver-todos" class="btn btn-secondary" type="button" aria-label="Ver todos los modelos disponibles">
+              Ver todos los modelos
+            </button>
           </div>
         </section>
 
-        <section id="catalogo" class="section catalog-section">
+        <!-- ============================================================
+             SECCIÓN 4: MODELO DESTACADO
+             Moto estrella con presentación visual y CTA directo a WhatsApp.
+             Modelo configurado en data/configuracion.json → modeloDestacado
+        ============================================================ -->
+        <section id="modelo-destacado" class="section featured-model-section reveal-section" aria-labelledby="modelo-destacado-heading">
           <div class="section-header">
-            <p class="eyebrow">Catálogo destacado</p>
-            <h2>Modelos seleccionados para Cusco</h2>
+            <span class="eyebrow">Modelo destacado</span>
+            <h2 id="modelo-destacado-heading">Pulsar NS400</h2>
+            <p>La naked deportiva con tecnología de punta y presencia agresiva en carretera y ciudad.</p>
           </div>
-          <div class="grid-placeholder">
-            <p>Panel con tarjetas de motos destacadas extraídas del catálogo JSON.</p>
+          <div class="featured-model-layout">
+            <!-- Zona de imagen principal del modelo destacado -->
+            <div class="featured-model-media" aria-hidden="true">
+              <!-- PENDIENTE: imagen oficial del modelo destacado -->
+              <div class="placeholder-media" aria-label="Imagen del modelo destacado"></div>
+            </div>
+            <div class="featured-model-info">
+              <ul class="feature-list" aria-label="Características del modelo destacado">
+                <li class="feature-item">Frenos ABS de doble disco</li>
+                <li class="feature-item">Iluminación LED completa</li>
+                <li class="feature-item">Tablero digital TFT</li>
+                <li class="feature-item">Control de tracción</li>
+              </ul>
+              <!-- Precio y CTA: datos provisionales, validar con configuracion.json -->
+              <p class="featured-price" aria-label="Precio desde">Desde <strong>S/ 23,800</strong></p>
+              <a
+                href="#cotizacion"
+                class="btn btn-primary"
+                aria-label="Consultar por la Pulsar NS400 vía WhatsApp"
+              >Consultar por WhatsApp</a>
+            </div>
           </div>
         </section>
 
-        <section id="modelo-destacado" class="section featured-model-section">
+        <!-- ============================================================
+             SECCIÓN 5: LÍNEAS DE MOTOS
+             Familias de productos: Pulsar, Dominar, Boxer, CT.
+        ============================================================ -->
+        <section id="lineas" class="section lines-section reveal-section" aria-labelledby="lineas-heading">
           <div class="section-header">
-            <p class="eyebrow">Modelo destacado</p>
-            <h2>Pulsar NS400</h2>
+            <span class="eyebrow">Líneas de motos</span>
+            <h2 id="lineas-heading">Encuentra tu categoría</h2>
+            <p>Cuatro familias diseñadas para cada tipo de piloto y necesidad.</p>
           </div>
-          <div class="placeholder-card">
-            <p>Presentación breve de un modelo estrella con llamada a WhatsApp.</p>
+          <div class="lines-grid" role="list" aria-label="Líneas de motos disponibles">
+
+            <article class="line-card" role="listitem" aria-label="Línea Pulsar">
+              <div class="line-icon" aria-hidden="true"><!-- PENDIENTE: ícono línea --></div>
+              <h3 class="line-name">Pulsar</h3>
+              <p class="line-desc">Deportivas y naked de alta cilindrada para el piloto exigente.</p>
+              <a href="#catalogo" class="btn btn-ghost" aria-label="Ver motos de la línea Pulsar">Ver modelos</a>
+            </article>
+
+            <article class="line-card" role="listitem" aria-label="Línea Dominar">
+              <div class="line-icon" aria-hidden="true"><!-- PENDIENTE: ícono línea --></div>
+              <h3 class="line-name">Dominar</h3>
+              <p class="line-desc">Aventura y touring con tecnología y comodidad en ruta.</p>
+              <a href="#catalogo" class="btn btn-ghost" aria-label="Ver motos de la línea Dominar">Ver modelos</a>
+            </article>
+
+            <article class="line-card" role="listitem" aria-label="Línea Boxer">
+              <div class="line-icon" aria-hidden="true"><!-- PENDIENTE: ícono línea --></div>
+              <h3 class="line-name">Boxer</h3>
+              <p class="line-desc">Confiable y urbana para el día a día en Cusco.</p>
+              <a href="#catalogo" class="btn btn-ghost" aria-label="Ver motos de la línea Boxer">Ver modelos</a>
+            </article>
+
+            <article class="line-card" role="listitem" aria-label="Línea CT">
+              <div class="line-icon" aria-hidden="true"><!-- PENDIENTE: ícono línea --></div>
+              <h3 class="line-name">CT</h3>
+              <p class="line-desc">Práctica y eficiente para trabajo, reparto y movilidad.</p>
+              <a href="#catalogo" class="btn btn-ghost" aria-label="Ver motos de la línea CT">Ver modelos</a>
+            </article>
+
           </div>
         </section>
 
-        <section id="lineas" class="section lines-section">
+        <!-- ============================================================
+             SECCIÓN 6: POR QUÉ ELEGIR ARENAS
+             Propuesta de valor, confianza y diferenciadores locales.
+        ============================================================ -->
+        <section id="porque" class="section why-section reveal-section" aria-labelledby="porque-heading">
           <div class="section-header">
-            <p class="eyebrow">Líneas de motos</p>
-            <h2>Dominar, Boxer, CT y Pulsar</h2>
+            <span class="eyebrow">Por qué elegir ARENAS</span>
+            <h2 id="porque-heading">Confianza y respaldo en Cusco</h2>
+            <p>Somos el concesionario de confianza para pilotos que exigen calidad y servicio real.</p>
           </div>
-          <div class="placeholder-card">
-            <p>Sección con listado de líneas y atributos clave.</p>
+          <div class="why-grid" role="list" aria-label="Razones para elegir ARENAS MOTOCICLETAS">
+
+            <article class="why-card" role="listitem">
+              <div class="why-icon" aria-hidden="true"><!-- PENDIENTE: ícono --></div>
+              <h3>Taller propio en Cusco</h3>
+              <p>Servicio técnico especializado con técnicos certificados y repuestos originales disponibles.</p>
+            </article>
+
+            <article class="why-card" role="listitem">
+              <div class="why-icon" aria-hidden="true"><!-- PENDIENTE: ícono --></div>
+              <h3>Financiamiento local</h3>
+              <p>Opciones de crédito adaptadas al perfil económico del piloto cusqueño, sin burocracia.</p>
+            </article>
+
+            <article class="why-card" role="listitem">
+              <div class="why-icon" aria-hidden="true"><!-- PENDIENTE: ícono --></div>
+              <h3>Stock real disponible</h3>
+              <p>Inventario actual verificado. Sin esperas largas ni promesas sin respaldo.</p>
+            </article>
+
+            <article class="why-card" role="listitem">
+              <div class="why-icon" aria-hidden="true"><!-- PENDIENTE: ícono --></div>
+              <h3>Asesoría personalizada</h3>
+              <p>Te ayudamos a elegir el modelo ideal según tu uso, presupuesto y estilo de vida.</p>
+            </article>
+
           </div>
         </section>
 
-        <section id="porque" class="section why-section">
+        <!-- ============================================================
+             SECCIÓN 7: TU MOTO INCLUYE
+             Beneficios y servicios incluidos en cada compra.
+        ============================================================ -->
+        <section id="incluye" class="section includes-section reveal-section" aria-labelledby="incluye-heading">
           <div class="section-header">
-            <p class="eyebrow">Por qué elegir ARENAS</p>
-            <h2>Confianza, tecnología y respaldo en Cusco</h2>
+            <span class="eyebrow">Tu moto incluye</span>
+            <h2 id="incluye-heading">Más que una moto, una experiencia completa</h2>
+            <p>Cada compra en ARENAS viene respaldada por beneficios reales desde el primer día.</p>
           </div>
-          <div class="placeholder-card">
-            <p>Lista de razones comerciales, soporte local y experiencia.</p>
+          <ul class="includes-list" aria-label="Beneficios incluidos en la compra">
+            <li class="include-item">
+              <span class="include-check" aria-hidden="true">✓</span>
+              <span>Garantía oficial de fábrica</span>
+            </li>
+            <li class="include-item">
+              <span class="include-check" aria-hidden="true">✓</span>
+              <span>Primer servicio técnico incluido</span>
+            </li>
+            <li class="include-item">
+              <span class="include-check" aria-hidden="true">✓</span>
+              <span>Asesoría en trámites de placa y SOAT</span>
+            </li>
+            <li class="include-item">
+              <span class="include-check" aria-hidden="true">✓</span>
+              <span>Entrega en tienda con verificación técnica</span>
+            </li>
+            <li class="include-item">
+              <span class="include-check" aria-hidden="true">✓</span>
+              <span>Soporte postventa por WhatsApp</span>
+            </li>
+            <!-- PENDIENTE: validar beneficios reales con el equipo -->
+          </ul>
+        </section>
+
+        <!-- ============================================================
+             SECCIÓN 8: FINANCIAMIENTO
+             Opciones de cuotas y crédito disponibles.
+             PENDIENTE: datos reales de financiamiento.
+        ============================================================ -->
+        <section id="financiamiento" class="section financing-section reveal-section" aria-labelledby="financiamiento-heading">
+          <div class="section-header">
+            <span class="eyebrow">Financiamiento</span>
+            <h2 id="financiamiento-heading">Opciones adaptadas a tu bolsillo</h2>
+            <p>Crédito accesible para que tu moto no espere. Planes desde 12 hasta 24 meses.</p>
+          </div>
+          <div class="financing-grid" role="list" aria-label="Opciones de financiamiento disponibles">
+
+            <article class="financing-card" role="listitem">
+              <h3 class="financing-plan">Plan Básico</h3>
+              <p class="financing-months">12 meses</p>
+              <p class="financing-note">Cuota inicial desde S/ 1,200 · PENDIENTE de validar</p>
+            </article>
+
+            <article class="financing-card" role="listitem">
+              <h3 class="financing-plan">Plan Estándar</h3>
+              <p class="financing-months">18 meses</p>
+              <p class="financing-note">Cuota inicial desde S/ 1,500 · PENDIENTE de validar</p>
+            </article>
+
+            <article class="financing-card financing-card--featured" role="listitem">
+              <h3 class="financing-plan">Plan Premium</h3>
+              <p class="financing-months">24 meses</p>
+              <p class="financing-note">Cuota inicial desde S/ 3,500 · PENDIENTE de validar</p>
+            </article>
+
+          </div>
+          <p class="financing-disclaimer" aria-label="Nota sobre datos de financiamiento">
+            * Datos provisionales. Condiciones sujetas a evaluación crediticia. Confirmar con asesor en tienda.
+          </p>
+        </section>
+
+        <!-- ============================================================
+             SECCIÓN 9: SERVICIO TÉCNICO
+             Taller propio, repuestos y mantenimiento.
+        ============================================================ -->
+        <section id="servicio" class="section service-section reveal-section" aria-labelledby="servicio-heading">
+          <div class="section-header">
+            <span class="eyebrow">Servicio técnico</span>
+            <h2 id="servicio-heading">Taller especializado en Cusco</h2>
+            <p>Mantenimiento preventivo y correctivo con técnicos certificados y repuestos originales.</p>
+          </div>
+          <div class="service-layout">
+            <div class="service-info">
+              <ul class="service-list" aria-label="Servicios técnicos disponibles">
+                <li>Mantenimiento preventivo según kilometraje</li>
+                <li>Diagnóstico electrónico de sistemas</li>
+                <li>Repuestos originales en stock</li>
+                <li>Reparación de motor, frenos y suspensión</li>
+                <li>Atención de garantías de fábrica</li>
+              </ul>
+              <a href="#cotizacion" class="btn btn-primary" aria-label="Agendar revisión técnica por WhatsApp">
+                Agendar revisión
+              </a>
+            </div>
+            <!-- PENDIENTE: imagen del taller o equipo técnico -->
+            <div class="service-media" aria-hidden="true">
+              <div class="placeholder-media" aria-label="Imagen del taller técnico"></div>
+            </div>
           </div>
         </section>
 
-        <section id="incluye" class="section includes-section">
+        <!-- ============================================================
+             SECCIÓN 10: PROMOCIONES
+             Ofertas actuales y paquetes especiales temporales.
+             PENDIENTE: conectar con campo "promocion" del catálogo JSON.
+        ============================================================ -->
+        <section id="promociones" class="section promos-section reveal-section" aria-labelledby="promociones-heading">
           <div class="section-header">
-            <p class="eyebrow">Tu moto incluye</p>
-            <h2>Beneficios y servicios en cada compra</h2>
+            <span class="eyebrow">Promociones</span>
+            <h2 id="promociones-heading">Ofertas y paquetes especiales</h2>
+            <p>Beneficios exclusivos para compras en tienda y temporadas especiales.</p>
           </div>
-          <div class="placeholder-card">
-            <p>Servicios básicos incluidos, revisiones y entrega.</p>
+          <div id="promos-grid" class="promos-grid" role="list" aria-label="Promociones vigentes">
+            <!-- Promos extraídas dinámicamente del catálogo JSON via script.js -->
+            <div class="placeholder-card">
+              <p>Las promociones vigentes se cargarán automáticamente desde el catálogo.</p>
+              <!-- PENDIENTE: activar render de promos desde catalogo.json -->
+            </div>
           </div>
         </section>
 
-        <section id="financiamiento" class="section financing-section">
+        <!-- ============================================================
+             SECCIÓN 11: TESTIMONIOS Y ENTREGAS REALES
+             Validación social de clientes satisfechos.
+             PENDIENTE: recolectar testimonios reales antes del lanzamiento.
+        ============================================================ -->
+        <section id="testimonios" class="section testimonials-section reveal-section" aria-labelledby="testimonios-heading">
           <div class="section-header">
-            <p class="eyebrow">Financiamiento</p>
-            <h2>Opciones adaptadas al bolsillo</h2>
+            <span class="eyebrow">Testimonios · Entregas reales</span>
+            <h2 id="testimonios-heading">Pilotos que ya aceleraron</h2>
+            <p>Experiencias reales de clientes que eligieron ARENAS MOTOCICLETAS.</p>
           </div>
-          <div class="placeholder-card">
-            <p>Descripción preliminar de cuotas y opciones de pago.</p>
+          <div class="testimonials-grid" role="list" aria-label="Testimonios de clientes">
+            <!-- PENDIENTE: insertar testimonios reales con nombre, ciudad y modelo comprado -->
+            <div class="placeholder-card">
+              <p>Los testimonios reales se publicarán tras el lanzamiento oficial del servicio.</p>
+            </div>
           </div>
         </section>
 
-        <section id="servicio" class="section service-section">
+        <!-- ============================================================
+             SECCIÓN 12: COMPARADOR
+             Comparación lado a lado de hasta 3 modelos.
+             PENDIENTE: implementar lógica de selección y tabla comparativa.
+        ============================================================ -->
+        <section id="comparador" class="section comparator-section reveal-section" aria-labelledby="comparador-heading">
           <div class="section-header">
-            <p class="eyebrow">Servicio técnico</p>
-            <h2>Taller especializado y atención de calidad</h2>
+            <span class="eyebrow">Comparador</span>
+            <h2 id="comparador-heading">Compara modelos lado a lado</h2>
+            <p>Elige hasta 3 motos y revisa sus características en paralelo.</p>
           </div>
-          <div class="placeholder-card">
-            <p>Resumen de taller, repuestos originales y revisiones.</p>
+          <div id="comparator-panel" class="comparator-panel" role="region" aria-label="Panel de comparación de motos">
+            <!-- PENDIENTE: implementar comparador dinámico en script.js → inicializarComparador() -->
+            <div class="placeholder-card">
+              <p>El comparador de modelos estará disponible próximamente.</p>
+              <p>Podrás seleccionar hasta 3 motos y comparar ficha técnica, precio y beneficios.</p>
+            </div>
           </div>
         </section>
 
-        <section id="promociones" class="section promos-section">
+        <!-- ============================================================
+             SECCIÓN 13: TIENDAS Y UBICACIONES
+             Sedes físicas, horarios y datos de contacto.
+             PENDIENTE: validar direcciones reales con el equipo.
+        ============================================================ -->
+        <section id="tiendas" class="section stores-section reveal-section" aria-labelledby="tiendas-heading">
           <div class="section-header">
-            <p class="eyebrow">Promociones</p>
-            <h2>Ofertas actuales y paquetes especiales</h2>
+            <span class="eyebrow">Tiendas</span>
+            <h2 id="tiendas-heading">Encuéntranos en Cusco</h2>
+            <p>Visítanos en tienda para asesoría personalizada, prueba de manejo y trámites.</p>
           </div>
-          <div class="placeholder-card">
-            <p>Espacio reservado para promociones especiales y paquetes.</p>
+          <div id="stores-grid" class="stores-grid" role="list" aria-label="Ubicaciones de ARENAS MOTOCICLETAS">
+            <!-- Las tiendas se renderizan dinámicamente desde configuracion.json via script.js -->
+            <article class="store-card" role="listitem" aria-label="Sucursal principal ARENAS MOTOCICLETAS">
+              <h3 class="store-name">Sucursal Principal</h3>
+              <!-- PENDIENTE: validar dirección real -->
+              <address class="store-address">
+                Av. Sol 123, Cusco<br />
+                <a href="tel:+51987654321" aria-label="Llamar a ARENAS MOTOCICLETAS">+51 987 654 321</a>
+              </address>
+              <p class="store-hours">Lun – Vie: 09:00 – 19:00 · Sáb: 09:00 – 14:00</p>
+              <!-- PENDIENTE: mapa embebido o enlace a Google Maps con coordenadas reales -->
+              <a
+                href="https://maps.google.com/?q=Av+Sol+123+Cusco+Peru"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-ghost"
+                aria-label="Ver sucursal principal en Google Maps"
+              >Ver en mapa</a>
+            </article>
           </div>
         </section>
 
-        <section id="testimonios" class="section testimonials-section">
+        <!-- ============================================================
+             SECCIÓN 14: FORMULARIO DE COTIZACIÓN
+             Formulario principal + enlace a WhatsApp.
+             Validación en script.js → inicializarFormulario()
+        ============================================================ -->
+        <section id="cotizacion" class="section quote-section reveal-section" aria-labelledby="cotizacion-heading">
           <div class="section-header">
-            <p class="eyebrow">Testimonios</p>
-            <h2>Experiencias de pilotos satisfechos</h2>
+            <span class="eyebrow">Cotización</span>
+            <h2 id="cotizacion-heading">Solicita tu cotización personalizada</h2>
+            <p>Completa el formulario o escríbenos directamente por WhatsApp.</p>
           </div>
-          <div class="placeholder-card">
-            <p>Frases reales del futuro sitio cuando el servicio y ventas estén activos.</p>
+
+          <div class="quote-layout">
+            <!-- Formulario de contacto con validación JS -->
+            <form
+              id="form-cotizacion"
+              class="quote-form"
+              novalidate
+              aria-label="Formulario de cotización de moto"
+            >
+              <div class="form-group">
+                <label for="campo-nombre" class="form-label">Nombre completo <span aria-hidden="true">*</span></label>
+                <input
+                  type="text"
+                  id="campo-nombre"
+                  name="nombre"
+                  class="form-input"
+                  placeholder="Tu nombre"
+                  required
+                  autocomplete="name"
+                  aria-required="true"
+                  aria-describedby="error-nombre"
+                  maxlength="100"
+                />
+                <span id="error-nombre" class="form-error" role="alert" aria-live="polite"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="campo-telefono" class="form-label">Teléfono o WhatsApp <span aria-hidden="true">*</span></label>
+                <input
+                  type="tel"
+                  id="campo-telefono"
+                  name="telefono"
+                  class="form-input"
+                  placeholder="Ej: 987654321"
+                  required
+                  autocomplete="tel"
+                  aria-required="true"
+                  aria-describedby="error-telefono"
+                  maxlength="20"
+                />
+                <span id="error-telefono" class="form-error" role="alert" aria-live="polite"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="campo-modelo" class="form-label">Modelo de interés</label>
+                <select
+                  id="campo-modelo"
+                  name="modelo"
+                  class="form-select"
+                  aria-label="Selecciona el modelo que te interesa"
+                >
+                  <option value="">¿Qué moto te interesa?</option>
+                  <option value="Pulsar NS400">Pulsar NS400</option>
+                  <option value="Dominar 400">Dominar 400</option>
+                  <option value="Boxer 150">Boxer 150</option>
+                  <option value="CT 125">CT 125</option>
+                  <option value="No sé, necesito asesoría">No sé, necesito asesoría</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="campo-mensaje" class="form-label">Mensaje o consulta</label>
+                <textarea
+                  id="campo-mensaje"
+                  name="mensaje"
+                  class="form-textarea"
+                  placeholder="Cuéntanos qué necesitas: modelo, uso, presupuesto, financiamiento..."
+                  rows="4"
+                  aria-label="Escribe tu consulta o mensaje"
+                  maxlength="500"
+                ></textarea>
+              </div>
+
+              <div class="form-group form-group--check">
+                <input
+                  type="checkbox"
+                  id="campo-datos"
+                  name="autoriza_datos"
+                  class="form-checkbox"
+                  required
+                  aria-required="true"
+                  aria-describedby="error-datos"
+                />
+                <label for="campo-datos" class="form-label-check">
+                  Autorizo el tratamiento de mis datos personales según la
+                  <a href="legales/datos-personales.html" target="_blank" rel="noopener noreferrer">
+                    política de datos personales
+                  </a>.
+                </label>
+                <span id="error-datos" class="form-error" role="alert" aria-live="polite"></span>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="btn-cotizar" aria-label="Enviar solicitud de cotización por WhatsApp">
+                  Enviar por WhatsApp
+                </button>
+                <!-- Mensaje de éxito — visible solo tras envío exitoso vía JS -->
+                <div id="form-success" class="form-success" role="status" aria-live="polite" hidden>
+                  <p>¡Gracias! Tu consulta fue enviada. Nos contactaremos pronto.</p>
+                </div>
+              </div>
+            </form>
+
+            <!-- Contacto directo alternativo -->
+            <aside class="quote-direct" aria-label="Contacto directo">
+              <h3>Contacto directo</h3>
+              <p>Prefiero escribir directamente:</p>
+              <!-- PENDIENTE: número de WhatsApp real en configuracion.json -->
+              <a
+                href="https://wa.me/51987654321"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-whatsapp"
+                aria-label="Abrir chat de WhatsApp con ARENAS MOTOCICLETAS"
+              >
+                <span aria-hidden="true">💬</span> Abrir WhatsApp
+              </a>
+              <p class="quote-hours">Atención: Lun–Vie 09:00–19:00 · Sáb 09:00–14:00</p>
+            </aside>
           </div>
         </section>
 
-        <section id="tiendas" class="section stores-section">
-          <div class="section-header">
-            <p class="eyebrow">Tiendas</p>
-            <h2>Ubicaciones en Cusco</h2>
-          </div>
-          <div class="placeholder-card">
-            <p>Listado de sedes físicas y horario de atención.</p>
-          </div>
-        </section>
-
-        <section id="cotizacion" class="section quote-section">
-          <div class="section-header">
-            <p class="eyebrow">Cotización</p>
-            <h2>Contacta al equipo por WhatsApp</h2>
-          </div>
-          <div class="contact-card">
-            <p>Consulta por disponibilidad y solicita una cotización personalizada.</p>
-            <a href="https://wa.me/51987654321" class="btn btn-primary">Enviar WhatsApp</a>
-          </div>
-        </section>
       </main>
+      <!-- /main -->
 
-      <footer class="site-footer">
-        <p>ARENAS MOTOCICLETAS • Cusco, Perú</p>
-        <nav class="footer-links" aria-label="Enlaces de pie de página">
+      <!-- ============================================================
+           FOOTER — pie de página con nav secundaria y legales
+      ============================================================ -->
+      <footer class="site-footer" role="contentinfo">
+        <div class="footer-brand">
+          <span class="brand-mark brand-mark--sm" aria-hidden="true">A</span>
+          <div>
+            <p class="brand-name">ARENAS MOTOCICLETAS</p>
+            <p class="brand-tag">Cusco, Perú &bull; La A que acelera</p>
+          </div>
+        </div>
+
+        <nav class="footer-links" aria-label="Navegación de pie de página">
+          <a href="#catalogo">Catálogo</a>
+          <a href="#financiamiento">Financiamiento</a>
+          <a href="#servicio">Servicio</a>
+          <a href="#tiendas">Tiendas</a>
+          <a href="#cotizacion">Cotización</a>
+        </nav>
+
+        <nav class="footer-legal" aria-label="Páginas legales">
           <a href="legales/privacidad.html">Privacidad</a>
           <a href="legales/terminos.html">Términos</a>
           <a href="legales/cookies.html">Cookies</a>
           <a href="legales/datos-personales.html">Datos personales</a>
+          <a href="legales/condiciones-financiamiento.html">Financiamiento</a>
+          <a href="legales/libro-reclamaciones.html">Libro de reclamaciones</a>
         </nav>
+
+        <p class="footer-copy">
+          &copy; <span id="footer-year">2025</span> ARENAS MOTOCICLETAS &bull; Todos los derechos reservados
+        </p>
       </footer>
+
     </div>
+    <!-- /app-shell -->
 
     <script src="script.js" defer></script>
   </body>

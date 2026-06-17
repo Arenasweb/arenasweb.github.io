@@ -1,22 +1,95 @@
 {
+  "_nota": "Archivo de configuración global — ARENAS MOTOCICLETAS. Campos marcados como PENDIENTE deben validarse antes del lanzamiento.",
+
   "nombreComercial": "ARENAS MOTOCICLETAS",
   "ciudad": "Cusco",
   "pais": "Perú",
   "slogan": "La A que acelera",
-  "conceptoMarca": "Concesionario premium con enfoque deportivo, oscuro y confiable.",
+  "conceptoMarca": "Concesionario premium con enfoque deportivo, oscuro y tecnológico.",
+  "modeloDestacadoId": "pulsar-ns400",
+
   "whatsapp": "+51987654321",
+  "telefonoFijo": "PENDIENTE",
   "correo": "contacto@arenasmotos.pe",
+  "correoSoporte": "PENDIENTE",
   "urlTemporal": "https://arenasweb.github.io",
+  "urlOficial": "PENDIENTE",
+
   "redesSociales": {
-    "facebook": "pendiente",
-    "instagram": "pendiente",
-    "tiktok": "pendiente"
+    "facebook": "PENDIENTE",
+    "instagram": "PENDIENTE",
+    "tiktok": "PENDIENTE",
+    "youtube": "PENDIENTE"
   },
+
   "sedes": [
     {
-      "nombre": "Sucursal principal",
+      "id": "sede-principal",
+      "nombre": "Sucursal Principal",
       "direccion": "Av. Sol 123, Cusco",
-      "horario": "Lun a Vie 09:00 - 19:00"
+      "distrito": "Cusco",
+      "provincia": "Cusco",
+      "departamento": "Cusco",
+      "telefono": "PENDIENTE",
+      "whatsapp": "+51987654321",
+      "coordenadas": "PENDIENTE",
+      "horario": "Lun – Vie: 09:00 – 19:00 · Sáb: 09:00 – 14:00",
+      "esPrincipal": true
     }
-  ]
+  ],
+
+  "horarios": {
+    "lunesViernes": "09:00 – 19:00",
+    "sabado": "09:00 – 14:00",
+    "domingo": "Cerrado",
+    "feriados": "PENDIENTE"
+  },
+
+  "mensajesWhatsApp": {
+    "cotizacionGeneral": "Hola ARENAS MOTOCICLETAS, me contacto desde el sitio web. Quisiera recibir una cotización.",
+    "consultaModelo": "Hola, estoy interesado/a en *{modelo}*. ¿Podría darme más información y cotización?",
+    "consultaFinanciamiento": "Hola, quisiera información sobre las opciones de financiamiento disponibles para motos.",
+    "consultaServicio": "Hola, necesito agendar una revisión técnica para mi moto. ¿Cuál es la disponibilidad?",
+    "libroReclamaciones": "Hola, deseo presentar una reclamación formal según el libro de reclamaciones."
+  },
+
+  "etiquetasSEO": {
+    "tituloBase": "ARENAS MOTOCICLETAS | Concesionario y Servicio en Cusco",
+    "descripcion": "Catálogo de motos, financiamiento flexible y servicio técnico especializado en Cusco, Perú. Pulsar, Dominar, Boxer y CT.",
+    "keywords": "motos Cusco, motocicletas Cusco, Bajaj Cusco, Pulsar NS400, Dominar 400, concesionario motos Perú, financiamiento motos Cusco, servicio técnico motos Cusco",
+    "ogTitle": "ARENAS MOTOCICLETAS | Cusco",
+    "ogDescription": "Catálogo de motos, financiamiento y servicio técnico en Cusco, Perú.",
+    "ogImagePath": "assets/og/arenas-og-cover.jpg",
+    "twitterCard": "summary_large_image"
+  },
+
+  "financiamiento": {
+    "planesDisponibles": ["12 meses", "18 meses", "24 meses"],
+    "cuotaInicialMinima": "PENDIENTE",
+    "bancos": "PENDIENTE",
+    "condiciones": "Sujeto a evaluación crediticia. Consultar en tienda.",
+    "_nota": "Validar condiciones reales con equipo financiero antes del lanzamiento."
+  },
+
+  "lineaProductos": [
+    { "id": "pulsar",  "nombre": "Pulsar",  "categoria": "deportiva-naked" },
+    { "id": "dominar", "nombre": "Dominar", "categoria": "touring-aventura" },
+    { "id": "boxer",   "nombre": "Boxer",   "categoria": "urbana" },
+    { "id": "ct",      "nombre": "CT",      "categoria": "trabajo-reparto" }
+  ],
+
+  "legal": {
+    "razonSocial": "PENDIENTE",
+    "ruc": "PENDIENTE",
+    "domicilioLegal": "PENDIENTE",
+    "textoAviso": "Los precios, condiciones y disponibilidad de stock están sujetos a cambios sin previo aviso. Consultar disponibilidad en tienda."
+  },
+
+  "metaDesarrollo": {
+    "version": "0.2.0",
+    "fase": "base-tecnica",
+    "fechaUltimaActualizacion": "2026-06-17",
+    "proximaFase": "diseno-premium",
+    "estadoGeneral": "en-preparacion"
+  }
 }

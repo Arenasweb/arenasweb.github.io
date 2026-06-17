@@ -3,17 +3,110 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, follow" />
     <title>Libro de Reclamaciones — ARENAS MOTOCICLETAS</title>
     <link rel="stylesheet" href="../style.css" />
   </head>
   <body>
-    <main class="app-shell">
-      <section class="section">
-        <h1>Libro de Reclamaciones</h1>
-        <p>Contenido pendiente de revisión legal.</p>
-        <p>Sección reservada para información de reclamaciones y atención al cliente.</p>
-        <a href="../index.html" class="btn btn-secondary">Volver al inicio</a>
-      </section>
-    </main>
+    <div class="app-shell">
+
+      <header class="site-header" role="banner">
+        <a href="../index.html" class="brand" aria-label="Volver al inicio de ARENAS MOTOCICLETAS">
+          <span class="brand-mark" aria-hidden="true">A</span>
+          <div>
+            <p class="brand-name">ARENAS MOTOCICLETAS</p>
+            <p class="brand-tag">Cusco &bull; La A que acelera</p>
+          </div>
+        </a>
+        <a href="../index.html" class="btn btn-ghost">&larr; Volver al inicio</a>
+      </header>
+
+      <main class="page-content" role="main">
+        <article class="section" aria-labelledby="reclamaciones-heading">
+
+          <div class="legal-notice" role="note">
+            <strong>Aviso:</strong> El formulario de reclamaciones digital está en desarrollo. Por ahora, las reclamaciones pueden enviarse por WhatsApp o correo electrónico. Texto legal provisional pendiente de revisión.
+          </div>
+
+          <div class="section-header">
+            <span class="eyebrow">Atención al cliente</span>
+            <h1 id="reclamaciones-heading">Libro de Reclamaciones</h1>
+          </div>
+
+          <div class="legal-content">
+            <p>
+              Conforme al <strong>Código de Protección y Defensa del Consumidor (Ley N.° 29571)</strong>,
+              ARENAS MOTOCICLETAS pone a disposición del consumidor este libro de reclamaciones para
+              el registro de quejas y reclamos.
+            </p>
+
+            <h2>Diferencia entre queja y reclamo</h2>
+            <ul>
+              <li><strong>Reclamo:</strong> Disconformidad relacionada con los productos o servicios adquiridos.</li>
+              <li><strong>Queja:</strong> Malestar o descontento con la atención o servicio recibido.</li>
+            </ul>
+
+            <h2>¿Cómo presentar una reclamación?</h2>
+            <p>Por el momento puedes presentar tu reclamación a través de los siguientes canales:</p>
+            <ul>
+              <li>
+                <strong>WhatsApp:</strong>
+                <a
+                  href="https://wa.me/51987654321?text=Hola%2C%20deseo%20presentar%20una%20reclamaci%C3%B3n%20formal."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Enviar reclamación por WhatsApp"
+                >Escribir al +51 987 654 321</a>
+                (PENDIENTE: número real)
+              </li>
+              <li>
+                <strong>Correo:</strong>
+                <a href="mailto:contacto@arenasmotos.pe" aria-label="Enviar reclamación por correo electrónico">
+                  contacto@arenasmotos.pe
+                </a>
+              </li>
+              <li><strong>En tienda:</strong> Acercarse a cualquiera de nuestras sedes en Cusco.</li>
+            </ul>
+
+            <h2>Datos requeridos para tu reclamación</h2>
+            <ul>
+              <li>Nombre completo del consumidor</li>
+              <li>DNI o documento de identidad</li>
+              <li>Dirección o contacto de respuesta</li>
+              <li>Descripción detallada del reclamo o queja</li>
+              <li>Número de comprobante de pago (si aplica)</li>
+            </ul>
+
+            <h2>Plazos de atención</h2>
+            <p>ARENAS MOTOCICLETAS se compromete a responder en un plazo máximo de <strong>15 días hábiles</strong> conforme a la Ley N.° 29571. <strong>PENDIENTE: validar este plazo con asesor legal.</strong></p>
+
+            <h2>Formulario digital</h2>
+            <p><strong>PENDIENTE: implementar formulario de reclamaciones digital con registro y número de seguimiento antes del lanzamiento oficial.</strong></p>
+
+            <p class="legal-date">Texto provisional — junio 2026. Pendiente de revisión legal y activación de formulario digital.</p>
+          </div>
+
+          <div class="legal-back">
+            <a href="../index.html" class="btn btn-secondary">&larr; Volver al inicio</a>
+          </div>
+
+        </article>
+      </main>
+
+      <footer class="site-footer" role="contentinfo">
+        <p class="footer-copy">&copy; 2026 ARENAS MOTOCICLETAS &bull; Cusco, Perú</p>
+      </footer>
+    </div>
+
+    <style>
+      .legal-notice { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); color: #f59e0b; font-size: var(--text-sm); margin-bottom: var(--space-8); }
+      .legal-content { display: grid; gap: var(--space-6); max-width: 740px; }
+      .legal-content h2 { font-size: var(--text-base); margin-top: var(--space-4); color: var(--color-white); }
+      .legal-content ul { list-style: disc; padding-left: var(--space-6); display: grid; gap: var(--space-2); }
+      .legal-content ul li { color: var(--color-silver); font-size: var(--text-sm); }
+      .legal-content a { color: var(--color-cyan); text-decoration: underline; text-decoration-color: rgba(6,176,209,0.4); }
+      .legal-date { font-size: var(--text-xs); color: var(--color-muted); border-top: var(--border-subtle); padding-top: var(--space-4); margin-top: var(--space-4); }
+      .legal-back { margin-top: var(--space-6); }
+    </style>
   </body>
 </html>
