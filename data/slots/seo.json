@@ -1,0 +1,16 @@
+{
+  "_nota": "Metadatos SEO editables. Sincronizar manualmente con las etiquetas <meta> de index.html hasta que se automatice la inyección.",
+
+  "title": "ARENAS MOTOCICLETAS | Concesionario y Servicio en Cusco",
+  "description": "Catálogo de motos, financiamiento flexible y servicio técnico especializado en Cusco, Perú. Pulsar, Dominar, Boxer y CT.",
+  "keywords": "motos Cusco, motocicletas Cusco, Bajaj Cusco, Pulsar NS400, Dominar 400, concesionario motos Perú, financiamiento motos Cusco, servicio técnico motos Cusco",
+  "ogTitle": "ARENAS MOTOCICLETAS | Cusco",
+  "ogDescription": "Catálogo de motos, financiamiento y servicio técnico en Cusco, Perú.",
+  "ogImage": "assets/og/arenas-og-cover.jpg",
+  "canonicalUrl": "https://arenasweb.github.io/",
+  "schemaPendiente": {
+    "tipo": "AutoDealer",
+    "estado": "pendiente-implementar-json-ld",
+    "nota": "PENDIENTE: agregar structured data (schema.org) cuando haya datos reales de dirección, teléfono y horario confirmados."
+  }
+}

@@ -217,7 +217,8 @@
               <a
                 href="#cotizacion"
                 class="btn btn-primary"
-                aria-label="Consultar por la Pulsar NS400 vía WhatsApp"
+                data-accion="whatsapp"
+                aria-label="Consultar por el modelo destacado vía WhatsApp"
               >Consultar por WhatsApp</a>
             </div>
           </div>
@@ -356,19 +357,19 @@
             <article class="financing-card" role="listitem">
               <h3 class="financing-plan">Plan Básico</h3>
               <p class="financing-months">12 meses</p>
-              <p class="financing-note">Cuota inicial desde S/ 1,200 · PENDIENTE de validar</p>
+              <p class="financing-note">Cuota inicial: <span class="badge-pendiente" title="Monto pendiente de confirmación con el área de financiamiento">Por confirmar</span></p>
             </article>
 
             <article class="financing-card" role="listitem">
               <h3 class="financing-plan">Plan Estándar</h3>
               <p class="financing-months">18 meses</p>
-              <p class="financing-note">Cuota inicial desde S/ 1,500 · PENDIENTE de validar</p>
+              <p class="financing-note">Cuota inicial: <span class="badge-pendiente" title="Monto pendiente de confirmación con el área de financiamiento">Por confirmar</span></p>
             </article>
 
             <article class="financing-card financing-card--featured" role="listitem">
               <h3 class="financing-plan">Plan Premium</h3>
               <p class="financing-months">24 meses</p>
-              <p class="financing-note">Cuota inicial desde S/ 3,500 · PENDIENTE de validar</p>
+              <p class="financing-note">Cuota inicial: <span class="badge-pendiente" title="Monto pendiente de confirmación con el área de financiamiento">Por confirmar</span></p>
             </article>
 
           </div>
@@ -478,24 +479,10 @@
             <p>Visítanos en tienda para asesoría personalizada, prueba de manejo y trámites.</p>
           </div>
           <div id="stores-grid" class="stores-grid" role="list" aria-label="Ubicaciones de ARENAS MOTOCICLETAS">
-            <!-- Las tiendas se renderizan dinámicamente desde configuracion.json via script.js -->
-            <article class="store-card" role="listitem" aria-label="Sucursal principal ARENAS MOTOCICLETAS">
-              <h3 class="store-name">Sucursal Principal</h3>
-              <!-- PENDIENTE: validar dirección real -->
-              <address class="store-address">
-                Av. Sol 123, Cusco<br />
-                <a href="tel:+51987654321" aria-label="Llamar a ARENAS MOTOCICLETAS">+51 987 654 321</a>
-              </address>
-              <p class="store-hours">Lun – Vie: 09:00 – 19:00 · Sáb: 09:00 – 14:00</p>
-              <!-- PENDIENTE: mapa embebido o enlace a Google Maps con coordenadas reales -->
-              <a
-                href="https://maps.google.com/?q=Av+Sol+123+Cusco+Peru"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="btn btn-ghost"
-                aria-label="Ver sucursal principal en Google Maps"
-              >Ver en mapa</a>
-            </article>
+            <!-- Las tiendas se renderizan dinámicamente desde data/slots/sedes.json vía script.js → renderizarTiendas().
+                 Si una sede no está confirmada (estadoAprobacion: pendiente-confirmar-existencia), no se muestra.
+                 Ver docs/fuente-unica-datos.md -->
+            <p class="empty-state" role="status" aria-live="polite">Cargando ubicaciones...</p>
           </div>
         </section>
 
@@ -530,6 +517,7 @@
                   required
                   autocomplete="name"
                   aria-required="true"
+                  aria-invalid="false"
                   aria-describedby="error-nombre"
                   maxlength="100"
                 />
@@ -547,6 +535,7 @@
                   required
                   autocomplete="tel"
                   aria-required="true"
+                  aria-invalid="false"
                   aria-describedby="error-telefono"
                   maxlength="20"
                 />
@@ -591,6 +580,7 @@
                   class="form-checkbox"
                   required
                   aria-required="true"
+                  aria-invalid="false"
                   aria-describedby="error-datos"
                 />
                 <label for="campo-datos" class="form-label-check">
@@ -603,9 +593,10 @@
               </div>
 
               <div class="form-actions">
-                <button type="submit" class="btn btn-primary" id="btn-cotizar" aria-label="Enviar solicitud de cotización por WhatsApp">
+                <button type="submit" class="btn btn-primary" id="btn-cotizar" data-accion="whatsapp" aria-label="Enviar solicitud de cotización por WhatsApp">
                   Enviar por WhatsApp
                 </button>
+                <p class="form-hint">Al enviar, se abrirá WhatsApp en una pestaña nueva.</p>
                 <!-- Mensaje de éxito — visible solo tras envío exitoso vía JS -->
                 <div id="form-success" class="form-success" role="status" aria-live="polite" hidden>
                   <p>¡Gracias! Tu consulta fue enviada. Nos contactaremos pronto.</p>

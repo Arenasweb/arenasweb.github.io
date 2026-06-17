@@ -1,0 +1,30 @@
+{
+  "_nota": "Estado de revisión de cada documento legal. Los textos completos viven en /legales/*.html — este JSON solo rastrea su estado de aprobación, no reemplaza el HTML.",
+
+  "politicaPrivacidad": {
+    "archivo": "legales/privacidad.html",
+    "estado": "provisional-pendiente-revision-legal"
+  },
+  "terminosCondiciones": {
+    "archivo": "legales/terminos.html",
+    "estado": "provisional-pendiente-revision-legal"
+  },
+  "tratamientoDatos": {
+    "archivo": "legales/datos-personales.html",
+    "estado": "provisional-pendiente-revision-legal-y-rnpdp"
+  },
+  "cookies": {
+    "archivo": "legales/cookies.html",
+    "estado": "provisional-sin-tracking-activo"
+  },
+  "libroReclamaciones": {
+    "archivo": "legales/libro-reclamaciones.html",
+    "estado": "provisional-canal-whatsapp-correo-activo"
+  },
+  "condicionesFinanciamiento": {
+    "archivo": "legales/condiciones-financiamiento.html",
+    "estado": "provisional-pendiente-validacion-financiera"
+  },
+
+  "estadoRevisionLegal": "ningun-documento-revisado-por-abogado-aun"
+}

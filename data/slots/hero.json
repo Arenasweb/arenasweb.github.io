@@ -1,0 +1,27 @@
+{
+  "_nota": "Slot editable del HERO. No representa diseño final — solo contenido y referencias de medios. Cambiar valores aquí no cambia la estética, solo el texto/recursos que se inyectan.",
+
+  "eyebrow": "Concesionario premium · Cusco, Perú",
+  "tituloPrincipal": "ARENAS MOTOCICLETAS",
+  "subtitulo": "Encuentra tu próxima moto en Cusco. Catálogo completo, financiamiento flexible y respaldo técnico para pilotos exigentes.",
+  "ctaPrincipal": {
+    "texto": "Ver catálogo",
+    "href": "#catalogo"
+  },
+  "ctaSecundario": {
+    "texto": "Pedir cotización",
+    "href": "#cotizacion"
+  },
+  "modeloHero": {
+    "id": "PENDIENTE",
+    "nota": "PENDIENTE: definir qué modelo protagoniza el hero. Puede no coincidir con el modelo destacado del catálogo."
+  },
+  "imagenHero": "assets/motos/PENDIENTE/hero-placeholder.jpg",
+  "videoHero": "assets/videos/PENDIENTE/hero-placeholder.mp4",
+  "marcaAgua": {
+    "activa": false,
+    "texto": "ARENAS",
+    "nota": "PENDIENTE: decidir si el hero lleva marca de agua tipográfica grande de fondo (recurso de diseño, no de contenido)."
+  },
+  "estadoAprobacion": "pendiente-diseno"
+}

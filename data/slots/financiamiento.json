@@ -1,0 +1,43 @@
+{
+  "_nota": "Contenido editable de la sección de financiamiento. La evaluación final SIEMPRE se realiza presencialmente en tienda — este JSON no debe usarse para procesar créditos, solo para mostrar información referencial.",
+
+  "titulo": "Financiamiento a tu medida",
+  "descripcion": "Opciones de crédito flexibles para que tu moto no espere. Evaluación final presencial en tienda.",
+  "avisoPresencial": "La evaluación y aprobación final del financiamiento se realiza de forma presencial en tienda, sujeta a los criterios y políticas internas de ARENAS MOTOCICLETAS.",
+
+  "requisitos": [
+    "DNI vigente del titular (PENDIENTE confirmar requisitos adicionales)",
+    "PENDIENTE: requisito 2",
+    "PENDIENTE: requisito 3"
+  ],
+
+  "documentosSolicitados": [
+    "Documento de identidad (DNI)",
+    "PENDIENTE: sustento de ingresos",
+    "PENDIENTE: recibo de servicios o domicilio"
+  ],
+
+  "pasos": [
+    "Solicitud de cotización en tienda o por WhatsApp",
+    "Presentación de documentación requerida",
+    "Evaluación presencial en tienda",
+    "Aprobación y firma de contrato",
+    "Entrega del vehículo"
+  ],
+
+  "entidadesFinancieras": [
+    "PENDIENTE: nombre de entidad 1",
+    "PENDIENTE: nombre de entidad 2"
+  ],
+
+  "condicionesReferenciales": {
+    "planesDisponibles": ["12 meses", "18 meses", "24 meses"],
+    "cuotaInicialMinima": "PENDIENTE",
+    "tasaReferencial": "PENDIENTE",
+    "nota": "Valores referenciales no vinculantes. Sujetos a evaluación presencial."
+  },
+
+  "disclaimer": "La información de financiamiento mostrada en el sitio es referencial e informativa. No constituye una oferta de crédito formal. Todas las condiciones reales se determinan y formalizan de manera presencial en tienda.",
+
+  "whatsappFinanciamiento": "pendiente"
+}

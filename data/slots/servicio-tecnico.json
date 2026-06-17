@@ -1,0 +1,22 @@
+{
+  "_nota": "Información editable del taller y servicio técnico. Confirmar todos los datos con el área de taller antes de publicar.",
+
+  "titulo": "Taller especializado en Cusco",
+  "descripcion": "Mantenimiento preventivo y correctivo con técnicos certificados y repuestos originales.",
+
+  "servicios": [
+    "Mantenimiento preventivo según kilometraje",
+    "Diagnóstico electrónico de sistemas",
+    "Repuestos originales en stock",
+    "Reparación de motor, frenos y suspensión",
+    "Atención de garantías de fábrica"
+  ],
+
+  "tecnicosCertificados": "pendiente",
+  "tiempoPromedioServicio": "pendiente",
+  "repuestosOriginalesDisponibles": "pendiente",
+  "fotoTaller": "assets/taller/taller-principal.jpg",
+  "whatsappServicioTecnico": "pendiente",
+
+  "estadoAprobacion": "pendiente-confirmacion-area-taller"
+}

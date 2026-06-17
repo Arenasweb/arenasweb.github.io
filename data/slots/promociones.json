@@ -1,0 +1,19 @@
+{
+  "_nota": "Promociones vigentes. No inventar descuentos ni vigencias. Mantener 'visible: false' hasta aprobación gerencial de cada promoción.",
+
+  "promocionesActivas": [
+    {
+      "modelo": "PENDIENTE",
+      "titulo": "PENDIENTE: título de la promoción",
+      "descripcion": "PENDIENTE: detalle de la promoción",
+      "vigencia": "PENDIENTE: fecha de inicio y fin",
+      "imagen": "assets/motos/PENDIENTE/promo-placeholder.jpg",
+      "cta": {
+        "texto": "Consultar promoción",
+        "accion": "whatsapp"
+      },
+      "visible": false,
+      "estadoAprobacion": "pendiente-aprobacion-gerencial"
+    }
+  ]
+}

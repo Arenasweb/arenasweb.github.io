@@ -39,7 +39,12 @@ arenasweb.github.io/
 │
 ├── data/
 │   ├── catalogo.json        ← Inventario de motos (fuente principal de datos)
-│   └── configuracion.json   ← Configuración global: WhatsApp, sedes, SEO
+│   ├── configuracion.json   ← Configuración global: WhatsApp, sedes, SEO
+│   └── slots/               ← Contenido editable y aprobable (12 archivos)
+│       ├── hero.json, empresa.json, whatsapp.json, sedes.json
+│       ├── financiamiento.json, beneficios.json, servicio-tecnico.json
+│       ├── promociones.json, testimonios.json, legales.json
+│       └── seo.json, ui-placeholders.json
 │
 ├── legales/                 ← 6 páginas legales (provisionales, pendiente revisión)
 │   ├── privacidad.html
@@ -53,14 +58,23 @@ arenasweb.github.io/
 │   ├── arquitectura-tecnica.md
 │   ├── sistema-animaciones.md
 │   ├── guia-catalogo-json.md
+│   ├── sistema-slots-editables.md
 │   ├── checklist-pre-diseno.md
 │   ├── checklist-lanzamiento.md
 │   ├── pendientes-manana.md
+│   ├── requisitos-pendientes-gerencia.md
+│   ├── flujo-ia-claude-codex-chatgpt.md
+│   ├── checklist-codex-review.md
 │   ├── catalogo-dinamico.md
 │   ├── estructura-web.md
 │   └── guia-marca.md
 │
-└── assets/                  ← PENDIENTE: crear con favicon, og e imágenes de motos
+├── .github/
+│   └── PULL_REQUEST_TEMPLATE.md
+│
+├── AGENTS.md                ← Reglas para Codex y otros agentes de código
+│
+└── assets/                  ← logo, iconos, motos, taller, tiendas, clientes, videos
 ```
 
 ---
@@ -127,6 +141,22 @@ Editar variables en `style.css` → Bloque 2 (`:root`).
 | `docs/checklist-pre-diseno.md` | Lista de decisiones antes del diseño premium |
 | `docs/checklist-lanzamiento.md` | Pasos antes de publicar al público |
 | `docs/pendientes-manana.md` | Resumen de todo lo pendiente para la próxima sesión |
+| `docs/sistema-slots-editables.md` | Qué es un slot, qué se puede editar libremente y qué requiere aprobación |
+| `docs/requisitos-pendientes-gerencia.md` | Checklist de datos que solo el dueño/gerencia puede confirmar |
+| `docs/flujo-ia-claude-codex-chatgpt.md` | Cómo se coordinan Claude Code, Codex y ChatGPT en este repo |
+| `docs/checklist-codex-review.md` | Checklist técnico que usa Codex al auditar un Pull Request |
+
+---
+
+## Flujo con agentes IA
+
+Este proyecto usa tres agentes de IA con roles separados:
+
+- **Claude Code** construye y modifica el código directamente en VS Code.
+- **Codex** audita el código vía Pull Requests en GitHub (errores, seguridad, performance, accesibilidad, SEO) — no rediseña ni decide visual.
+- **ChatGPT** dirige la estrategia, redacta prompts y prioriza los hallazgos de Codex.
+
+Las reglas inviolables y la arquitectura técnica para cualquier agente están en **`AGENTS.md`**. Antes de pedirle a Codex que revise algo, o a Claude Code que construya algo nuevo, leer ese archivo primero.
 
 ---
 

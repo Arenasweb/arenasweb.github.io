@@ -9,6 +9,8 @@
   "modeloDestacadoId": "pulsar-ns400",
 
   "whatsapp": "+51987654321",
+  "whatsappConfirmado": false,
+  "_notaWhatsapp": "El número anterior es un PLACEHOLDER técnico, no un número real. Mientras whatsappConfirmado sea false, script.js deshabilita los botones/enlaces de WhatsApp en todo el sitio. Ver docs/fuente-unica-datos.md.",
   "telefonoFijo": "PENDIENTE",
   "correo": "contacto@arenasmotos.pe",
   "correoSoporte": "PENDIENTE",
@@ -22,16 +24,17 @@
     "youtube": "PENDIENTE"
   },
 
+  "_notaSedes": "DEPRECADO: este array ya no es la fuente activa de sedes. script.js → renderizarTiendas() ahora lee de data/slots/sedes.json, que incluye estadoAprobacion por sede. Se mantiene aquí solo como referencia histórica/fallback. Ver docs/fuente-unica-datos.md.",
   "sedes": [
     {
       "id": "sede-principal",
       "nombre": "Sucursal Principal",
-      "direccion": "Av. Sol 123, Cusco",
+      "direccion": "PENDIENTE",
       "distrito": "Cusco",
       "provincia": "Cusco",
       "departamento": "Cusco",
       "telefono": "PENDIENTE",
-      "whatsapp": "+51987654321",
+      "whatsapp": "pendiente",
       "coordenadas": "PENDIENTE",
       "horario": "Lun – Vie: 09:00 – 19:00 · Sáb: 09:00 – 14:00",
       "esPrincipal": true

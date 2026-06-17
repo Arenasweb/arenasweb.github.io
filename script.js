@@ -6,7 +6,7 @@
  *   1. CONFIG              — constantes globales y referencia a configuracion.json
  *   2. DOM helpers         — selectores reutilizables
  *   3. WhatsApp helpers    — generación de mensajes y URLs
- *   4. Catalog loader      — carga desde data/catalogo.json
+ *   4. Catalog loader      — carga desde data/catalogo.json y data/slots/*.json (cargarSlots)
  *   5. Render catalog      — construcción de tarjetas HTML
  *   6. Search / filters    — filtrado del catálogo
  *   7. Featured model      — modelo destacado dinámico
@@ -29,6 +29,12 @@ const CONFIG = {
   whatsapp:       "+51987654321",   // PENDIENTE: número real
   catalogPath:    "data/catalogo.json",
   configPath:     "data/configuracion.json",
+  slotsPath:      "data/slots",     // carpeta de slots editables
+  slotsArchivos: [
+    "hero", "empresa", "whatsapp", "sedes", "financiamiento",
+    "beneficios", "servicio-tecnico", "promociones", "testimonios",
+    "legales", "seo", "ui-placeholders",
+  ],
   revealThreshold: 0.12,           // % de visibilidad para activar reveal
   revealClass:    "is-visible",    // clase que activa la animación CSS
   maxFiltros:     3,               // máximo de filtros activos simultáneos
@@ -39,6 +45,7 @@ const CONFIG = {
 const STATE = {
   catalogo:    [],
   config:      {},
+  slots:       {},   // contenido de data/slots/*.json, una clave por archivo
   filtroActivo: { linea: "", uso: "", cilindrada: "" },
 };
 
@@ -97,21 +104,294 @@ function buildWhatsAppURL(mensaje, numero = CONFIG.whatsapp) {
 }
 
 /**
+ * Indica si el número de WhatsApp ya fue confirmado por gerencia.
+ * Mientras sea false, ningún flujo debe abrir un chat real con el
+ * número placeholder — ver data/configuracion.json → whatsappConfirmado.
+ * @returns {boolean}
+ */
+function whatsappConfirmado() {
+  return Boolean(STATE.config && STATE.config.whatsappConfirmado === true);
+}
+
+/**
+ * Muestra un aviso temporal (toast) cuando se intenta usar un canal
+ * de WhatsApp que aún no está confirmado, en vez de abrir un chat falso.
+ */
+function mostrarAvisoWhatsAppPendiente() {
+  const mensaje =
+    (STATE.slots &&
+      STATE.slots["ui-placeholders"] &&
+      STATE.slots["ui-placeholders"].mensajesEstadoPendiente &&
+      STATE.slots["ui-placeholders"].mensajesEstadoPendiente.whatsappNoConfirmado) ||
+    "Estamos validando este canal de WhatsApp. Por favor inténtalo más tarde o usa el formulario de cotización.";
+
+  let toast = document.getElementById("aviso-toast");
+  if (!toast) {
+    toast = createElement("div", {
+      id: "aviso-toast",
+      class: "aviso-toast",
+      role: "status",
+      "aria-live": "polite",
+    });
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = mensaje;
+  toast.classList.add("is-visible");
+  clearTimeout(toast._timeoutId);
+  toast._timeoutId = setTimeout(() => toast.classList.remove("is-visible"), 4500);
+
+  trackEvent("whatsapp_bloqueado_pendiente", {});
+}
+
+/**
+ * Marca visualmente como deshabilitados los botones/enlaces de WhatsApp
+ * mientras el número no esté confirmado (no los elimina, solo los marca).
+ * Debe llamarse después de cargarConfiguracion() y tras cada re-render
+ * que agregue nuevos elementos de WhatsApp al DOM.
+ */
+function aplicarEstadoWhatsApp() {
+  const confirmado = whatsappConfirmado();
+  $$('a[href*="wa.me"], .btn-whatsapp, [data-accion="whatsapp"]').forEach((el) => {
+    if (confirmado) {
+      el.removeAttribute("aria-disabled");
+    } else {
+      el.setAttribute("aria-disabled", "true");
+    }
+  });
+}
+
+/**
  * Abre WhatsApp en nueva pestaña con mensaje predefinido para un modelo.
+ * No abre nada si el número aún no está confirmado por gerencia.
  * @param {string} modelo
  */
 function consultarPorWhatsApp(modelo) {
+  if (!whatsappConfirmado()) {
+    mostrarAvisoWhatsAppPendiente();
+    return;
+  }
   const mensaje = crearMensajeWhatsApp(modelo);
   const url     = buildWhatsAppURL(mensaje);
   window.open(url, "_blank", "noopener,noreferrer");
   trackEvent("whatsapp_click", { modelo });
 }
 
+// Intercepta cualquier enlace directo a wa.me en el HTML estático
+// (ej. el botón "Abrir WhatsApp" del aside de cotización) mientras
+// el número no esté confirmado. Delegación de eventos: funciona también
+// con enlaces añadidos dinámicamente más adelante.
+document.addEventListener("click", (e) => {
+  const link = e.target.closest('a[href*="wa.me"]');
+  if (link && !whatsappConfirmado()) {
+    e.preventDefault();
+    mostrarAvisoWhatsAppPendiente();
+  }
+});
+
+
+/* ================================================================
+   MÓDULO 3b: ESQUEMA Y VALIDACIÓN DE DATOS
+   Valida forma y seguridad de los datos antes de usarlos para
+   renderizar. Nunca rompe el sitio: los registros inválidos se
+   descartan (con warning en consola) en vez de detener el render.
+
+   Esto también prepara el terreno para una futura fuente remota
+   (Google Sheets) — cualquier dato externo deberá pasar por estos
+   mismos validadores antes de mostrarse. Ver
+   docs/contrato-datos-google-sheets.md. NO se conecta Google Sheets
+   todavía: el JSON local sigue siendo la única fuente de datos.
+   ================================================================ */
+
+/** Dominios externos permitidos para enlaces generados desde datos editables */
+const DOMINIOS_PERMITIDOS = [
+  "maps.google.com",
+  "www.google.com",
+  "goo.gl",
+  "wa.me",
+  "api.whatsapp.com",
+];
+
+/**
+ * Verifica que una URL sea HTTPS y pertenezca a un dominio autorizado.
+ * Se usa antes de insertar cualquier href que provenga de un JSON editable
+ * (ej. sede.googleMapsUrl) — nunca se confía en la URL "tal cual".
+ * @param {string} url
+ * @returns {boolean}
+ */
+function esURLExternaSegura(url) {
+  if (typeof url !== "string" || !url.trim()) return false;
+  try {
+    const parsed = new URL(url, window.location.href);
+    if (parsed.protocol !== "https:") return false;
+    return DOMINIOS_PERMITIDOS.some(
+      (dominio) => parsed.hostname === dominio || parsed.hostname.endsWith(`.${dominio}`)
+    );
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Verifica que una ruta de asset sea local (relativa al proyecto),
+ * nunca un recurso externo — refuerza la regla "no imágenes externas".
+ * @param {string} ruta
+ * @returns {boolean}
+ */
+function esRutaLocalSegura(ruta) {
+  if (typeof ruta !== "string" || !ruta.trim()) return false;
+  return !/^([a-z][a-z0-9+.-]*:)?\/\//i.test(ruta.trim());
+}
+
+/**
+ * Verifica que un teléfono solo contenga caracteres válidos
+ * (dígitos, espacios, +, guiones, paréntesis) antes de usarlo en un
+ * href="tel:" — evita inyectar otros esquemas de URL vía datos editables.
+ * @param {string} valor
+ * @returns {boolean}
+ */
+function esTelefonoSeguro(valor) {
+  return typeof valor === "string" && /^[+\d][\d\s().-]{5,19}$/.test(valor.trim());
+}
+
+/** Esquemas mínimos de tipos esperados por dominio de datos */
+const ESQUEMA_MOTO = {
+  id: "string", linea: "string", modelo: "string",
+  visible: "boolean", destacado: "boolean", orden: "number",
+  precio: "string", precioConfirmado: "boolean",
+  cuotaInicial: "string", cuotaConfirmada: "boolean",
+  stock: "string", stockConfirmado: "boolean",
+  descripcion: "string",
+};
+
+const ESQUEMA_SEDE = {
+  id: "string", nombre: "string", direccion: "string",
+  telefono: "string", whatsapp: "string",
+  googleMapsUrl: "string", horario: "string",
+  estadoAprobacion: "string",
+};
+
+const ESQUEMA_PROMOCION = {
+  modelo: "string", titulo: "string", descripcion: "string",
+  vigencia: "string", visible: "boolean", estadoAprobacion: "string",
+};
+
+const ESQUEMA_WHATSAPP_SLOT = {
+  whatsappGeneral: "string", whatsappVentas: "string",
+  whatsappFinanciamiento: "string", whatsappServicioTecnico: "string",
+  estadoAprobacion: "string",
+};
+
+const ESQUEMA_SEO_SLOT = {
+  title: "string", description: "string", keywords: "string",
+  ogTitle: "string", ogDescription: "string", ogImage: "string",
+  canonicalUrl: "string",
+};
+
+/**
+ * Valida un objeto contra un esquema simple de tipos esperados.
+ * Solo revisa los campos presentes en el esquema; campos ausentes se
+ * toleran (se consideran opcionales) y campos extra se ignoran.
+ * @returns {string[]} lista de errores (vacía si el objeto es válido)
+ */
+function validarContraEsquema(objeto, esquema, etiqueta) {
+  if (!objeto || typeof objeto !== "object") {
+    return [`${etiqueta}: el registro no es un objeto válido`];
+  }
+  const errores = [];
+  Object.entries(esquema).forEach(([campo, tipoEsperado]) => {
+    if (!(campo in objeto)) return;
+    const valor = objeto[campo];
+    const tipoReal = Array.isArray(valor) ? "array" : typeof valor;
+    if (tipoReal !== tipoEsperado) {
+      errores.push(`${etiqueta}: campo "${campo}" debería ser ${tipoEsperado}, llegó ${tipoReal}`);
+    }
+  });
+  return errores;
+}
+
+/** Filtra el catálogo crudo dejando solo registros válidos según ESQUEMA_MOTO */
+function validarYFiltrarCatalogo(catalogoRaw) {
+  if (!Array.isArray(catalogoRaw)) return [];
+  return catalogoRaw.filter((moto) => {
+    const errores = validarContraEsquema(moto, ESQUEMA_MOTO, `catalogo:${moto && moto.id}`);
+    if (errores.length) {
+      console.warn("[ARENAS] Registro de catálogo inválido, se omite:", errores);
+      return false;
+    }
+    return true;
+  });
+}
+
+/** Filtra sedes crudas dejando solo registros válidos según ESQUEMA_SEDE */
+function validarYFiltrarSedes(sedesRaw) {
+  if (!Array.isArray(sedesRaw)) return [];
+  return sedesRaw.filter((sede) => {
+    const errores = validarContraEsquema(sede, ESQUEMA_SEDE, `sede:${sede && sede.id}`);
+    if (errores.length) {
+      console.warn("[ARENAS] Registro de sede inválido, se omite:", errores);
+      return false;
+    }
+    return true;
+  });
+}
+
+/** Filtra promociones crudas dejando solo registros válidos según ESQUEMA_PROMOCION */
+function validarYFiltrarPromociones(promosRaw) {
+  if (!Array.isArray(promosRaw)) return [];
+  return promosRaw.filter((promo) => {
+    const errores = validarContraEsquema(promo, ESQUEMA_PROMOCION, `promocion:${promo && promo.modelo}`);
+    if (errores.length) {
+      console.warn("[ARENAS] Promoción inválida, se omite:", errores);
+      return false;
+    }
+    return true;
+  });
+}
+
+/** Valida (sin filtrar, es un objeto único) el slot de WhatsApp */
+function validarSlotWhatsapp(whatsappRaw) {
+  const errores = validarContraEsquema(whatsappRaw, ESQUEMA_WHATSAPP_SLOT, "slot:whatsapp");
+  if (errores.length) console.warn("[ARENAS] data/slots/whatsapp.json no cumple el esquema esperado:", errores);
+  return errores.length === 0;
+}
+
+/** Valida (sin filtrar, es un objeto único) el slot de SEO */
+function validarSlotSeo(seoRaw) {
+  const errores = validarContraEsquema(seoRaw, ESQUEMA_SEO_SLOT, "slot:seo");
+  if (errores.length) console.warn("[ARENAS] data/slots/seo.json no cumple el esquema esperado:", errores);
+  return errores.length === 0;
+}
+
+/**
+ * Ejecuta todas las validaciones de slots cargados y reemplaza en
+ * STATE.slots los arrays con sus versiones filtradas (sedes y
+ * promociones). Debe llamarse después de cargarSlots().
+ */
+function validarSlotsCargados() {
+  if (STATE.slots.sedes && Array.isArray(STATE.slots.sedes.sedes)) {
+    STATE.slots.sedes.sedes = validarYFiltrarSedes(STATE.slots.sedes.sedes);
+  }
+  if (STATE.slots.whatsapp) {
+    validarSlotWhatsapp(STATE.slots.whatsapp);
+  }
+  if (STATE.slots.promociones && Array.isArray(STATE.slots.promociones.promocionesActivas)) {
+    STATE.slots.promociones.promocionesActivas = validarYFiltrarPromociones(
+      STATE.slots.promociones.promocionesActivas
+    );
+  }
+  if (STATE.slots.seo) {
+    validarSlotSeo(STATE.slots.seo);
+  }
+}
+
 
 /* ================================================================
    MÓDULO 4: CATALOG LOADER
-   Carga el catálogo desde data/catalogo.json.
-   Preparado para migrar a Google Sheets API en fase posterior.
+   Carga el catálogo desde data/catalogo.json (fuente local, fallback
+   permanente — ver punto 7 de docs/correcciones-auditoria-codex.md).
+   Preparado para evaluar Google Sheets en una fase futura, sin
+   conectarlo todavía. Ver docs/contrato-datos-google-sheets.md.
    ================================================================ */
 
 /**
@@ -123,7 +403,7 @@ async function cargarCatalogo() {
     const res = await fetch(CONFIG.catalogPath);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    STATE.catalogo = Array.isArray(data) ? data : [];
+    STATE.catalogo = validarYFiltrarCatalogo(Array.isArray(data) ? data : []);
     return STATE.catalogo;
   } catch (err) {
     console.error("[ARENAS] Error cargando catálogo:", err);
@@ -152,6 +432,43 @@ async function cargarConfiguracion() {
   }
 }
 
+/**
+ * Carga todos los archivos JSON de data/slots/ y los deja disponibles
+ * en STATE.slots, indexados por nombre de archivo (sin extensión).
+ *
+ * Ejemplo de uso tras la carga:
+ *   STATE.slots.hero.tituloPrincipal
+ *   STATE.slots.whatsapp.whatsappVentas
+ *   STATE.slots["ui-placeholders"].textosBotones.verCatalogo
+ *
+ * Cada archivo se carga de forma independiente: si uno falla, no rompe
+ * la carga de los demás (Promise.allSettled).
+ *
+ * @returns {Promise<Object>} STATE.slots actualizado
+ */
+async function cargarSlots() {
+  const resultados = await Promise.allSettled(
+    CONFIG.slotsArchivos.map(async (nombre) => {
+      const res = await fetch(`${CONFIG.slotsPath}/${nombre}.json`);
+      if (!res.ok) throw new Error(`HTTP ${res.status} en ${nombre}.json`);
+      const data = await res.json();
+      return { nombre, data };
+    })
+  );
+
+  resultados.forEach((resultado, i) => {
+    const nombre = CONFIG.slotsArchivos[i];
+    if (resultado.status === "fulfilled") {
+      STATE.slots[nombre] = resultado.value.data;
+    } else {
+      console.warn(`[ARENAS] No se pudo cargar slot "${nombre}.json":`, resultado.reason);
+      STATE.slots[nombre] = null;
+    }
+  });
+
+  return STATE.slots;
+}
+
 
 /* ================================================================
    MÓDULO 5: RENDER CATALOG
@@ -159,57 +476,160 @@ async function cargarConfiguracion() {
    ================================================================ */
 
 /**
- * Construye el HTML de una tarjeta de moto.
+ * Construye el nodo de imagen de una tarjeta. Si la ruta no carga
+ * (asset aún no subido), se reemplaza por el placeholder visual en
+ * lugar de dejar una imagen rota — ver docs/correcciones-auditoria-codex.md.
+ * @param {Object} moto
+ * @returns {HTMLElement}
+ */
+function crearImagenMoto(moto) {
+  const wrapper = createElement("div", { class: "moto-card__image" });
+
+  // Sin ruta, o ruta externa no permitida (regla: no imágenes externas)
+  if (!moto.fotoPrincipal || !esRutaLocalSegura(moto.fotoPrincipal)) {
+    if (moto.fotoPrincipal && !esRutaLocalSegura(moto.fotoPrincipal)) {
+      console.warn(`[ARENAS] Imagen externa no permitida para "${moto.modelo}", se usa placeholder.`);
+    }
+    wrapper.appendChild(crearPlaceholderImagen(moto));
+    return wrapper;
+  }
+
+  const img = createElement("img", {
+    src: moto.fotoPrincipal,
+    alt: `Moto ${moto.modelo}${moto.version ? " " + moto.version : ""}`,
+    loading: "lazy",
+    width: "400",
+    height: "225",
+  });
+
+  // Si el archivo aún no existe en assets/, se sustituye por el placeholder
+  // en vez de mostrar una imagen rota (evita el problema de assets faltantes).
+  img.addEventListener("error", () => {
+    wrapper.replaceChildren(crearPlaceholderImagen(moto));
+  }, { once: true });
+
+  wrapper.appendChild(img);
+  return wrapper;
+}
+
+function crearPlaceholderImagen(moto) {
+  const mensaje =
+    (STATE.slots &&
+      STATE.slots["ui-placeholders"] &&
+      STATE.slots["ui-placeholders"].mensajesEstadoPendiente &&
+      STATE.slots["ui-placeholders"].mensajesEstadoPendiente.imagenNoDisponible) ||
+    "Imagen no disponible";
+
+  return createElement("div", {
+    class: "placeholder-media",
+    "aria-label": `${mensaje}: ${moto.modelo}`,
+  });
+}
+
+/**
+ * Crea un badge de dato pendiente/no confirmado. Por defecto usa la
+ * etiqueta "Referencial" (compatibilidad con usos previos como la
+ * dirección de una sede), pero acepta una etiqueta personalizada
+ * (ej. "Consultar", "Consultar disponibilidad").
+ * @param {string} titulo - texto accesible (atributo title)
+ * @param {string} [etiquetaPersonalizada] - texto visible del badge
+ * @returns {HTMLElement}
+ */
+function crearBadgePendiente(titulo, etiquetaPersonalizada) {
+  const placeholders = STATE.slots && STATE.slots["ui-placeholders"];
+  const etiquetaDefault =
+    (placeholders &&
+      placeholders.mensajesEstadoPendiente &&
+      placeholders.mensajesEstadoPendiente.precioReferencial) || "Referencial";
+  const tituloDefault =
+    (placeholders &&
+      placeholders.mensajesEstadoPendiente &&
+      placeholders.mensajesEstadoPendiente.precioReferencialTitulo) ||
+    "Dato referencial sujeto a confirmación";
+
+  const badge = createElement("span", {
+    class: "badge-pendiente",
+    title: titulo || tituloDefault,
+  });
+  badge.textContent = etiquetaPersonalizada || etiquetaDefault;
+  return badge;
+}
+
+/**
+ * Construye una tarjeta de moto completa usando DOM seguro (sin innerHTML
+ * con datos provenientes de JSON editable) para evitar inyección de HTML
+ * si data/catalogo.json llega a contener texto no controlado.
  * @param {Object} moto - objeto del catálogo
  * @returns {HTMLElement}
  */
 function crearTarjetaMoto(moto) {
+  const nombreCompleto = `${moto.linea} ${moto.modelo} ${moto.version || ""}`.trim();
+
   const card = createElement("article", {
     class: "moto-card reveal-fade",
     role: "listitem",
-    "aria-label": `${moto.linea} ${moto.modelo} ${moto.version || ""}`.trim(),
-    "data-id":    moto.id,
-    "data-linea": moto.linea,
+    "aria-label": nombreCompleto,
+    "data-id":    moto.id || "",
+    "data-linea": moto.linea || "",
   });
 
-  // Imagen
-  const imgHTML = moto.fotoPrincipal
-    ? `<img
-         src="${moto.fotoPrincipal}"
-         alt="Moto ${moto.modelo} ${moto.version || ""}"
-         loading="lazy"
-         width="400"
-         height="225"
-       />`
-    : `<div class="placeholder-media" aria-label="Imagen de ${moto.modelo} no disponible"></div>`;
+  card.appendChild(crearImagenMoto(moto));
 
-  card.innerHTML = `
-    <div class="moto-card__image">${imgHTML}</div>
-    <div class="moto-card__body">
-      <span class="moto-card__linea">${moto.linea}</span>
-      <h3 class="moto-card__nombre">${moto.modelo}${moto.version ? " " + moto.version : ""}</h3>
-      <p class="moto-card__desc">${moto.descripcion || ""}</p>
-      ${moto.promocion ? `<span class="moto-card__badge">${moto.promocion}</span>` : ""}
-      <p class="moto-card__price">${moto.precio || "Consultar precio"}</p>
-    </div>
-    <div class="moto-card__footer">
-      <button
-        class="btn btn-primary"
-        type="button"
-        aria-label="Consultar por ${moto.modelo} vía WhatsApp"
-        data-modelo="${moto.modelo} ${moto.version || ""}".trim()
-      >Cotizar</button>
-      <span style="font-size: var(--text-xs); color: var(--color-muted);">${moto.cilindrada || ""}</span>
-    </div>
-  `.trim();
+  // --- Cuerpo de la tarjeta ---
+  const body = createElement("div", { class: "moto-card__body" });
 
-  // Evento WhatsApp en el botón de la tarjeta
-  const btnCotizar = $(".btn", card);
-  if (btnCotizar) {
-    btnCotizar.addEventListener("click", () => {
-      consultarPorWhatsApp(`${moto.modelo} ${moto.version || ""}`.trim());
-    });
+  const linea = createElement("span", { class: "moto-card__linea" });
+  linea.textContent = moto.linea || "";
+  body.appendChild(linea);
+
+  const nombre = createElement("h3", { class: "moto-card__nombre" });
+  nombre.textContent = `${moto.modelo || ""}${moto.version ? " " + moto.version : ""}`;
+  body.appendChild(nombre);
+
+  const desc = createElement("p", { class: "moto-card__desc" });
+  desc.textContent = moto.descripcion || "";
+  body.appendChild(desc);
+
+  if (moto.promocion) {
+    const promoBadge = createElement("span", { class: "moto-card__badge" });
+    promoBadge.textContent = moto.promocion;
+    body.appendChild(promoBadge);
   }
+
+  const priceRow = createElement("p", { class: "moto-card__price" });
+  priceRow.textContent = moto.precio || "Consultar precio";
+  if (moto.precio && moto.precioConfirmado !== true) {
+    priceRow.appendChild(document.createTextNode(" "));
+    priceRow.appendChild(crearBadgePendiente("Precio referencial sujeto a confirmación en tienda"));
+  }
+  body.appendChild(priceRow);
+
+  card.appendChild(body);
+
+  // --- Footer de la tarjeta ---
+  const footer = createElement("div", { class: "moto-card__footer" });
+
+  const btnCotizar = createElement("button", {
+    class: "btn btn-primary",
+    type: "button",
+    "aria-label": `Consultar por ${nombreCompleto || "esta moto"} vía WhatsApp`,
+    "data-modelo": `${moto.modelo || ""} ${moto.version || ""}`.trim(),
+    "data-accion": "whatsapp",
+  });
+  btnCotizar.textContent = "Cotizar";
+  if (!whatsappConfirmado()) {
+    btnCotizar.setAttribute("aria-disabled", "true");
+  }
+  btnCotizar.addEventListener("click", () => {
+    consultarPorWhatsApp(`${moto.modelo || ""} ${moto.version || ""}`.trim());
+  });
+  footer.appendChild(btnCotizar);
+
+  const meta = createElement("span", { class: "moto-card__meta" });
+  meta.textContent = moto.cilindrada || "";
+  footer.appendChild(meta);
+
+  card.appendChild(footer);
 
   return card;
 }
@@ -227,10 +647,15 @@ function renderizarCatalogo(motos = STATE.catalogo) {
   const visibles = motos.filter(m => m.visible !== false);
 
   if (visibles.length === 0) {
-    grid.innerHTML = `
-      <p class="catalog-loading" role="status">
-        No se encontraron motos con los filtros seleccionados.
-      </p>`;
+    const mensaje =
+      (STATE.slots &&
+        STATE.slots["ui-placeholders"] &&
+        STATE.slots["ui-placeholders"].mensajesError &&
+        STATE.slots["ui-placeholders"].mensajesError.catalogoSinResultados) ||
+      "No se encontraron motos con los filtros seleccionados.";
+    const aviso = createElement("p", { class: "catalog-loading", role: "status" });
+    aviso.textContent = mensaje;
+    grid.appendChild(aviso);
     return;
   }
 
@@ -357,15 +782,34 @@ function actualizarModeloDestacado() {
   const moto = STATE.catalogo.find(m => m.id === CONFIG.modeloDestacadoId);
   if (!moto) return;
 
-  // Actualizar precio en la sección destacada
+  // Actualizar encabezado y descripción con el modelo real configurado
+  const headingEl = $("#modelo-destacado-heading");
+  if (headingEl) {
+    headingEl.textContent = `${moto.linea} ${moto.modelo}${moto.version ? " " + moto.version : ""}`.trim();
+  }
+  const descEl = $("#modelo-destacado .section-header p");
+  if (descEl && moto.descripcion) {
+    descEl.textContent = moto.descripcion;
+  }
+
+  // Actualizar precio en la sección destacada + badge si no está confirmado
+  const precioContainer = $(".featured-price");
   const precioEl = $(".featured-price strong");
   if (precioEl && moto.precio) {
     precioEl.textContent = moto.precio;
+  }
+  if (precioContainer && moto.precio && moto.precioConfirmado !== true) {
+    // Evitar duplicar el badge si esta función se vuelve a ejecutar
+    if (!$(".badge-pendiente", precioContainer)) {
+      precioContainer.appendChild(document.createTextNode(" "));
+      precioContainer.appendChild(crearBadgePendiente("Precio referencial sujeto a confirmación en tienda"));
+    }
   }
 
   // Actualizar CTA WhatsApp del modelo destacado
   const ctaDestacado = $("#modelo-destacado .btn-primary");
   if (ctaDestacado) {
+    ctaDestacado.setAttribute("data-accion", "whatsapp");
     ctaDestacado.addEventListener("click", (e) => {
       e.preventDefault();
       consultarPorWhatsApp(moto.modelo);
@@ -376,52 +820,113 @@ function actualizarModeloDestacado() {
 
 /* ================================================================
    MÓDULO 8: STORES RENDER
-   Renderiza sedes desde configuracion.json si hay más de una.
+   Fuente única: data/slots/sedes.json (ver docs/fuente-unica-datos.md).
+   data/configuracion.json → sedes queda deprecado y solo se usa como
+   fallback si el slot no carga.
    ================================================================ */
 
-function renderizarTiendas() {
-  const sedes = STATE.config.sedes;
-  if (!sedes || sedes.length <= 1) return; // Con 1 sede, el HTML estático ya es suficiente
+/** Valores de estadoAprobacion que implican que la sede NO debe mostrarse aún */
+const ESTADOS_SEDE_OCULTOS = ["pendiente-confirmar-existencia"];
 
+function renderizarTiendas() {
   const grid = $("#stores-grid");
   if (!grid) return;
 
+  const sedesSlot = STATE.slots && STATE.slots.sedes && STATE.slots.sedes.sedes;
+  const sedesFuente = Array.isArray(sedesSlot) && sedesSlot.length
+    ? sedesSlot
+    : (STATE.config.sedes || []);
+
+  const sedesVisibles = sedesFuente.filter(
+    (sede) => !ESTADOS_SEDE_OCULTOS.includes(sede.estadoAprobacion)
+  );
+
   clearElement(grid);
 
-  sedes.forEach(sede => {
-    const card = createElement("article", {
-      class: "store-card",
-      role: "listitem",
-      "aria-label": `${sede.nombre} — ARENAS MOTOCICLETAS`,
-    });
+  if (sedesVisibles.length === 0) {
+    const mensaje =
+      (STATE.slots &&
+        STATE.slots["ui-placeholders"] &&
+        STATE.slots["ui-placeholders"].mensajesEstadoPendiente &&
+        STATE.slots["ui-placeholders"].mensajesEstadoPendiente.sedesPendientes) ||
+      "Estamos confirmando nuestras ubicaciones en Cusco. Escríbenos por el formulario para más información.";
+    const vacio = createElement("p", { class: "empty-state", role: "status" });
+    vacio.textContent = mensaje;
+    grid.appendChild(vacio);
+    return;
+  }
 
-    const telefono = STATE.config.whatsapp || "";
-    const telLink  = telefono
-      ? `<a href="tel:${telefono}" aria-label="Llamar a ${sede.nombre}">${telefono}</a>`
-      : "";
+  sedesVisibles.forEach((sede) => grid.appendChild(crearTarjetaSede(sede)));
+}
 
-    const mapsURL = sede.coordenadas
-      ? `https://maps.google.com/?q=${sede.coordenadas}`
-      : `https://maps.google.com/?q=${encodeURIComponent(sede.direccion + " Cusco Peru")}`;
+/**
+ * Construye una tarjeta de sede con DOM seguro. Los datos sin confirmar
+ * (dirección, teléfono, horario) se muestran con badge "pendiente" en
+ * lugar de aparentar ser información real.
+ * @param {Object} sede
+ * @returns {HTMLElement}
+ */
+function crearTarjetaSede(sede) {
+  const esPendiente = (valor) =>
+    !valor || /^pendiente$/i.test(String(valor).trim());
 
-    card.innerHTML = `
-      <h3 class="store-name">${sede.nombre}</h3>
-      <address class="store-address">
-        ${sede.direccion || "Dirección pendiente"}<br />
-        ${telLink}
-      </address>
-      <p class="store-hours">${sede.horario || "Horario pendiente"}</p>
-      <a
-        href="${mapsURL}"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="btn btn-ghost"
-        aria-label="Ver ${sede.nombre} en Google Maps"
-      >Ver en mapa</a>
-    `.trim();
-
-    grid.appendChild(card);
+  const card = createElement("article", {
+    class: "store-card",
+    role: "listitem",
+    "aria-label": `${sede.nombre || "Sede"} — ARENAS MOTOCICLETAS`,
   });
+
+  const nombre = createElement("h3", { class: "store-name" });
+  nombre.textContent = sede.nombre || "Sede";
+  card.appendChild(nombre);
+
+  const address = createElement("address", { class: "store-address" });
+
+  const direccionTexto = document.createTextNode(
+    esPendiente(sede.direccion) ? "Dirección por confirmar" : sede.direccion
+  );
+  address.appendChild(direccionTexto);
+  if (esPendiente(sede.direccion)) {
+    address.appendChild(document.createTextNode(" "));
+    address.appendChild(crearBadgePendiente("Dirección pendiente de confirmar"));
+  }
+  address.appendChild(createElement("br"));
+
+  if (!esPendiente(sede.telefono)) {
+    const telLink = createElement("a", {
+      href: `tel:${sede.telefono}`,
+      "aria-label": `Llamar a ${sede.nombre || "esta sede"}`,
+    });
+    telLink.textContent = sede.telefono;
+    address.appendChild(telLink);
+  } else {
+    const telPendiente = createElement("span", { class: "form-hint" });
+    telPendiente.textContent = "Teléfono por confirmar";
+    address.appendChild(telPendiente);
+  }
+  card.appendChild(address);
+
+  const horario = createElement("p", { class: "store-hours" });
+  horario.textContent = esPendiente(sede.horario) ? "Horario por confirmar" : sede.horario;
+  card.appendChild(horario);
+
+  if (!esPendiente(sede.googleMapsUrl) || !esPendiente(sede.direccion)) {
+    const mapsURL = !esPendiente(sede.googleMapsUrl)
+      ? sede.googleMapsUrl
+      : `https://maps.google.com/?q=${encodeURIComponent(`${sede.direccion} Cusco Peru`)}`;
+
+    const mapLink = createElement("a", {
+      href: mapsURL,
+      target: "_blank",
+      rel: "noopener noreferrer",
+      class: "btn btn-ghost",
+      "aria-label": `Ver ${sede.nombre || "esta sede"} en Google Maps`,
+    });
+    mapLink.textContent = "Ver en mapa";
+    card.appendChild(mapLink);
+  }
+
+  return card;
 }
 
 
@@ -500,8 +1005,13 @@ function inicializarFormulario() {
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    if (validarFormulario(form)) {
+    const primerError = validarFormulario(form);
+    if (primerError === null) {
       enviarFormularioPorWhatsApp(form);
+    } else {
+      // Foco accesible en el primer campo inválido (requisito de auditoría)
+      primerError.focus();
+      trackEvent("formulario_con_errores", { campo: primerError.id });
     }
   });
 
@@ -515,31 +1025,34 @@ function inicializarFormulario() {
 }
 
 /**
- * Valida el formulario completo. Retorna true si es válido.
+ * Valida el formulario completo.
  * @param {HTMLFormElement} form
- * @returns {boolean}
+ * @returns {HTMLElement|null} El primer campo inválido, o null si todo es válido
  */
 function validarFormulario(form) {
-  let valido = true;
+  let primerInvalido = null;
+  const marcar = (campoValido, campo) => {
+    if (!campoValido && !primerInvalido) primerInvalido = campo;
+  };
 
   // Nombre
   const nombre = form.querySelector("#campo-nombre");
-  if (!validarCampoRequerido(nombre, "El nombre es obligatorio.")) valido = false;
+  marcar(validarCampoRequerido(nombre, "El nombre es obligatorio."), nombre);
 
   // Teléfono
   const telefono = form.querySelector("#campo-telefono");
-  if (!validarTelefono(telefono)) valido = false;
+  marcar(validarTelefono(telefono), telefono);
 
   // Checkbox de datos
   const checkDatos = form.querySelector("#campo-datos");
   if (checkDatos && !checkDatos.checked) {
     mostrarError(checkDatos, "error-datos", "Debes autorizar el tratamiento de datos para continuar.");
-    valido = false;
+    marcar(false, checkDatos);
   } else if (checkDatos) {
     ocultarError(checkDatos, "error-datos");
   }
 
-  return valido;
+  return primerInvalido;
 }
 
 /**
@@ -586,23 +1099,37 @@ function validarTelefono(campo) {
 }
 
 function mostrarError(campo, errorId, mensaje) {
-  if (campo) campo.classList.add("is-invalid");
+  if (campo) {
+    campo.classList.add("is-invalid");
+    campo.setAttribute("aria-invalid", "true");
+  }
   const errorEl = document.getElementById(errorId);
   if (errorEl) errorEl.textContent = mensaje;
 }
 
 function ocultarError(campo, errorId) {
-  if (campo) campo.classList.remove("is-invalid");
+  if (campo) {
+    campo.classList.remove("is-invalid");
+    campo.setAttribute("aria-invalid", "false");
+  }
   const errorEl = document.getElementById(errorId);
   if (errorEl) errorEl.textContent = "";
 }
 
 /**
  * Construye el mensaje de WhatsApp con los datos del formulario y abre el chat.
+ * Si el número de WhatsApp aún no está confirmado, no abre ningún chat falso:
+ * muestra el aviso correspondiente y conserva los datos para que el usuario
+ * pueda reintentar más tarde.
  * NOTA: no envía a servidor externo — todo local.
  * @param {HTMLFormElement} form
  */
 function enviarFormularioPorWhatsApp(form) {
+  if (!whatsappConfirmado()) {
+    mostrarAvisoWhatsAppPendiente();
+    return;
+  }
+
   const nombre   = form.querySelector("#campo-nombre")?.value.trim()   || "";
   const telefono = form.querySelector("#campo-telefono")?.value.trim() || "";
   const modelo   = form.querySelector("#campo-modelo")?.value          || "consulta general";
@@ -720,6 +1247,15 @@ async function inicializarApp() {
     // 1. Cargar configuración global
     await cargarConfiguracion();
 
+    // 1b. Cargar slots editables (data/slots/*.json)
+    await cargarSlots();
+
+    // 1b2. Validar esquema/seguridad de los slots cargados (sedes, whatsapp, promociones, seo)
+    validarSlotsCargados();
+
+    // 1c. Deshabilitar visualmente WhatsApp si el número no está confirmado
+    aplicarEstadoWhatsApp();
+
     // 2. Cargar catálogo
     await cargarCatalogo();
 
@@ -729,7 +1265,7 @@ async function inicializarApp() {
     // 4. Actualizar modelo destacado
     actualizarModeloDestacado();
 
-    // 5. Renderizar tiendas desde configuracion.json (si hay múltiples)
+    // 5. Renderizar tiendas (fuente: data/slots/sedes.json)
     renderizarTiendas();
 
     // 6. Inicializar buscador y filtros
@@ -746,6 +1282,9 @@ async function inicializarApp() {
 
     // 10. Año del copyright
     actualizarAnioCopyright();
+
+    // 10b. Reforzar estado de WhatsApp tras renderizar catálogo y tiendas
+    aplicarEstadoWhatsApp();
 
     // 11. Evento de página lista
     trackEvent("app_ready", { secciones: document.querySelectorAll(".section").length });

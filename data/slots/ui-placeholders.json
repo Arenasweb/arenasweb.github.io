@@ -1,0 +1,94 @@
+{
+  "_nota": "Textos de interfaz reutilizables: botones, labels, mensajes. Cambiar aquí el copy de microinteracciones sin tocar el HTML ni el diseño.",
+
+  "textosBotones": {
+    "verCatalogo": "Ver catálogo",
+    "pedirCotizacion": "Pedir cotización",
+    "cotizarWhatsapp": "Cotizar",
+    "verTodosModelos": "Ver todos los modelos",
+    "buscarMoto": "Buscar moto",
+    "verEnMapa": "Ver en mapa",
+    "abrirWhatsapp": "Abrir WhatsApp",
+    "enviarPorWhatsapp": "Enviar por WhatsApp",
+    "agendarRevision": "Agendar revisión",
+    "consultarPromocion": "Consultar promoción",
+    "volverInicio": "Volver al inicio"
+  },
+
+  "nombresSecciones": {
+    "hero": "Inicio",
+    "buscador": "Busca tu moto ideal",
+    "catalogo": "Catálogo destacado",
+    "modeloDestacado": "Modelo destacado",
+    "lineas": "Líneas de motos",
+    "porque": "Por qué elegir ARENAS",
+    "incluye": "Tu moto incluye",
+    "financiamiento": "Financiamiento",
+    "servicio": "Servicio técnico",
+    "promociones": "Promociones",
+    "testimonios": "Testimonios",
+    "comparador": "Comparador",
+    "tiendas": "Tiendas",
+    "cotizacion": "Cotización"
+  },
+
+  "etiquetasFiltros": {
+    "linea": "Línea",
+    "uso": "Uso",
+    "cilindrada": "Cilindrada",
+    "todasLasLineas": "Todas las líneas",
+    "todosLosUsos": "Todos los usos",
+    "cualquierCilindrada": "Cualquier cilindrada"
+  },
+
+  "mensajesFormulario": {
+    "labelNombre": "Nombre completo",
+    "labelTelefono": "Teléfono o WhatsApp",
+    "labelModelo": "Modelo de interés",
+    "labelMensaje": "Mensaje o consulta",
+    "placeholderNombre": "Tu nombre",
+    "placeholderTelefono": "Ej: 987654321",
+    "placeholderMensaje": "Cuéntanos qué necesitas: modelo, uso, presupuesto, financiamiento..."
+  },
+
+  "mensajesError": {
+    "nombreRequerido": "El nombre es obligatorio.",
+    "telefonoRequerido": "El teléfono es obligatorio.",
+    "telefonoInvalido": "Ingresa un número de teléfono válido (ej: 987654321).",
+    "datosRequeridos": "Debes autorizar el tratamiento de datos para continuar.",
+    "catalogoSinResultados": "No se encontraron motos con los filtros seleccionados."
+  },
+
+  "mensajesExito": {
+    "formularioEnviado": "¡Gracias! Tu consulta fue enviada. Nos contactaremos pronto."
+  },
+
+  "mensajesEstadoPendiente": {
+    "whatsappNoConfirmado": "Estamos validando este canal de WhatsApp. Por favor inténtalo más tarde o usa el formulario de cotización.",
+    "sedesPendientes": "Estamos confirmando nuestras ubicaciones en Cusco. Escríbenos por el formulario para más información.",
+    "precioReferencial": "Referencial",
+    "precioReferencialTitulo": "Precio referencial sujeto a confirmación en tienda",
+    "stockPorConfirmar": "Stock por confirmar",
+    "cuotaReferencial": "Cuota referencial",
+    "fichaTecnicaPendiente": "Ficha técnica pendiente",
+    "imagenNoDisponible": "Imagen no disponible",
+    "avisoEnvioWhatsapp": "Al enviar, se abrirá WhatsApp en una pestaña nueva.",
+    "consultarPrecio": "Consultar",
+    "consultarPrecioTitulo": "Precio no confirmado todavía — consultar en tienda o por WhatsApp",
+    "consultarCuota": "Consultar",
+    "consultarCuotaTitulo": "Cuota inicial no confirmada todavía — consultar en tienda",
+    "consultarDisponibilidad": "Consultar disponibilidad",
+    "consultarDisponibilidadTitulo": "Stock no confirmado todavía — consultar disponibilidad real en tienda",
+    "direccionPendienteEtiqueta": "Pendiente"
+  },
+
+  "labelsAccesibilidad": {
+    "navPrincipal": "Navegación principal",
+    "abrirMenu": "Abrir menú de navegación",
+    "filtrosCatalogo": "Filtros de catálogo",
+    "catalogoMotos": "Catálogo de motos disponibles",
+    "lineasDisponibles": "Líneas de motos disponibles",
+    "razonesArenas": "Razones para elegir ARENAS MOTOCICLETAS",
+    "ubicacionesArenas": "Ubicaciones de ARENAS MOTOCICLETAS"
+  }
+}

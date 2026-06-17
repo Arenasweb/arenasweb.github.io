@@ -1,0 +1,17 @@
+{
+  "_nota": "Testimonios reales de clientes. NUNCA inventar testimonios, nombres ni comentarios. Requiere consentimiento explícito del cliente antes de publicar nombre, foto o video.",
+
+  "testimonios": [
+    {
+      "nombreCliente": "PENDIENTE",
+      "modeloComprado": "PENDIENTE",
+      "sede": "PENDIENTE",
+      "comentario": "PENDIENTE: testimonio real del cliente, con su autorización",
+      "foto": "assets/clientes/PENDIENTE.jpg",
+      "video": "pendiente",
+      "redSocialUrl": "pendiente",
+      "visible": false,
+      "_advertencia": "No publicar sin consentimiento firmado o verbal documentado del cliente."
+    }
+  ]
+}

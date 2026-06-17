@@ -26,8 +26,11 @@
 | `script.js` | ✅ Núcleo JS | 14 módulos: catálogo, filtros, formulario, animaciones, nav móvil |
 | `data/catalogo.json` | ✅ 4 modelos | Estructura completa lista para escalar |
 | `data/configuracion.json` | ✅ Config global | WhatsApp, SEO, sedes, mensajes, meta desarrollo |
+| `data/slots/` | ✅ 12 archivos | Contenido editable/aprobable: hero, empresa, whatsapp, sedes, financiamiento, beneficios, servicio técnico, promociones, testimonios, legales, seo, ui-placeholders |
 | `legales/` | ✅ 6 páginas | HTML válido, aviso provisional, navegación interna |
-| `docs/` | ✅ 9 documentos | Arquitectura, animaciones, catálogo, checklists |
+| `docs/` | ✅ 13 documentos | Arquitectura, animaciones, catálogo, slots, gerencia, flujo de agentes IA, checklists |
+| `AGENTS.md` | ✅ Creado | Reglas y arquitectura para Codex y otros agentes |
+| `.github/PULL_REQUEST_TEMPLATE.md` | ✅ Creado | Checklist obligatorio para cada PR |
 
 ### PENDIENTE para sesión de diseño
 
@@ -171,11 +174,44 @@ Conectar con Google Analytics antes del lanzamiento. Ver `script.js → trackEve
 
 ---
 
+## Coordinación de agentes IA
+
+El proyecto suma a Codex como auditor técnico junto a Claude Code (constructor) y ChatGPT (dirección estratégica). Reglas completas en `AGENTS.md`.
+
+### Roles
+
+| Agente | Rol |
+|--------|-----|
+| Claude Code | Constructor principal en VS Code — escribe y modifica HTML/CSS/JS/JSON |
+| Codex | Auditor técnico vía GitHub — revisa errores, seguridad, performance, accesibilidad, SEO |
+| ChatGPT | Dirección estratégica — prompts, prioriza hallazgos, criterio gerencial |
+
+### Reglas clave
+
+- Codex audita, no rediseña ni decide identidad visual.
+- Ningún agente inventa datos comerciales, legales o de contacto.
+- Ningún agente hace commit ni push sin autorización explícita del usuario.
+- Cambios de contenido van primero a `data/slots/*.json`, no al HTML directamente.
+
+### Flujo de trabajo
+
+```
+ChatGPT define prioridad → Claude Code construye → usuario revisa →
+commit autorizado → Pull Request → Codex audita → ChatGPT prioriza hallazgos →
+Claude Code corrige → usuario aprueba merge a main
+```
+
+Documentación completa: `docs/flujo-ia-claude-codex-chatgpt.md` y checklist de auditoría en `docs/checklist-codex-review.md`. Plantilla obligatoria de PR en `.github/PULL_REQUEST_TEMPLATE.md`.
+
+---
+
 ## Cómo continuar mañana
 
 1. Abrir `docs/pendientes-manana.md` — lista completa de decisiones a tomar
 2. Completar `docs/checklist-pre-diseno.md` — antes de iniciar el diseño premium
-3. Confirmar tipografías y paleta definitiva
-4. Insertar logo, favicon e imagen OG
-5. Actualizar número de WhatsApp real
-6. Definir hero visual y entrar al diseño inmersivo
+3. Revisar `docs/requisitos-pendientes-gerencia.md` — datos que solo el dueño puede confirmar
+4. Confirmar tipografías y paleta definitiva
+5. Insertar logo, favicon e imagen OG
+6. Actualizar número de WhatsApp real en `data/slots/whatsapp.json`
+7. Definir hero visual y entrar al diseño inmersivo
+8. Conectar Codex con el repositorio en GitHub para empezar a auditar Pull Requests

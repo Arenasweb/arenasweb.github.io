@@ -9,9 +9,12 @@
     "version": "Premium",
     "cilindrada": "400 cc",
     "precio": "S/ 23,800",
+    "precioConfirmado": false,
     "cuotaInicial": "S/ 3,800",
+    "cuotaConfirmada": false,
     "financiamiento": "12-24 meses",
     "stock": "Disponible",
+    "stockConfirmado": false,
     "colores": ["Negro carbón", "Gris metálico"],
     "descripcion": "La moto deportiva para ciudad y carretera, con agresividad y tecnología modernizada.",
     "beneficio": "Frenos ABS, iluminación LED y tablero digital.",
@@ -20,6 +23,7 @@
     "fotoSecundaria": "assets/motos/pulsar/pulsar-ns400-2.jpg",
     "fichaTecnica": "assets/motos/pulsar/pulsar-ns400-ficha.pdf",
     "whatsapp": "+51987654321",
+    "_notaWhatsapp": "DEPRECADO: este campo no es leído por script.js. La fuente única de WhatsApp es data/configuracion.json → whatsapp. Ver docs/fuente-unica-datos.md.",
     "estado": "activo"
   },
   {
@@ -32,9 +36,12 @@
     "version": "Ride Edition",
     "cilindrada": "398 cc",
     "precio": "S/ 22,500",
+    "precioConfirmado": false,
     "cuotaInicial": "S/ 3,550",
+    "cuotaConfirmada": false,
     "financiamiento": "12-24 meses",
     "stock": "Disponible",
+    "stockConfirmado": false,
     "colores": ["Rojo intenso", "Azul profundo"],
     "descripcion": "La naked deportiva con ergonomía cómoda y respuesta en todas las rutas.",
     "beneficio": "Control de tracción, marcha madre y suspensión ajustable.",
@@ -43,6 +50,7 @@
     "fotoSecundaria": "assets/motos/dominar/dominar-400-2.jpg",
     "fichaTecnica": "assets/motos/dominar/dominar-400-ficha.pdf",
     "whatsapp": "+51987654321",
+    "_notaWhatsapp": "DEPRECADO: este campo no es leído por script.js. La fuente única de WhatsApp es data/configuracion.json → whatsapp. Ver docs/fuente-unica-datos.md.",
     "estado": "activo"
   },
   {
@@ -55,9 +63,12 @@
     "version": "City",
     "cilindrada": "149 cc",
     "precio": "S/ 7,900",
+    "precioConfirmado": false,
     "cuotaInicial": "S/ 1,200",
+    "cuotaConfirmada": false,
     "financiamiento": "12-18 meses",
     "stock": "Disponible",
+    "stockConfirmado": false,
     "colores": ["Blanco perla", "Negro mate"],
     "descripcion": "La urbana confiable para el día a día con bajo consumo y mantenimiento sencillo.",
     "beneficio": "Garantía local y repuestos disponibles en taller propio.",
@@ -66,6 +77,7 @@
     "fotoSecundaria": "assets/motos/boxer/boxer-150-2.jpg",
     "fichaTecnica": "assets/motos/boxer/boxer-150-ficha.pdf",
     "whatsapp": "+51987654321",
+    "_notaWhatsapp": "DEPRECADO: este campo no es leído por script.js. La fuente única de WhatsApp es data/configuracion.json → whatsapp. Ver docs/fuente-unica-datos.md.",
     "estado": "activo"
   },
   {
@@ -78,9 +90,12 @@
     "version": "Work",
     "cilindrada": "124 cc",
     "precio": "S/ 8,200",
+    "precioConfirmado": false,
     "cuotaInicial": "S/ 1,150",
+    "cuotaConfirmada": false,
     "financiamiento": "12-18 meses",
     "stock": "Disponible",
+    "stockConfirmado": false,
     "colores": ["Azul clásico", "Rojo brillante"],
     "descripcion": "La opción práctica y eficiente ideal para reparto y movilidad urbana.",
     "beneficio": "Estructura resistente y consumo optimizado para rutas exigentes.",
@@ -89,6 +104,7 @@
     "fotoSecundaria": "assets/motos/ct/ct125-2.jpg",
     "fichaTecnica": "assets/motos/ct/ct125-ficha.pdf",
     "whatsapp": "+51987654321",
+    "_notaWhatsapp": "DEPRECADO: este campo no es leído por script.js. La fuente única de WhatsApp es data/configuracion.json → whatsapp. Ver docs/fuente-unica-datos.md.",
     "estado": "activo"
   }
 ]

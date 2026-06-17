@@ -1529,6 +1529,95 @@ address {
 
 
 /* ================================================================
+   BLOQUE 14b: SISTEMA DE PLACEHOLDERS Y DATOS PENDIENTES
+   Clases para marcar visualmente datos no confirmados, en lugar de
+   mostrarlos como información real y definitiva.
+   ================================================================ */
+
+/* Badge inline para precios, cuotas o stock no confirmados */
+.badge-pendiente {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-warning);
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px dashed rgba(245, 158, 11, 0.4);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-2);
+  cursor: help;
+}
+
+/* Texto secundario usado para metadatos de tarjeta (ej. cilindrada) */
+.moto-card__meta {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+
+/* Tarjeta vacía / estado sin datos confirmados (ej. sin sedes confirmadas) */
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--space-10);
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Texto de ayuda bajo botones (ej. aviso de apertura de WhatsApp) */
+.form-hint {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+
+/* Mensaje de aviso por canal no confirmado (WhatsApp, sedes, etc.) */
+.aviso-pendiente {
+  font-size: var(--text-xs);
+  color: var(--color-warning);
+  margin-top: var(--space-2);
+}
+
+/* Refuerzo de accesibilidad: aria-invalid equivalente a .is-invalid */
+.form-input[aria-invalid="true"],
+.form-select[aria-invalid="true"],
+.form-textarea[aria-invalid="true"] {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+
+/* Toast de aviso (ej. WhatsApp no confirmado) — utilitario, no decisión de diseño final */
+.aviso-toast {
+  position: fixed;
+  left: 50%;
+  bottom: var(--space-6);
+  transform: translate(-50%, 12px);
+  max-width: min(92vw, 420px);
+  background: var(--color-navy);
+  color: var(--color-white);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--text-sm);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  pointer-events: none;
+  z-index: var(--z-toast);
+  transition: opacity var(--duration-base) var(--ease-out),
+              transform var(--duration-base) var(--ease-out);
+}
+
+.aviso-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+
+/* ================================================================
    BLOQUE 15: UTILIDADES
    ================================================================ */
 

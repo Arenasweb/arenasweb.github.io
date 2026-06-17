@@ -1,0 +1,21 @@
+{
+  "_nota": "Números de WhatsApp segmentados por área. TODOS son PENDIENTE hasta que la empresa confirme números reales por canal. No usar el número placeholder de configuracion.json como real.",
+
+  "whatsappGeneral": "pendiente",
+  "whatsappVentas": "pendiente",
+  "whatsappFinanciamiento": "pendiente",
+  "whatsappServicioTecnico": "pendiente",
+  "whatsappRepuestos": "pendiente",
+  "whatsappHuaynaCapac": "pendiente",
+  "whatsappViaExpresa": "pendiente",
+  "whatsappOcongate": "pendiente",
+
+  "mensajesPredefinidos": {
+    "ventas": "Hola ARENAS MOTOCICLETAS, estoy interesado/a en una moto. ¿Podrían darme información y cotización?",
+    "financiamiento": "Hola, quisiera información sobre las opciones de financiamiento disponibles.",
+    "servicioTecnico": "Hola, necesito agendar una revisión técnica para mi moto.",
+    "repuestos": "Hola, estoy buscando un repuesto. ¿Podrían ayudarme con disponibilidad y precio?"
+  },
+
+  "estadoAprobacion": "pendiente-confirmacion-gerencial"
+}

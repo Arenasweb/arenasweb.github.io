@@ -1,0 +1,58 @@
+{
+  "_nota": "Lista editable de sedes/tiendas físicas. Los nombres Huayna Cápac, Vía Expresa y Ocongate aparecen referenciados en whatsapp.json como posibles sedes — confirmar con gerencia cuáles existen realmente antes de publicarlas.",
+
+  "sedes": [
+    {
+      "id": "sede-principal",
+      "nombre": "Sucursal Principal",
+      "direccion": "PENDIENTE",
+      "distrito": "Cusco",
+      "ciudad": "Cusco",
+      "horario": "Lun – Vie: 09:00 – 19:00 · Sáb: 09:00 – 14:00",
+      "telefono": "pendiente",
+      "whatsapp": "pendiente",
+      "googleMapsUrl": "pendiente",
+      "foto": "assets/tiendas/sede-principal.jpg",
+      "estadoAprobacion": "pendiente-confirmacion-gerencial"
+    },
+    {
+      "id": "sede-huayna-capac",
+      "nombre": "Sede Huayna Cápac",
+      "direccion": "PENDIENTE",
+      "distrito": "PENDIENTE",
+      "ciudad": "Cusco",
+      "horario": "PENDIENTE",
+      "telefono": "pendiente",
+      "whatsapp": "pendiente",
+      "googleMapsUrl": "pendiente",
+      "foto": "assets/tiendas/sede-huayna-capac.jpg",
+      "estadoAprobacion": "pendiente-confirmar-existencia"
+    },
+    {
+      "id": "sede-via-expresa",
+      "nombre": "Sede Vía Expresa",
+      "direccion": "PENDIENTE",
+      "distrito": "PENDIENTE",
+      "ciudad": "Cusco",
+      "horario": "PENDIENTE",
+      "telefono": "pendiente",
+      "whatsapp": "pendiente",
+      "googleMapsUrl": "pendiente",
+      "foto": "assets/tiendas/sede-via-expresa.jpg",
+      "estadoAprobacion": "pendiente-confirmar-existencia"
+    },
+    {
+      "id": "sede-ocongate",
+      "nombre": "Sede Ocongate",
+      "direccion": "PENDIENTE",
+      "distrito": "Ocongate",
+      "ciudad": "Quispicanchi",
+      "horario": "PENDIENTE",
+      "telefono": "pendiente",
+      "whatsapp": "pendiente",
+      "googleMapsUrl": "pendiente",
+      "foto": "assets/tiendas/sede-ocongate.jpg",
+      "estadoAprobacion": "pendiente-confirmar-existencia"
+    }
+  ]
+}
