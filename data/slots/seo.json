@@ -7,6 +7,8 @@
   "ogTitle": "ARENAS MOTOCICLETAS | Cusco",
   "ogDescription": "Catálogo de motos, financiamiento y servicio técnico en Cusco, Perú.",
   "ogImage": "assets/og/arenas-og-cover.jpg",
+  "ogImageActiva": false,
+  "_notaOgImage": "El archivo aún no existe. Las etiquetas og:image/twitter:image están comentadas en index.html para no generar una vista previa rota al compartir. Subir el archivo real y descomentar ambos lugares cuando esté listo.",
   "canonicalUrl": "https://arenasweb.github.io/",
   "schemaPendiente": {
     "tipo": "AutoDealer",

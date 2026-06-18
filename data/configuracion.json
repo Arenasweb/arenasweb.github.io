@@ -7,6 +7,7 @@
   "slogan": "La A que acelera",
   "conceptoMarca": "Concesionario premium con enfoque deportivo, oscuro y tecnológico.",
   "modeloDestacadoId": "pulsar-ns400",
+  "_notaModeloDestacado": "Fuente única para el modelo destacado de la sección #modelo-destacado. script.js → cargarConfiguracion() sincroniza este valor a CONFIG.modeloDestacadoId al arrancar; ya no debe editarse directamente en script.js.",
 
   "whatsapp": "+51987654321",
   "whatsappConfirmado": false,

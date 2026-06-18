@@ -11,31 +11,50 @@
     <meta name="author" content="ARENAS MOTOCICLETAS" />
     <meta name="theme-color" content="#050608" />
 
-    <!-- Open Graph (imágenes definitivas pendientes) -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_PE" />
     <meta property="og:title" content="ARENAS MOTOCICLETAS | Cusco" />
     <meta property="og:description" content="Catálogo de motos, financiamiento y servicio técnico en Cusco, Perú." />
     <meta property="og:url" content="https://arenasweb.github.io/" />
     <meta property="og:site_name" content="ARENAS MOTOCICLETAS" />
-    <!-- og:image pendiente de imagen oficial -->
-    <meta property="og:image" content="assets/og/arenas-og-cover.jpg" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="ARENAS MOTOCICLETAS — Concesionario en Cusco" />
+    <!--
+      og:image DESACTIVADO: assets/og/arenas-og-cover.jpg todavía no existe.
+      Una meta og:image apuntando a un archivo inexistente genera una vista
+      previa rota al compartir el enlace (Facebook, WhatsApp, etc.), peor que
+      no tener imagen. Cuando exista el archivo real (1200×630px, JPG ≤300KB),
+      descomentar estas 4 líneas. Ver docs/pendientes-produccion.md.
+
+      <meta property="og:image" content="assets/og/arenas-og-cover.jpg" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content="ARENAS MOTOCICLETAS — Concesionario en Cusco" />
+    -->
 
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="ARENAS MOTOCICLETAS | Cusco" />
     <meta name="twitter:description" content="Catálogo de motos, financiamiento y servicio técnico en Cusco, Perú." />
-    <!-- twitter:image pendiente de imagen oficial -->
-    <meta name="twitter:image" content="assets/og/arenas-og-cover.jpg" />
+    <!--
+      twitter:image DESACTIVADO por el mismo motivo que og:image (archivo
+      todavía no existe). "summary" arriba no requiere imagen grande;
+      cuando exista el archivo, restaurar "summary_large_image" y
+      descomentar la línea de abajo.
+
+      <meta name="twitter:image" content="assets/og/arenas-og-cover.jpg" />
+    -->
 
     <title>ARENAS MOTOCICLETAS | Concesionario y Servicio en Cusco</title>
 
-    <!-- Favicon placeholder — reemplazar con logo oficial -->
-    <link rel="icon" href="assets/favicon/favicon.ico" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="assets/favicon/apple-touch-icon.png" />
+    <!--
+      Favicon DESACTIVADO: assets/favicon/favicon.ico y apple-touch-icon.png
+      todavía no existen. Sin estas líneas el navegador usa su ícono por
+      defecto (no rompe nada). Cuando exista el logo oficial en SVG/PNG,
+      generar los íconos y descomentar:
+
+      <link rel="icon" href="assets/favicon/favicon.ico" type="image/x-icon" />
+      <link rel="apple-touch-icon" href="assets/favicon/apple-touch-icon.png" />
+    -->
 
     <link rel="stylesheet" href="style.css" />
     <link rel="canonical" href="https://arenasweb.github.io/" />
@@ -212,8 +231,13 @@
                 <li class="feature-item">Tablero digital TFT</li>
                 <li class="feature-item">Control de tracción</li>
               </ul>
-              <!-- Precio y CTA: datos provisionales, validar con configuracion.json -->
-              <p class="featured-price" aria-label="Precio desde">Desde <strong>S/ 23,800</strong></p>
+              <!-- Precio: estado neutro por defecto — script.js → actualizarModeloDestacado()
+                   lo reemplaza con el valor real SOLO si precioConfirmado === true en
+                   data/catalogo.json. Si no hay JS o el precio no está confirmado, debe
+                   verse "Consultar", nunca un precio inventado. -->
+              <p class="featured-price" aria-label="Precio">
+                <span class="badge-pendiente" title="Precio no confirmado todavía">Consultar</span>
+              </p>
               <a
                 href="#cotizacion"
                 class="btn btn-primary"
@@ -608,16 +632,19 @@
             <aside class="quote-direct" aria-label="Contacto directo">
               <h3>Contacto directo</h3>
               <p>Prefiero escribir directamente:</p>
-              <!-- PENDIENTE: número de WhatsApp real en configuracion.json -->
-              <a
-                href="https://wa.me/51987654321"
-                target="_blank"
-                rel="noopener noreferrer"
+              <!-- Sin href fijo a propósito: no debe existir ningún enlace wa.me con
+                   número placeholder en el HTML. script.js → abrirWhatsAppGeneral()
+                   abre el chat real SOLO si whatsappConfirmado === true en
+                   data/configuracion.json; si no, muestra el aviso de pendiente. -->
+              <button
+                type="button"
+                id="btn-whatsapp-directo"
                 class="btn btn-whatsapp"
+                data-accion="whatsapp"
                 aria-label="Abrir chat de WhatsApp con ARENAS MOTOCICLETAS"
               >
                 <span aria-hidden="true">💬</span> Abrir WhatsApp
-              </a>
+              </button>
               <p class="quote-hours">Atención: Lun–Vie 09:00–19:00 · Sáb 09:00–14:00</p>
             </aside>
           </div>

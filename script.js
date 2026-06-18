@@ -38,7 +38,7 @@ const CONFIG = {
   revealThreshold: 0.12,           // % de visibilidad para activar reveal
   revealClass:    "is-visible",    // clase que activa la animación CSS
   maxFiltros:     3,               // máximo de filtros activos simultáneos
-  modeloDestacadoId: "pulsar-ns400", // PENDIENTE: mover a configuracion.json
+  modeloDestacadoId: "pulsar-ns400", // valor de arranque — cargarConfiguracion() lo sobrescribe con data/configuracion.json → modeloDestacadoId
 };
 
 // Estado global de la app (mutable durante sesión)
@@ -181,10 +181,44 @@ function consultarPorWhatsApp(modelo) {
   trackEvent("whatsapp_click", { modelo });
 }
 
-// Intercepta cualquier enlace directo a wa.me en el HTML estático
-// (ej. el botón "Abrir WhatsApp" del aside de cotización) mientras
-// el número no esté confirmado. Delegación de eventos: funciona también
-// con enlaces añadidos dinámicamente más adelante.
+/**
+ * Abre WhatsApp con un mensaje general (contacto directo, no atado a un
+ * modelo específico). Usada por el botón "Abrir WhatsApp" del aside de
+ * cotización, que a propósito NO tiene href en el HTML — el enlace real
+ * solo se construye aquí, en memoria, y solo si whatsappConfirmado() es true.
+ */
+function abrirWhatsAppGeneral() {
+  if (!whatsappConfirmado()) {
+    mostrarAvisoWhatsAppPendiente();
+    return;
+  }
+  const mensajePredefinido =
+    STATE.slots &&
+    STATE.slots.whatsapp &&
+    STATE.slots.whatsapp.mensajesPredefinidos &&
+    STATE.slots.whatsapp.mensajesPredefinidos.ventas;
+
+  const mensaje = mensajePredefinido || crearMensajeWhatsApp();
+  const url     = buildWhatsAppURL(mensaje);
+  window.open(url, "_blank", "noopener,noreferrer");
+  trackEvent("whatsapp_click", { origen: "contacto_directo" });
+}
+
+/**
+ * Conecta el botón de contacto directo del aside de cotización.
+ * Es un <button> sin href (no un <a href="wa.me/...">) precisamente para
+ * que nunca exista en el HTML un enlace de WhatsApp con número placeholder.
+ */
+function inicializarWhatsAppDirecto() {
+  const btn = $("#btn-whatsapp-directo");
+  if (!btn) return;
+  btn.addEventListener("click", abrirWhatsAppGeneral);
+}
+
+// Intercepta cualquier enlace directo a wa.me que pudiera existir en el DOM
+// (defensa en profundidad — hoy no debería haber ninguno en el HTML estático)
+// mientras el número no esté confirmado. Delegación de eventos: funciona
+// también con enlaces añadidos dinámicamente más adelante.
 document.addEventListener("click", (e) => {
   const link = e.target.closest('a[href*="wa.me"]');
   if (link && !whatsappConfirmado()) {
@@ -237,14 +271,27 @@ function esURLExternaSegura(url) {
 }
 
 /**
- * Verifica que una ruta de asset sea local (relativa al proyecto),
- * nunca un recurso externo — refuerza la regla "no imágenes externas".
+ * Verifica que una ruta de asset (imagen, ficha técnica, foto de sede)
+ * sea una ruta local segura bajo assets/ — nunca un recurso externo ni
+ * una ruta absoluta o con path traversal. Usada antes de insertar
+ * cualquier src/href que provenga de un JSON editable.
+ *
+ * Reglas:
+ *  - rechaza protocolo o protocolo-relativo (http://, https://, //...)
+ *  - rechaza rutas absolutas del dominio (que empiecen con "/")
+ *  - rechaza cualquier ".." (path traversal)
+ *  - exige que la ruta empiece exactamente con "assets/"
+ *
  * @param {string} ruta
  * @returns {boolean}
  */
 function esRutaLocalSegura(ruta) {
   if (typeof ruta !== "string" || !ruta.trim()) return false;
-  return !/^([a-z][a-z0-9+.-]*:)?\/\//i.test(ruta.trim());
+  const limpia = ruta.trim();
+  if (/^([a-z][a-z0-9+.-]*:)?\/\//i.test(limpia)) return false; // protocolo o //externo
+  if (limpia.startsWith("/")) return false;                    // ruta absoluta del dominio
+  if (limpia.includes("..")) return false;                     // path traversal
+  return limpia.startsWith("assets/");
 }
 
 /**
@@ -293,6 +340,17 @@ const ESQUEMA_SEO_SLOT = {
 };
 
 /**
+ * Campos obligatorios por dominio — sin estos, el registro no se puede
+ * identificar ni renderizar de forma confiable. Pensado para que un
+ * futuro exportador de Google Sheets (Apps Script) sepa exactamente
+ * qué columnas no pueden quedar vacías. Ver docs/contrato-datos-google-sheets.md.
+ */
+const CAMPOS_REQUERIDOS_MOTO = ["id", "linea", "modelo", "visible"];
+const CAMPOS_REQUERIDOS_SEDE = ["id", "nombre", "estadoAprobacion"];
+const CAMPOS_REQUERIDOS_PROMOCION = ["modelo", "titulo", "visible", "estadoAprobacion"];
+const CAMPOS_REQUERIDOS_SEO = ["title", "description", "canonicalUrl"];
+
+/**
  * Valida un objeto contra un esquema simple de tipos esperados.
  * Solo revisa los campos presentes en el esquema; campos ausentes se
  * toleran (se consideran opcionales) y campos extra se ignoran.
@@ -314,11 +372,79 @@ function validarContraEsquema(objeto, esquema, etiqueta) {
   return errores;
 }
 
-/** Filtra el catálogo crudo dejando solo registros válidos según ESQUEMA_MOTO */
+/**
+ * Valida que un objeto tenga presentes (y no vacíos) los campos
+ * obligatorios de su dominio. Complementa a validarContraEsquema(),
+ * que solo revisa tipos de los campos que SÍ están presentes.
+ * @returns {string[]} lista de errores (vacía si no falta nada)
+ */
+function validarCamposRequeridos(objeto, camposRequeridos, etiqueta) {
+  if (!objeto || typeof objeto !== "object") return [];
+  return camposRequeridos
+    .filter((campo) => {
+      const valor = objeto[campo];
+      return valor === undefined || valor === null || valor === "";
+    })
+    .map((campo) => `${etiqueta}: falta campo obligatorio "${campo}"`);
+}
+
+/**
+ * Reglas de consistencia que van más allá del tipo de dato: detectan
+ * estados contradictorios que un esquema de tipos no puede capturar
+ * (ej. un precio marcado como confirmado pero sin valor real).
+ * @returns {string[]} lista de errores (vacía si es consistente)
+ */
+function validarConsistenciaMoto(moto) {
+  const errores = [];
+  if (moto.precioConfirmado === true && !moto.precio) {
+    errores.push(`catalogo:${moto.id}: precioConfirmado=true pero falta "precio"`);
+  }
+  if (moto.cuotaConfirmada === true && !moto.cuotaInicial) {
+    errores.push(`catalogo:${moto.id}: cuotaConfirmada=true pero falta "cuotaInicial"`);
+  }
+  if (moto.stockConfirmado === true && !moto.stock) {
+    errores.push(`catalogo:${moto.id}: stockConfirmado=true pero falta "stock"`);
+  }
+  return errores;
+}
+
+function validarConsistenciaSede(sede) {
+  const errores = [];
+  const estado = String(sede.estadoAprobacion || "").trim().toLowerCase();
+  const aprobada = ESTADOS_SEDE_VISIBLES.includes(estado);
+  const direccionPendiente = !sede.direccion || /^pendiente$/i.test(String(sede.direccion).trim());
+  if (aprobada && direccionPendiente) {
+    errores.push(`sede:${sede.id}: estadoAprobacion="${sede.estadoAprobacion}" pero la dirección sigue pendiente`);
+  }
+  return errores;
+}
+
+/** Estados que permiten mostrar una promoción (mismo criterio que sedes) */
+const ESTADOS_PROMOCION_VISIBLES = ["aprobado", "confirmado"];
+
+function validarConsistenciaPromocion(promo) {
+  const errores = [];
+  const estado = String(promo.estadoAprobacion || "").trim().toLowerCase();
+  if (promo.visible === true && !ESTADOS_PROMOCION_VISIBLES.includes(estado)) {
+    errores.push(`promocion:${promo.modelo}: visible=true pero estadoAprobacion="${promo.estadoAprobacion}" no está aprobado`);
+  }
+  return errores;
+}
+
+/**
+ * Filtra el catálogo crudo dejando solo registros que cumplen:
+ * tipos correctos (ESQUEMA_MOTO), campos obligatorios presentes, y
+ * consistencia entre los flags *Confirmado y su valor real asociado.
+ */
 function validarYFiltrarCatalogo(catalogoRaw) {
   if (!Array.isArray(catalogoRaw)) return [];
   return catalogoRaw.filter((moto) => {
-    const errores = validarContraEsquema(moto, ESQUEMA_MOTO, `catalogo:${moto && moto.id}`);
+    const etiqueta = `catalogo:${moto && moto.id}`;
+    const errores = [
+      ...validarContraEsquema(moto, ESQUEMA_MOTO, etiqueta),
+      ...validarCamposRequeridos(moto, CAMPOS_REQUERIDOS_MOTO, etiqueta),
+      ...(moto && typeof moto === "object" ? validarConsistenciaMoto(moto) : []),
+    ];
     if (errores.length) {
       console.warn("[ARENAS] Registro de catálogo inválido, se omite:", errores);
       return false;
@@ -327,11 +453,20 @@ function validarYFiltrarCatalogo(catalogoRaw) {
   });
 }
 
-/** Filtra sedes crudas dejando solo registros válidos según ESQUEMA_SEDE */
+/**
+ * Filtra sedes crudas dejando solo registros que cumplen: tipos
+ * correctos (ESQUEMA_SEDE), campos obligatorios presentes, y consistencia
+ * entre estadoAprobacion y los datos reales de la sede.
+ */
 function validarYFiltrarSedes(sedesRaw) {
   if (!Array.isArray(sedesRaw)) return [];
   return sedesRaw.filter((sede) => {
-    const errores = validarContraEsquema(sede, ESQUEMA_SEDE, `sede:${sede && sede.id}`);
+    const etiqueta = `sede:${sede && sede.id}`;
+    const errores = [
+      ...validarContraEsquema(sede, ESQUEMA_SEDE, etiqueta),
+      ...validarCamposRequeridos(sede, CAMPOS_REQUERIDOS_SEDE, etiqueta),
+      ...(sede && typeof sede === "object" ? validarConsistenciaSede(sede) : []),
+    ];
     if (errores.length) {
       console.warn("[ARENAS] Registro de sede inválido, se omite:", errores);
       return false;
@@ -340,11 +475,20 @@ function validarYFiltrarSedes(sedesRaw) {
   });
 }
 
-/** Filtra promociones crudas dejando solo registros válidos según ESQUEMA_PROMOCION */
+/**
+ * Filtra promociones crudas dejando solo registros que cumplen: tipos
+ * correctos (ESQUEMA_PROMOCION), campos obligatorios presentes, y
+ * consistencia entre visible=true y estadoAprobacion.
+ */
 function validarYFiltrarPromociones(promosRaw) {
   if (!Array.isArray(promosRaw)) return [];
   return promosRaw.filter((promo) => {
-    const errores = validarContraEsquema(promo, ESQUEMA_PROMOCION, `promocion:${promo && promo.modelo}`);
+    const etiqueta = `promocion:${promo && promo.modelo}`;
+    const errores = [
+      ...validarContraEsquema(promo, ESQUEMA_PROMOCION, etiqueta),
+      ...validarCamposRequeridos(promo, CAMPOS_REQUERIDOS_PROMOCION, etiqueta),
+      ...(promo && typeof promo === "object" ? validarConsistenciaPromocion(promo) : []),
+    ];
     if (errores.length) {
       console.warn("[ARENAS] Promoción inválida, se omite:", errores);
       return false;
@@ -362,7 +506,10 @@ function validarSlotWhatsapp(whatsappRaw) {
 
 /** Valida (sin filtrar, es un objeto único) el slot de SEO */
 function validarSlotSeo(seoRaw) {
-  const errores = validarContraEsquema(seoRaw, ESQUEMA_SEO_SLOT, "slot:seo");
+  const errores = [
+    ...validarContraEsquema(seoRaw, ESQUEMA_SEO_SLOT, "slot:seo"),
+    ...validarCamposRequeridos(seoRaw, CAMPOS_REQUERIDOS_SEO, "slot:seo"),
+  ];
   if (errores.length) console.warn("[ARENAS] data/slots/seo.json no cumple el esquema esperado:", errores);
   return errores.length === 0;
 }
@@ -468,6 +615,11 @@ async function cargarConfiguracion() {
     // Sincronizar WhatsApp desde configuracion.json si existe
     if (STATE.config.whatsapp) {
       CONFIG.whatsapp = STATE.config.whatsapp;
+    }
+    // Sincronizar modelo destacado desde configuracion.json — ya no debe
+    // quedar hardcodeado en CONFIG (ver _notaModeloDestacado en el JSON).
+    if (STATE.config.modeloDestacadoId) {
+      CONFIG.modeloDestacadoId = STATE.config.modeloDestacadoId;
     }
     return STATE.config;
   } catch (err) {
@@ -1390,6 +1542,9 @@ async function inicializarApp() {
 
     // 8. Inicializar formulario de cotización
     inicializarFormulario();
+
+    // 8b. Inicializar botón de contacto directo por WhatsApp (sin href fijo)
+    inicializarWhatsAppDirecto();
 
     // 9. Inicializar menú móvil
     inicializarNavMobile();

@@ -1,11 +1,16 @@
 # Contrato de Datos — Futura Integración con Google Sheets
 
-**Estado: NO IMPLEMENTADO.** Este documento define el contrato (esquema y reglas)
-que deberá cumplir cualquier fuente de datos remota antes de conectarse al sitio.
-Hoy el sitio sigue funcionando exclusivamente con JSON local en `data/` y
-`data/slots/`. No se ha conectado ningún endpoint externo ni Google Sheets.
+**Estado: NO CONECTADO.** Codex aprobó el proyecto para preparar este contrato
+a nivel de esquema, columnas y Apps Script — **no aprobó conectar Google
+Sheets al sitio todavía**. Hoy el sitio sigue funcionando exclusivamente con
+JSON local en `data/` y `data/slots/`. No existe ningún endpoint externo
+configurado, ni código que intente alcanzarlo.
 
-Última actualización: junio 2026 (corrección post-auditoría Codex, segunda vuelta)
+**Endpoint recomendado cuando se autorice: Google Apps Script** (`doGet()`
+publicado como Web App, devolviendo JSON), no la API de Sheets directamente
+ni un SDK de Google — ver sección dedicada más abajo.
+
+Última actualización: junio 2026 (corrección post-auditoría Codex, tercera vuelta)
 
 ---
 
@@ -104,6 +109,112 @@ alimentar `seo.json`, nunca el HTML directamente vía JavaScript.
 
 ---
 
+## Columnas recomendadas por hoja (Apps Script)
+
+Cada hoja de cálculo debería tener una fila de encabezados que coincida
+exactamente con estos nombres de columna — así el `doGet()` de Apps Script
+puede convertir filas en objetos JSON sin necesidad de mapeo adicional.
+
+### Hoja "Catalogo"
+
+| Columna | Tipo | Obligatoria | Nota |
+|---------|------|-------------|------|
+| `id` | texto | **sí** | único, kebab-case |
+| `linea` | texto | **sí** | Pulsar / Dominar / Boxer / CT |
+| `modelo` | texto | **sí** | |
+| `version` | texto | no | |
+| `visible` | TRUE/FALSE | **sí** | |
+| `destacado` | TRUE/FALSE | no | |
+| `orden` | número | no | entero |
+| `cilindrada` | texto | no | |
+| `precio` | texto | no | ej. "S/ 23,800" |
+| `precioConfirmado` | TRUE/FALSE | **sí** | vacío → tratar como FALSE |
+| `cuotaInicial` | texto | no | |
+| `cuotaConfirmada` | TRUE/FALSE | **sí** | vacío → tratar como FALSE |
+| `stock` | texto | no | |
+| `stockConfirmado` | TRUE/FALSE | **sí** | vacío → tratar como FALSE |
+| `descripcion` | texto | no | texto plano, sin HTML/fórmulas |
+| `fotoPrincipal` | texto | no | debe empezar con `assets/` |
+| `fichaTecnica` | texto | no | debe empezar con `assets/` |
+
+### Hoja "Sedes"
+
+| Columna | Tipo | Obligatoria | Nota |
+|---------|------|-------------|------|
+| `id` | texto | **sí** | único |
+| `nombre` | texto | **sí** | |
+| `direccion` | texto | no | "PENDIENTE" si no está confirmada |
+| `telefono` | texto | no | solo dígitos/espacios/+/-/paréntesis |
+| `googleMapsUrl` | texto | no | debe ser HTTPS de maps.google.com |
+| `horario` | texto | no | |
+| `estadoAprobacion` | texto | **sí** | solo `"aprobado"` muestra la sede |
+
+### Hoja "Promociones"
+
+| Columna | Tipo | Obligatoria | Nota |
+|---------|------|-------------|------|
+| `modelo` | texto | **sí** | debe existir en la hoja Catálogo |
+| `titulo` | texto | **sí** | |
+| `descripcion` | texto | no | |
+| `vigencia` | texto | no | fecha inicio–fin en texto |
+| `visible` | TRUE/FALSE | **sí** | |
+| `estadoAprobacion` | texto | **sí** | debe ser `"aprobado"` si `visible=TRUE` |
+
+### Hoja "WhatsApp" (single-row, no lista)
+
+| Columna | Tipo | Obligatoria | Nota |
+|---------|------|-------------|------|
+| `whatsappGeneral` | texto | no | "pendiente" hasta confirmar |
+| `whatsappVentas` | texto | no | |
+| `whatsappFinanciamiento` | texto | no | |
+| `whatsappServicioTecnico` | texto | no | |
+| `estadoAprobacion` | texto | **sí** | |
+
+**Nota importante:** ningún número de esta hoja activa botones de WhatsApp
+por sí solo. La activación real depende exclusivamente de
+`data/configuracion.json → whatsappConfirmado === true`, un flag que **no
+debe vivir en una hoja editable por cualquiera** — es una decisión explícita
+y separada.
+
+### Hoja "SEO" (single-row, no lista)
+
+| Columna | Tipo | Obligatoria | Nota |
+|---------|------|-------------|------|
+| `title` | texto | **sí** | debe coincidir con `<title>` real |
+| `description` | texto | **sí** | debe coincidir con meta description real |
+| `keywords` | texto | no | |
+| `ogTitle` | texto | no | |
+| `ogDescription` | texto | no | |
+| `ogImage` | texto | no | debe empezar con `assets/` |
+| `canonicalUrl` | texto | **sí** | debe coincidir con `<link rel="canonical">` real |
+
+---
+
+## Apps Script como endpoint recomendado
+
+Cuando se autorice la conexión, el mecanismo recomendado es:
+
+1. Una hoja de Google Sheets con las pestañas/columnas descritas arriba.
+2. Un script de Apps Script vinculado, publicado como **Web App** con un
+   `doGet(e)` que lea cada pestaña y devuelva JSON con `ContentService` y
+   tipo MIME `application/json` — de solo lectura, sin parámetros que
+   permitan escribir.
+3. La URL publicada (`https://script.google.com/macros/s/.../exec`) sería
+   la única que el sitio necesitaría llamar con `fetch()`.
+4. Esa URL debe pasar por una validación de dominio igual de estricta que
+   `esURLExternaSegura()`, agregando explícitamente `script.google.com` y
+   `script.googleusercontent.com` a una lista de dominios permitidos para
+   *fetch* de datos (separada de `DOMINIOS_PERMITIDOS`, que es para enlaces
+   visibles al usuario, no para llamadas de datos).
+5. El JSON devuelto por Apps Script debe pasar por los mismos validadores
+   (`validarYFiltrarCatalogo()`, etc.) que ya corren sobre el JSON local —
+   sin excepciones ni "modo confianza" para la fuente remota.
+
+**Nada de esto está implementado.** Es la receta a seguir cuando el usuario
+autorice explícitamente la conexión.
+
+---
+
 ## Requisitos técnicos para la futura conexión (cuando se autorice)
 
 1. **Endpoint de solo lectura.** El sitio nunca debe escribir en Sheets desde
@@ -134,6 +245,20 @@ alimentar `seo.json`, nunca el HTML directamente vía JavaScript.
   `fetch()` remoto.
 - No se agrega ninguna credencial, API key ni token de Google.
 - No se cambia el flujo de `inicializarApp()` — sigue siendo 100% local.
+- No se publica ningún Apps Script real ni se comparte ninguna URL de Web App.
+
+## Reglas que no cambian aunque se conecte Sheets
+
+1. **El JSON local en `data/` y `data/slots/` sigue siendo el fallback
+   permanente.** Si la fuente remota falla, el sitio debe seguir funcionando
+   con esos archivos — nunca debe quedar sin datos.
+2. **Ningún campo no confirmado se publica como real.** Esto es una regla
+   del *render*, no de la fuente de datos: venga del JSON local o de una
+   futura hoja de Sheets, si `precioConfirmado`/`cuotaConfirmada`/
+   `stockConfirmado` no es exactamente `true`, el sitio muestra "Consultar"
+   / "Consultar disponibilidad". Si `estadoAprobacion` no es `"aprobado"` o
+   `"confirmado"`, la sede o promoción correspondiente no se muestra. Estas
+   reglas viven en `script.js` (no en la fuente de datos) y aplican siempre.
 
 Este documento es exclusivamente de planificación. La implementación real
 requiere una decisión explícita del usuario y una nueva sesión de trabajo
