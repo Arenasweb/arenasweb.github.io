@@ -60,20 +60,24 @@ const $ = (selector, context = document) => context.querySelector(selector);
 /** Selector múltiple — retorna NodeList */
 const $$ = (selector, context = document) => context.querySelectorAll(selector);
 
-/** Crea un elemento con atributos opcionales */
-function createElement(tag, attrs = {}, innerHTML = "") {
+/**
+ * Crea un elemento con atributos opcionales. A propósito NO acepta un
+ * parámetro de HTML genérico (eliminado tras la auditoría de segunda
+ * vuelta): todo el contenido textual debe asignarse con .textContent
+ * en el código llamante, nunca con innerHTML de datos editables.
+ */
+function createElement(tag, attrs = {}) {
   const el = document.createElement(tag);
   Object.entries(attrs).forEach(([k, v]) => {
     if (k === "class") el.className = v;
     else el.setAttribute(k, v);
   });
-  if (innerHTML) el.innerHTML = innerHTML;
   return el;
 }
 
-/** Vacía el contenido de un elemento */
+/** Vacía el contenido de un elemento usando la API de nodos (sin innerHTML) */
 function clearElement(el) {
-  if (el) el.innerHTML = "";
+  if (el) el.replaceChildren();
 }
 
 
@@ -364,6 +368,46 @@ function validarSlotSeo(seoRaw) {
 }
 
 /**
+ * FUENTE ÚNICA PARA SEO: las etiquetas <meta>, <title> y <link rel="canonical">
+ * de index.html son la fuente autoritativa — son las que efectivamente leen
+ * los crawlers (Google, Facebook, Twitter). data/slots/seo.json es solo una
+ * capa editable de referencia para proponer cambios sin tocar HTML.
+ *
+ * Esta función NO sobrescribe el HTML (eso degradaría el SEO, ya que
+ * algunos crawlers no ejecutan JavaScript de forma confiable). Solo
+ * detecta y avisa si el slot quedó desincronizado del HTML real, para
+ * que alguien con acceso al código traslade el cambio manualmente.
+ * Ver docs/fuente-unica-datos.md → sección SEO.
+ */
+function verificarConsistenciaSEO() {
+  const seoSlot = STATE.slots && STATE.slots.seo;
+  if (!seoSlot) return;
+
+  const metaDescripcion = document.querySelector('meta[name="description"]');
+  const metaCanonical   = document.querySelector('link[rel="canonical"]');
+  const tituloActual    = document.title;
+
+  if (seoSlot.title && seoSlot.title !== tituloActual) {
+    console.warn(
+      `[ARENAS] SEO desincronizado: data/slots/seo.json → title ("${seoSlot.title}") ` +
+      `no coincide con <title> real ("${tituloActual}"). index.html manda — actualizar uno de los dos.`
+    );
+  }
+  if (seoSlot.description && metaDescripcion && seoSlot.description !== metaDescripcion.getAttribute("content")) {
+    console.warn(
+      `[ARENAS] SEO desincronizado: data/slots/seo.json → description no coincide con ` +
+      `la <meta name="description"> real de index.html.`
+    );
+  }
+  if (seoSlot.canonicalUrl && metaCanonical && seoSlot.canonicalUrl !== metaCanonical.getAttribute("href")) {
+    console.warn(
+      `[ARENAS] SEO desincronizado: data/slots/seo.json → canonicalUrl no coincide con ` +
+      `el <link rel="canonical"> real de index.html.`
+    );
+  }
+}
+
+/**
  * Ejecuta todas las validaciones de slots cargados y reemplaza en
  * STATE.slots los arrays con sus versiones filtradas (sedes y
  * promociones). Debe llamarse después de cargarSlots().
@@ -596,13 +640,51 @@ function crearTarjetaMoto(moto) {
     body.appendChild(promoBadge);
   }
 
+  // Precio: nunca se muestra el valor real si no está confirmado por gerencia
+  const placeholdersUI = STATE.slots && STATE.slots["ui-placeholders"] && STATE.slots["ui-placeholders"].mensajesEstadoPendiente;
+
   const priceRow = createElement("p", { class: "moto-card__price" });
-  priceRow.textContent = moto.precio || "Consultar precio";
-  if (moto.precio && moto.precioConfirmado !== true) {
-    priceRow.appendChild(document.createTextNode(" "));
-    priceRow.appendChild(crearBadgePendiente("Precio referencial sujeto a confirmación en tienda"));
+  if (moto.precioConfirmado === true && moto.precio) {
+    priceRow.textContent = moto.precio;
+  } else {
+    priceRow.appendChild(
+      crearBadgePendiente(
+        (placeholdersUI && placeholdersUI.consultarPrecioTitulo) || "Precio no confirmado todavía",
+        (placeholdersUI && placeholdersUI.consultarPrecio) || "Consultar"
+      )
+    );
   }
   body.appendChild(priceRow);
+
+  // Cuota inicial: misma regla — solo se muestra si cuotaConfirmada === true
+  const cuotaRow = createElement("p", { class: "moto-card__meta" });
+  cuotaRow.appendChild(document.createTextNode("Cuota inicial: "));
+  if (moto.cuotaConfirmada === true && moto.cuotaInicial) {
+    cuotaRow.appendChild(document.createTextNode(moto.cuotaInicial));
+  } else {
+    cuotaRow.appendChild(
+      crearBadgePendiente(
+        (placeholdersUI && placeholdersUI.consultarCuotaTitulo) || "Cuota no confirmada todavía",
+        (placeholdersUI && placeholdersUI.consultarCuota) || "Consultar"
+      )
+    );
+  }
+  body.appendChild(cuotaRow);
+
+  // Stock: misma regla — solo se muestra si stockConfirmado === true
+  const stockRow = createElement("p", { class: "moto-card__meta" });
+  stockRow.appendChild(document.createTextNode("Disponibilidad: "));
+  if (moto.stockConfirmado === true && moto.stock) {
+    stockRow.appendChild(document.createTextNode(moto.stock));
+  } else {
+    stockRow.appendChild(
+      crearBadgePendiente(
+        (placeholdersUI && placeholdersUI.consultarDisponibilidadTitulo) || "Stock no confirmado todavía",
+        (placeholdersUI && placeholdersUI.consultarDisponibilidad) || "Consultar disponibilidad"
+      )
+    );
+  }
+  body.appendChild(stockRow);
 
   card.appendChild(body);
 
@@ -792,17 +874,24 @@ function actualizarModeloDestacado() {
     descEl.textContent = moto.descripcion;
   }
 
-  // Actualizar precio en la sección destacada + badge si no está confirmado
+  // Precio del modelo destacado: misma regla que en el catálogo — nunca
+  // se muestra el valor real si precioConfirmado no es exactamente true.
   const precioContainer = $(".featured-price");
-  const precioEl = $(".featured-price strong");
-  if (precioEl && moto.precio) {
-    precioEl.textContent = moto.precio;
-  }
-  if (precioContainer && moto.precio && moto.precioConfirmado !== true) {
-    // Evitar duplicar el badge si esta función se vuelve a ejecutar
-    if (!$(".badge-pendiente", precioContainer)) {
-      precioContainer.appendChild(document.createTextNode(" "));
-      precioContainer.appendChild(crearBadgePendiente("Precio referencial sujeto a confirmación en tienda"));
+  if (precioContainer) {
+    clearElement(precioContainer); // seguro: solo limpiamos markup propio, no inyectamos datos externos
+    if (moto.precioConfirmado === true && moto.precio) {
+      precioContainer.appendChild(document.createTextNode("Desde "));
+      const strong = createElement("strong");
+      strong.textContent = moto.precio;
+      precioContainer.appendChild(strong);
+    } else {
+      const placeholdersUI = STATE.slots && STATE.slots["ui-placeholders"] && STATE.slots["ui-placeholders"].mensajesEstadoPendiente;
+      precioContainer.appendChild(
+        crearBadgePendiente(
+          (placeholdersUI && placeholdersUI.consultarPrecioTitulo) || "Precio no confirmado todavía",
+          (placeholdersUI && placeholdersUI.consultarPrecio) || "Consultar"
+        )
+      );
     }
   }
 
@@ -825,8 +914,13 @@ function actualizarModeloDestacado() {
    fallback si el slot no carga.
    ================================================================ */
 
-/** Valores de estadoAprobacion que implican que la sede NO debe mostrarse aún */
-const ESTADOS_SEDE_OCULTOS = ["pendiente-confirmar-existencia"];
+/**
+ * Allowlist de estados que permiten mostrar una sede. Es intencional
+ * que sea una lista de permitidos (no de bloqueados): cualquier estado
+ * nuevo que se invente en el futuro (typos, valores no documentados)
+ * queda oculto por defecto en vez de mostrarse por error.
+ */
+const ESTADOS_SEDE_VISIBLES = ["aprobado", "confirmado"];
 
 function renderizarTiendas() {
   const grid = $("#stores-grid");
@@ -837,8 +931,8 @@ function renderizarTiendas() {
     ? sedesSlot
     : (STATE.config.sedes || []);
 
-  const sedesVisibles = sedesFuente.filter(
-    (sede) => !ESTADOS_SEDE_OCULTOS.includes(sede.estadoAprobacion)
+  const sedesVisibles = sedesFuente.filter((sede) =>
+    ESTADOS_SEDE_VISIBLES.includes(String(sede.estadoAprobacion || "").trim().toLowerCase())
   );
 
   clearElement(grid);
@@ -888,11 +982,13 @@ function crearTarjetaSede(sede) {
   address.appendChild(direccionTexto);
   if (esPendiente(sede.direccion)) {
     address.appendChild(document.createTextNode(" "));
-    address.appendChild(crearBadgePendiente("Dirección pendiente de confirmar"));
+    address.appendChild(crearBadgePendiente("Dirección pendiente de confirmar", "Pendiente"));
   }
   address.appendChild(createElement("br"));
 
-  if (!esPendiente(sede.telefono)) {
+  // Teléfono: solo se renderiza como enlace tel: si pasa el validador de
+  // formato (evita que un dato editable inyecte otro esquema de URL).
+  if (!esPendiente(sede.telefono) && esTelefonoSeguro(sede.telefono)) {
     const telLink = createElement("a", {
       href: `tel:${sede.telefono}`,
       "aria-label": `Llamar a ${sede.nombre || "esta sede"}`,
@@ -900,6 +996,9 @@ function crearTarjetaSede(sede) {
     telLink.textContent = sede.telefono;
     address.appendChild(telLink);
   } else {
+    if (!esPendiente(sede.telefono)) {
+      console.warn(`[ARENAS] Teléfono con formato inválido en sede "${sede.id}", se trata como pendiente.`);
+    }
     const telPendiente = createElement("span", { class: "form-hint" });
     telPendiente.textContent = "Teléfono por confirmar";
     address.appendChild(telPendiente);
@@ -910,11 +1009,23 @@ function crearTarjetaSede(sede) {
   horario.textContent = esPendiente(sede.horario) ? "Horario por confirmar" : sede.horario;
   card.appendChild(horario);
 
-  if (!esPendiente(sede.googleMapsUrl) || !esPendiente(sede.direccion)) {
-    const mapsURL = !esPendiente(sede.googleMapsUrl)
-      ? sede.googleMapsUrl
-      : `https://maps.google.com/?q=${encodeURIComponent(`${sede.direccion} Cusco Peru`)}`;
+  // Enlace a mapa: solo se usa sede.googleMapsUrl si es HTTPS y de un
+  // dominio autorizado (ver DOMINIOS_PERMITIDOS). Si no es seguro, se
+  // recurre a una URL de Google Maps generada por nosotros mismos
+  // (siempre segura porque el dominio y el protocolo son fijos).
+  let mapsURL = null;
+  if (!esPendiente(sede.googleMapsUrl)) {
+    if (esURLExternaSegura(sede.googleMapsUrl)) {
+      mapsURL = sede.googleMapsUrl;
+    } else {
+      console.warn(`[ARENAS] googleMapsUrl no autorizada en sede "${sede.id}", se ignora.`);
+    }
+  }
+  if (!mapsURL && !esPendiente(sede.direccion)) {
+    mapsURL = `https://maps.google.com/?q=${encodeURIComponent(`${sede.direccion} Cusco Peru`)}`;
+  }
 
+  if (mapsURL) {
     const mapLink = createElement("a", {
       href: mapsURL,
       target: "_blank",
@@ -1252,6 +1363,9 @@ async function inicializarApp() {
 
     // 1b2. Validar esquema/seguridad de los slots cargados (sedes, whatsapp, promociones, seo)
     validarSlotsCargados();
+
+    // 1b3. Avisar en consola si seo.json quedó desincronizado de index.html
+    verificarConsistenciaSEO();
 
     // 1c. Deshabilitar visualmente WhatsApp si el número no está confirmado
     aplicarEstadoWhatsApp();
