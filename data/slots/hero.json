@@ -3,7 +3,8 @@
 
   "eyebrow": "Concesionario premium · Cusco, Perú",
   "tituloPrincipal": "ARENAS MOTOCICLETAS",
-  "subtitulo": "Encuentra tu próxima moto en Cusco. Catálogo completo, financiamiento flexible y respaldo técnico para pilotos exigentes.",
+  "subtitulo": "Encuentra tu próxima moto en Cusco. Catálogo completo y respaldo técnico para pilotos exigentes.",
+  "_notaSubtitulo": "Se removió la mención de 'financiamiento flexible'. El estado del financiamiento y las entidades vinculadas son datos comerciales administrados desde Google Sheets. Ver data/configuracion.json → financiamiento.",
   "ctaPrincipal": {
     "texto": "Ver catálogo",
     "href": "#catalogo"
@@ -16,8 +17,9 @@
     "id": "PENDIENTE",
     "nota": "PENDIENTE: definir qué modelo protagoniza el hero. Puede no coincidir con el modelo destacado del catálogo."
   },
-  "imagenHero": "assets/motos/PENDIENTE/hero-placeholder.jpg",
-  "videoHero": "assets/videos/PENDIENTE/hero-placeholder.mp4",
+  "imagenHero": "PENDIENTE",
+  "videoHero": "PENDIENTE",
+  "_notaMediosHero": "No referenciar rutas de assets que no existen. Cuando existan los archivos reales en assets/, reemplazar PENDIENTE por la ruta real (debe empezar con assets/).",
   "marcaAgua": {
     "activa": false,
     "texto": "ARENAS",

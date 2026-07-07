@@ -176,7 +176,7 @@ p {
   --duration-slow:    380ms;
   --duration-slower:  600ms;
   --duration-reveal:  700ms;
-  --duration-page:    1000ms;
+  --duration-page:    700ms; /* límite técnico: nada >800ms; antes 1000ms (hallazgo Codex) */
 
   /* Easing (curvas) */
   --ease-out:         cubic-bezier(0.22, 1, 0.36, 1);
@@ -510,8 +510,9 @@ address {
   border: var(--border-subtle);
   border-radius: var(--radius-lg);
   overflow: hidden;
+  /* box-shadow fuera de la transición (hallazgo Codex: repaint costoso en móvil).
+     El cambio de sombra en hover es instantáneo; el movimiento lo da transform. */
   transition: transform var(--duration-slow) var(--ease-out),
-              box-shadow var(--duration-slow) var(--ease-out),
               border-color var(--duration-slow) var(--ease-out);
   display: flex;
   flex-direction: column;
@@ -801,9 +802,10 @@ address {
   cursor: pointer;
   border: 1px solid transparent;
   text-decoration: none;
+  /* box-shadow fuera de la transición (hallazgo Codex): el glow de hover
+     aparece de forma instantánea; el movimiento lo aporta transform. */
   transition:
     transform     var(--duration-fast) var(--ease-out),
-    box-shadow    var(--duration-base) var(--ease-out),
     background    var(--duration-base) var(--ease-out),
     border-color  var(--duration-base) var(--ease-out),
     color         var(--duration-base) var(--ease-out);
@@ -931,10 +933,11 @@ address {
   color: var(--color-white);
   font-size: var(--text-base);
   padding: var(--space-3) var(--space-4);
+  /* box-shadow fuera de la transición (hallazgo Codex): el anillo de foco
+     aparece instantáneo — mejor para rendimiento y accesibilidad. */
   transition:
     border-color  var(--duration-base) var(--ease-out),
-    background    var(--duration-base) var(--ease-out),
-    box-shadow    var(--duration-base) var(--ease-out);
+    background    var(--duration-base) var(--ease-out);
   width: 100%;
   appearance: none;
   -webkit-appearance: none;

@@ -1,14 +1,24 @@
 {
-  "_nota": "Números de WhatsApp segmentados por área. TODOS son PENDIENTE hasta que la empresa confirme números reales por canal. No usar el número placeholder de configuracion.json como real.",
+  "_nota": "Bajo la arquitectura objetivo, los canales de WhatsApp por área se administran desde Google Sheets, no desde este JSON público. Este archivo queda como fallback de estructura/esquema: áreas conocidas, sin nombres de personal ni números reales. Ver apps-script/README.md para el plan de integración.",
 
-  "whatsappGeneral": "pendiente",
-  "whatsappVentas": "pendiente",
-  "whatsappFinanciamiento": "pendiente",
-  "whatsappServicioTecnico": "pendiente",
-  "whatsappRepuestos": "pendiente",
-  "whatsappHuaynaCapac": "pendiente",
-  "whatsappViaExpresa": "pendiente",
-  "whatsappOcongate": "pendiente",
+  "areas": [
+    { "area": "ventas",         "numero": "Canal administrado desde Google Sheets", "confirmado": false, "estadoAprobacion": "pendiente" },
+    { "area": "logistica",      "numero": "Canal administrado desde Google Sheets", "confirmado": false, "estadoAprobacion": "pendiente" },
+    { "area": "administracion", "numero": "Canal administrado desde Google Sheets", "confirmado": false, "estadoAprobacion": "pendiente" },
+    { "area": "tecnica",        "numero": "Canal administrado desde Google Sheets", "confirmado": false, "estadoAprobacion": "pendiente" }
+  ],
+  "_notaAreas": "Los nombres de personal (asesores, logística, técnica) son datos internos del equipo y no se publican en el repositorio público. Solo se documentan las áreas funcionales. Los números reales y la asignación de personal viven en Google Sheets, fuera de este repositorio.",
+
+  "whatsappGeneral": "PENDIENTE",
+  "whatsappGeneralConfirmado": false,
+  "whatsappVentas": "Canal administrado desde Google Sheets",
+  "whatsappFinanciamiento": "PENDIENTE",
+  "whatsappServicioTecnico": "Canal administrado desde Google Sheets",
+  "whatsappRepuestos": "PENDIENTE",
+  "whatsappHuaynaCapac": "PENDIENTE",
+  "whatsappViaExpresa": "PENDIENTE",
+  "whatsappOcongate": "PENDIENTE",
+  "whatsappSecundarioConfirmado": false,
 
   "mensajesPredefinidos": {
     "ventas": "Hola ARENAS MOTOCICLETAS, estoy interesado/a en una moto. ¿Podrían darme información y cotización?",
@@ -17,5 +27,5 @@
     "repuestos": "Hola, estoy buscando un repuesto. ¿Podrían ayudarme con disponibilidad y precio?"
   },
 
-  "estadoAprobacion": "pendiente-confirmacion-gerencial"
+  "estadoAprobacion": "pendiente"
 }

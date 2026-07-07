@@ -1,1 +1,23 @@
 .claude/
+
+# Fase separada, auditada aparte — no forma parte del commit de limpieza web actual
+apps-script/
+
+# Plantilla madre independiente, ya publicada en su propio repositorio
+# (pixdeah-coder/business-static-web-framework) — no debe mezclarse con ARENAS
+_template/
+
+# Protección contra fugas de datos comerciales/locales al repo público
+*.local
+*.backup
+*.bak
+*.tmp
+.env
+.env.*
+private/
+exports/
+google-sheets-dumps/
+
+# Basura de sistema operativo
+.DS_Store
+Thumbs.db

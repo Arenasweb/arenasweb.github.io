@@ -19,8 +19,8 @@ Cada slot tiene una estructura predecible y, en la mayoría de los casos, un cam
 
 | Archivo | Propósito |
 |---------|-----------|
-| `data/catalogo.json` | Inventario de motos — ya consumido activamente por `script.js` |
-| `data/configuracion.json` | Configuración técnica global ya integrada (WhatsApp activo, sedes, SEO base) |
+| `data/catalogo.json` | Fallback neutro del catálogo (NO inventario real; el catálogo se administra desde Google Sheets) — consumido por `script.js` |
+| `data/configuracion.json` | Configuración técnica global (WhatsApp pendiente de confirmación, sedes, SEO base) |
 | `data/slots/*.json` | **Capa de contenido editable y "aprobable"**, más granular, pensada para que gerencia/marketing la complete progresivamente sin esperar a un desarrollador |
 
 `cargarSlots()` en `script.js` carga estos 12 archivos y los deja disponibles en `STATE.slots`, pero **no reemplaza** `configuracion.json` — ambos coexisten. La migración completa de campos (decidir cuál es la fuente única de verdad) es una tarea PENDIENTE para cuando los datos reales estén confirmados.
@@ -38,7 +38,7 @@ Cada slot tiene una estructura predecible y, en la mayoría de los casos, un cam
 | `financiamiento.json` | Requisitos, pasos, condiciones referenciales de crédito | **Alto** — información financiera |
 | `beneficios.json` | Qué incluye la compra de una moto | Medio — expectativa del cliente |
 | `servicio-tecnico.json` | Datos del taller y servicios ofrecidos | Medio |
-| `promociones.json` | Ofertas activas, vigencia, modelo | **Alto** — compromiso comercial con fecha |
+| `promociones.json` | Promociones sujetas a confirmación, vigencia, modelo | **Alto** — compromiso comercial con fecha |
 | `testimonios.json` | Comentarios y datos de clientes reales | **Alto** — requiere consentimiento |
 | `legales.json` | Estado de revisión de cada documento legal | Medio — rastreo, no contenido legal en sí |
 | `seo.json` | Metadatos de SEO y redes sociales | Bajo |

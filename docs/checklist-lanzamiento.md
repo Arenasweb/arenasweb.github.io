@@ -7,14 +7,16 @@
 
 ## BLOQUE 1: Datos reales validados
 
-- [ ] Número de WhatsApp real confirmado en `data/configuracion.json → whatsapp`
-- [ ] Dirección de tienda validada en `data/configuracion.json → sedes[0].direccion`
-- [ ] Horarios reales confirmados en `data/configuracion.json → horarios`
-- [ ] Correo electrónico activo y recibiendo mensajes
-- [ ] URLs de redes sociales reales en `data/configuracion.json → redesSociales`
-- [ ] Precios del catálogo validados con el equipo comercial
-- [ ] Stock real de cada modelo verificado
-- [ ] Razón social y RUC completos en páginas legales
+> **Arquitectura vigente:** todo dato comercial real se **confirma y administra desde Google Sheets** y se publica únicamente mediante **Apps Script** (filtro seguro) cuando está aprobado. `data/configuracion.json` y `data/catalogo.json` son **solo fallback neutro**: **NO deben contener números reales, direcciones reales, horarios reales, redes reales, precios reales ni stock real.** El repositorio público NO es una base de datos comercial.
+
+- [ ] Número de WhatsApp real confirmado y administrado **en Google Sheets** (se publica vía Apps Script cuando esté aprobado; `data/configuracion.json` queda como fallback neutro, sin número real)
+- [ ] Dirección de tienda confirmada y administrada **en Google Sheets** (no en `data/configuracion.json`)
+- [ ] Horarios reales confirmados y administrados **en Google Sheets** (no en `data/configuracion.json`)
+- [ ] Correo electrónico activo y recibiendo mensajes (canal operativo; se publica desde Google Sheets cuando esté aprobado)
+- [ ] URLs de redes sociales reales confirmadas y administradas **en Google Sheets** (no en `data/configuracion.json`)
+- [ ] Precios del catálogo validados **en Google Sheets** (no en `data/catalogo.json`, que es fallback neutro)
+- [ ] Stock real de cada modelo verificado **en Google Sheets** (no en `data/catalogo.json`)
+- [ ] Razón social y RUC completos en páginas legales (validados legalmente antes de publicar)
 
 ---
 

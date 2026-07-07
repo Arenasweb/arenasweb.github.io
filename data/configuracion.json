@@ -4,16 +4,22 @@
   "nombreComercial": "ARENAS MOTOCICLETAS",
   "ciudad": "Cusco",
   "pais": "Perú",
-  "slogan": "La A que acelera",
+  "slogan": "Dato administrado desde Google Sheets",
+  "sloganPendienteRediseño": true,
+  "_notaSlogan": "El eslogan comercial real es identidad de marca administrada desde Google Sheets — no se conserva en este repositorio público. No inventar un eslogan nuevo sin autorización.",
   "conceptoMarca": "Concesionario premium con enfoque deportivo, oscuro y tecnológico.",
-  "modeloDestacadoId": "pulsar-ns400",
+  "modeloDestacadoId": "PENDIENTE",
+  "_notaModeloDestacadoValor": "El id del modelo destacado real es dato de catálogo administrado desde Google Sheets. Mientras sea PENDIENTE, script.js no encuentra coincidencia en el catálogo y la sección mantiene su estado neutro por defecto.",
   "_notaModeloDestacado": "Fuente única para el modelo destacado de la sección #modelo-destacado. script.js → cargarConfiguracion() sincroniza este valor a CONFIG.modeloDestacadoId al arrancar; ya no debe editarse directamente en script.js.",
 
-  "whatsapp": "+51987654321",
+  "whatsapp": "PENDIENTE",
   "whatsappConfirmado": false,
-  "_notaWhatsapp": "El número anterior es un PLACEHOLDER técnico, no un número real. Mientras whatsappConfirmado sea false, script.js deshabilita los botones/enlaces de WhatsApp en todo el sitio. Ver docs/fuente-unica-datos.md.",
+  "whatsappEstadoAprobacion": "pendiente",
+  "_notaWhatsapp": "El número real existe (reportado por el cliente) pero NO se publica en este JSON público (GitHub Pages expone /data sin restricción) mientras no esté aprobado para publicación. Mientras whatsappConfirmado sea false, script.js deshabilita los botones/enlaces de WhatsApp en todo el sitio. Activación pendiente de aprobación explícita de gerencia. Ver docs/fuente-unica-datos.md.",
   "telefonoFijo": "PENDIENTE",
-  "correo": "contacto@arenasmotos.pe",
+  "correo": "Sin correo comercial publicado",
+  "correoConfirmado": false,
+  "_notaCorreo": "Información comercial oficial: la empresa actualmente NO cuenta con correos electrónicos comerciales registrados para atención al cliente. El valor heredado no confirmado se reemplazó por este texto neutral — correo comercial pendiente de confirmación gerencial. Canal de contacto recomendado mientras tanto: WhatsApp (pendiente de activación) o asesores por área.",
   "correoSoporte": "PENDIENTE",
   "urlTemporal": "https://arenasweb.github.io",
   "urlOficial": "PENDIENTE",
@@ -37,16 +43,18 @@
       "telefono": "PENDIENTE",
       "whatsapp": "pendiente",
       "coordenadas": "PENDIENTE",
-      "horario": "Lun – Vie: 09:00 – 19:00 · Sáb: 09:00 – 14:00",
+      "horario": "PENDIENTE",
       "esPrincipal": true
     }
   ],
 
   "horarios": {
-    "lunesViernes": "09:00 – 19:00",
-    "sabado": "09:00 – 14:00",
-    "domingo": "Cerrado",
-    "feriados": "PENDIENTE"
+    "lunesSabado": "Dato administrado desde Google Sheets",
+    "domingo": "Dato administrado desde Google Sheets",
+    "feriados": "PENDIENTE",
+    "horarioWhatsapp": "Dato administrado desde Google Sheets",
+    "horarioConfirmado": false,
+    "_notaHorario": "El horario real de atención es un dato comercial administrado desde Google Sheets — no se conserva en este repositorio público. Existe confirmación del cliente registrada fuera del repo; se publicará cuando la integración esté activa y aprobada."
   },
 
   "mensajesWhatsApp": {
@@ -58,32 +66,38 @@
   },
 
   "etiquetasSEO": {
-    "tituloBase": "ARENAS MOTOCICLETAS | Concesionario y Servicio en Cusco",
-    "descripcion": "Catálogo de motos, financiamiento flexible y servicio técnico especializado en Cusco, Perú. Pulsar, Dominar, Boxer y CT.",
-    "keywords": "motos Cusco, motocicletas Cusco, Bajaj Cusco, Pulsar NS400, Dominar 400, concesionario motos Perú, financiamiento motos Cusco, servicio técnico motos Cusco",
-    "ogTitle": "ARENAS MOTOCICLETAS | Cusco",
-    "ogDescription": "Catálogo de motos, financiamiento y servicio técnico en Cusco, Perú.",
-    "ogImagePath": "assets/og/arenas-og-cover.jpg",
-    "twitterCard": "summary_large_image"
+    "tituloBase": "Arenas Motocicletas | Tienda de motocicletas en Cusco",
+    "descripcion": "Arenas Motocicletas: tienda de motocicletas en Cusco. Catálogo y servicios administrados desde canales oficiales. Sujeto a condiciones comerciales vigentes.",
+    "keywords": "Arenas Motocicletas, tienda de motocicletas en Cusco, motos en Cusco",
+    "ogTitle": "Arenas Motocicletas | Cusco",
+    "ogDescription": "Tienda de motocicletas en Cusco. Información administrada desde canales oficiales.",
+    "_notaActualizacion": "SEO neutralizado: sin marca principal, sin líneas/modelos del catálogo, sin financiamiento, sin precios/stock/promociones. El detalle comercial se administra desde Google Sheets.",
+    "ogImagePath": "PENDIENTE",
+    "_notaOgImagePath": "El archivo no existe todavía. No crear un asset falso — mantener PENDIENTE hasta que exista el archivo real.",
+    "twitterCard": "summary"
   },
 
   "financiamiento": {
-    "planesDisponibles": ["12 meses", "18 meses", "24 meses"],
+    "financiamientoActivo": false,
+    "estado": "pendiente",
+    "entidadesVinculadas": ["Entidad administrada desde Google Sheets"],
+    "planesDisponibles": [],
     "cuotaInicialMinima": "PENDIENTE",
     "bancos": "PENDIENTE",
-    "condiciones": "Sujeto a evaluación crediticia. Consultar en tienda.",
-    "_nota": "Validar condiciones reales con equipo financiero antes del lanzamiento."
+    "condiciones": "Financiamiento sujeto a evaluación y disponibilidad vigente. Información administrada desde canales oficiales.",
+    "visible": false,
+    "estadoAprobacion": "pendiente",
+    "_nota": "Las entidades financieras reales, el estado del financiamiento y sus condiciones son datos comerciales administrados desde Google Sheets — no se conservan en este repositorio público. No publicar entidades, planes, plazos ni tasas."
   },
 
+  "_notaLineaProductos": "Las líneas/familias reales del catálogo son datos comerciales administrados desde Google Sheets — no se conservan en este repositorio público. Este array queda como estructura de ejemplo no comercial.",
   "lineaProductos": [
-    { "id": "pulsar",  "nombre": "Pulsar",  "categoria": "deportiva-naked" },
-    { "id": "dominar", "nombre": "Dominar", "categoria": "touring-aventura" },
-    { "id": "boxer",   "nombre": "Boxer",   "categoria": "urbana" },
-    { "id": "ct",      "nombre": "CT",      "categoria": "trabajo-reparto" }
+    { "id": "linea-ejemplo", "nombre": "Línea administrada desde Google Sheets", "categoria": "Categoría administrada desde Google Sheets" }
   ],
 
   "legal": {
-    "razonSocial": "PENDIENTE",
+    "razonSocial": "PENDIENTE_REVISION_LEGAL",
+    "_notaRazonSocial": "La razón social real existe (reportada por el cliente) pero no se publica en este repositorio hasta su validación legal para publicación. Dato administrado desde Google Sheets.",
     "ruc": "PENDIENTE",
     "domicilioLegal": "PENDIENTE",
     "textoAviso": "Los precios, condiciones y disponibilidad de stock están sujetos a cambios sin previo aviso. Consultar disponibilidad en tienda."

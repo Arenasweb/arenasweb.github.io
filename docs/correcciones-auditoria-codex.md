@@ -11,9 +11,9 @@ Fecha de corrección: junio 2026
 |----------|-----------|
 | `data/configuracion.json → whatsapp` tenía un número con apariencia real sin marcador de pendiente | Se agregó `whatsappConfirmado: false` + `_notaWhatsapp` explicando que es un placeholder técnico. Mientras sea `false`, todo el sitio deshabilita visualmente los botones/enlaces de WhatsApp (`aplicarEstadoWhatsApp()` en `script.js`) |
 | `data/configuracion.json → sedes[0].direccion` mostraba "Av. Sol 123, Cusco" como dirección real, contradiciendo `data/slots/sedes.json` (que la marca "PENDIENTE") | Se corrigió el valor a `"PENDIENTE"` y se documentó el campo como deprecado (`_notaSedes`). La fuente activa ahora es `data/slots/sedes.json` |
-| `index.html` → tarjeta estática de tienda mostraba "Av. Sol 123, Cusco" y "+51 987 654 321" como datos reales | Se eliminó la tarjeta estática; ahora `#stores-grid` se llena dinámicamente vía `renderizarTiendas()`, que oculta sedes no confirmadas y muestra badges "pendiente" en los campos sin validar |
+| `index.html` → tarjeta estática de tienda mostraba dirección y teléfono con apariencia de datos reales | Se eliminó la tarjeta estática; ahora `#stores-grid` se llena dinámicamente vía `renderizarTiendas()`, que oculta sedes no confirmadas y muestra badges "pendiente" en los campos sin validar |
 | `data/catalogo.json` → precios, cuotas y stock sin indicador de confirmación | Se agregaron campos `precioConfirmado`, `cuotaConfirmada`, `stockConfirmado` (todos en `false`). El render del catálogo ahora añade un badge "Referencial" junto al precio cuando no está confirmado |
-| `index.html` → tarjetas de financiamiento con montos inventados (S/ 1,200, S/ 1,500, S/ 3,500) sin respaldo en ningún JSON | Se reemplazaron por un badge "Por confirmar", consistente con `data/slots/financiamiento.json → cuotaInicialMinima: "PENDIENTE"` |
+| `index.html` → tarjetas de financiamiento con montos inventados (sin respaldo en ningún JSON) | Se reemplazaron por un badge "Por confirmar", consistente con `data/slots/financiamiento.json → cuotaInicialMinima: "PENDIENTE"` |
 | `legales/libro-reclamaciones.html` → enlace de WhatsApp funcional con número placeholder | Se desactivó el enlace (ya no es clicable) y se reemplazó por un badge "Pendiente de confirmar", priorizando el canal de correo (real) mientras tanto |
 
 ---
@@ -54,7 +54,7 @@ Se confirmó que `assets/` solo contiene carpetas vacías (`logo/`, `iconos/`, `
 data-modelo="${moto.modelo} ${moto.version || ""}".trim()
 ```
 
-El `.trim()` quedaba **fuera** del template literal y se insertaba como texto literal dentro del HTML generado (`data-modelo="NS400 Premium".trim()`), rompiendo el atributo. Se corrigió calculando el valor antes de insertarlo en el DOM.
+El `.trim()` quedaba **fuera** del template literal y se insertaba como texto literal dentro del HTML generado (`data-modelo="Modelo Versión".trim()`), rompiendo el atributo. Se corrigió calculando el valor antes de insertarlo en el DOM.
 
 **Estilo inline eliminado:** el span de cilindrada en cada tarjeta usaba `style="font-size: var(--text-xs); color: var(--color-muted);"` generado desde JS. Se movió a la clase `.moto-card__meta` en `style.css`.
 

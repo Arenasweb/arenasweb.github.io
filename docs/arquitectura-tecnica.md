@@ -32,7 +32,7 @@ arenasweb.github.io/
 ├── README.md                  # Documentación del repositorio
 │
 ├── data/
-│   ├── catalogo.json          # Inventario de motos (fuente de datos principal)
+│   ├── catalogo.json          # Fallback neutro (NO inventario real; catálogo administrado desde Google Sheets)
 │   └── configuracion.json     # Config global: WhatsApp, sedes, SEO, mensajes
 │
 ├── legales/
@@ -58,10 +58,7 @@ arenasweb.github.io/
     ├── favicon/               # favicon.ico, apple-touch-icon.png
     ├── og/                    # Imagen Open Graph (1200×630)
     └── motos/                 # Fotografías por línea y modelo
-        ├── pulsar/
-        ├── dominar/
-        ├── boxer/
-        └── ct/
+        └── <linea-lowercase>/ # una carpeta por línea real (nombres administrados desde Google Sheets)
 ```
 
 ---

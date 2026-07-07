@@ -24,7 +24,7 @@
 | `index.html` | ✅ Base técnica | 14 secciones semánticas, SEO, accesibilidad, formulario real |
 | `style.css` | ✅ Sistema base | 15 bloques, variables, animaciones, responsive, utilities |
 | `script.js` | ✅ Núcleo JS | 14 módulos: catálogo, filtros, formulario, animaciones, nav móvil |
-| `data/catalogo.json` | ✅ 4 modelos | Estructura completa lista para escalar |
+| `data/catalogo.json` | ✅ Fallback neutro | Estructura de ejemplo (`modelo-ejemplo`, `visible:false`); modelos reales pendientes de carga aprobada desde Google Sheets |
 | `data/configuracion.json` | ✅ Config global | WhatsApp, SEO, sedes, mensajes, meta desarrollo |
 | `data/slots/` | ✅ 12 archivos | Contenido editable/aprobable: hero, empresa, whatsapp, sedes, financiamiento, beneficios, servicio técnico, promociones, testimonios, legales, seo, ui-placeholders |
 | `legales/` | ✅ 6 páginas | HTML válido, aviso provisional, navegación interna |
@@ -75,7 +75,7 @@ Ver `docs/pendientes-manana.md` para lista completa.
 ## Catálogo dinámico
 
 **Estado actual:** JSON estático en `data/catalogo.json` cargado con `fetch()`.  
-**4 modelos base:** Pulsar NS400, Dominar 400, Boxer 150, CT 125.
+El catálogo real (modelos, líneas, categorías y destacados) es **dato comercial administrado desde Google Sheets** — no se conserva en este repositorio público. `data/catalogo.json` es solo un fallback neutro con un registro de ejemplo (`modelo-ejemplo`, `visible: false`) que documenta la estructura esperada por `script.js`.
 
 **Flujo actual:**
 ```
@@ -101,7 +101,7 @@ El sitio prioriza WhatsApp como canal de conversión. Implementado en:
 - CTA en sección de servicio técnico → agendamiento
 - Páginas legales → reclamaciones
 
-**Número actual:** `+51987654321` — PENDIENTE de validación con número real.
+**Número actual:** `{{WHATSAPP_ADMINISTRADO_EN_GOOGLE_SHEETS}}` — el canal real se administrará desde Google Sheets, no se conserva en este repositorio.
 
 ---
 
@@ -212,6 +212,6 @@ Documentación completa: `docs/flujo-ia-claude-codex-chatgpt.md` y checklist de 
 3. Revisar `docs/requisitos-pendientes-gerencia.md` — datos que solo el dueño puede confirmar
 4. Confirmar tipografías y paleta definitiva
 5. Insertar logo, favicon e imagen OG
-6. Actualizar número de WhatsApp real en `data/slots/whatsapp.json`
+6. El WhatsApp real debe administrarse desde Google Sheets y publicarse únicamente mediante Apps Script cuando esté aprobado. `data/slots/whatsapp.json` es solo fallback neutro y no debe contener números reales.
 7. Definir hero visual y entrar al diseño inmersivo
 8. Conectar Codex con el repositorio en GitHub para empezar a auditar Pull Requests

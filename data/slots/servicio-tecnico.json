@@ -2,21 +2,25 @@
   "_nota": "Información editable del taller y servicio técnico. Confirmar todos los datos con el área de taller antes de publicar.",
 
   "titulo": "Taller especializado en Cusco",
-  "descripcion": "Mantenimiento preventivo y correctivo con técnicos certificados y repuestos originales.",
+  "descripcion": "Mantenimiento preventivo y correctivo. Servicio postventa sujeto a condiciones comerciales vigentes.",
 
   "servicios": [
-    "Mantenimiento preventivo según kilometraje",
+    "Mantenimiento preventivo según condiciones comerciales vigentes",
     "Diagnóstico electrónico de sistemas",
-    "Repuestos originales en stock",
     "Reparación de motor, frenos y suspensión",
-    "Atención de garantías de fábrica"
+    "Repuestos sujetos a disponibilidad",
+    "Área técnica disponible",
+    "Servicio postventa sujeto a condiciones comerciales vigentes"
   ],
 
   "tecnicosCertificados": "pendiente",
+  "_notaTecnicosCertificados": "No publicar 'técnicos certificados' como hecho confirmado mientras este campo siga en 'pendiente'.",
   "tiempoPromedioServicio": "pendiente",
   "repuestosOriginalesDisponibles": "pendiente",
-  "fotoTaller": "assets/taller/taller-principal.jpg",
-  "whatsappServicioTecnico": "pendiente",
+  "_notaRepuestos": "No publicar 'repuestos originales en stock' como hecho confirmado mientras este campo siga en 'pendiente'.",
+  "fotoTaller": "PENDIENTE",
+  "whatsappServicioTecnico": "Canal administrado desde Google Sheets",
+  "_notaWhatsappServicioTecnico": "Existe un contacto técnico oficial reportado por el cliente, pero el dato de equipo interno no se publica en este JSON público. Ver data/slots/whatsapp.json y la futura integración en apps-script/.",
 
-  "estadoAprobacion": "pendiente-confirmacion-area-taller"
+  "estadoAprobacion": "pendiente"
 }

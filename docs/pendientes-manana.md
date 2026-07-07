@@ -17,12 +17,12 @@ Generado: junio 2026 · Referencia base: docs/checklist-pre-diseno.md
 
 ## URGENTE (necesario para publicar)
 
-- [ ] **Validar número de WhatsApp real** — Actualmente `+51987654321` en `data/configuracion.json` y `script.js → CONFIG`. Cambiar antes de cualquier prueba de usuario real.
+- [ ] **Validar número de WhatsApp real** — Actualmente `"PENDIENTE"` en `data/configuracion.json` y `script.js → CONFIG`. El número real se administrará desde Google Sheets, no se hardcodea en el repositorio.
 - [ ] **Insertar imágenes oficiales de motos** — Las tarjetas del catálogo muestran placeholder si no hay fotos en `assets/motos/`.
-- [ ] **Crear carpeta `assets/`** con estructura: `favicon/`, `og/`, `motos/pulsar/`, `motos/dominar/`, `motos/boxer/`, `motos/ct/`
+- [ ] **Crear carpeta `assets/`** con estructura: `favicon/`, `og/`, `motos/<linea-lowercase>/` (una carpeta por línea real — nombres administrados desde Google Sheets)
 - [ ] **Crear favicon** — `assets/favicon/favicon.ico` (32×32) y `apple-touch-icon.png` (180×180)
 - [ ] **Crear imagen OG** — `assets/og/arenas-og-cover.jpg` (1200×630 px). Sin esta imagen, los compartidos en redes muestran imagen vacía.
-- [ ] **Validar dirección(es) de tienda** — Confirmar dirección exacta en `data/configuracion.json → sedes[0].direccion`
+- [ ] **Validar dirección(es) de tienda** — La dirección real debe confirmarse y administrarse desde Google Sheets. Se publicará hacia la web únicamente mediante Apps Script cuando esté aprobada. `data/configuracion.json` queda como fallback neutro y no debe contener direcciones reales.
 - [ ] **Validar horarios de atención** — Confirmar con el equipo los horarios reales.
 
 ---

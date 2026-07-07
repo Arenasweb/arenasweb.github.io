@@ -46,12 +46,12 @@ campos de `ESQUEMA_MOTO` en `script.js`:
 | Campo | Tipo | Notas |
 |-------|------|-------|
 | `id` | string | único, kebab-case, no debe cambiar entre sincronizaciones |
-| `linea` | string | uno de: Pulsar, Dominar, Boxer, CT (o las que se agreguen) |
+| `linea` | string | una de las líneas oficiales definidas en la hoja (los nombres reales se administran en Google Sheets, no en este repo) |
 | `modelo` | string | |
 | `visible` | boolean | controla si aparece en el catálogo |
 | `destacado` | boolean | |
 | `orden` | number | entero, define el orden de la grilla |
-| `precio` | string | formato libre (ej. "S/ 23,800") |
+| `precio` | string | formato libre (ej. "PRECIO_PENDIENTE", dato administrado desde Google Sheets) |
 | `precioConfirmado` | boolean | **obligatorio**. Si la hoja no lo trae, se debe asumir `false` |
 | `cuotaInicial` | string | |
 | `cuotaConfirmada` | boolean | **obligatorio**, mismo criterio que `precioConfirmado` |
@@ -120,14 +120,14 @@ puede convertir filas en objetos JSON sin necesidad de mapeo adicional.
 | Columna | Tipo | Obligatoria | Nota |
 |---------|------|-------------|------|
 | `id` | texto | **sí** | único, kebab-case |
-| `linea` | texto | **sí** | Pulsar / Dominar / Boxer / CT |
+| `linea` | texto | **sí** | línea oficial (nombres reales administrados en la hoja) |
 | `modelo` | texto | **sí** | |
 | `version` | texto | no | |
 | `visible` | TRUE/FALSE | **sí** | |
 | `destacado` | TRUE/FALSE | no | |
 | `orden` | número | no | entero |
 | `cilindrada` | texto | no | |
-| `precio` | texto | no | ej. "S/ 23,800" |
+| `precio` | texto | no | ej. "PRECIO_PENDIENTE" — dato administrado desde Google Sheets |
 | `precioConfirmado` | TRUE/FALSE | **sí** | vacío → tratar como FALSE |
 | `cuotaInicial` | texto | no | |
 | `cuotaConfirmada` | TRUE/FALSE | **sí** | vacío → tratar como FALSE |

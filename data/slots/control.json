@@ -1,0 +1,19 @@
+{
+  "_nota": "Contrato operativo local para la futura pestaña 99_CONTROL del PANEL WEB ARENAS. Mientras Google Sheets no esté conectado, este archivo es la única fuente de estas banderas. Ver docs/control-publicacion-datos.md.",
+
+  "modoDatos": "local",
+  "googleSheetsConectado": false,
+  "appsScriptEndpoint": "",
+  "fallbackLocal": true,
+
+  "permitirDatosPendientes": false,
+  "mostrarPreciosPendientes": false,
+  "mostrarWhatsappPendiente": false,
+  "mostrarPromocionesPendientes": false,
+  "mostrarGarantiaNoConfirmada": false,
+  "mostrarFinanciamientoNoConfirmado": false,
+
+  "ultimaRevisionGerencial": "pendiente",
+
+  "_notaBanderas": "Todas las banderas 'mostrar*' y 'permitirDatosPendientes' deben permanecer en false por defecto. Cambiarlas a true es una decisión explícita de gerencia para habilitar una excepción puntual, nunca un valor por defecto del sistema."
+}

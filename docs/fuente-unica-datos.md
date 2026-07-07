@@ -1,7 +1,9 @@
 # Fuente Única de Datos — ARENAS MOTOCICLETAS
 
 **Propósito:** Resolver la duplicación entre `index.html` estático, `data/configuracion.json`, `data/slots/` y `data/catalogo.json`, dejando claro qué archivo manda para cada dominio de datos.  
-Última actualización: junio 2026 (corrección post-auditoría Codex)
+Última actualización: julio 2026 (corrección post-auditoría Codex)
+
+> **Arquitectura vigente:** **Google Sheets será la fuente comercial editable** y **Apps Script será el filtro** que publique solo datos aprobados. **El repositorio público NO es una base de datos comercial.** Los archivos `data/*.json` son únicamente **fallback público neutro** (estructura + placeholders), no inventario real. Mientras la integración no esté conectada, este documento describe qué archivo local manda como fallback para cada dominio.
 
 ---
 
@@ -15,11 +17,11 @@
 
 | Dominio | Fuente única | Archivos relacionados (NO autoritativos) |
 |---------|-------------|--------------------------------------------|
-| **Empresa** (razón social, RUC, representante legal) | `data/slots/empresa.json` | — |
+| **Empresa** (razón social, RUC, representante legal) | **Google Sheets / registro interno** (dato validado legalmente). Fallback local: `data/slots/empresa.json` — **neutro, con placeholders** | — |
 | **WhatsApp** (número activo del sitio) | `data/configuracion.json → whatsapp` + `whatsappConfirmado` | `data/slots/whatsapp.json` (números segmentados por área, aún no consumidos por `script.js`), `data/catalogo.json → moto.whatsapp` (campo deprecado, no leído por el código) |
 | **Sedes / tiendas** | `data/slots/sedes.json` | `data/configuracion.json → sedes` (deprecado, solo fallback si el slot falla al cargar) |
-| **Catálogo de motos** (precio, stock, colores, fotos) | `data/catalogo.json` | — |
-| **Confirmación de precio/cuota/stock** | `data/catalogo.json → precioConfirmado / cuotaConfirmada / stockConfirmado` | — |
+| **Catálogo de motos** (modelos, precio, stock, colores, fotos) | **Google Sheets** (futuro, vía Apps Script). Fallback local: `data/catalogo.json` — **neutro, NO inventario real** | `data/catalogo.json` como fallback con un único registro `modelo-ejemplo` (`visible: false`) |
+| **Confirmación de precio/cuota/stock** | `data/catalogo.json → precioConfirmado / cuotaConfirmada / stockConfirmado` (todos `false` en el fallback) | — |
 | **Promociones** | `data/slots/promociones.json` (planeado) — actualmente la sección de promociones en `index.html` es un placeholder estático | `data/catalogo.json → moto.promocion` (sí se usa hoy para el badge de cada tarjeta) |
 | **Financiamiento** (requisitos, condiciones referenciales) | `data/slots/financiamiento.json` | `data/configuracion.json → financiamiento` (resumen técnico simplificado, debe mantenerse coherente con el slot) |
 | **SEO** (title, description, OG, Twitter) | `index.html` (las etiquetas `<meta>` reales que lee el navegador/crawler) | `data/slots/seo.json` y `data/configuracion.json → etiquetasSEO` (capa editable de referencia; **debe copiarse manualmente** a `index.html` hasta que se automatice la inyección) |
@@ -46,7 +48,7 @@ Las sedes cuyo `estadoAprobacion` sea `"pendiente-confirmar-existencia"` **no se
 
 ### Catálogo
 
-`data/catalogo.json` sigue siendo la única fuente de productos. Se agregaron banderas booleanas (`precioConfirmado`, `cuotaConfirmada`, `stockConfirmado`) que **no cambian el dato mostrado**, solo activan un badge visual "Referencial" cuando el valor no ha sido validado por el negocio. Esto evita borrar datos de ejemplo útiles para maquetar, sin presentarlos como reales.
+`data/catalogo.json` **NO es inventario real ni la fuente única del catálogo**: es un **fallback público neutro** que documenta la estructura esperada por `script.js` (`ESQUEMA_MOTO`) con un único registro de ejemplo (`modelo-ejemplo`, `visible: false`). El catálogo real (modelos, líneas, versiones, precios, stock) es dato comercial que vivirá en **Google Sheets** y se publicará mediante **Apps Script filtrado**. Las banderas `precioConfirmado`/`cuotaConfirmada`/`stockConfirmado` permanecen en `false` en el fallback, de modo que nada se presenta como dato confirmado.
 
 ### Financiamiento
 

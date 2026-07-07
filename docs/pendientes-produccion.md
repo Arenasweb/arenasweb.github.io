@@ -25,7 +25,7 @@ Ver el detalle completo en `docs/requisitos-pendientes-gerencia.md`. Resumen de 
 1. **Número(s) de WhatsApp reales** — sin esto, todo el flujo de conversión del sitio permanece deshabilitado para el usuario final.
 2. **Aprobación explícita de al menos una sede** — ninguna sede se muestra hoy porque ninguna tiene `estadoAprobacion: "aprobado"` (ni siquiera la principal). Gerencia debe: (a) confirmar los datos reales de la sede, y (b) cambiar el campo a `"aprobado"` para que aparezca en el sitio.
 3. **Existencia real de las sedes Huayna Cápac, Vía Expresa y Ocongate** — si no existen, lo correcto es eliminarlas del JSON; si existen, deben pasar por el mismo proceso de aprobación.
-4. **Precios, cuotas y stock confirmados del catálogo** (4 modelos: Pulsar NS400, Dominar 400, Boxer 150, CT 125) — hasta que `precioConfirmado`/`cuotaConfirmada`/`stockConfirmado` sean `true`, el visitante solo verá "Consultar" / "Consultar disponibilidad".
+4. **Catálogo real (modelos, precios, cuotas y stock)** — el catálogo se administra desde Google Sheets; los modelos reales están pendientes de carga aprobada. `data/catalogo.json` es solo un fallback neutro. Hasta que `precioConfirmado`/`cuotaConfirmada`/`stockConfirmado` sean `true`, el visitante solo verá "Consultar" / "Consultar disponibilidad".
 5. **Condiciones reales de financiamiento** (cuota inicial, entidades financieras, requisitos).
 6. **Razón social y RUC** para completar los documentos legales.
 

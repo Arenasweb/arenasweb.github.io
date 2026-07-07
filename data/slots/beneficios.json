@@ -1,40 +1,39 @@
 {
-  "_nota": "Beneficios incluidos en la compra. Marcar 'incluido: false' o 'PENDIENTE' si no está confirmado por gerencia — no asumir beneficios que la empresa no ha validado.",
+  "_nota": "Fallback público neutro de beneficios. Los beneficios reales por compra (accesorios, trámites, garantía, mantenimientos) son datos comerciales administrados desde Google Sheets — NO se conservan en este repositorio público. No listar aquí garantías, kilometrajes ni beneficios concretos como vigentes.",
+  "disclaimer": "Beneficios sujetos a condiciones comerciales vigentes.",
 
-  "placa": {
-    "incluido": "pendiente",
-    "descripcion": "PENDIENTE: confirmar si el trámite de placa está incluido o tiene costo adicional."
-  },
-  "tarjeta": {
-    "incluido": "pendiente",
-    "descripcion": "PENDIENTE: confirmar tarjeta de propiedad / SOAT incluido."
-  },
-  "casco": {
-    "incluido": "pendiente",
-    "descripcion": "PENDIENTE: confirmar si se entrega casco de regalo con la compra."
-  },
-  "kitHerramientas": {
-    "incluido": "pendiente",
-    "descripcion": "PENDIENTE: confirmar si la moto incluye kit de herramientas de fábrica."
-  },
+  "beneficios": [
+    {
+      "titulo": "Beneficio administrado desde Google Sheets",
+      "descripcion": "Sujeto a condiciones comerciales vigentes.",
+      "visible": false,
+      "beneficioConfirmado": false,
+      "estadoAprobacion": "pendiente",
+      "fuenteDato": "google-sheets-pendiente"
+    }
+  ],
+
   "garantia": {
     "incluido": "pendiente",
-    "descripcion": "PENDIENTE: confirmar tiempo y alcance de la garantía oficial."
+    "descripcion": "Condiciones de garantía administradas desde Google Sheets. Consultar condiciones vigentes con un asesor autorizado.",
+    "visible": false,
+    "beneficioConfirmado": false,
+    "estadoAprobacion": "pendiente",
+    "fuenteDato": "google-sheets-pendiente"
   },
-  "asesoriaTramites": {
+  "mantenimientos": {
     "incluido": "pendiente",
-    "descripcion": "PENDIENTE: confirmar si se ofrece asesoría para trámites de placa y SOAT."
-  },
-  "servicioTecnico": {
-    "incluido": "pendiente",
-    "descripcion": "PENDIENTE: confirmar si el primer mantenimiento está incluido."
+    "descripcion": "Plan de mantenimientos administrado desde Google Sheets. Consultar condiciones vigentes con un asesor autorizado.",
+    "visible": false,
+    "beneficioConfirmado": false,
+    "estadoAprobacion": "pendiente",
+    "fuenteDato": "google-sheets-pendiente"
   },
   "financiamiento": {
-    "incluido": "pendiente",
-    "descripcion": "PENDIENTE: confirmar si hay beneficios especiales de financiamiento por compra."
+    "incluido": false,
+    "descripcion": "Financiamiento sujeto a evaluación y disponibilidad vigente. Información administrada desde canales oficiales.",
+    "visible": false,
+    "estadoAprobacion": "pendiente"
   },
-  "otrosBeneficios": [
-    "PENDIENTE: beneficio adicional 1",
-    "PENDIENTE: beneficio adicional 2"
-  ]
+  "_notaSoat": "El SOAT no se publica como beneficio en ningún caso sin fuente confirmada y aprobación explícita."
 }

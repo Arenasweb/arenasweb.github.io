@@ -57,12 +57,12 @@
 
 ## BLOQUE E: Datos reales para validar
 
-- [ ] **Número de WhatsApp oficial** — Confirmar y reemplazar en `data/configuracion.json`
+- [ ] **Número de WhatsApp oficial** — El WhatsApp oficial se valida y administra en Google Sheets. `data/configuracion.json` no debe contener números reales; solo fallback neutro.
 - [ ] **Dirección(es) de tienda** — Validar dirección exacta y referencias
 - [ ] **Horarios reales** — Días y horas de apertura/cierre
-- [ ] **Correo electrónico oficial** — Confirmar si contacto@arenasmotos.pe está activo
+- [ ] **Correo electrónico oficial** — Correo comercial pendiente de confirmación gerencial (actualmente no hay correos comerciales registrados)
 - [ ] **Redes sociales** — URLs definitivas de Facebook, Instagram, TikTok
-- [ ] **Precios reales** — Revisar y confirmar los precios del catálogo JSON
+- [ ] **Precios reales** — Los precios reales se validan en Google Sheets. `data/catalogo.json` es fallback neutro y no debe contener precios reales, stock real ni disponibilidad real.
 - [ ] **Stock real** — Confirmar disponibilidad actual de modelos
 - [ ] **Líneas de motos activas** — ¿Cuáles se comercializan realmente ahora?
 
@@ -73,7 +73,7 @@
 - [ ] **Favicon** — Archivo `assets/favicon/favicon.ico` (32×32) y `apple-touch-icon.png` (180×180)
 - [ ] **Imagen Open Graph** — `assets/og/arenas-og-cover.jpg` (1200×630 px, máx 300 KB)
 - [ ] **Fotos de motos** — Mínimo foto principal de cada modelo en catálogo
-- [ ] **Íconos de línea** — SVG o PNG para Pulsar, Dominar, Boxer, CT
+- [ ] **Íconos de línea** — SVG o PNG por cada línea oficial (nombres administrados desde Google Sheets)
 - [ ] **Íconos de "por qué ARENAS"** — 4 íconos para la sección de propuesta de valor
 - [ ] **Foto del taller** — Para sección de servicio técnico
 
@@ -107,7 +107,7 @@
 - [x] Arquitectura HTML con todas las secciones
 - [x] Sistema CSS con variables editables
 - [x] JavaScript funcional (catálogo, filtros, formulario, animaciones)
-- [x] Catálogo JSON con 4 modelos base
+- [x] Catálogo JSON como fallback neutro (estructura de ejemplo; catálogo real administrado desde Google Sheets)
 - [x] Configuración centralizada en JSON
 - [x] Páginas legales con estructura válida
 

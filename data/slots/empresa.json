@@ -1,15 +1,33 @@
 {
-  "_nota": "Datos legales y comerciales de la empresa. NO inventar RUC, razón social ni representante legal. Dejar PENDIENTE hasta confirmación documental.",
+  "_nota": "Fallback público neutro de datos de empresa. La identidad comercial, razón social, trayectoria, historia, misión/visión, reconocimientos y condiciones de compra son información comercial administrada desde Google Sheets — NO se conserva en este repositorio público. NO inventar RUC, razón social ni representante legal.",
 
-  "nombreComercial": "ARENAS MOTOCICLETAS",
-  "razonSocial": "PENDIENTE",
+  "nombreComercial": "Dato administrado desde Google Sheets",
+  "razonSocial": "PENDIENTE_REVISION_LEGAL",
   "ruc": "PENDIENTE",
   "representanteLegal": "PENDIENTE",
+  "rubro": "Tienda de motocicletas",
+  "marcaPrincipal": "Dato administrado desde Google Sheets",
   "ciudad": "Cusco",
   "pais": "Perú",
-  "slogan": "La A que acelera",
   "conceptoMarca": "Concesionario premium con enfoque deportivo, oscuro y tecnológico.",
-  "correoGeneral": "contacto@arenasmotos.pe",
-  "horarioGeneral": "Lun – Vie: 09:00 – 19:00 · Sáb: 09:00 – 14:00",
-  "estadoDatos": "pendiente-confirmacion-gerencial"
+  "correoGeneral": "Sin correo comercial publicado",
+  "correoGeneralConfirmado": false,
+  "horarioGeneral": "Dato administrado desde Google Sheets",
+  "horarioGeneralConfirmado": false,
+
+  "trayectoria": "Dato administrado desde Google Sheets",
+  "historia": "Dato administrado desde Google Sheets",
+  "mision": "Dato administrado desde Google Sheets",
+  "vision": "Dato administrado desde Google Sheets",
+
+  "reconocimientos": [],
+  "_notaReconocimientos": "Los reconocimientos reales existen (reportados por el cliente) pero se administran desde Google Sheets y se publicarán solo con aprobación.",
+
+  "condicionesCompra": "Dato administrado desde Google Sheets",
+  "condicionesCompraEstadoAprobacion": "pendiente",
+
+  "visible": false,
+  "estadoAprobacion": "pendiente",
+  "fuenteDato": "google-sheets-pendiente",
+  "_notaEstadoDatos": "Este archivo documenta la estructura esperada. Ningún campo debe rellenarse con datos comerciales reales en el repositorio público."
 }

@@ -33,7 +33,7 @@ Guía principal para Codex y cualquier otro agente de código que trabaje en est
 - **`index.html`** — Página única con las 14 secciones semánticas del sitio (hero, buscador, catálogo, financiamiento, servicio técnico, cotización, etc.). Sin lógica de negocio embebida.
 - **`style.css`** — Sistema CSS en 15 bloques (reset, variables, layout, componentes, animaciones, responsive, utilidades). Las variables en `:root` son el único lugar donde deberían cambiar colores/espacios/tipografías.
 - **`script.js`** — Núcleo JS modular vanilla (14 módulos: config, helpers, WhatsApp, catálogo, render, filtros, formulario, animaciones, analytics, init). Sin dependencias externas.
-- **`data/`** — Fuente de datos en JSON. `catalogo.json` (inventario de motos) y `configuracion.json` (config técnica global), ambos consumidos activamente por `script.js`.
+- **`data/`** — Fallback público neutro en JSON. `catalogo.json` (fallback neutro del catálogo, NO inventario real — el catálogo se administra desde Google Sheets) y `configuracion.json` (config técnica global), ambos consumidos por `script.js`.
 - **`data/slots/`** — Capa de contenido editable y "aprobable" (hero, empresa, whatsapp, sedes, financiamiento, beneficios, servicio técnico, promociones, testimonios, legales, seo, ui-placeholders). Cargada por `cargarSlots()` en `script.js`. Ver `docs/sistema-slots-editables.md`.
 - **`assets/`** — Recursos estáticos (logo, iconos, motos, taller, tiendas, clientes, videos). Sin imágenes externas ni CDN.
 - **`docs/`** — Documentación técnica interna del proyecto (arquitectura, animaciones, catálogo, checklists, pendientes).

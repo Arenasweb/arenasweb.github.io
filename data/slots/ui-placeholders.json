@@ -47,14 +47,14 @@
     "labelModelo": "Modelo de interés",
     "labelMensaje": "Mensaje o consulta",
     "placeholderNombre": "Tu nombre",
-    "placeholderTelefono": "Ej: 987654321",
+    "placeholderTelefono": "Ej: tu número de contacto",
     "placeholderMensaje": "Cuéntanos qué necesitas: modelo, uso, presupuesto, financiamiento..."
   },
 
   "mensajesError": {
     "nombreRequerido": "El nombre es obligatorio.",
     "telefonoRequerido": "El teléfono es obligatorio.",
-    "telefonoInvalido": "Ingresa un número de teléfono válido (ej: 987654321).",
+    "telefonoInvalido": "Ingresa un número de teléfono válido.",
     "datosRequeridos": "Debes autorizar el tratamiento de datos para continuar.",
     "catalogoSinResultados": "No se encontraron motos con los filtros seleccionados."
   },
@@ -72,7 +72,7 @@
     "cuotaReferencial": "Cuota referencial",
     "fichaTecnicaPendiente": "Ficha técnica pendiente",
     "imagenNoDisponible": "Imagen no disponible",
-    "avisoEnvioWhatsapp": "Al enviar, se abrirá WhatsApp en una pestaña nueva.",
+    "avisoEnvioWhatsapp": "El canal de contacto se habilitará cuando sea aprobado.",
     "consultarPrecio": "Consultar",
     "consultarPrecioTitulo": "Precio no confirmado todavía — consultar en tienda o por WhatsApp",
     "consultarCuota": "Consultar",

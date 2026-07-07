@@ -19,7 +19,7 @@
   },
   "libroReclamaciones": {
     "archivo": "legales/libro-reclamaciones.html",
-    "estado": "provisional-canal-whatsapp-correo-activo"
+    "estado": "provisional-canales-pendientes"
   },
   "condicionesFinanciamiento": {
     "archivo": "legales/condiciones-financiamiento.html",

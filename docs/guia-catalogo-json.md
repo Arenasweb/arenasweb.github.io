@@ -7,7 +7,9 @@
 
 ## ¿Para qué sirve este archivo?
 
-`catalogo.json` es la fuente principal de datos del catálogo de motos. El sitio lo carga dinámicamente con `fetch()` en `script.js` → `cargarCatalogo()`. No hay servidor backend — todo se sirve como archivo estático desde GitHub Pages.
+`catalogo.json` es el **fallback público neutro** del catálogo. El sitio lo carga dinámicamente con `fetch()` en `script.js` → `cargarCatalogo()`. No hay servidor backend — todo se sirve como archivo estático desde GitHub Pages.
+
+**Importante:** el catálogo real (modelos, líneas, versiones, precios, stock) es dato comercial administrado desde Google Sheets — **no se escribe en este JSON público**. Este documento enseña la estructura técnica usando únicamente ejemplos genéricos no comerciales.
 
 ---
 
@@ -15,27 +17,28 @@
 
 ```json
 {
-  "id":             "pulsar-ns400",
-  "visible":        true,
-  "destacado":      true,
+  "id":             "modelo-ejemplo",
+  "visible":        false,
+  "destacado":      false,
   "orden":          1,
-  "linea":          "Pulsar",
-  "modelo":         "NS400",
-  "version":        "Premium",
-  "cilindrada":     "400 cc",
+  "linea":          "Línea administrada desde Google Sheets",
+  "modelo":         "Modelo administrado desde Google Sheets",
+  "version":        "",
+  "cilindrada":     "Consultar",
   "uso":            "deportivo",
-  "precio":         "S/ 23,800",
-  "cuotaInicial":   "S/ 3,800",
-  "financiamiento": "12-24 meses",
-  "stock":          "Disponible",
-  "colores":        ["Negro carbón", "Gris metálico"],
+  "precio":         "Consultar",
+  "cuotaInicial":   "Consultar",
+  "financiamiento": "Dato administrado desde Google Sheets",
+  "stock":          "Consultar",
+  "estadoStock":    "PENDIENTE_GOOGLE_SHEETS",
+  "colores":        "Consultar",
   "descripcion":    "Texto breve del modelo (máx 120 caracteres recomendado).",
-  "beneficio":      "Característica técnica o beneficio clave.",
-  "promocion":      "Texto de promoción vigente o null si no hay.",
-  "fotoPrincipal":  "assets/motos/pulsar/pulsar-ns400-1.jpg",
-  "fotoSecundaria": "assets/motos/pulsar/pulsar-ns400-2.jpg",
-  "fichaTecnica":   "assets/motos/pulsar/pulsar-ns400-ficha.pdf",
-  "whatsapp":       "+51987654321",
+  "beneficio":      "Consultar",
+  "promocion":      "Consultar condiciones vigentes",
+  "fotoPrincipal":  "PENDIENTE",
+  "fotoSecundaria": "PENDIENTE",
+  "fichaTecnica":   "PENDIENTE",
+  "whatsapp":       "PENDIENTE",
   "estado":         "activo"
 }
 ```
@@ -50,15 +53,16 @@
 | `visible` | boolean | ✅ | `false` oculta la moto del catálogo sin borrarla. |
 | `destacado` | boolean | ✅ | `true` aparece en sección de destacados. |
 | `orden` | number | ✅ | Número de orden en la grilla. El menor aparece primero. |
-| `linea` | string | ✅ | Debe coincidir con el filtro: "Pulsar", "Dominar", "Boxer", "CT". |
-| `modelo` | string | ✅ | Nombre del modelo (ej: "NS400"). |
-| `version` | string | No | Variante o edición (ej: "Ride Edition"). |
+| `linea` | string | ✅ | Línea/familia del modelo. Los nombres reales de líneas se administran desde Google Sheets. |
+| `modelo` | string | ✅ | Nombre del modelo. Los nombres reales se administran desde Google Sheets. |
+| `version` | string | No | Variante o edición. Ejemplo técnico no comercial. |
 | `cilindrada` | string | ✅ | Formato: "XXX cc" (ej: "400 cc"). Lo usa el filtro numérico. |
 | `uso` | string | No | Categoría de uso: "deportivo", "urbano", "trabajo", "touring". |
-| `precio` | string | ✅ | Precio final en soles. Ej: "S/ 23,800". PENDIENTE validación. |
-| `cuotaInicial` | string | No | Cuota de entrada orientativa. PENDIENTE validación. |
-| `financiamiento` | string | No | Rango de meses disponibles. Ej: "12-24 meses". |
-| `stock` | string | ✅ | Estado: "Disponible", "Bajo stock", "Agotado", "Por llegar". |
+| `precio` | string | ✅ | Precio final. Ej: "PRECIO_PENDIENTE" o "Consultar". Dato administrado desde Google Sheets. |
+| `cuotaInicial` | string | No | Cuota de entrada orientativa. Ej: "PRECIO_PENDIENTE". Dato administrado desde Google Sheets. |
+| `financiamiento` | string | No | Estado del financiamiento. Ej: "Dato administrado desde Google Sheets". No usar plazos fijos en este repositorio. |
+| `stock` | string | ✅ | Valor público seguro: siempre "Consultar" mientras `stockConfirmado` no sea `true`. |
+| `estadoStock` | string | No | Marcador de origen del dato, no el valor real. Ej: "PENDIENTE_GOOGLE_SHEETS". El estado operativo real (disponible/agotado/etc.) se administra en Google Sheets, no en este repositorio. |
 | `colores` | array | No | Lista de colores disponibles como strings. |
 | `descripcion` | string | ✅ | Descripción breve para la tarjeta. Máx 150 caracteres. |
 | `beneficio` | string | No | Beneficio o característica técnica principal. |
@@ -75,7 +79,8 @@
 
 ### `linea`
 ```
-"Pulsar" | "Dominar" | "Boxer" | "CT"
+Las líneas reales del catálogo se administran desde Google Sheets.
+No se enumeran en este repositorio público.
 ```
 
 ### `uso`
@@ -85,8 +90,9 @@
 
 ### `stock`
 ```
-"Disponible" | "Bajo stock" | "Agotado" | "Por llegar"
+"Consultar" (valor público seguro mientras stockConfirmado !== true)
 ```
+El estado operativo real (disponible/agotado/por llegar/etc.) se administra desde Google Sheets — no se modela como lista de valores en este repositorio público.
 
 ### `estado`
 ```
@@ -97,12 +103,14 @@
 
 ## Cómo agregar una moto nueva
 
+**Bajo la arquitectura vigente, las motos NO se agregan editando este JSON público** — el catálogo real se administra desde Google Sheets y se publicará vía Apps Script filtrado. Este procedimiento aplica solo a la estructura técnica:
+
 1. Copia un bloque existente al final del array (antes del `]`)
-2. Cambia el `id` por uno único en kebab-case (ej: `"pulsar-200ns"`)
+2. Cambia el `id` por uno único en kebab-case (ej: `"modelo-ejemplo-2"`)
 3. Asigna el siguiente número de `orden`
-4. Completa todos los campos requeridos (✅)
-5. Deja `visible: false` si no está lista para publicar
-6. Guarda el archivo y haz commit
+4. Completa todos los campos requeridos (✅) con placeholders seguros
+5. Mantén `visible: false` — nada se publica sin aprobación
+6. Guarda el archivo (el commit requiere auditoría y autorización)
 
 ---
 
@@ -114,19 +122,21 @@ Cambia `"visible": true` a `"visible": false`. La moto permanece en el archivo p
 
 ## Cómo marcar una moto como agotada
 
-Cambia `"stock": "Disponible"` a `"stock": "Agotado"`. El JS puede usar este campo para mostrar un badge visual distinto.
+El estado real de stock (disponible/agotado/por llegar/etc.) se administra desde Google Sheets, no editando este JSON público directamente. Mientras esa integración no esté activa, `stock` permanece en `"Consultar"` y `stockConfirmado` en `false` para todos los modelos.
 
 ---
 
 ## Ruta de imágenes
 
-Las imágenes se guardan en `assets/motos/<linea-lowercase>/`. Ejemplo:
+Las imágenes se guardan en `assets/motos/<linea-lowercase>/`. Ejemplo genérico (no comercial):
 
 ```
-assets/motos/pulsar/pulsar-ns400-1.jpg     ← fotoPrincipal
-assets/motos/pulsar/pulsar-ns400-2.jpg     ← fotoSecundaria
-assets/motos/pulsar/pulsar-ns400-ficha.pdf ← fichaTecnica
+assets/motos/linea-ejemplo/modelo-ejemplo-1.jpg     ← fotoPrincipal
+assets/motos/linea-ejemplo/modelo-ejemplo-2.jpg     ← fotoSecundaria
+assets/motos/linea-ejemplo/modelo-ejemplo-ficha.pdf ← fichaTecnica
 ```
+
+Mientras el archivo no exista físicamente en `assets/`, el campo se mantiene en `"PENDIENTE"` — nunca referenciar rutas inexistentes.
 
 **Dimensiones recomendadas para fotos:**
 - Proporción: 16:9 (ej: 800×450 px)
@@ -135,13 +145,11 @@ assets/motos/pulsar/pulsar-ns400-ficha.pdf ← fichaTecnica
 
 ---
 
-## Migración futura a Google Sheets
+## Arquitectura de datos con Google Sheets
 
-En Fase 3, el JSON se podrá generar automáticamente desde una hoja de cálculo:
+- **Google Sheets es la fuente comercial editable.** El catálogo real (modelos, precios, stock, disponibilidad, colores, fichas) se administra ahí, nunca en este JSON público.
+- **Apps Script publica un JSON filtrado hacia la web**, exponiendo únicamente los registros aprobados.
+- **`data/catalogo.json` público NO se actualiza con el catálogo real** ni automáticamente desde Sheets. Queda como **fallback neutro/manual** (estructura de ejemplo, `visible:false`) para que la web no se rompa si el endpoint futuro falla.
+- **No debe contener precios reales, stock real, disponibilidad real ni el catálogo completo.**
 
-1. Hoja pública en Google Sheets con columnas equivalentes
-2. Apps Script o herramienta externa exporta el JSON
-3. El archivo `data/catalogo.json` se actualiza automáticamente
-4. El esquema actual no cambia — compatibilidad garantizada
-
-**Importante:** mantener exactamente los mismos nombres de campos para no romper el frontend.
+**Importante:** el esquema de campos (`ESQUEMA_MOTO`) debe mantenerse idéntico entre Google Sheets, el JSON filtrado publicado por Apps Script y este fallback, para no romper el frontend.

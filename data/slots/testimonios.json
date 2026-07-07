@@ -1,5 +1,8 @@
 {
   "_nota": "Testimonios reales de clientes. NUNCA inventar testimonios, nombres ni comentarios. Requiere consentimiento explícito del cliente antes de publicar nombre, foto o video.",
+  "canalPrincipal": "Dato administrado desde Google Sheets",
+  "formatoPrincipal": "Dato administrado desde Google Sheets",
+  "_notaCanalPrincipal": "El canal, formato y URLs reales de los testimonios se administran desde Google Sheets — no se conservan en este repositorio público. No hay testimonios escritos verificados; no se inventan. Cualquier testimonio requiere consentimiento documentado del cliente antes de publicarse.",
 
   "testimonios": [
     {
@@ -7,7 +10,7 @@
       "modeloComprado": "PENDIENTE",
       "sede": "PENDIENTE",
       "comentario": "PENDIENTE: testimonio real del cliente, con su autorización",
-      "foto": "assets/clientes/PENDIENTE.jpg",
+      "foto": "PENDIENTE",
       "video": "pendiente",
       "redSocialUrl": "pendiente",
       "visible": false,

@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- SEO base -->
-    <meta name="description" content="ARENAS MOTOCICLETAS en Cusco: catálogo de motos, financiamiento flexible y servicio técnico especializado. Pulsar, Dominar, Boxer y CT." />
-    <meta name="keywords" content="motos Cusco, motocicletas Cusco, Bajaj Cusco, Pulsar NS400, Dominar 400, concesionario motos Perú, financiamiento motos Cusco" />
+    <meta name="description" content="Arenas Motocicletas: tienda de motocicletas en Cusco. Catálogo y servicios administrados desde canales oficiales. Sujeto a condiciones comerciales vigentes." />
+    <meta name="keywords" content="Arenas Motocicletas, tienda de motocicletas en Cusco, motos en Cusco" />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="ARENAS MOTOCICLETAS" />
     <meta name="theme-color" content="#050608" />
@@ -15,7 +15,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_PE" />
     <meta property="og:title" content="ARENAS MOTOCICLETAS | Cusco" />
-    <meta property="og:description" content="Catálogo de motos, financiamiento y servicio técnico en Cusco, Perú." />
+    <meta property="og:description" content="Tienda de motocicletas en Cusco. Información administrada desde canales oficiales." />
     <meta property="og:url" content="https://arenasweb.github.io/" />
     <meta property="og:site_name" content="ARENAS MOTOCICLETAS" />
     <!--
@@ -34,7 +34,7 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="ARENAS MOTOCICLETAS | Cusco" />
-    <meta name="twitter:description" content="Catálogo de motos, financiamiento y servicio técnico en Cusco, Perú." />
+    <meta name="twitter:description" content="Tienda de motocicletas en Cusco. Información administrada desde canales oficiales." />
     <!--
       twitter:image DESACTIVADO por el mismo motivo que og:image (archivo
       todavía no existe). "summary" arriba no requiere imagen grande;
@@ -75,7 +75,7 @@
           <span class="brand-mark" aria-hidden="true">A</span>
           <div>
             <p class="brand-name">ARENAS MOTOCICLETAS</p>
-            <p class="brand-tag">Cusco &bull; La A que acelera</p>
+            <p class="brand-tag">Cusco</p>
           </div>
         </div>
 
@@ -116,7 +116,7 @@
             <span class="eyebrow">Concesionario premium · Cusco, Perú</span>
             <h1 id="hero-heading">ARENAS MOTOCICLETAS</h1>
             <p class="hero-description">
-              Encuentra tu próxima moto en Cusco. Catálogo completo, financiamiento flexible
+              Encuentra tu próxima moto en Cusco. Catálogo completo
               y respaldo técnico para pilotos exigentes.
             </p>
             <div class="hero-actions">
@@ -147,12 +147,10 @@
           <div id="search-controls" class="search-controls" role="search" aria-label="Filtros de catálogo">
             <div class="search-filters">
               <label for="filtro-linea" class="filter-label">Línea</label>
+              <!-- Las líneas reales del catálogo se administran desde Google Sheets;
+                   este filtro se poblará dinámicamente cuando la integración esté activa. -->
               <select id="filtro-linea" class="filter-select" aria-label="Filtrar por línea de moto">
                 <option value="">Todas las líneas</option>
-                <option value="Pulsar">Pulsar</option>
-                <option value="Dominar">Dominar</option>
-                <option value="Boxer">Boxer</option>
-                <option value="CT">CT</option>
               </select>
 
               <label for="filtro-uso" class="filter-label">Uso</label>
@@ -189,7 +187,7 @@
           <div class="section-header">
             <span class="eyebrow">Catálogo destacado</span>
             <h2 id="catalogo-heading">Modelos para Cusco</h2>
-            <p>Selección curada de motos disponibles en tienda con financiamiento y stock real.</p>
+            <p>Catálogo administrado desde canales oficiales, con información comercial sujeta a confirmación.</p>
           </div>
 
           <!-- Zona de tarjetas — JS inserta aquí el catálogo dinámico -->
@@ -215,8 +213,8 @@
         <section id="modelo-destacado" class="section featured-model-section reveal-section" aria-labelledby="modelo-destacado-heading">
           <div class="section-header">
             <span class="eyebrow">Modelo destacado</span>
-            <h2 id="modelo-destacado-heading">Pulsar NS400</h2>
-            <p>La naked deportiva con tecnología de punta y presencia agresiva en carretera y ciudad.</p>
+            <h2 id="modelo-destacado-heading">Modelo destacado por confirmar</h2>
+            <p>Información administrada desde canales oficiales.</p>
           </div>
           <div class="featured-model-layout">
             <!-- Zona de imagen principal del modelo destacado -->
@@ -226,10 +224,7 @@
             </div>
             <div class="featured-model-info">
               <ul class="feature-list" aria-label="Características del modelo destacado">
-                <li class="feature-item">Frenos ABS de doble disco</li>
-                <li class="feature-item">Iluminación LED completa</li>
-                <li class="feature-item">Tablero digital TFT</li>
-                <li class="feature-item">Control de tracción</li>
+                <li class="feature-item">Especificaciones técnicas: Consultar con un asesor</li>
               </ul>
               <!-- Precio: estado neutro por defecto — script.js → actualizarModeloDestacado()
                    lo reemplaza con el valor real SOLO si precioConfirmado === true en
@@ -250,7 +245,8 @@
 
         <!-- ============================================================
              SECCIÓN 5: LÍNEAS DE MOTOS
-             Familias de productos: Pulsar, Dominar, Boxer, CT.
+             Categorías de uso genéricas — las familias reales del catálogo
+             se administran desde Google Sheets.
         ============================================================ -->
         <section id="lineas" class="section lines-section reveal-section" aria-labelledby="lineas-heading">
           <div class="section-header">
@@ -260,32 +256,35 @@
           </div>
           <div class="lines-grid" role="list" aria-label="Líneas de motos disponibles">
 
-            <article class="line-card" role="listitem" aria-label="Línea Pulsar">
+            <!-- Las líneas/familias reales del catálogo se administran desde Google
+                 Sheets. Estas tarjetas usan categorías de uso genéricas (no líneas
+                 comerciales) como estructura visual hasta que la integración esté activa. -->
+            <article class="line-card" role="listitem" aria-label="Categoría urbana">
               <div class="line-icon" aria-hidden="true"><!-- PENDIENTE: ícono línea --></div>
-              <h3 class="line-name">Pulsar</h3>
-              <p class="line-desc">Deportivas y naked de alta cilindrada para el piloto exigente.</p>
-              <a href="#catalogo" class="btn btn-ghost" aria-label="Ver motos de la línea Pulsar">Ver modelos</a>
+              <h3 class="line-name">Urbanas</h3>
+              <p class="line-desc">Movilidad diaria en ciudad. Modelos administrados desde canales oficiales.</p>
+              <a href="#catalogo" class="btn btn-ghost" aria-label="Ver motos urbanas">Ver modelos</a>
             </article>
 
-            <article class="line-card" role="listitem" aria-label="Línea Dominar">
+            <article class="line-card" role="listitem" aria-label="Categoría deportiva">
               <div class="line-icon" aria-hidden="true"><!-- PENDIENTE: ícono línea --></div>
-              <h3 class="line-name">Dominar</h3>
-              <p class="line-desc">Aventura y touring con tecnología y comodidad en ruta.</p>
-              <a href="#catalogo" class="btn btn-ghost" aria-label="Ver motos de la línea Dominar">Ver modelos</a>
+              <h3 class="line-name">Deportivas</h3>
+              <p class="line-desc">Para el piloto exigente. Modelos administrados desde canales oficiales.</p>
+              <a href="#catalogo" class="btn btn-ghost" aria-label="Ver motos deportivas">Ver modelos</a>
             </article>
 
-            <article class="line-card" role="listitem" aria-label="Línea Boxer">
+            <article class="line-card" role="listitem" aria-label="Categoría aventura">
               <div class="line-icon" aria-hidden="true"><!-- PENDIENTE: ícono línea --></div>
-              <h3 class="line-name">Boxer</h3>
-              <p class="line-desc">Confiable y urbana para el día a día en Cusco.</p>
-              <a href="#catalogo" class="btn btn-ghost" aria-label="Ver motos de la línea Boxer">Ver modelos</a>
+              <h3 class="line-name">Aventura</h3>
+              <p class="line-desc">Ruta y touring. Modelos administrados desde canales oficiales.</p>
+              <a href="#catalogo" class="btn btn-ghost" aria-label="Ver motos de aventura">Ver modelos</a>
             </article>
 
-            <article class="line-card" role="listitem" aria-label="Línea CT">
+            <article class="line-card" role="listitem" aria-label="Categoría trabajo y carga">
               <div class="line-icon" aria-hidden="true"><!-- PENDIENTE: ícono línea --></div>
-              <h3 class="line-name">CT</h3>
-              <p class="line-desc">Práctica y eficiente para trabajo, reparto y movilidad.</p>
-              <a href="#catalogo" class="btn btn-ghost" aria-label="Ver motos de la línea CT">Ver modelos</a>
+              <h3 class="line-name">Trabajo y carga</h3>
+              <p class="line-desc">Reparto y uso intensivo. Modelos administrados desde canales oficiales.</p>
+              <a href="#catalogo" class="btn btn-ghost" aria-label="Ver motos de trabajo y carga">Ver modelos</a>
             </article>
 
           </div>
@@ -306,19 +305,19 @@
             <article class="why-card" role="listitem">
               <div class="why-icon" aria-hidden="true"><!-- PENDIENTE: ícono --></div>
               <h3>Taller propio en Cusco</h3>
-              <p>Servicio técnico especializado con técnicos certificados y repuestos originales disponibles.</p>
+              <p>Área técnica disponible. Mantenimiento sujeto a condiciones comerciales vigentes.</p>
             </article>
 
             <article class="why-card" role="listitem">
               <div class="why-icon" aria-hidden="true"><!-- PENDIENTE: ícono --></div>
-              <h3>Financiamiento local</h3>
-              <p>Opciones de crédito adaptadas al perfil económico del piloto cusqueño, sin burocracia.</p>
+              <h3>Opciones de pago</h3>
+              <p>Financiamiento sujeto a evaluación y disponibilidad vigente. Información administrada desde canales oficiales.</p>
             </article>
 
             <article class="why-card" role="listitem">
               <div class="why-icon" aria-hidden="true"><!-- PENDIENTE: ícono --></div>
-              <h3>Stock real disponible</h3>
-              <p>Inventario actual verificado. Sin esperas largas ni promesas sin respaldo.</p>
+              <h3>Disponibilidad sujeta a confirmación</h3>
+              <p>Consulta condiciones vigentes con un asesor antes de tu visita.</p>
             </article>
 
             <article class="why-card" role="listitem">
@@ -338,67 +337,54 @@
           <div class="section-header">
             <span class="eyebrow">Tu moto incluye</span>
             <h2 id="incluye-heading">Más que una moto, una experiencia completa</h2>
-            <p>Cada compra en ARENAS viene respaldada por beneficios reales desde el primer día.</p>
+            <p>Cada compra en ARENAS incluye los siguientes beneficios, sujetos a condiciones comerciales vigentes.</p>
           </div>
+          <!-- Los beneficios reales por compra se administran desde Google Sheets
+               y se publicarán solo cuando estén aprobados. No listar beneficios
+               concretos (garantía, mantenimientos, accesorios) en este HTML. -->
           <ul class="includes-list" aria-label="Beneficios incluidos en la compra">
             <li class="include-item">
               <span class="include-check" aria-hidden="true">✓</span>
-              <span>Garantía oficial de fábrica</span>
+              <span>Beneficios sujetos a condiciones comerciales vigentes.</span>
             </li>
             <li class="include-item">
               <span class="include-check" aria-hidden="true">✓</span>
-              <span>Primer servicio técnico incluido</span>
+              <span>Información administrada desde canales oficiales.</span>
             </li>
             <li class="include-item">
               <span class="include-check" aria-hidden="true">✓</span>
-              <span>Asesoría en trámites de placa y SOAT</span>
+              <span>Consulta condiciones vigentes con un asesor autorizado.</span>
             </li>
-            <li class="include-item">
-              <span class="include-check" aria-hidden="true">✓</span>
-              <span>Entrega en tienda con verificación técnica</span>
-            </li>
-            <li class="include-item">
-              <span class="include-check" aria-hidden="true">✓</span>
-              <span>Soporte postventa por WhatsApp</span>
-            </li>
-            <!-- PENDIENTE: validar beneficios reales con el equipo -->
           </ul>
+          <p class="includes-disclaimer" aria-label="Nota sobre beneficios incluidos">
+            * Beneficios sujetos a condiciones comerciales vigentes.
+          </p>
         </section>
 
         <!-- ============================================================
              SECCIÓN 8: FINANCIAMIENTO
-             Opciones de cuotas y crédito disponibles.
-             PENDIENTE: datos reales de financiamiento.
+             Estado y entidades administrados desde Google Sheets.
+             No mostrar plazos, cuotas, entidades ni financiamiento como activo sin aprobación.
         ============================================================ -->
         <section id="financiamiento" class="section financing-section reveal-section" aria-labelledby="financiamiento-heading">
           <div class="section-header">
             <span class="eyebrow">Financiamiento</span>
-            <h2 id="financiamiento-heading">Opciones adaptadas a tu bolsillo</h2>
-            <p>Crédito accesible para que tu moto no espere. Planes desde 12 hasta 24 meses.</p>
+            <h2 id="financiamiento-heading">Opciones de financiamiento</h2>
+            <p>Financiamiento sujeto a evaluación y disponibilidad vigente. Información administrada desde canales oficiales.</p>
           </div>
-          <div class="financing-grid" role="list" aria-label="Opciones de financiamiento disponibles">
+          <!-- Las entidades financieras reales y el estado del financiamiento se
+               administran desde Google Sheets. No nombrar entidades en este HTML. -->
+          <div class="financing-grid" role="list" aria-label="Estado del financiamiento">
 
             <article class="financing-card" role="listitem">
-              <h3 class="financing-plan">Plan Básico</h3>
-              <p class="financing-months">12 meses</p>
-              <p class="financing-note">Cuota inicial: <span class="badge-pendiente" title="Monto pendiente de confirmación con el área de financiamiento">Por confirmar</span></p>
-            </article>
-
-            <article class="financing-card" role="listitem">
-              <h3 class="financing-plan">Plan Estándar</h3>
-              <p class="financing-months">18 meses</p>
-              <p class="financing-note">Cuota inicial: <span class="badge-pendiente" title="Monto pendiente de confirmación con el área de financiamiento">Por confirmar</span></p>
-            </article>
-
-            <article class="financing-card financing-card--featured" role="listitem">
-              <h3 class="financing-plan">Plan Premium</h3>
-              <p class="financing-months">24 meses</p>
-              <p class="financing-note">Cuota inicial: <span class="badge-pendiente" title="Monto pendiente de confirmación con el área de financiamiento">Por confirmar</span></p>
+              <h3 class="financing-plan">Entidad administrada desde Google Sheets</h3>
+              <p class="financing-months">Información por confirmar</p>
+              <p class="financing-note">Estado: <span class="badge-pendiente" title="Información pendiente de publicación">Por confirmar</span></p>
             </article>
 
           </div>
           <p class="financing-disclaimer" aria-label="Nota sobre datos de financiamiento">
-            * Datos provisionales. Condiciones sujetas a evaluación crediticia. Confirmar con asesor en tienda.
+            * Financiamiento sujeto a evaluación y disponibilidad vigente. Consulta condiciones vigentes con un asesor autorizado.
           </p>
         </section>
 
@@ -410,16 +396,17 @@
           <div class="section-header">
             <span class="eyebrow">Servicio técnico</span>
             <h2 id="servicio-heading">Taller especializado en Cusco</h2>
-            <p>Mantenimiento preventivo y correctivo con técnicos certificados y repuestos originales.</p>
+            <p>Mantenimiento preventivo y correctivo. Servicio postventa sujeto a condiciones comerciales vigentes.</p>
           </div>
           <div class="service-layout">
             <div class="service-info">
               <ul class="service-list" aria-label="Servicios técnicos disponibles">
-                <li>Mantenimiento preventivo según kilometraje</li>
+                <li>Mantenimiento preventivo según condiciones comerciales vigentes</li>
                 <li>Diagnóstico electrónico de sistemas</li>
-                <li>Repuestos originales en stock</li>
                 <li>Reparación de motor, frenos y suspensión</li>
-                <li>Atención de garantías de fábrica</li>
+                <li>Repuestos sujetos a disponibilidad</li>
+                <li>Área técnica disponible</li>
+                <li>Servicio postventa sujeto a condiciones comerciales vigentes</li>
               </ul>
               <a href="#cotizacion" class="btn btn-primary" aria-label="Agendar revisión técnica por WhatsApp">
                 Agendar revisión
@@ -434,20 +421,22 @@
 
         <!-- ============================================================
              SECCIÓN 10: PROMOCIONES
-             Ofertas actuales y paquetes especiales temporales.
-             PENDIENTE: conectar con campo "promocion" del catálogo JSON.
+             Promociones y campañas comerciales sujetas a confirmación.
+             PENDIENTE: conectar con campo "promocion" del catálogo JSON, solo
+             cuando existan promociones con promocionConfirmada=true y
+             estadoAprobacion="aprobado".
         ============================================================ -->
         <section id="promociones" class="section promos-section reveal-section" aria-labelledby="promociones-heading">
           <div class="section-header">
             <span class="eyebrow">Promociones</span>
-            <h2 id="promociones-heading">Ofertas y paquetes especiales</h2>
-            <p>Beneficios exclusivos para compras en tienda y temporadas especiales.</p>
+            <h2 id="promociones-heading">Promociones y campañas comerciales</h2>
+            <p>Promociones y campañas comerciales sujetas a confirmación. Consulta condiciones vigentes con un asesor.</p>
           </div>
-          <div id="promos-grid" class="promos-grid" role="list" aria-label="Promociones vigentes">
+          <div id="promos-grid" class="promos-grid" role="list" aria-label="Promociones sujetas a confirmación">
             <!-- Promos extraídas dinámicamente del catálogo JSON via script.js -->
             <div class="placeholder-card">
-              <p>Las promociones vigentes se cargarán automáticamente desde el catálogo.</p>
-              <!-- PENDIENTE: activar render de promos desde catalogo.json -->
+              <p>No hay promociones aprobadas para publicación en este momento. Consulta condiciones vigentes con un asesor.</p>
+              <!-- PENDIENTE: activar render de promos desde catalogo.json solo cuando existan promociones con promocionConfirmada=true y estadoAprobacion="aprobado" -->
             </div>
           </div>
         </section>
@@ -555,7 +544,7 @@
                   id="campo-telefono"
                   name="telefono"
                   class="form-input"
-                  placeholder="Ej: 987654321"
+                  placeholder="Ej: tu número de contacto"
                   required
                   autocomplete="tel"
                   aria-required="true"
@@ -574,11 +563,13 @@
                   class="form-select"
                   aria-label="Selecciona el modelo que te interesa"
                 >
+                  <!-- La lista real de modelos se administra desde Google Sheets.
+                       No enumerar el catálogo comercial en este HTML. -->
                   <option value="">¿Qué moto te interesa?</option>
-                  <option value="Pulsar NS400">Pulsar NS400</option>
-                  <option value="Dominar 400">Dominar 400</option>
-                  <option value="Boxer 150">Boxer 150</option>
-                  <option value="CT 125">CT 125</option>
+                  <option value="Modelo urbano">Modelo urbano</option>
+                  <option value="Modelo deportivo">Modelo deportivo</option>
+                  <option value="Modelo de aventura">Modelo de aventura</option>
+                  <option value="Modelo de trabajo / carga">Modelo de trabajo / carga</option>
                   <option value="No sé, necesito asesoría">No sé, necesito asesoría</option>
                 </select>
               </div>
@@ -617,10 +608,10 @@
               </div>
 
               <div class="form-actions">
-                <button type="submit" class="btn btn-primary" id="btn-cotizar" data-accion="whatsapp" aria-label="Enviar solicitud de cotización por WhatsApp">
-                  Enviar por WhatsApp
+                <button type="submit" class="btn btn-primary" id="btn-cotizar" data-accion="whatsapp" aria-label="Enviar solicitud de cotización">
+                  Enviar solicitud
                 </button>
-                <p class="form-hint">Al enviar, se abrirá WhatsApp en una pestaña nueva.</p>
+                <p class="form-hint">El canal de contacto se habilitará cuando sea aprobado. Recibiremos tu solicitud y te contactaremos por los canales oficiales vigentes.</p>
                 <!-- Mensaje de éxito — visible solo tras envío exitoso vía JS -->
                 <div id="form-success" class="form-success" role="status" aria-live="polite" hidden>
                   <p>¡Gracias! Tu consulta fue enviada. Nos contactaremos pronto.</p>
@@ -645,7 +636,7 @@
               >
                 <span aria-hidden="true">💬</span> Abrir WhatsApp
               </button>
-              <p class="quote-hours">Atención: Lun–Vie 09:00–19:00 · Sáb 09:00–14:00</p>
+              <p class="quote-hours">Horario de atención por confirmar. Consulta disponibilidad de atención antes de visitar tienda.</p>
             </aside>
           </div>
         </section>
@@ -661,7 +652,7 @@
           <span class="brand-mark brand-mark--sm" aria-hidden="true">A</span>
           <div>
             <p class="brand-name">ARENAS MOTOCICLETAS</p>
-            <p class="brand-tag">Cusco, Perú &bull; La A que acelera</p>
+            <p class="brand-tag">Cusco, Perú</p>
           </div>
         </div>
 

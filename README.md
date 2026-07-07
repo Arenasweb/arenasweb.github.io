@@ -38,7 +38,7 @@ arenasweb.github.io/
 ├── sitemap.xml              ← Mapa del sitio
 │
 ├── data/
-│   ├── catalogo.json        ← Inventario de motos (fuente principal de datos)
+│   ├── catalogo.json        ← Fallback neutro (NO inventario real; catálogo administrado desde Google Sheets)
 │   ├── configuracion.json   ← Configuración global: WhatsApp, sedes, SEO
 │   └── slots/               ← Contenido editable y aprobable (12 archivos)
 │       ├── hero.json, empresa.json, whatsapp.json, sedes.json
@@ -85,12 +85,12 @@ arenasweb.github.io/
 2. Buscador — Filtros por línea, uso y cilindrada
 3. Catálogo destacado — Tarjetas dinámicas desde `data/catalogo.json`
 4. Modelo destacado — Presentación de la moto estrella
-5. Líneas de motos — Pulsar, Dominar, Boxer, CT
+5. Líneas de motos — Categorías de uso genéricas (las líneas reales se administran desde Google Sheets)
 6. Por qué elegir ARENAS — Propuesta de valor
-7. Tu moto incluye — Beneficios de compra
-8. Financiamiento — Opciones de cuotas
+7. Tu moto incluye — Beneficios (administrados desde Google Sheets)
+8. Financiamiento — Sujeto a evaluación y disponibilidad vigente (entidades administradas desde Google Sheets)
 9. Servicio técnico — Taller en Cusco
-10. Promociones — Ofertas vigentes
+10. Promociones — Sujetas a confirmación
 11. Testimonios — Entregas reales
 12. Comparador — Comparación de modelos (pendiente implementación)
 13. Tiendas — Sedes y horarios

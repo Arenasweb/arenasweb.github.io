@@ -157,7 +157,7 @@ Se aplican automáticamente en `renderizarCatalogo()` a las primeras 6 tarjetas.
 - [ ] ¿Parallax sutil en hero o evitarlo para rendimiento?
 - [ ] ¿Transición de página con View Transitions API?
 - [ ] ¿Cursor personalizado?
-- [ ] ¿Countdown de oferta animado?
+- [ ] ¿Countdown animado para promociones aprobadas (solo si existe alguna vigente y confirmada)?
 - [ ] ¿Slider de imágenes en tarjetas o lightbox?
 - [ ] ¿Número de partículas/canvas en hero?
 - [ ] ¿Nivel de glow en botones primarios?

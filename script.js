@@ -26,19 +26,19 @@
    ================================================================ */
 
 const CONFIG = {
-  whatsapp:       "+51987654321",   // PENDIENTE: número real
+  whatsapp:       "PENDIENTE",      // valor de arranque — cargarConfiguracion() lo sobrescribe con data/configuracion.json → whatsapp. whatsappConfirmado() bloquea cualquier enlace mientras no haya aprobación, independientemente de este valor.
   catalogPath:    "data/catalogo.json",
   configPath:     "data/configuracion.json",
   slotsPath:      "data/slots",     // carpeta de slots editables
   slotsArchivos: [
     "hero", "empresa", "whatsapp", "sedes", "financiamiento",
     "beneficios", "servicio-tecnico", "promociones", "testimonios",
-    "legales", "seo", "ui-placeholders",
+    "legales", "seo", "ui-placeholders", "control",
   ],
   revealThreshold: 0.12,           // % de visibilidad para activar reveal
   revealClass:    "is-visible",    // clase que activa la animación CSS
   maxFiltros:     3,               // máximo de filtros activos simultáneos
-  modeloDestacadoId: "pulsar-ns400", // valor de arranque — cargarConfiguracion() lo sobrescribe con data/configuracion.json → modeloDestacadoId
+  modeloDestacadoId: "PENDIENTE",   // valor de arranque — cargarConfiguracion() lo sobrescribe con data/configuracion.json → modeloDestacadoId. El id real es dato de catálogo administrado desde Google Sheets; con PENDIENTE no hay coincidencia y la sección destacada conserva su estado neutro.
 };
 
 // Estado global de la app (mutable durante sesión)
@@ -98,12 +98,18 @@ function crearMensajeWhatsApp(modelo = "una moto", extra = "") {
 
 /**
  * Construye la URL completa de WhatsApp con mensaje codificado.
+ * Autodefensa: devuelve "" si el canal no está confirmado por gerencia o si
+ * el número es un placeholder (PENDIENTE/vacío/sin dígitos suficientes) —
+ * ningún llamador debe poder generar un wa.me con datos no aprobados,
+ * aunque olvide su propio gate.
  * @param {string} mensaje
  * @param {string} numero  - número con código de país, sin espacios ni guiones
- * @returns {string}
+ * @returns {string} URL de wa.me, o "" si el canal no está aprobado
  */
 function buildWhatsAppURL(mensaje, numero = CONFIG.whatsapp) {
-  const clean = numero.replace(/\D/g, "");
+  if (!whatsappConfirmado()) return "";
+  const clean = typeof numero === "string" ? numero.replace(/\D/g, "") : "";
+  if (clean.length < 9) return ""; // placeholder, vacío o número incompleto
   return `https://wa.me/${clean}?text=${encodeURIComponent(mensaje)}`;
 }
 
@@ -177,6 +183,7 @@ function consultarPorWhatsApp(modelo) {
   }
   const mensaje = crearMensajeWhatsApp(modelo);
   const url     = buildWhatsAppURL(mensaje);
+  if (!url) { mostrarAvisoWhatsAppPendiente(); return; } // número placeholder/no aprobado
   window.open(url, "_blank", "noopener,noreferrer");
   trackEvent("whatsapp_click", { modelo });
 }
@@ -200,6 +207,7 @@ function abrirWhatsAppGeneral() {
 
   const mensaje = mensajePredefinido || crearMensajeWhatsApp();
   const url     = buildWhatsAppURL(mensaje);
+  if (!url) { mostrarAvisoWhatsAppPendiente(); return; } // número placeholder/no aprobado
   window.open(url, "_blank", "noopener,noreferrer");
   trackEvent("whatsapp_click", { origen: "contacto_directo" });
 }
@@ -305,6 +313,30 @@ function esTelefonoSeguro(valor) {
   return typeof valor === "string" && /^[+\d][\d\s().-]{5,19}$/.test(valor.trim());
 }
 
+/**
+ * Estados de aprobación normalizados — únicos valores que el sitio
+ * reconoce para decidir si algo se publica. Cualquier estado extendido
+ * o legado (ej. "pendiente-confirmacion-gerencial",
+ * "pendiente-confirmar-existencia", "pendiente-aprobacion-gerencial",
+ * "confirmado") se reduce a uno de estos cuatro antes de evaluarse.
+ * Ver docs/control-publicacion-datos.md.
+ */
+const ESTADOS_APROBACION_VALIDOS = ["pendiente", "aprobado", "rechazado", "oculto"];
+
+/**
+ * Normaliza cualquier valor de estadoAprobacion (incluyendo estados
+ * extendidos/legado o desconocidos) a uno de ESTADOS_APROBACION_VALIDOS.
+ * Por diseño, todo lo que no sea exactamente "aprobado", "rechazado" u
+ * "oculto" se trata como "pendiente" — el valor más conservador, que
+ * nunca permite publicar un dato como confirmado.
+ * @param {*} valor
+ * @returns {"pendiente"|"aprobado"|"rechazado"|"oculto"}
+ */
+function normalizarEstadoAprobacion(valor) {
+  const limpio = String(valor || "").trim().toLowerCase();
+  return ESTADOS_APROBACION_VALIDOS.includes(limpio) ? limpio : "pendiente";
+}
+
 /** Esquemas mínimos de tipos esperados por dominio de datos */
 const ESQUEMA_MOTO = {
   id: "string", linea: "string", modelo: "string",
@@ -313,6 +345,8 @@ const ESQUEMA_MOTO = {
   cuotaInicial: "string", cuotaConfirmada: "boolean",
   stock: "string", stockConfirmado: "boolean",
   descripcion: "string",
+  promocion: "string", promocionConfirmada: "boolean",
+  estadoAprobacion: "string",
 };
 
 const ESQUEMA_SEDE = {
@@ -337,6 +371,21 @@ const ESQUEMA_SEO_SLOT = {
   title: "string", description: "string", keywords: "string",
   ogTitle: "string", ogDescription: "string", ogImage: "string",
   canonicalUrl: "string",
+};
+
+/** Contrato local equivalente a la futura pestaña 99_CONTROL */
+const ESQUEMA_CONTROL_SLOT = {
+  modoDatos: "string",
+  googleSheetsConectado: "boolean",
+  appsScriptEndpoint: "string",
+  fallbackLocal: "boolean",
+  permitirDatosPendientes: "boolean",
+  mostrarPreciosPendientes: "boolean",
+  mostrarWhatsappPendiente: "boolean",
+  mostrarPromocionesPendientes: "boolean",
+  mostrarGarantiaNoConfirmada: "boolean",
+  mostrarFinanciamientoNoConfirmado: "boolean",
+  ultimaRevisionGerencial: "string",
 };
 
 /**
@@ -405,13 +454,15 @@ function validarConsistenciaMoto(moto) {
   if (moto.stockConfirmado === true && !moto.stock) {
     errores.push(`catalogo:${moto.id}: stockConfirmado=true pero falta "stock"`);
   }
+  if (moto.promocionConfirmada === true && !moto.promocion) {
+    errores.push(`catalogo:${moto.id}: promocionConfirmada=true pero falta "promocion"`);
+  }
   return errores;
 }
 
 function validarConsistenciaSede(sede) {
   const errores = [];
-  const estado = String(sede.estadoAprobacion || "").trim().toLowerCase();
-  const aprobada = ESTADOS_SEDE_VISIBLES.includes(estado);
+  const aprobada = normalizarEstadoAprobacion(sede.estadoAprobacion) === "aprobado";
   const direccionPendiente = !sede.direccion || /^pendiente$/i.test(String(sede.direccion).trim());
   if (aprobada && direccionPendiente) {
     errores.push(`sede:${sede.id}: estadoAprobacion="${sede.estadoAprobacion}" pero la dirección sigue pendiente`);
@@ -419,13 +470,9 @@ function validarConsistenciaSede(sede) {
   return errores;
 }
 
-/** Estados que permiten mostrar una promoción (mismo criterio que sedes) */
-const ESTADOS_PROMOCION_VISIBLES = ["aprobado", "confirmado"];
-
 function validarConsistenciaPromocion(promo) {
   const errores = [];
-  const estado = String(promo.estadoAprobacion || "").trim().toLowerCase();
-  if (promo.visible === true && !ESTADOS_PROMOCION_VISIBLES.includes(estado)) {
+  if (promo.visible === true && normalizarEstadoAprobacion(promo.estadoAprobacion) !== "aprobado") {
     errores.push(`promocion:${promo.modelo}: visible=true pero estadoAprobacion="${promo.estadoAprobacion}" no está aprobado`);
   }
   return errores;
@@ -554,6 +601,25 @@ function verificarConsistenciaSEO() {
   }
 }
 
+/** Valida (sin filtrar, es un objeto único) el slot de control (99_CONTROL) */
+function validarSlotControl(controlRaw) {
+  const errores = validarContraEsquema(controlRaw, ESQUEMA_CONTROL_SLOT, "slot:control");
+  if (errores.length) console.warn("[ARENAS] data/slots/control.json no cumple el esquema esperado:", errores);
+  return errores.length === 0;
+}
+
+/**
+ * Indica si el sitio está operando en modo de datos local (el único
+ * modo soportado hoy). Lee data/slots/control.json si está disponible;
+ * si no, asume local por seguridad (nunca asume una fuente remota).
+ * @returns {boolean}
+ */
+function modoDatosEsLocal() {
+  const control = STATE.slots && STATE.slots.control;
+  if (!control) return true;
+  return control.googleSheetsConectado !== true;
+}
+
 /**
  * Ejecuta todas las validaciones de slots cargados y reemplaza en
  * STATE.slots los arrays con sus versiones filtradas (sedes y
@@ -573,6 +639,19 @@ function validarSlotsCargados() {
   }
   if (STATE.slots.seo) {
     validarSlotSeo(STATE.slots.seo);
+  }
+  if (STATE.slots.control) {
+    validarSlotControl(STATE.slots.control);
+    if (!modoDatosEsLocal()) {
+      // Defensa en profundidad: aunque el slot afirme una conexión remota,
+      // este build no tiene código de fetch remoto — se documenta la
+      // discrepancia y se sigue operando en modo local.
+      console.warn(
+        "[ARENAS] data/slots/control.json declara googleSheetsConectado=true, " +
+        "pero este sitio no tiene implementado ningún fetch remoto todavía. " +
+        "Se continúa en modo local. Ver docs/contrato-datos-google-sheets.md."
+      );
+    }
   }
 }
 
@@ -786,7 +865,16 @@ function crearTarjetaMoto(moto) {
   desc.textContent = moto.descripcion || "";
   body.appendChild(desc);
 
-  if (moto.promocion) {
+  // La promoción solo se publica como beneficio confirmado si el negocio
+  // la aprobó explícitamente. Sin esas dos condiciones, no se renderiza
+  // nada — no hay badge "pendiente" aquí porque mostrar el texto de la
+  // promoción (aunque marcado como referencial) seguiría siendo una
+  // promesa comercial no autorizada. Ver docs/control-publicacion-datos.md.
+  if (
+    moto.promocion &&
+    moto.promocionConfirmada === true &&
+    normalizarEstadoAprobacion(moto.estadoAprobacion) === "aprobado"
+  ) {
     const promoBadge = createElement("span", { class: "moto-card__badge" });
     promoBadge.textContent = moto.promocion;
     body.appendChild(promoBadge);
@@ -1066,14 +1154,6 @@ function actualizarModeloDestacado() {
    fallback si el slot no carga.
    ================================================================ */
 
-/**
- * Allowlist de estados que permiten mostrar una sede. Es intencional
- * que sea una lista de permitidos (no de bloqueados): cualquier estado
- * nuevo que se invente en el futuro (typos, valores no documentados)
- * queda oculto por defecto en vez de mostrarse por error.
- */
-const ESTADOS_SEDE_VISIBLES = ["aprobado", "confirmado"];
-
 function renderizarTiendas() {
   const grid = $("#stores-grid");
   if (!grid) return;
@@ -1083,8 +1163,10 @@ function renderizarTiendas() {
     ? sedesSlot
     : (STATE.config.sedes || []);
 
-  const sedesVisibles = sedesFuente.filter((sede) =>
-    ESTADOS_SEDE_VISIBLES.includes(String(sede.estadoAprobacion || "").trim().toLowerCase())
+  // Solo se muestran sedes cuyo estado normalizado sea exactamente "aprobado"
+  // (ver normalizarEstadoAprobacion() y docs/control-publicacion-datos.md).
+  const sedesVisibles = sedesFuente.filter(
+    (sede) => normalizarEstadoAprobacion(sede.estadoAprobacion) === "aprobado"
   );
 
   clearElement(grid);
@@ -1354,7 +1436,7 @@ function validarTelefono(campo) {
     return false;
   }
   if (!valido) {
-    mostrarError(campo, "error-telefono", "Ingresa un número de teléfono válido (ej: 987654321).");
+    mostrarError(campo, "error-telefono", "Ingresa un número de teléfono válido.");
     return false;
   }
   ocultarError(campo, "error-telefono");
@@ -1409,6 +1491,11 @@ function enviarFormularioPorWhatsApp(form) {
     .join("\n");
 
   const url = buildWhatsAppURL(textoWA);
+  if (!url) {
+    // Número placeholder/no aprobado: avisar sin perder lo escrito por el usuario
+    mostrarAvisoWhatsAppPendiente();
+    return;
+  }
   window.open(url, "_blank", "noopener,noreferrer");
 
   // Mostrar mensaje de éxito y limpiar formulario

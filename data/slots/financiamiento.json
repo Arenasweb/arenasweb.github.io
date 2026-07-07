@@ -1,9 +1,13 @@
 {
   "_nota": "Contenido editable de la sección de financiamiento. La evaluación final SIEMPRE se realiza presencialmente en tienda — este JSON no debe usarse para procesar créditos, solo para mostrar información referencial.",
 
-  "titulo": "Financiamiento a tu medida",
-  "descripcion": "Opciones de crédito flexibles para que tu moto no espere. Evaluación final presencial en tienda.",
-  "avisoPresencial": "La evaluación y aprobación final del financiamiento se realiza de forma presencial en tienda, sujeta a los criterios y políticas internas de ARENAS MOTOCICLETAS.",
+  "financiamientoActivo": false,
+  "estado": "pendiente",
+  "visible": false,
+  "estadoAprobacion": "pendiente",
+  "titulo": "Opciones de financiamiento",
+  "descripcion": "Financiamiento sujeto a evaluación y disponibilidad vigente. Información administrada desde canales oficiales.",
+  "avisoPresencial": "La evaluación y aprobación final del financiamiento, cuando se reactive, se realizará de forma presencial en tienda, sujeta a los criterios y políticas internas de ARENAS MOTOCICLETAS.",
 
   "requisitos": [
     "DNI vigente del titular (PENDIENTE confirmar requisitos adicionales)",
@@ -25,19 +29,17 @@
     "Entrega del vehículo"
   ],
 
-  "entidadesFinancieras": [
-    "PENDIENTE: nombre de entidad 1",
-    "PENDIENTE: nombre de entidad 2"
-  ],
+  "entidadesFinancieras": ["Entidad administrada desde Google Sheets"],
+  "_notaEntidades": "Las entidades financieras reales son datos comerciales administrados desde Google Sheets — no se conservan en este repositorio público. No publicar nombres de entidades sin aprobación.",
 
   "condicionesReferenciales": {
-    "planesDisponibles": ["12 meses", "18 meses", "24 meses"],
+    "planesDisponibles": [],
     "cuotaInicialMinima": "PENDIENTE",
     "tasaReferencial": "PENDIENTE",
-    "nota": "Valores referenciales no vinculantes. Sujetos a evaluación presencial."
+    "nota": "Sin planes ni plazos publicados mientras el financiamiento esté inactivo. No publicar 12/18/24 meses ni ningún plazo hasta reactivación confirmada por gerencia."
   },
 
-  "disclaimer": "La información de financiamiento mostrada en el sitio es referencial e informativa. No constituye una oferta de crédito formal. Todas las condiciones reales se determinan y formalizan de manera presencial en tienda.",
+  "disclaimer": "El financiamiento no está disponible por el momento. La información mostrada es referencial. Todas las condiciones reales, cuando se reactive, se determinan y formalizan de manera presencial en tienda.",
 
   "whatsappFinanciamiento": "pendiente"
 }

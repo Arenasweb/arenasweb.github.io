@@ -15,7 +15,7 @@ Este documento describe las secciones principales que formarán la primera versi
 ## 3. Catálogo destacado
 
 - Presenta los modelos clave de la marca.
-- Extrae inventario del JSON en `data/catalogo.json`.
+- Lee el fallback neutro de `data/catalogo.json` (el catálogo real se administra desde Google Sheets).
 
 ## 4. Modelo destacado
 
@@ -24,7 +24,7 @@ Este documento describe las secciones principales que formarán la primera versi
 
 ## 5. Líneas de motos
 
-- Muestra familias: Pulsar, Dominar, Boxer, CT.
+- Muestra categorías de uso genéricas; las familias/líneas reales se administran desde Google Sheets.
 - Ayuda a estructurar el catálogo por segmento.
 
 ## 6. Por qué elegir ARENAS
@@ -49,8 +49,8 @@ Este documento describe las secciones principales que formarán la primera versi
 
 ## 10. Promociones
 
-- Espacio para ofertas temporales.
-- Ideal para campañas comerciales.
+- Espacio para promociones y campañas comerciales sujetas a confirmación.
+- Solo se publica con aprobación gerencial explícita por promoción.
 
 ## 11. Testimonios
 
