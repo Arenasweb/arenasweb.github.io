@@ -87,10 +87,16 @@ p {
   --color-blue-mid:     #0d5fa0;
   --color-blue-light:   #1475c4;
 
-  /* Acento cian (CTA principal) */
+  /* Acento cian (heredado) */
   --color-cyan:         #06b0d1;
   --color-cyan-bright:  #00d4f5;
   --color-cyan-dim:     #047a92;
+
+  /* Azul eléctrico de marca — color principal unificado (hero, métricas y toda la web) */
+  --brand-blue:         #1f6bff;
+  --brand-blue-bright:  #5b93ff;
+  --brand-blue-ice:     #bcd4ff;
+  --brand-red:          #ff3b30;  /* acento mínimo */
 
   /* Neutros de texto */
   --color-white:        #f7f8fb;
@@ -206,10 +212,12 @@ body {
   font-size: var(--text-base);
   line-height: 1.65;
   color: var(--color-white);
-  background-color: var(--color-black);
+  background-color: #04060d;
   background-image:
-    radial-gradient(ellipse 80% 40% at 50% -10%, rgba(6, 176, 209, 0.12), transparent),
-    linear-gradient(180deg, var(--color-black) 0%, #0b1017 100%);
+    radial-gradient(60% 42% at 50% -8%, rgba(31, 107, 255, 0.16), transparent 72%),
+    radial-gradient(42% 32% at 88% 6%, rgba(31, 107, 255, 0.09), transparent 70%),
+    radial-gradient(38% 30% at 6% 40%, rgba(13, 95, 160, 0.08), transparent 72%),
+    linear-gradient(180deg, #04060d 0%, #05070f 55%, #030509 100%);
   background-attachment: fixed;
 }
 
@@ -315,6 +323,7 @@ body {
   padding: var(--space-4) 0 var(--space-6);
   position: relative;
   z-index: var(--z-sticky);
+  border-bottom: 1px solid rgba(91, 147, 255, 0.10);
 }
 
 /* Marca / logotipo */
@@ -326,20 +335,37 @@ body {
 }
 
 .brand-mark {
-  width: 48px;
-  height: 48px;
+  position: relative;
+  width: 46px;
+  height: 46px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #1f6bff 0%, var(--color-blue) 70%);
-  box-shadow: 0 0 16px rgba(31, 107, 255, 0.35);
+  overflow: hidden;
+  background: linear-gradient(140deg, var(--brand-blue-bright) 0%, var(--brand-blue) 45%, #0b3aa0 100%);
+  box-shadow:
+    0 0 0 1px rgba(120, 160, 255, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 6px 18px rgba(31, 107, 255, 0.4);
   color: var(--color-white);
-  font-weight: 800;
-  font-size: var(--text-lg);
-  letter-spacing: -0.02em;
-  border-radius: var(--radius-md);
+  font-weight: 900;
+  font-size: var(--text-xl);
+  letter-spacing: 0;
+  border-radius: 13px;
   flex-shrink: 0;
   /* PENDIENTE: reemplazar con logo SVG oficial */
+}
+.brand-mark__a { position: relative; z-index: 1; }
+/* franja diagonal de velocidad */
+.brand-mark::before {
+  content: "";
+  position: absolute;
+  left: -20%;
+  top: 58%;
+  width: 140%;
+  height: 30%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+  transform: rotate(-22deg);
 }
 
 .brand-mark--sm {
@@ -349,12 +375,25 @@ body {
   border-radius: var(--radius-sm);
 }
 
+/* Lockup tipográfico ARENAS / MOTOCICLETAS */
+.brand-lockup {
+  display: grid;
+  gap: 2px;
+  line-height: 1;
+}
 .brand-name {
-  font-size: var(--text-sm);
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-size: var(--text-md);
+  font-weight: 800;
+  letter-spacing: 0.34em;
   text-transform: uppercase;
   color: var(--color-white);
+}
+.brand-sub {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--brand-blue-ice);
 }
 
 .brand-tag {
@@ -384,11 +423,31 @@ body {
   color: var(--color-white);
 }
 
+/* Subrayado premium azul eléctrico (no en el CTA) */
+.nav-link:not(.nav-cta)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--brand-blue), var(--brand-blue-bright));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-base) var(--ease-out);
+}
+.nav-link:not(.nav-cta):hover::after,
+.nav-link:not(.nav-cta):focus-visible::after {
+  transform: scaleX(1);
+}
+
 /* CTA de navegación (botón en nav) */
 .nav-cta {
   padding: var(--space-2) var(--space-5) !important;
   font-size: var(--text-sm) !important;
-  color: var(--color-black) !important;
+  color: var(--color-white) !important;
+  min-height: 44px;   /* área táctil accesible, manteniéndolo compacto */
 }
 
 /* Botón hamburguesa — visible solo en móvil */
@@ -424,13 +483,28 @@ body {
 
 .section {
   padding: var(--space-10) var(--space-6);
-  border: var(--border-subtle);
+  border: 1px solid rgba(91, 147, 255, 0.10);
   border-radius: var(--radius-xl);
-  background: rgba(12, 19, 32, 0.82);
+  background:
+    linear-gradient(180deg, rgba(18, 28, 50, 0.62) 0%, rgba(9, 14, 26, 0.82) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(120, 160, 255, 0.06),
+    0 22px 50px rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   position: relative;
   overflow: hidden;
+}
+
+/* Separador superior azul eléctrico — solo en secciones de contenido */
+.section:not(.hero-section):not(.stats-section)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(91, 147, 255, 0.45), transparent);
 }
 
 .section-header {
@@ -442,14 +516,14 @@ body {
   margin-top: var(--space-3);
 }
 
-/* Eyebrow — etiqueta de sección en cian */
+/* Eyebrow — etiqueta de sección en azul eléctrico de marca */
 .eyebrow {
   display: inline-block;
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-size: var(--text-xs);
   font-weight: 700;
-  color: var(--color-cyan);
+  color: var(--brand-blue-ice);
   margin-bottom: var(--space-3);
 }
 
@@ -1399,15 +1473,16 @@ body {
 
 /* Primario: cian sólido */
 .btn-primary {
-  background: var(--color-cyan);
-  color: var(--color-black);
-  border-color: var(--color-cyan);
+  background: linear-gradient(120deg, var(--brand-blue) 0%, #2f7bff 55%, var(--brand-blue) 100%);
+  color: #ffffff;
+  border-color: rgba(91, 147, 255, 0.7);
+  box-shadow: 0 0 20px rgba(31, 107, 255, 0.3);
 }
 
 .btn-primary:hover {
-  background: var(--color-cyan-bright);
-  border-color: var(--color-cyan-bright);
-  box-shadow: 0 0 20px rgba(6, 176, 209, 0.35);
+  background: linear-gradient(120deg, #2f7bff 0%, var(--brand-blue-bright) 55%, #2f7bff 100%);
+  border-color: var(--brand-blue-bright);
+  box-shadow: 0 0 24px rgba(31, 107, 255, 0.45);
 }
 
 /* Secundario: outline translúcido */
@@ -1614,7 +1689,12 @@ body {
 
 /* Filtros de búsqueda */
 .search-controls {
-  margin-top: var(--space-2);
+  margin-top: var(--space-4);
+  padding: clamp(var(--space-4), 3vw, var(--space-6));
+  background: linear-gradient(180deg, rgba(16, 26, 46, 0.55), rgba(9, 14, 26, 0.55));
+  border: 1px solid rgba(91, 147, 255, 0.14);
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 1px 0 rgba(120, 160, 255, 0.06);
 }
 
 .search-filters {
@@ -1647,13 +1727,19 @@ body {
   appearance: none;
   -webkit-appearance: none;
   cursor: pointer;
-  transition: border-color var(--duration-base) var(--ease-out);
+  transition: border-color var(--duration-base) var(--ease-out),
+              box-shadow var(--duration-base) var(--ease-out);
   min-width: 160px;
+}
+
+.filter-select:hover {
+  border-color: rgba(91, 147, 255, 0.4);
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: var(--color-cyan);
+  border-color: var(--brand-blue-bright);
+  box-shadow: 0 0 0 3px rgba(31, 107, 255, 0.18);
 }
 
 .filter-select option {
@@ -1836,13 +1922,23 @@ body {
    ================================================================ */
 
 .site-footer {
+  position: relative;
   margin-top: var(--space-10);
   padding-top: var(--space-8);
-  border-top: var(--border-subtle);
+  border-top: 1px solid rgba(91, 147, 255, 0.14);
   display: grid;
   grid-template-columns: auto 1fr auto;
   gap: var(--space-8);
   align-items: start;
+}
+.site-footer::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(91, 147, 255, 0.5), transparent);
 }
 
 .footer-links,
