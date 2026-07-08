@@ -111,24 +111,53 @@
              Introducción de marca, headline principal y CTAs primarios.
              DISEÑO FINAL PENDIENTE — no cerrar estética hasta sesión de diseño.
         ============================================================ -->
-        <section id="hero" class="section hero-section reveal-section" aria-labelledby="hero-heading">
-          <div class="section-intro">
-            <span class="eyebrow">Concesionario premium · Cusco, Perú</span>
-            <h1 id="hero-heading">ARENAS MOTOCICLETAS</h1>
-            <p class="hero-description">
-              Encuentra tu próxima moto en Cusco. Catálogo completo
-              y respaldo técnico para pilotos exigentes.
+        <section id="hero" class="section hero-section" aria-labelledby="hero-heading">
+          <!-- Escena cinematográfica CSS-only — puramente decorativa, sin imágenes ni rutas -->
+          <div class="hero-scene" aria-hidden="true">
+            <span class="hero-scene__sky"></span>
+            <span class="hero-scene__stars"></span>
+            <span class="hero-scene__watermark">ARENAS</span>
+            <span class="hero-scene__ridge hero-scene__ridge--far"></span>
+            <span class="hero-scene__ridge hero-scene__ridge--back"></span>
+            <span class="hero-scene__ridge hero-scene__ridge--front"></span>
+            <span class="hero-scene__haze"></span>
+            <span class="hero-scene__road">
+              <span class="hero-scene__road-line"></span>
+              <span class="hero-scene__road-edge hero-scene__road-edge--left"></span>
+              <span class="hero-scene__road-edge hero-scene__road-edge--right"></span>
+            </span>
+            <span class="hero-scene__glow"></span>
+            <span class="hero-scene__moto">
+              <span class="hero-scene__moto-speed"></span>
+              <span class="hero-scene__moto-beam"></span>
+              <span class="hero-scene__moto-shadow"></span>
+              <span class="hero-scene__moto-chassis"></span>
+              <span class="hero-scene__moto-fork"></span>
+              <span class="hero-scene__moto-body"></span>
+              <span class="hero-scene__moto-seat"></span>
+              <span class="hero-scene__moto-light"></span>
+              <span class="hero-scene__moto-tail"></span>
+            </span>
+            <span class="hero-scene__vignette"></span>
+          </div>
+
+          <div class="hero-content section-intro">
+            <span class="eyebrow hero-eyebrow hero-anim hero-anim--1">Concesionario premium · Cusco, Perú</span>
+            <h1 id="hero-heading" class="hero-title">
+              <span class="hero-title__line hero-anim hero-anim--2">Rutas que te definen.</span>
+              <span class="hero-title__line hero-title__line--accent hero-anim hero-anim--3">Libertad que te mueve.</span>
+            </h1>
+            <p class="hero-description hero-anim hero-anim--4">
+              Motos hechas para la ruta andina. Diseño, potencia y respaldo para pilotos que no se detienen.
             </p>
-            <div class="hero-actions">
-              <a href="#catalogo" class="btn btn-primary" aria-label="Ver catálogo de motos">Ver catálogo</a>
-              <a href="#cotizacion" class="btn btn-secondary" aria-label="Solicitar cotización personalizada">Pedir cotización</a>
+            <div class="hero-actions hero-anim hero-anim--5">
+              <a href="#catalogo" class="btn btn-primary btn-hero" aria-label="Explorar el catálogo de motos">Explorar catálogo</a>
+              <a href="#porque" class="btn btn-secondary btn-hero" aria-label="Conocer más sobre ARENAS MOTOCICLETAS">Conocer ARENAS</a>
             </div>
           </div>
-          <!-- Zona reservada para imagen hero o video cinematic futuro -->
-          <div class="hero-media" aria-hidden="true">
-            <!-- PENDIENTE: imagen o video del hero definitivo -->
-            <div class="hero-media-placeholder"></div>
-          </div>
+
+          <!-- Indicador de scroll — decorativo -->
+          <span class="hero-scroll-cue hero-anim hero-anim--6" aria-hidden="true"></span>
         </section>
 
         <!-- ============================================================

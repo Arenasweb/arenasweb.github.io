@@ -263,6 +263,13 @@ address {
    BLOQUE 5: LAYOUT Y CONTENEDORES
    ================================================================ */
 
+/* Blindaje anti scroll horizontal: ningún desborde interno debe
+   ensanchar la página (crítico en 360-390px). */
+html,
+body {
+  overflow-x: clip;
+}
+
 .app-shell {
   max-width: var(--container-lg);
   margin: 0 auto;
@@ -273,6 +280,12 @@ address {
   display: grid;
   gap: var(--space-8);
   margin-top: var(--space-6);
+}
+
+/* Los grid items no deben inflar la pista con su min-content
+   (min-width:auto por defecto ensancharía TODAS las secciones). */
+.page-content > * {
+  min-width: 0;
 }
 
 /* Contenedor centrado reutilizable */
@@ -318,7 +331,8 @@ address {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-blue);
+  background: linear-gradient(135deg, #1f6bff 0%, var(--color-blue) 70%);
+  box-shadow: 0 0 16px rgba(31, 107, 255, 0.35);
   color: var(--color-white);
   font-weight: 800;
   font-size: var(--text-lg);
@@ -382,17 +396,22 @@ address {
   display: none;
   flex-direction: column;
   gap: 5px;
-  padding: var(--space-2);
-  background: transparent;
-  border: var(--border-subtle);
+  padding: var(--space-3);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: var(--radius-sm);
   cursor: pointer;
+  flex-shrink: 0;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav-toggle-bar {
   width: 22px;
   height: 2px;
-  background: var(--color-silver);
+  background: var(--color-white);
   display: block;
   transition: transform var(--duration-base) var(--ease-out),
               opacity var(--duration-base) var(--ease-out);
@@ -446,26 +465,367 @@ address {
    DISEÑO FINAL PENDIENTE — placeholder técnico para ahora.
    ================================================================ */
 
+/* ================================================================
+   HERO CINEMATOGRÁFICO — CSS-only (sin imágenes, sin JS)
+   Escena nocturna andina por capas: cielo, estrellas, marca de agua,
+   3 crestas de cordillera, bruma, carretera viva, moto protagonista
+   con faro/haz de luz y luz trasera roja (único acento rojo).
+   Azul eléctrico como color principal. Solo transform/opacity animados.
+   ================================================================ */
 .hero-section {
-  min-height: 480px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-8);
+  --hero-blue:        #1f6bff;   /* azul eléctrico — principal del hero */
+  --hero-blue-bright: #5b93ff;
+  --hero-blue-ice:    #bcd4ff;
+  --hero-red:         #ff3b30;   /* acento mínimo (<10%): luz trasera + 1 línea */
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: clamp(520px, 86vh, 920px);
+  display: flex;
   align-items: center;
-  background: rgba(5, 6, 8, 0.92);
-  border: var(--border-subtle);
-  /* PENDIENTE: fondo definitivo del hero (imagen, video, partículas, etc.) */
+  padding-block: clamp(var(--space-12), 12vh, var(--space-32));
+  padding-inline: clamp(var(--space-5), 6vw, var(--space-16));
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(130% 95% at 76% 12%, rgba(31, 107, 255, 0.20), transparent 56%),
+    radial-gradient(80% 55% at 12% 4%, rgba(13, 95, 160, 0.12), transparent 65%),
+    linear-gradient(180deg, #05091a 0%, #04060f 55%, #030408 100%);
 }
 
+/* ---- Escena decorativa (aria-hidden en el HTML) ---- */
+.hero-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.hero-scene > span { position: absolute; display: block; }
+
+.hero-scene__sky {
+  inset: 0;
+  background:
+    radial-gradient(95% 65% at 80% 0%, rgba(31, 107, 255, 0.18), transparent 58%),
+    radial-gradient(55% 38% at 16% 6%, rgba(13, 95, 160, 0.15), transparent 70%);
+}
+
+/* Cielo estrellado — puntos sutiles con radial-gradients, sin imágenes */
+.hero-scene__stars {
+  inset: 0 0 45% 0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 22%, rgba(255,255,255,0.75), transparent 100%),
+    radial-gradient(1px 1px at 28% 10%, rgba(255,255,255,0.5), transparent 100%),
+    radial-gradient(1.5px 1.5px at 41% 30%, rgba(188,212,255,0.6), transparent 100%),
+    radial-gradient(1px 1px at 55% 14%, rgba(255,255,255,0.45), transparent 100%),
+    radial-gradient(2px 2px at 67% 26%, rgba(188,212,255,0.7), transparent 100%),
+    radial-gradient(1px 1px at 76% 8%, rgba(255,255,255,0.5), transparent 100%),
+    radial-gradient(1.5px 1.5px at 88% 34%, rgba(255,255,255,0.55), transparent 100%),
+    radial-gradient(1px 1px at 94% 16%, rgba(188,212,255,0.5), transparent 100%),
+    radial-gradient(1px 1px at 7% 44%, rgba(255,255,255,0.35), transparent 100%),
+    radial-gradient(1.5px 1.5px at 34% 48%, rgba(188,212,255,0.4), transparent 100%);
+  animation: heroStars 7s ease-in-out infinite;
+}
+
+/* Marca de agua tipográfica gigante — recurso de diseño, no contenido */
+.hero-scene__watermark {
+  top: clamp(-30px, -2vw, -8px);
+  right: -2%;
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 22vw, 19rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(91, 147, 255, 0.10);
+  user-select: none;
+}
+
+/* Cordillera andina — tres crestas con perspectiva atmosférica */
+.hero-scene__ridge {
+  left: -6%;
+  width: 112%;
+  bottom: 30%;
+}
+.hero-scene__ridge--far {
+  height: 52%;
+  bottom: 32%;
+  background: linear-gradient(180deg, #0e1830 0%, #0b1326 100%);
+  clip-path: polygon(0 70%, 9% 52%, 20% 64%, 33% 38%, 45% 58%, 57% 34%, 70% 56%, 82% 40%, 93% 56%, 100% 46%, 100% 100%, 0 100%);
+  opacity: 0.75;
+}
+.hero-scene__ridge--back {
+  height: 46%;
+  background: linear-gradient(180deg, #0a1120 0%, #091120 100%);
+  clip-path: polygon(0 62%, 12% 40%, 24% 55%, 38% 28%, 52% 50%, 66% 24%, 80% 46%, 92% 30%, 100% 48%, 100% 100%, 0 100%);
+  box-shadow: 0 -1px 0 rgba(91, 147, 255, 0.12);
+}
+.hero-scene__ridge--front {
+  bottom: 25%;
+  height: 40%;
+  background: linear-gradient(180deg, #0a1424 0%, #050810 100%);
+  clip-path: polygon(0 70%, 16% 48%, 30% 64%, 46% 40%, 60% 60%, 74% 42%, 88% 58%, 100% 44%, 100% 100%, 0 100%);
+  box-shadow: 0 -1px 0 rgba(120, 170, 255, 0.1);
+}
+
+/* Bruma fría entre montaña y carretera — profundidad */
+.hero-scene__haze {
+  left: 0;
+  right: 0;
+  bottom: 24%;
+  height: 18%;
+  background: linear-gradient(180deg, transparent, rgba(91, 147, 255, 0.07) 45%, transparent);
+  filter: blur(10px);
+}
+
+/* Carretera en perspectiva, con línea central viva y bordes iluminados */
+.hero-scene__road {
+  left: 50%;
+  bottom: 0;
+  width: 170%;
+  height: 34%;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #0c101c 0%, #06080f 100%);
+  clip-path: polygon(43% 0, 57% 0, 100% 100%, 0 100%);
+  overflow: hidden;
+}
+.hero-scene__road-line {
+  left: 50%;
+  top: -34%;
+  bottom: 0;
+  width: clamp(6px, 1.1vw, 12px);
+  transform: translateX(-50%);
+  background: repeating-linear-gradient(180deg, rgba(120, 170, 255, 1) 0 6%, transparent 6% 15%);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 42%);
+  mask-image: linear-gradient(180deg, transparent, #000 42%);
+  opacity: 0.75;
+  animation: heroRoad 1.6s linear infinite;
+}
+.hero-scene__road-edge {
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, rgba(120, 170, 255, 0.55));
+}
+.hero-scene__road-edge--left  { left: 30%;  transform: rotate(14deg);  transform-origin: bottom; }
+.hero-scene__road-edge--right { right: 30%; transform: rotate(-14deg); transform-origin: bottom; }
+
+/* Glow eléctrico ambiental detrás de la moto */
+.hero-scene__glow {
+  right: 2%;
+  bottom: 18%;
+  width: min(56vw, 680px);
+  height: min(56vw, 680px);
+  background: radial-gradient(circle, rgba(31, 107, 255, 0.36), rgba(31, 107, 255, 0.10) 44%, transparent 68%);
+  filter: blur(8px);
+  animation: heroGlow 5.5s ease-in-out infinite;
+}
+
+/* ---- Moto protagonista (silueta técnica estilizada, orientada a la derecha) ---- */
+.hero-scene__moto {
+  right: clamp(-20px, 4vw, 90px);
+  bottom: 19%;
+  width: min(64vw, 640px);
+  height: min(35vw, 350px);
+  animation: heroMotoArrive 950ms var(--ease-cinematic) both;
+  animation-delay: 150ms;
+}
+/* Las sub-capas de la moto son spans anidados: necesitan su propia
+   regla de posicionamiento (la de .hero-scene > span no las alcanza). */
+.hero-scene__moto > span {
+  position: absolute;
+  display: block;
+}
+/* ruedas — llantas con aro azul brillante y cubo */
+.hero-scene__moto::before,
+.hero-scene__moto::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 33%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, #16233f 0 17%, #0a1120 18% 33%, #070c16 34%);
+  box-shadow:
+    0 0 0 3px rgba(91, 147, 255, 0.85),
+    0 0 14px 1px rgba(31, 107, 255, 0.55),
+    inset 0 0 0 6px rgba(10, 15, 28, 0.9),
+    inset 0 0 0 8px rgba(120, 160, 255, 0.35);
+}
+.hero-scene__moto::before { left: 1%; }   /* rueda trasera */
+.hero-scene__moto::after  { right: 1%; }   /* rueda delantera */
+
+.hero-scene__moto-chassis { /* bastidor: conecta visualmente ambas ruedas */
+  left: 14%;
+  right: 14%;
+  bottom: 14%;
+  height: 4%;
+  background: linear-gradient(90deg, rgba(91, 147, 255, 0.5), rgba(150, 190, 255, 0.85) 50%, rgba(91, 147, 255, 0.5));
+  border-radius: 999px;
+  box-shadow: 0 0 10px rgba(31, 107, 255, 0.5);
+}
+
+.hero-scene__moto-body {   /* carenado + tanque + cola en una silueta */
+  left: 5%;
+  right: 5%;
+  bottom: 16%;
+  height: 52%;
+  background: linear-gradient(122deg, #14284f 0%, #23539c 40%, #16305e 68%, #0f2244 100%);
+  /* Perfil lateral de moto deportiva (nariz/faro a la derecha, cola a la izquierda) */
+  clip-path: polygon(
+    100% 52%, 92% 34%, 82% 30%, 66% 12%, 52% 20%, 46% 33%,
+    36% 30%, 22% 14%, 6% 30%, 2% 46%, 12% 62%, 30% 60%,
+    50% 66%, 72% 62%, 90% 66%, 100% 52%
+  );
+  filter:
+    drop-shadow(0 0 5px rgba(91, 147, 255, 0.6))
+    drop-shadow(0 12px 18px rgba(0, 0, 0, 0.55));
+}
+.hero-scene__moto-seat {   /* lomo tanque→asiento, brillo superior */
+  left: 30%;
+  right: 20%;
+  bottom: 56%;
+  height: 12%;
+  background: linear-gradient(100deg, rgba(150, 190, 255, 0.15), rgba(188, 212, 255, 0.6) 55%, rgba(120, 160, 255, 0.2));
+  border-radius: 60% 70% 30% 40% / 100% 100% 20% 20%;
+  filter: blur(0.5px);
+}
+.hero-scene__moto-fork {   /* horquilla delantera inclinada hacia la rueda */
+  right: 12%;
+  bottom: 14%;
+  width: 3.4%;
+  height: 40%;
+  background: linear-gradient(180deg, rgba(188, 212, 255, 0.85), rgba(91, 147, 255, 0.25));
+  border-radius: 999px;
+  transform: rotate(26deg);
+  transform-origin: bottom;
+  box-shadow: 0 0 8px rgba(91, 147, 255, 0.5);
+}
+.hero-scene__moto-light {  /* faro delantero */
+  right: 3%;
+  bottom: 44%;
+  width: 13%;
+  height: 13%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff, var(--hero-blue-bright) 42%, transparent 72%);
+  box-shadow: 0 0 34px 10px rgba(120, 170, 255, 0.9);
+  animation: heroHeadlight 4s ease-in-out infinite;
+}
+.hero-scene__moto-beam {   /* haz de luz proyectado sobre la carretera */
+  right: 6%;
+  bottom: 2%;
+  width: 66%;
+  height: 56%;
+  background: linear-gradient(255deg, rgba(188, 212, 255, 0.32), rgba(91, 147, 255, 0.08) 55%, transparent 82%);
+  clip-path: polygon(98% 10%, 100% 20%, 26% 100%, 0 100%);
+  filter: blur(2px);
+  opacity: 0.9;
+}
+.hero-scene__moto-tail {   /* luz trasera — único acento rojo de la moto */
+  left: 3%;
+  bottom: 48%;
+  width: 6%;
+  height: 8%;
+  border-radius: 999px;
+  background: radial-gradient(circle, #ffd6d2, var(--hero-red) 52%, transparent 78%);
+  box-shadow: 0 0 20px 5px rgba(255, 59, 48, 0.65);
+}
+.hero-scene__moto-shadow { /* sombra de contacto en la carretera */
+  left: 4%;
+  right: 4%;
+  bottom: -4%;
+  height: 12%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.78), transparent 70%);
+  filter: blur(7px);
+}
+.hero-scene__moto-speed {  /* estelas de velocidad — 1 línea roja como acento */
+  left: -24%;
+  bottom: 40%;
+  width: 48%;
+  height: 24%;
+  background:
+    linear-gradient(90deg, transparent, rgba(120, 170, 255, 0.75)) no-repeat 0 12% / 100% 2px,
+    linear-gradient(90deg, transparent, rgba(91, 147, 255, 0.6))   no-repeat 0 42% / 82% 2px,
+    linear-gradient(90deg, transparent, rgba(188, 212, 255, 0.45)) no-repeat 0 70% / 64% 2px,
+    linear-gradient(90deg, transparent, rgba(255, 59, 48, 0.55))   no-repeat 0 92% / 46% 2px;
+  animation: heroSpeed 2.4s ease-in-out infinite;
+}
+
+/* Viñeta cinematográfica */
+.hero-scene__vignette {
+  inset: 0;
+  background:
+    radial-gradient(140% 110% at 50% 42%, transparent 55%, rgba(2, 3, 6, 0.55) 100%),
+    linear-gradient(180deg, rgba(2, 3, 6, 0.35), transparent 18% 82%, rgba(2, 3, 6, 0.5));
+}
+
+/* ---- Contenido del hero ---- */
+.hero-content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: var(--space-5);
+  min-width: 0;
+  max-width: min(94vw, 720px);
+}
 .section-intro {
   display: grid;
   gap: var(--space-4);
 }
 
+.hero-eyebrow {
+  display: flex;             /* block-level: permite que el texto largo envuelva */
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  max-width: 100%;
+  letter-spacing: 0.16em;    /* algo menos que el eyebrow base para no desbordar */
+  color: var(--hero-blue-ice);
+  overflow-wrap: break-word;
+}
+.hero-eyebrow::before {
+  content: "";
+  width: clamp(20px, 5vw, 34px);
+  height: 2px;
+  flex-shrink: 0;
+  background: linear-gradient(90deg, var(--hero-blue), transparent);
+  border-radius: 999px;
+}
+
+.hero-title {
+  display: grid;
+  gap: clamp(2px, 0.5vw, 6px);
+  margin: 0;
+  max-width: 15ch;           /* favorece 1 frase por línea en desktop */
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.hero-title__line {
+  display: block;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: clamp(1.95rem, 6.4vw, 4.15rem);
+  color: var(--color-white);
+  text-shadow: 0 2px 34px rgba(0, 0, 0, 0.65);
+  overflow-wrap: break-word;
+}
+.hero-title__line--accent {
+  color: transparent;
+  background: linear-gradient(93deg, var(--hero-blue-ice) 0%, var(--hero-blue-bright) 34%, var(--hero-blue) 72%, #7fa8ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 0 22px rgba(31, 107, 255, 0.4));
+}
+
 .hero-description {
-  font-size: var(--text-md);
-  max-width: 520px;
+  font-size: clamp(var(--text-base), 1.6vw, var(--text-md));
+  max-width: min(100%, 46ch);
   line-height: 1.7;
+  color: var(--color-silver);
+  text-wrap: pretty;
 }
 
 .hero-actions {
@@ -474,23 +834,115 @@ address {
   gap: var(--space-3);
   margin-top: var(--space-2);
 }
+.hero-actions .btn { min-height: 48px; }
 
-/* Zona reservada para media del hero */
-.hero-media {
+/* CTAs del hero — azul eléctrico + barrido de brillo (transform-only) */
+.btn-hero {
   position: relative;
-  min-height: 300px;
-  border-radius: var(--radius-lg);
   overflow: hidden;
+  padding-inline: var(--space-8);
+  letter-spacing: 0.04em;
+}
+.btn-hero.btn-primary {
+  background: linear-gradient(120deg, var(--hero-blue) 0%, #2f7bff 55%, var(--hero-blue) 100%);
+  border-color: rgba(91, 147, 255, 0.7);
+  color: #fff;
+  box-shadow: 0 0 24px rgba(31, 107, 255, 0.35);
+}
+.btn-hero.btn-primary:hover {
+  background: linear-gradient(120deg, #2f7bff 0%, var(--hero-blue-bright) 55%, #2f7bff 100%);
+  border-color: var(--hero-blue-bright);
+}
+.btn-hero.btn-secondary {
+  border-color: rgba(91, 147, 255, 0.4);
+  color: var(--hero-blue-ice);
+}
+.btn-hero.btn-secondary:hover {
+  border-color: var(--hero-blue-bright);
+  background: rgba(31, 107, 255, 0.12);
+}
+.btn-hero::after {   /* barrido de brillo */
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 40%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  transform: translateX(-160%) skewX(-18deg);
+  transition: transform 600ms var(--ease-out);
+  pointer-events: none;
+}
+.btn-hero:hover::after,
+.btn-hero:focus-visible::after {
+  transform: translateX(320%) skewX(-18deg);
 }
 
-.hero-media-placeholder {
-  width: 100%;
-  height: 100%;
-  min-height: 300px;
-  background: rgba(255, 255, 255, 0.03);
-  border: var(--border-subtle);
-  border-radius: var(--radius-lg);
-  /* PENDIENTE: imagen o video del hero definitivo */
+/* Indicador de scroll */
+.hero-scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(10px, 2.4vh, 26px);
+  z-index: 1;
+  width: 24px;
+  height: 38px;
+  transform: translateX(-50%);
+  border: 2px solid rgba(188, 212, 255, 0.35);
+  border-radius: 999px;
+  pointer-events: none;
+}
+.hero-scroll-cue::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 7px;
+  width: 4px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--hero-blue-bright);
+  transform: translateX(-50%);
+  animation: heroScrollCue 1.8s var(--ease-in-out) infinite;
+}
+
+/* ---- Entrada animada — solo transform/opacity ---- */
+.hero-anim {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: heroRise var(--duration-reveal) var(--ease-cinematic) both;
+}
+.hero-anim--1 { animation-delay: 80ms; }
+.hero-anim--2 { animation-delay: 180ms; }
+.hero-anim--3 { animation-delay: 300ms; }
+.hero-anim--4 { animation-delay: 430ms; }
+.hero-anim--5 { animation-delay: 560ms; }
+.hero-anim--6 { animation-delay: 900ms; }
+
+@keyframes heroRise {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroMotoArrive {
+  from { opacity: 0; transform: translateX(64px) scale(1.05); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes heroGlow {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 1; }
+}
+@keyframes heroHeadlight {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1; }
+}
+@keyframes heroStars {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 1; }
+}
+@keyframes heroRoad {
+  from { transform: translateX(-50%) translateY(0); }
+  to   { transform: translateX(-50%) translateY(15%); }
+}
+@keyframes heroSpeed {
+  0%, 100% { opacity: 0.35; transform: translateX(0); }
+  50%      { opacity: 0.85; transform: translateX(-14px); }
 }
 
 
@@ -1400,6 +1852,25 @@ address {
     transform: none !important;
     transition: none !important;
   }
+
+  /* Hero: mostrar el estado final sin animación de entrada ni loops */
+  .hero-anim {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .hero-scene__moto,
+  .hero-scene__glow,
+  .hero-scene__stars,
+  .hero-scene__moto-light,
+  .hero-scene__moto-speed,
+  .hero-scene__road-line,
+  .hero-scroll-cue::before {
+    animation: none !important;
+  }
+  .btn-hero::after {
+    transition: none !important;
+  }
 }
 
 
@@ -1410,13 +1881,16 @@ address {
 /* Tablet — 900px */
 @media (max-width: 900px) {
   .hero-section {
-    grid-template-columns: 1fr;
-    min-height: unset;
+    min-height: clamp(480px, 78vh, 700px);
+    padding-block: clamp(var(--space-10), 9vh, var(--space-16));
   }
 
-  .hero-media {
-    display: none; /* PENDIENTE: decidir comportamiento en tablet */
-  }
+  /* La escena pasa a fondo tenue detrás del texto para mantener contraste */
+  .hero-scene__moto      { opacity: 0.45; width: min(88vw, 480px); right: -12%; }
+  .hero-scene__moto-beam { display: none; }
+  .hero-scene__glow      { opacity: 0.55; }
+  .hero-scene__watermark { font-size: clamp(4.5rem, 26vw, 9rem); opacity: 0.7; }
+  .hero-scroll-cue       { display: none; }
 
   .featured-model-layout,
   .service-layout {
