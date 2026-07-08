@@ -161,6 +161,45 @@
         </section>
 
         <!-- ============================================================
+             SECCIÓN 1.5: MÉTRICAS DE CONFIANZA
+             Transición premium entre el hero y el catálogo.
+             Reveal por scroll con el observer existente (sin JS nuevo):
+             la sección recibe .is-visible y las cifras/gráfico animan por CSS.
+        ============================================================ -->
+        <section id="metricas" class="section stats-section reveal-section" aria-label="Nuestra trayectoria en cifras">
+          <!-- Línea de gráfico de crecimiento — puramente decorativa -->
+          <svg class="stats-graph" viewBox="0 0 1200 260" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="statsLineGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#1f6bff" stop-opacity="0.15" />
+                <stop offset="0.55" stop-color="#5b93ff" stop-opacity="0.95" />
+                <stop offset="1" stop-color="#bcd4ff" stop-opacity="0.95" />
+              </linearGradient>
+              <linearGradient id="statsAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#1f6bff" stop-opacity="0.16" />
+                <stop offset="1" stop-color="#1f6bff" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <path class="stats-graph__area" fill="url(#statsAreaGrad)"
+              d="M0,205 C130,196 210,150 330,162 C470,175 520,92 690,112 C840,130 910,52 1050,66 C1130,74 1175,42 1200,32 L1200,260 L0,260 Z" />
+            <path class="stats-graph__line" fill="none" stroke="url(#statsLineGrad)" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round" pathLength="1"
+              d="M0,205 C130,196 210,150 330,162 C470,175 520,92 690,112 C840,130 910,52 1050,66 C1130,74 1175,42 1200,32" />
+          </svg>
+
+          <ul class="stats-grid" role="list">
+            <li class="stat-item stat-item--1">
+              <span class="stat-number">12<span class="stat-plus">+</span></span>
+              <span class="stat-label">Años de experiencia</span>
+            </li>
+            <li class="stat-item stat-item--2">
+              <span class="stat-number">5000<span class="stat-plus">+</span></span>
+              <span class="stat-label">Motos vendidas</span>
+            </li>
+          </ul>
+        </section>
+
+        <!-- ============================================================
              SECCIÓN 2: BUSCADOR DE MOTO IDEAL
              Filtros interactivos por línea, cilindrada y uso.
              JS conectado en script.js → inicializarBuscador()
