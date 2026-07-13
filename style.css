@@ -320,10 +320,27 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  padding: var(--space-4) 0 var(--space-6);
-  position: relative;
+  padding: var(--space-4) var(--space-4) var(--space-4);
+  position: sticky;
+  top: 0;
   z-index: var(--z-sticky);
   border-bottom: 1px solid rgba(91, 147, 255, 0.10);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  /* Interacción aprobada: transparente al inicio → oscuro con blur al scrollear.
+     script.js → inicializarHeaderScroll() alterna .is-scrolled (scrollY > 24). */
+  background: transparent;
+  transition:
+    background 450ms var(--ease-out),
+    border-color 450ms var(--ease-out),
+    box-shadow 450ms var(--ease-out);
+}
+
+.site-header.is-scrolled {
+  background: rgba(3, 5, 10, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom-color: rgba(91, 147, 255, 0.16);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 /* Marca / logotipo */
@@ -540,17 +557,16 @@ body {
    ================================================================ */
 
 /* ================================================================
-   HERO CINEMATOGRÁFICO — CSS-only (sin imágenes, sin JS)
-   Escena nocturna andina por capas: cielo, estrellas, marca de agua,
-   3 crestas de cordillera, bruma, carretera viva, moto protagonista
-   con faro/haz de luz y luz trasera roja (único acento rojo).
-   Azul eléctrico como color principal. Solo transform/opacity animados.
+   HERO CINEMATOGRÁFICO — video de fondo (moto llegando a la derecha)
+   Video PROVISIONAL (marca del generador visible; se sustituirá por la
+   exportación oficial limpia). Sin loop: el último fotograma queda fijo.
+   Overlays generales para legibilidad del texto — no cubren la marca.
+   Control en script.js → inicializarHeroVideo().
    ================================================================ */
 .hero-section {
   --hero-blue:        #1f6bff;   /* azul eléctrico — principal del hero */
   --hero-blue-bright: #5b93ff;
   --hero-blue-ice:    #bcd4ff;
-  --hero-red:         #ff3b30;   /* acento mínimo (<10%): luz trasera + 1 línea */
 
   position: relative;
   isolation: isolate;
@@ -561,278 +577,64 @@ body {
   padding-block: clamp(var(--space-12), 12vh, var(--space-32));
   padding-inline: clamp(var(--space-5), 6vw, var(--space-16));
   border-radius: var(--radius-lg);
-  background:
-    radial-gradient(130% 95% at 76% 12%, rgba(31, 107, 255, 0.20), transparent 56%),
-    radial-gradient(80% 55% at 12% 4%, rgba(13, 95, 160, 0.12), transparent 65%),
-    linear-gradient(180deg, #05091a 0%, #04060f 55%, #030408 100%);
+  /* Fondo base mientras el video carga — coherente con la escena nocturna */
+  background: linear-gradient(180deg, #05091a 0%, #04060f 55%, #030408 100%);
 }
 
-/* ---- Escena decorativa (aria-hidden en el HTML) ---- */
-.hero-scene {
+/* ---- Capa de video (aria-hidden en el HTML) ---- */
+.hero-media {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
 }
-.hero-scene > span { position: absolute; display: block; }
 
-.hero-scene__sky {
+.hero-video {
+  position: absolute;
   inset: 0;
-  background:
-    radial-gradient(95% 65% at 80% 0%, rgba(31, 107, 255, 0.18), transparent 58%),
-    radial-gradient(55% 38% at 16% 6%, rgba(13, 95, 160, 0.15), transparent 70%);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Mantener la moto (mitad derecha del encuadre) visible al recortar */
+  object-position: 72% center;
 }
 
-/* Cielo estrellado — puntos sutiles con radial-gradients, sin imágenes */
-.hero-scene__stars {
-  inset: 0 0 45% 0;
-  background-image:
-    radial-gradient(1.5px 1.5px at 12% 22%, rgba(255,255,255,0.75), transparent 100%),
-    radial-gradient(1px 1px at 28% 10%, rgba(255,255,255,0.5), transparent 100%),
-    radial-gradient(1.5px 1.5px at 41% 30%, rgba(188,212,255,0.6), transparent 100%),
-    radial-gradient(1px 1px at 55% 14%, rgba(255,255,255,0.45), transparent 100%),
-    radial-gradient(2px 2px at 67% 26%, rgba(188,212,255,0.7), transparent 100%),
-    radial-gradient(1px 1px at 76% 8%, rgba(255,255,255,0.5), transparent 100%),
-    radial-gradient(1.5px 1.5px at 88% 34%, rgba(255,255,255,0.55), transparent 100%),
-    radial-gradient(1px 1px at 94% 16%, rgba(188,212,255,0.5), transparent 100%),
-    radial-gradient(1px 1px at 7% 44%, rgba(255,255,255,0.35), transparent 100%),
-    radial-gradient(1.5px 1.5px at 34% 48%, rgba(188,212,255,0.4), transparent 100%);
-  animation: heroStars 7s ease-in-out infinite;
+/* Fallback si el video no puede cargarse/reproducirse:
+   script.js añade .video-failed y el poster ocupa el fondo. */
+.hero-media.video-failed .hero-video { display: none; }
+.hero-media.video-failed {
+  background: url("assets/hero/hero-arenas-poster.jpg") 72% center / cover no-repeat;
 }
 
-/* Marca de agua tipográfica gigante — recurso de diseño, no contenido */
-.hero-scene__watermark {
-  top: clamp(-30px, -2vw, -8px);
-  right: -2%;
-  font-family: var(--font-display);
-  font-size: clamp(6rem, 22vw, 19rem);
-  font-weight: 900;
-  letter-spacing: 0.02em;
-  line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(91, 147, 255, 0.10);
-  user-select: none;
-}
-
-/* Cordillera andina — tres crestas con perspectiva atmosférica */
-.hero-scene__ridge {
-  left: -6%;
-  width: 112%;
-  bottom: 30%;
-}
-.hero-scene__ridge--far {
-  height: 52%;
-  bottom: 32%;
-  background: linear-gradient(180deg, #0e1830 0%, #0b1326 100%);
-  clip-path: polygon(0 70%, 9% 52%, 20% 64%, 33% 38%, 45% 58%, 57% 34%, 70% 56%, 82% 40%, 93% 56%, 100% 46%, 100% 100%, 0 100%);
-  opacity: 0.75;
-}
-.hero-scene__ridge--back {
-  height: 46%;
-  background: linear-gradient(180deg, #0a1120 0%, #091120 100%);
-  clip-path: polygon(0 62%, 12% 40%, 24% 55%, 38% 28%, 52% 50%, 66% 24%, 80% 46%, 92% 30%, 100% 48%, 100% 100%, 0 100%);
-  box-shadow: 0 -1px 0 rgba(91, 147, 255, 0.12);
-}
-.hero-scene__ridge--front {
-  bottom: 25%;
-  height: 40%;
-  background: linear-gradient(180deg, #0a1424 0%, #050810 100%);
-  clip-path: polygon(0 70%, 16% 48%, 30% 64%, 46% 40%, 60% 60%, 74% 42%, 88% 58%, 100% 44%, 100% 100%, 0 100%);
-  box-shadow: 0 -1px 0 rgba(120, 170, 255, 0.1);
-}
-
-/* Bruma fría entre montaña y carretera — profundidad */
-.hero-scene__haze {
-  left: 0;
-  right: 0;
-  bottom: 24%;
-  height: 18%;
-  background: linear-gradient(180deg, transparent, rgba(91, 147, 255, 0.07) 45%, transparent);
-  filter: blur(10px);
-}
-
-/* Carretera en perspectiva, con línea central viva y bordes iluminados */
-.hero-scene__road {
-  left: 50%;
-  bottom: 0;
-  width: 170%;
-  height: 34%;
-  transform: translateX(-50%);
-  background: linear-gradient(180deg, #0c101c 0%, #06080f 100%);
-  clip-path: polygon(43% 0, 57% 0, 100% 100%, 0 100%);
-  overflow: hidden;
-}
-.hero-scene__road-line {
-  left: 50%;
-  top: -34%;
-  bottom: 0;
-  width: clamp(6px, 1.1vw, 12px);
-  transform: translateX(-50%);
-  background: repeating-linear-gradient(180deg, rgba(120, 170, 255, 1) 0 6%, transparent 6% 15%);
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 42%);
-  mask-image: linear-gradient(180deg, transparent, #000 42%);
-  opacity: 0.75;
-  animation: heroRoad 1.6s linear infinite;
-}
-.hero-scene__road-edge {
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: linear-gradient(180deg, transparent, rgba(120, 170, 255, 0.55));
-}
-.hero-scene__road-edge--left  { left: 30%;  transform: rotate(14deg);  transform-origin: bottom; }
-.hero-scene__road-edge--right { right: 30%; transform: rotate(-14deg); transform-origin: bottom; }
-
-/* Glow eléctrico ambiental detrás de la moto */
-.hero-scene__glow {
-  right: 2%;
-  bottom: 18%;
-  width: min(56vw, 680px);
-  height: min(56vw, 680px);
-  background: radial-gradient(circle, rgba(31, 107, 255, 0.36), rgba(31, 107, 255, 0.10) 44%, transparent 68%);
-  filter: blur(8px);
-  animation: heroGlow 5.5s ease-in-out infinite;
-}
-
-/* ---- Moto protagonista (silueta técnica estilizada, orientada a la derecha) ---- */
-.hero-scene__moto {
-  right: clamp(-20px, 4vw, 90px);
-  bottom: 19%;
-  width: min(64vw, 640px);
-  height: min(35vw, 350px);
-  animation: heroMotoArrive 950ms var(--ease-cinematic) both;
-  animation-delay: 150ms;
-}
-/* Las sub-capas de la moto son spans anidados: necesitan su propia
-   regla de posicionamiento (la de .hero-scene > span no las alcanza). */
-.hero-scene__moto > span {
+/* ---- Overlays de legibilidad (generales, no dirigidos a la marca) ---- */
+.hero-overlay {
   position: absolute;
-  display: block;
+  inset: 0;
+  pointer-events: none;
 }
-/* ruedas — llantas con aro azul brillante y cubo */
-.hero-scene__moto::before,
-.hero-scene__moto::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  width: 33%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 50% 50%, #16233f 0 17%, #0a1120 18% 33%, #070c16 34%);
-  box-shadow:
-    0 0 0 3px rgba(91, 147, 255, 0.85),
-    0 0 14px 1px rgba(31, 107, 255, 0.55),
-    inset 0 0 0 6px rgba(10, 15, 28, 0.9),
-    inset 0 0 0 8px rgba(120, 160, 255, 0.35);
-}
-.hero-scene__moto::before { left: 1%; }   /* rueda trasera */
-.hero-scene__moto::after  { right: 1%; }   /* rueda delantera */
-
-.hero-scene__moto-chassis { /* bastidor: conecta visualmente ambas ruedas */
-  left: 14%;
-  right: 14%;
-  bottom: 14%;
-  height: 4%;
-  background: linear-gradient(90deg, rgba(91, 147, 255, 0.5), rgba(150, 190, 255, 0.85) 50%, rgba(91, 147, 255, 0.5));
-  border-radius: 999px;
-  box-shadow: 0 0 10px rgba(31, 107, 255, 0.5);
-}
-
-.hero-scene__moto-body {   /* carenado + tanque + cola en una silueta */
-  left: 5%;
-  right: 5%;
-  bottom: 16%;
-  height: 52%;
-  background: linear-gradient(122deg, #14284f 0%, #23539c 40%, #16305e 68%, #0f2244 100%);
-  /* Perfil lateral de moto deportiva (nariz/faro a la derecha, cola a la izquierda) */
-  clip-path: polygon(
-    100% 52%, 92% 34%, 82% 30%, 66% 12%, 52% 20%, 46% 33%,
-    36% 30%, 22% 14%, 6% 30%, 2% 46%, 12% 62%, 30% 60%,
-    50% 66%, 72% 62%, 90% 66%, 100% 52%
+/* Degradado oscuro en la zona izquierda — asegura contraste del texto */
+.hero-overlay--left {
+  background: linear-gradient(
+    90deg,
+    rgba(3, 6, 14, 0.88) 0%,
+    rgba(3, 6, 14, 0.60) 30%,
+    rgba(3, 6, 14, 0.20) 54%,
+    transparent 72%
   );
-  filter:
-    drop-shadow(0 0 5px rgba(91, 147, 255, 0.6))
-    drop-shadow(0 12px 18px rgba(0, 0, 0, 0.55));
 }
-.hero-scene__moto-seat {   /* lomo tanque→asiento, brillo superior */
-  left: 30%;
-  right: 20%;
-  bottom: 56%;
-  height: 12%;
-  background: linear-gradient(100deg, rgba(150, 190, 255, 0.15), rgba(188, 212, 255, 0.6) 55%, rgba(120, 160, 255, 0.2));
-  border-radius: 60% 70% 30% 40% / 100% 100% 20% 20%;
-  filter: blur(0.5px);
+/* Degradado inferior suave — asienta la sección sobre el fondo de página */
+.hero-overlay--bottom {
+  background: linear-gradient(
+    180deg,
+    transparent 64%,
+    rgba(3, 6, 14, 0.34) 86%,
+    rgba(3, 6, 14, 0.58) 100%
+  );
 }
-.hero-scene__moto-fork {   /* horquilla delantera inclinada hacia la rueda */
-  right: 12%;
-  bottom: 14%;
-  width: 3.4%;
-  height: 40%;
-  background: linear-gradient(180deg, rgba(188, 212, 255, 0.85), rgba(91, 147, 255, 0.25));
-  border-radius: 999px;
-  transform: rotate(26deg);
-  transform-origin: bottom;
-  box-shadow: 0 0 8px rgba(91, 147, 255, 0.5);
-}
-.hero-scene__moto-light {  /* faro delantero */
-  right: 3%;
-  bottom: 44%;
-  width: 13%;
-  height: 13%;
-  border-radius: 50%;
-  background: radial-gradient(circle, #ffffff, var(--hero-blue-bright) 42%, transparent 72%);
-  box-shadow: 0 0 34px 10px rgba(120, 170, 255, 0.9);
-  animation: heroHeadlight 4s ease-in-out infinite;
-}
-.hero-scene__moto-beam {   /* haz de luz proyectado sobre la carretera */
-  right: 6%;
-  bottom: 2%;
-  width: 66%;
-  height: 56%;
-  background: linear-gradient(255deg, rgba(188, 212, 255, 0.32), rgba(91, 147, 255, 0.08) 55%, transparent 82%);
-  clip-path: polygon(98% 10%, 100% 20%, 26% 100%, 0 100%);
-  filter: blur(2px);
-  opacity: 0.9;
-}
-.hero-scene__moto-tail {   /* luz trasera — único acento rojo de la moto */
-  left: 3%;
-  bottom: 48%;
-  width: 6%;
-  height: 8%;
-  border-radius: 999px;
-  background: radial-gradient(circle, #ffd6d2, var(--hero-red) 52%, transparent 78%);
-  box-shadow: 0 0 20px 5px rgba(255, 59, 48, 0.65);
-}
-.hero-scene__moto-shadow { /* sombra de contacto en la carretera */
-  left: 4%;
-  right: 4%;
-  bottom: -4%;
-  height: 12%;
-  border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.78), transparent 70%);
-  filter: blur(7px);
-}
-.hero-scene__moto-speed {  /* estelas de velocidad — 1 línea roja como acento */
-  left: -24%;
-  bottom: 40%;
-  width: 48%;
-  height: 24%;
-  background:
-    linear-gradient(90deg, transparent, rgba(120, 170, 255, 0.75)) no-repeat 0 12% / 100% 2px,
-    linear-gradient(90deg, transparent, rgba(91, 147, 255, 0.6))   no-repeat 0 42% / 82% 2px,
-    linear-gradient(90deg, transparent, rgba(188, 212, 255, 0.45)) no-repeat 0 70% / 64% 2px,
-    linear-gradient(90deg, transparent, rgba(255, 59, 48, 0.55))   no-repeat 0 92% / 46% 2px;
-  animation: heroSpeed 2.4s ease-in-out infinite;
-}
-
-/* Viñeta cinematográfica */
-.hero-scene__vignette {
-  inset: 0;
-  background:
-    radial-gradient(140% 110% at 50% 42%, transparent 55%, rgba(2, 3, 6, 0.55) 100%),
-    linear-gradient(180deg, rgba(2, 3, 6, 0.35), transparent 18% 82%, rgba(2, 3, 6, 0.5));
+/* Viñeta ligera — cierre cinematográfico sin oscurecer la moto */
+.hero-overlay--vignette {
+  background: radial-gradient(140% 110% at 50% 42%, transparent 62%, rgba(2, 3, 6, 0.34) 100%);
 }
 
 /* ---- Contenido del hero ---- */
@@ -910,12 +712,15 @@ body {
 }
 .hero-actions .btn { min-height: 48px; }
 
-/* CTAs del hero — azul eléctrico + barrido de brillo (transform-only) */
+/* CTAs del hero — azul eléctrico + barrido de brillo (transform-only)
+   Tipografía de botón aprobada en el handoff: mayúsculas + tracking amplio */
 .btn-hero {
   position: relative;
   overflow: hidden;
   padding-inline: var(--space-8);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
 }
 .btn-hero.btn-primary {
   background: linear-gradient(120deg, var(--hero-blue) 0%, #2f7bff 55%, var(--hero-blue) 100%);
@@ -994,29 +799,10 @@ body {
 @keyframes heroRise {
   to { opacity: 1; transform: translateY(0); }
 }
-@keyframes heroMotoArrive {
-  from { opacity: 0; transform: translateX(64px) scale(1.05); }
-  to   { opacity: 1; transform: translateX(0) scale(1); }
-}
-@keyframes heroGlow {
-  0%, 100% { opacity: 0.6; }
-  50%      { opacity: 1; }
-}
-@keyframes heroHeadlight {
-  0%, 100% { opacity: 0.85; }
-  50%      { opacity: 1; }
-}
-@keyframes heroStars {
-  0%, 100% { opacity: 0.7; }
-  50%      { opacity: 1; }
-}
-@keyframes heroRoad {
-  from { transform: translateX(-50%) translateY(0); }
-  to   { transform: translateX(-50%) translateY(15%); }
-}
-@keyframes heroSpeed {
-  0%, 100% { opacity: 0.35; transform: translateX(0); }
-  50%      { opacity: 0.85; transform: translateX(-14px); }
+/* Punto del indicador de scroll (aprobado en el handoff de interacciones) */
+@keyframes heroScrollCue {
+  0%, 100% { transform: translate(-50%, 0); opacity: 1; }
+  50%      { transform: translate(-50%, 10px); opacity: 0.35; }
 }
 
 
@@ -1049,8 +835,10 @@ body {
   z-index: 0;
   pointer-events: none;
   opacity: 0.9;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  /* Solo se desvanece el arranque izquierdo: el final debe quedar nítido
+     para que la punta de flecha sea claramente visible. */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%);
+  mask-image: linear-gradient(90deg, transparent, #000 12%);
 }
 .stats-graph__area {
   opacity: 0;
@@ -1061,11 +849,20 @@ body {
   stroke-dashoffset: 1;
   filter: drop-shadow(0 0 6px rgba(91, 147, 255, 0.45));
 }
+/* Punta de flecha: aparece cuando la línea termina de dibujarse */
+.stats-graph__arrow {
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out) 1.7s;
+  filter: drop-shadow(0 0 6px rgba(91, 147, 255, 0.45));
+}
 .stats-section.is-visible .stats-graph__line {
   transition: stroke-dashoffset 1.8s var(--ease-cinematic) 0.2s;
   stroke-dashoffset: 0;
 }
 .stats-section.is-visible .stats-graph__area {
+  opacity: 1;
+}
+.stats-section.is-visible .stats-graph__arrow {
   opacity: 1;
 }
 
@@ -1538,8 +1335,17 @@ body {
   transform: translateY(-2px);
 }
 
+/* Microinteracción aprobada: presión sutil al hacer clic */
 .btn:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.99);
+}
+
+/* Anillo de foco aprobado — visible sobre fondos oscuros y video */
+.btn:focus-visible {
+  outline: 2px solid var(--brand-blue-ice);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px rgba(31, 107, 255, 0.35);
+  border-radius: var(--radius-pill);
 }
 
 /* Primario: cian sólido */
@@ -2207,14 +2013,17 @@ body {
     transform: none !important;
     animation: none !important;
   }
-  .hero-scene__moto,
-  .hero-scene__glow,
-  .hero-scene__stars,
-  .hero-scene__moto-light,
-  .hero-scene__moto-speed,
-  .hero-scene__road-line,
   .hero-scroll-cue::before {
     animation: none !important;
+  }
+  /* Video: no reproducir — mostrar el poster estático (fotograma final).
+     script.js también pausa el video; esta capa garantiza el resultado
+     aunque el JS no llegue a ejecutarse. */
+  .hero-video {
+    display: none !important;
+  }
+  .hero-media {
+    background: url("assets/hero/hero-arenas-poster.jpg") 72% center / cover no-repeat;
   }
   .btn-hero::after {
     transition: none !important;
@@ -2228,6 +2037,7 @@ body {
   }
   .stats-graph__area { opacity: 1 !important; transition: none !important; }
   .stats-graph__line { stroke-dashoffset: 0 !important; transition: none !important; }
+  .stats-graph__arrow { opacity: 1 !important; transition: none !important; }
 }
 
 
@@ -2242,12 +2052,13 @@ body {
     padding-block: clamp(var(--space-10), 9vh, var(--space-16));
   }
 
-  /* La escena pasa a fondo tenue detrás del texto para mantener contraste */
-  .hero-scene__moto      { opacity: 0.45; width: min(88vw, 480px); right: -12%; }
-  .hero-scene__moto-beam { display: none; }
-  .hero-scene__glow      { opacity: 0.55; }
-  .hero-scene__watermark { font-size: clamp(4.5rem, 26vw, 9rem); opacity: 0.7; }
-  .hero-scroll-cue       { display: none; }
+  /* El recorte vertical del video prioriza a la moto (mitad derecha) */
+  .hero-video,
+  .hero-media.video-failed {
+    object-position: 68% center;
+    background-position: 68% center;
+  }
+  .hero-scroll-cue { display: none; }
 
   .featured-model-layout,
   .service-layout {
@@ -2278,7 +2089,7 @@ body {
   .stats-graph { opacity: 0.5; }
 
   .site-header {
-    padding: var(--space-3) 0 var(--space-5);
+    padding: var(--space-3) var(--space-3) var(--space-3);
   }
 
   /* Menú móvil — activado por nav-toggle en JS */

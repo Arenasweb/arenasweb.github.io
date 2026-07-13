@@ -1337,6 +1337,97 @@ function inicializarAnimaciones() {
 
 
 /* ================================================================
+   MÓDULO 9b: HERO VIDEO + HEADER ON-SCROLL
+   Interacciones aprobadas del handoff, integradas selectivamente.
+   - Video del hero: reproduce una vez (sin loop), conserva el último
+     fotograma, se pausa fuera del viewport y nunca se reinicia solo.
+   - prefers-reduced-motion: no reproduce; el CSS muestra el poster.
+   - Header: transparente al inicio, oscuro con blur tras 24px de scroll.
+   Observer propio del video — no reutiliza ni duplica motionObserver.
+   ================================================================ */
+
+function inicializarHeroVideo() {
+  const video = $("#hero-video");
+  if (!video) return;
+
+  const media = video.closest(".hero-media");
+  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Refuerzo por JS de los atributos críticos de autoplay silencioso
+  video.muted = true;
+
+  // Fallback: si el video no puede cargarse, el poster ocupa el fondo
+  const marcarFallo = () => {
+    if (media) media.classList.add("video-failed");
+  };
+  video.addEventListener("error", marcarFallo);
+  const source = video.querySelector("source");
+  if (source) source.addEventListener("error", marcarFallo);
+
+  // Accesibilidad: sin reproducción automática con movimiento reducido.
+  // El CSS oculta el video y muestra el poster (fotograma final).
+  if (prefersReduced) {
+    video.removeAttribute("autoplay");
+    video.pause();
+    return;
+  }
+
+  // La intro se reproduce UNA sola vez: al terminar, el navegador conserva
+  // el último fotograma (sin atributo loop no hay reinicio automático).
+  let introTerminada = false;
+  video.addEventListener("ended", () => {
+    introTerminada = true;
+  });
+
+  // Pausar fuera del viewport / reanudar al volver SOLO si la intro
+  // no ha terminado. Si ya terminó, se conserva el estado final.
+  if ("IntersectionObserver" in window) {
+    const videoObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (introTerminada || video.ended) return;
+          if (entry.isIntersecting) {
+            if (video.paused) {
+              const p = video.play();
+              if (p && typeof p.catch === "function") p.catch(() => {});
+            }
+          } else if (!video.paused) {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    videoObserver.observe(video.closest(".hero-section") || video);
+  }
+}
+
+function inicializarHeaderScroll() {
+  const header = $(".site-header");
+  if (!header) return;
+
+  let ticking = false;
+  const actualizarHeader = () => {
+    header.classList.toggle("is-scrolled", (window.scrollY || 0) > 24);
+    ticking = false;
+  };
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(actualizarHeader);
+    },
+    { passive: true }
+  );
+
+  // Estado inicial correcto si la página carga ya scrolleada (anclas)
+  actualizarHeader();
+}
+
+
+/* ================================================================
    MÓDULO 10: FORM HANDLING
    Validación del formulario de cotización y envío por WhatsApp.
    ================================================================ */
@@ -1626,6 +1717,12 @@ async function inicializarApp() {
 
     // 7. Inicializar sistema de animaciones
     inicializarAnimaciones();
+
+    // 7b. Video del hero (una sola reproducción, pausa fuera de viewport)
+    inicializarHeroVideo();
+
+    // 7c. Header transparente → oscuro con blur al hacer scroll
+    inicializarHeaderScroll();
 
     // 8. Inicializar formulario de cotización
     inicializarFormulario();

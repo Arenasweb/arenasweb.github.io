@@ -55,6 +55,10 @@
       <link rel="icon" href="assets/favicon/favicon.ico" type="image/x-icon" />
       <link rel="apple-touch-icon" href="assets/favicon/apple-touch-icon.png" />
     -->
+    <!-- Favicon vacío provisional: evita la petición automática del navegador
+         a /favicon.ico (404 en consola). Reemplazar por las líneas de arriba
+         cuando exista el ícono oficial. -->
+    <link rel="icon" href="data:," />
 
     <link rel="stylesheet" href="style.css" />
     <link rel="canonical" href="https://arenasweb.github.io/" />
@@ -112,33 +116,27 @@
              DISEÑO FINAL PENDIENTE — no cerrar estética hasta sesión de diseño.
         ============================================================ -->
         <section id="hero" class="section hero-section" aria-labelledby="hero-heading">
-          <!-- Escena cinematográfica CSS-only — puramente decorativa, sin imágenes ni rutas -->
-          <div class="hero-scene" aria-hidden="true">
-            <span class="hero-scene__sky"></span>
-            <span class="hero-scene__stars"></span>
-            <span class="hero-scene__watermark">ARENAS</span>
-            <span class="hero-scene__ridge hero-scene__ridge--far"></span>
-            <span class="hero-scene__ridge hero-scene__ridge--back"></span>
-            <span class="hero-scene__ridge hero-scene__ridge--front"></span>
-            <span class="hero-scene__haze"></span>
-            <span class="hero-scene__road">
-              <span class="hero-scene__road-line"></span>
-              <span class="hero-scene__road-edge hero-scene__road-edge--left"></span>
-              <span class="hero-scene__road-edge hero-scene__road-edge--right"></span>
-            </span>
-            <span class="hero-scene__glow"></span>
-            <span class="hero-scene__moto">
-              <span class="hero-scene__moto-speed"></span>
-              <span class="hero-scene__moto-beam"></span>
-              <span class="hero-scene__moto-shadow"></span>
-              <span class="hero-scene__moto-chassis"></span>
-              <span class="hero-scene__moto-fork"></span>
-              <span class="hero-scene__moto-body"></span>
-              <span class="hero-scene__moto-seat"></span>
-              <span class="hero-scene__moto-light"></span>
-              <span class="hero-scene__moto-tail"></span>
-            </span>
-            <span class="hero-scene__vignette"></span>
+          <!-- Fondo cinematográfico: video PROVISIONAL (contiene marca visible del
+               generador; se sustituirá por la exportación oficial limpia).
+               Sin loop: la moto llega y el último fotograma queda en pantalla.
+               script.js → inicializarHeroVideo(): pausa fuera del viewport,
+               conserva el estado final y respeta prefers-reduced-motion. -->
+          <div class="hero-media" aria-hidden="true">
+            <video
+              id="hero-video"
+              class="hero-video"
+              autoplay
+              muted
+              playsinline
+              preload="metadata"
+              poster="assets/hero/hero-arenas-poster.jpg"
+              tabindex="-1"
+            >
+              <source src="assets/hero/hero-arenas-desktop.mp4" type="video/mp4" />
+            </video>
+            <span class="hero-overlay hero-overlay--left"></span>
+            <span class="hero-overlay hero-overlay--bottom"></span>
+            <span class="hero-overlay hero-overlay--vignette"></span>
           </div>
 
           <div class="hero-content section-intro">
@@ -148,7 +146,7 @@
               <span class="hero-title__line hero-title__line--accent hero-anim hero-anim--3">Libertad que te mueve.</span>
             </h1>
             <p class="hero-description hero-anim hero-anim--4">
-              Motos hechas para la ruta andina. Diseño, potencia y respaldo para pilotos que no se detienen.
+              Desde la ciudad hasta la ruta andina, encuentra la experiencia que encaje con tu camino.
             </p>
             <div class="hero-actions hero-anim hero-anim--5">
               <a href="#catalogo" class="btn btn-primary btn-hero" aria-label="Explorar el catálogo de motos">Explorar catálogo</a>
@@ -184,7 +182,11 @@
               d="M0,205 C130,196 210,150 330,162 C470,175 520,92 690,112 C840,130 910,52 1050,66 C1130,74 1175,42 1200,32 L1200,260 L0,260 Z" />
             <path class="stats-graph__line" fill="none" stroke="url(#statsLineGrad)" stroke-width="2.5"
               stroke-linecap="round" stroke-linejoin="round" pathLength="1"
-              d="M0,205 C130,196 210,150 330,162 C470,175 520,92 690,112 C840,130 910,52 1050,66 C1130,74 1175,42 1200,32" />
+              d="M0,205 C130,196 210,150 330,162 C470,175 520,92 690,112 C840,130 910,52 1050,66 C1130,74 1168,44 1188,34" />
+            <!-- Punta de flecha al final de la línea de crecimiento — decorativa -->
+            <path class="stats-graph__arrow" fill="none" stroke="#bcd4ff" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round"
+              d="M1170,33 L1188,34 L1178,49" />
           </svg>
 
           <ul class="stats-grid" role="list">
