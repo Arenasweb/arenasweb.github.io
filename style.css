@@ -109,11 +109,11 @@ p {
   --color-error:        #ef4444;
   --color-warning:      #f59e0b;
 
-  /* --- Tipografía — PENDIENTE DE DECISIÓN FINAL --- */
-  /* Usando stack seguro hasta elegir tipografía premium definitiva */
-  --font-body:          Inter, "Segoe UI", Helvetica, Arial, sans-serif;
-  --font-display:       Inter, "Segoe UI", Helvetica, Arial, sans-serif; /* PENDIENTE: fuente de display */
-  --font-mono:          "Fira Code", "Cascadia Code", monospace;
+  /* --- Tipografía — stacks locales del sistema (sin CDN, sin @font-face) --- */
+  /* Display técnica condensada para headlines automotrices; body legible. */
+  --font-display:       "Bahnschrift Condensed", "Arial Narrow", "Segoe UI Variable Display", "Segoe UI", sans-serif;
+  --font-body:          "Segoe UI Variable", "Segoe UI", Arial, sans-serif;
+  --font-mono:          "Cascadia Code", Consolas, monospace;
 
   /* Escala tipográfica */
   --text-xs:    0.72rem;   /* 11.5px */
@@ -284,6 +284,12 @@ body {
   padding: var(--space-6) var(--space-5) var(--space-12);
 }
 
+/* Wrapper del footer: sin doble espacio superior */
+.app-shell--footer {
+  padding-top: 0;
+  padding-bottom: var(--space-8);
+}
+
 .page-content {
   display: grid;
   gap: var(--space-8);
@@ -315,19 +321,19 @@ body {
    BLOQUE 6: HEADER
    ================================================================ */
 
+/* Header fijo superpuesto al hero: transparente al inicio, oscuro con blur
+   al scrollear. script.js → inicializarHeaderScroll() alterna .is-scrolled
+   (scrollY > 24). El hero de video es visible detrás desde el primer píxel. */
 .site-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  padding: var(--space-4) var(--space-4) var(--space-4);
-  position: sticky;
-  top: 0;
-  z-index: var(--z-sticky);
-  border-bottom: 1px solid rgba(91, 147, 255, 0.10);
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
-  /* Interacción aprobada: transparente al inicio → oscuro con blur al scrollear.
-     script.js → inicializarHeaderScroll() alterna .is-scrolled (scrollY > 24). */
+  padding: 14px clamp(20px, 4vw, 48px);
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: var(--z-modal);
+  border-bottom: 1px solid transparent;
   background: transparent;
   transition:
     background 450ms var(--ease-out),
@@ -341,6 +347,13 @@ body {
   -webkit-backdrop-filter: blur(12px);
   border-bottom-color: rgba(91, 147, 255, 0.16);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* El header fijo cubre ~76px: los saltos por ancla no deben ocultar títulos */
+.section,
+.stats-section,
+.hero-section {
+  scroll-margin-top: 84px;
 }
 
 /* Marca / logotipo */
@@ -419,17 +432,19 @@ body {
   letter-spacing: 0.04em;
 }
 
-/* Navegación principal */
+/* Navegación principal — ligera, con respiración entre enlaces */
 .site-nav {
   display: flex;
   align-items: center;
-  gap: var(--space-5);
+  gap: clamp(var(--space-4), 2.2vw, var(--space-8));
   flex-wrap: wrap;
 }
 
 .nav-link {
-  font-size: var(--text-sm);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
   font-weight: 500;
+  letter-spacing: 0;
   color: var(--color-silver);
   transition: color var(--duration-base) var(--ease-out);
   padding: var(--space-1) 0;
@@ -557,10 +572,12 @@ body {
    ================================================================ */
 
 /* ================================================================
-   HERO CINEMATOGRÁFICO — video de fondo (moto llegando a la derecha)
+   HERO CINEMATOGRÁFICO FULL-BLEED — video como fondo de pantalla
+   completa detrás del header fijo. Texto a la izquierda, moto a la
+   derecha, paisaje ocupando todo el viewport. Sin tarjeta, sin borde,
+   sin esquinas redondeadas, sin max-width en la escena.
    Video PROVISIONAL (marca del generador visible; se sustituirá por la
    exportación oficial limpia). Sin loop: el último fotograma queda fijo.
-   Overlays generales para legibilidad del texto — no cubren la marca.
    Control en script.js → inicializarHeroVideo().
    ================================================================ */
 .hero-section {
@@ -571,14 +588,20 @@ body {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  min-height: clamp(520px, 86vh, 920px);
+  /* Escena continua a sangre completa: nunca tarjeta, panel ni marco */
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  min-height: max(640px, 100svh);
   display: flex;
   align-items: center;
-  padding-block: clamp(var(--space-12), 12vh, var(--space-32));
-  padding-inline: clamp(var(--space-5), 6vw, var(--space-16));
-  border-radius: var(--radius-lg);
+  /* Espacio superior para el header fijo; inferior para el scroll-cue */
+  padding-block: clamp(96px, 14vh, 160px) clamp(72px, 10vh, 120px);
   /* Fondo base mientras el video carga — coherente con la escena nocturna */
-  background: linear-gradient(180deg, #05091a 0%, #04060f 55%, #030408 100%);
+  background: linear-gradient(180deg, #05091a 0%, #04060f 55%, #04060d 100%);
 }
 
 /* ---- Capa de video (aria-hidden en el HTML) ---- */
@@ -596,96 +619,88 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Mantener la moto (mitad derecha del encuadre) visible al recortar */
-  object-position: 72% center;
+  display: block;
+  /* Moto v2 más a la derecha del encuadre (45–95%): recorte que conserva
+     la cola de la moto y deja paisaje libre a la izquierda para el texto */
+  object-position: 68% center;
 }
 
 /* Fallback si el video no puede cargarse/reproducirse:
    script.js añade .video-failed y el poster ocupa el fondo. */
 .hero-media.video-failed .hero-video { display: none; }
 .hero-media.video-failed {
-  background: url("assets/hero/hero-arenas-poster.jpg") 72% center / cover no-repeat;
+  background: url("assets/hero/hero-arenas-poster-v2.jpg") 68% center / cover no-repeat;
 }
 
-/* ---- Overlays de legibilidad (generales, no dirigidos a la marca) ---- */
+/* ---- Overlays cinematográficos (generales, no dirigidos a la marca) ---- */
 .hero-overlay {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
-/* Degradado oscuro en la zona izquierda — asegura contraste del texto */
+/* Horizontal: intenso a la izquierda para el texto, casi nulo sobre la moto */
 .hero-overlay--left {
   background: linear-gradient(
     90deg,
-    rgba(3, 6, 14, 0.88) 0%,
-    rgba(3, 6, 14, 0.60) 30%,
-    rgba(3, 6, 14, 0.20) 54%,
-    transparent 72%
+    rgba(2, 5, 13, 0.92) 0%,
+    rgba(2, 5, 13, 0.76) 28%,
+    rgba(2, 5, 13, 0.34) 52%,
+    rgba(2, 5, 13, 0.08) 72%,
+    transparent 100%
   );
 }
-/* Degradado inferior suave — asienta la sección sobre el fondo de página */
-.hero-overlay--bottom {
+/* Vertical: leve oscurecimiento superior (navegación) e inferior que se
+   funde con el fondo de la sección de métricas (#04060d) sin corte. */
+.hero-overlay--vertical {
   background: linear-gradient(
     180deg,
-    transparent 64%,
-    rgba(3, 6, 14, 0.34) 86%,
-    rgba(3, 6, 14, 0.58) 100%
+    rgba(2, 5, 13, 0.55) 0%,
+    transparent 20%,
+    transparent 58%,
+    rgba(4, 6, 13, 0.55) 84%,
+    #04060d 100%
   );
 }
 /* Viñeta ligera — cierre cinematográfico sin oscurecer la moto */
 .hero-overlay--vignette {
-  background: radial-gradient(140% 110% at 50% 42%, transparent 62%, rgba(2, 3, 6, 0.34) 100%);
+  background: radial-gradient(140% 110% at 50% 42%, transparent 64%, rgba(2, 3, 6, 0.30) 100%);
 }
 
-/* ---- Contenido del hero ---- */
+/* ---- Contenido del hero: contenedor de lectura sobre la escena ---- */
 .hero-content {
   position: relative;
   z-index: 1;
-  display: grid;
-  gap: var(--space-5);
-  min-width: 0;
-  max-width: min(94vw, 720px);
-}
-.section-intro {
-  display: grid;
-  gap: var(--space-4);
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 80px);
 }
 
-.hero-eyebrow {
-  display: flex;             /* block-level: permite que el texto largo envuelva */
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-3);
-  max-width: 100%;
-  letter-spacing: 0.16em;    /* algo menos que el eyebrow base para no desbordar */
-  color: var(--hero-blue-ice);
-  overflow-wrap: break-word;
-}
-.hero-eyebrow::before {
-  content: "";
-  width: clamp(20px, 5vw, 34px);
-  height: 2px;
-  flex-shrink: 0;
-  background: linear-gradient(90deg, var(--hero-blue), transparent);
-  border-radius: 999px;
+/* Bloque de texto: SIEMPRE en el lado izquierdo, sin invadir la moto */
+.hero-copy {
+  display: grid;
+  gap: var(--space-5);
+  max-width: 640px;
+  min-width: 0;
 }
 
 .hero-title {
   display: grid;
-  gap: clamp(2px, 0.5vw, 6px);
+  gap: clamp(4px, 0.6vw, 10px);
   margin: 0;
-  max-width: 15ch;           /* favorece 1 frase por línea en desktop */
-  line-height: 0.98;
-  letter-spacing: -0.02em;
-  text-wrap: balance;
+  max-width: 620px;
+  line-height: 0.94;
+  letter-spacing: 0;
 }
 .hero-title__line {
   display: block;
-  font-weight: 900;
+  font-family: var(--font-display);
+  font-weight: 700;
   text-transform: uppercase;
-  font-size: clamp(1.95rem, 6.4vw, 4.15rem);
+  font-size: clamp(3.2rem, 5.5vw, 6rem);
   color: var(--color-white);
-  text-shadow: 0 2px 34px rgba(0, 0, 0, 0.65);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
+  text-wrap: balance;
   overflow-wrap: break-word;
 }
 .hero-title__line--accent {
@@ -693,14 +708,17 @@ body {
   background: linear-gradient(93deg, var(--hero-blue-ice) 0%, var(--hero-blue-bright) 34%, var(--hero-blue) 72%, #7fa8ff 100%);
   -webkit-background-clip: text;
   background-clip: text;
-  filter: drop-shadow(0 0 22px rgba(31, 107, 255, 0.4));
+  filter: drop-shadow(0 0 12px rgba(31, 107, 255, 0.25));
 }
 
 .hero-description {
-  font-size: clamp(var(--text-base), 1.6vw, var(--text-md));
-  max-width: min(100%, 46ch);
-  line-height: 1.7;
-  color: var(--color-silver);
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.3vw, 1.15rem);
+  max-width: 470px;
+  line-height: 1.6;
+  margin-top: var(--space-2);
+  color: #d8dee9;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.45);
   text-wrap: pretty;
 }
 
@@ -812,6 +830,9 @@ body {
    observer existente (.is-visible en la sección) — sin JS nuevo.
    Solo se animan transform, opacity y stroke-dashoffset.
    ================================================================ */
+/* Full-bleed, fusionada con el final del hero: mismo color de arranque
+   (#04060d) que el degradado inferior del video — sin corte, sin tarjeta,
+   sin borde ni esquinas redondeadas. */
 .stats-section {
   --stat-blue:        #1f6bff;
   --stat-blue-bright: #5b93ff;
@@ -820,10 +841,14 @@ body {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding-block: clamp(var(--space-10), 7vw, var(--space-20));
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  padding-block: clamp(var(--space-8), 6vw, var(--space-16)) clamp(var(--space-10), 7vw, var(--space-20));
+  padding-inline: clamp(var(--space-5), 6vw, var(--space-16));
   background:
-    radial-gradient(120% 120% at 50% 0%, rgba(31, 107, 255, 0.14), transparent 60%),
-    linear-gradient(180deg, #070c18 0%, #05080f 100%);
+    radial-gradient(120% 120% at 50% 0%, rgba(31, 107, 255, 0.10), transparent 60%),
+    linear-gradient(180deg, #04060d 0%, #05080f 100%);
 }
 
 /* Línea de gráfico de crecimiento — decorativa, al fondo */
@@ -2023,7 +2048,7 @@ body {
     display: none !important;
   }
   .hero-media {
-    background: url("assets/hero/hero-arenas-poster.jpg") 72% center / cover no-repeat;
+    background: url("assets/hero/hero-arenas-poster-v2.jpg") 68% center / cover no-repeat;
   }
   .btn-hero::after {
     transition: none !important;
@@ -2048,15 +2073,15 @@ body {
 /* Tablet — 900px */
 @media (max-width: 900px) {
   .hero-section {
-    min-height: clamp(480px, 78vh, 700px);
-    padding-block: clamp(var(--space-10), 9vh, var(--space-16));
+    min-height: max(600px, 100svh);
+    padding-block: clamp(112px, 16vh, 150px) clamp(64px, 9vh, 100px);
   }
 
-  /* El recorte vertical del video prioriza a la moto (mitad derecha) */
+  /* Recorte más centrado en la moto al estrecharse el viewport */
   .hero-video,
   .hero-media.video-failed {
-    object-position: 68% center;
-    background-position: 68% center;
+    object-position: 70% center;
+    background-position: 70% center;
   }
   .hero-scroll-cue { display: none; }
 
@@ -2077,6 +2102,22 @@ body {
     padding: var(--space-4) var(--space-4) var(--space-10);
   }
 
+  /* Hero móvil: texto en la zona media-superior, moto visible en la
+     mitad inferior-derecha del encuadre (el video 16:9 se recorta a la
+     zona de la moto). Botones apilados a ancho completo. */
+  .hero-section {
+    align-items: flex-start;
+    padding-block: clamp(104px, 16vh, 140px) clamp(56px, 8vh, 88px);
+  }
+  .hero-content {
+    padding-inline: 20px;
+  }
+  .hero-video,
+  .hero-media.video-failed {
+    object-position: 65% center;
+    background-position: 65% center;
+  }
+
   /* Métricas: apilar en una columna, sin separador vertical */
   .stats-grid {
     grid-template-columns: 1fr;
@@ -2089,7 +2130,7 @@ body {
   .stats-graph { opacity: 0.5; }
 
   .site-header {
-    padding: var(--space-3) var(--space-3) var(--space-3);
+    padding: 10px 16px;
   }
 
   /* Menú móvil — activado por nav-toggle en JS */

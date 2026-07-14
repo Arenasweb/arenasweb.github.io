@@ -66,61 +66,61 @@
 
   <body>
     <!-- ============================================================
-         APP SHELL — contenedor principal de toda la página
+         HEADER — fijo y transparente, superpuesto al video del hero.
+         script.js → inicializarHeaderScroll() añade .is-scrolled
+         (fondo oscuro con blur) tras 24px de scroll.
     ============================================================ -->
-    <div class="app-shell">
-
-      <!-- ============================================================
-           HEADER — navegación principal fija en la parte superior
-      ============================================================ -->
-      <header class="site-header" role="banner">
-        <div class="brand" aria-label="ARENAS MOTOCICLETAS inicio">
-          <!-- brand-mark: monograma CSS premium hasta tener logo SVG oficial -->
-          <span class="brand-mark" aria-hidden="true"><span class="brand-mark__a">A</span></span>
-          <div class="brand-lockup">
-            <p class="brand-name">ARENAS</p>
-            <p class="brand-sub">MOTOCICLETAS</p>
-          </div>
+    <header class="site-header" role="banner">
+      <div class="brand" aria-label="ARENAS MOTOCICLETAS inicio">
+        <!-- Logo oficial PENDIENTE de incorporación — wordmark textual provisional -->
+        <div class="brand-lockup">
+          <p class="brand-name">ARENAS</p>
+          <p class="brand-sub">MOTOCICLETAS</p>
         </div>
+      </div>
 
-        <!-- Botón hamburguesa para móvil -->
-        <button
-          class="nav-toggle"
-          aria-expanded="false"
-          aria-controls="site-nav"
-          aria-label="Abrir menú de navegación"
-        >
-          <span class="nav-toggle-bar"></span>
-          <span class="nav-toggle-bar"></span>
-          <span class="nav-toggle-bar"></span>
-        </button>
+      <!-- Botón hamburguesa para móvil -->
+      <button
+        class="nav-toggle"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        aria-label="Abrir menú de navegación"
+      >
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
 
-        <nav id="site-nav" class="site-nav" aria-label="Navegación principal">
-          <a href="#hero" class="nav-link">Inicio</a>
-          <a href="#catalogo" class="nav-link">Catálogo</a>
-          <a href="#financiamiento" class="nav-link">Financiamiento</a>
-          <a href="#servicio" class="nav-link">Servicio</a>
-          <a href="#tiendas" class="nav-link">Tiendas</a>
-          <a href="#cotizacion" class="nav-link btn btn-primary nav-cta">Cotizar</a>
-        </nav>
-      </header>
+      <nav id="site-nav" class="site-nav" aria-label="Navegación principal">
+        <a href="#hero" class="nav-link">Inicio</a>
+        <a href="#catalogo" class="nav-link">Catálogo</a>
+        <a href="#financiamiento" class="nav-link">Financiamiento</a>
+        <a href="#servicio" class="nav-link">Servicio</a>
+        <a href="#tiendas" class="nav-link">Tiendas</a>
+        <a href="#cotizacion" class="nav-link btn btn-primary nav-cta">Cotizar</a>
+      </nav>
+    </header>
 
-      <!-- ============================================================
-           MAIN — contenido principal de la página
-      ============================================================ -->
-      <main id="main-content" class="page-content" role="main">
+    <!-- ============================================================
+         MAIN — contenido principal de la página
+    ============================================================ -->
+    <main id="main-content" role="main">
 
         <!-- ============================================================
              SECCIÓN 1: HERO
              Introducción de marca, headline principal y CTAs primarios.
              DISEÑO FINAL PENDIENTE — no cerrar estética hasta sesión de diseño.
         ============================================================ -->
-        <section id="hero" class="section hero-section" aria-labelledby="hero-heading">
-          <!-- Fondo cinematográfico: video PROVISIONAL (contiene marca visible del
-               generador; se sustituirá por la exportación oficial limpia).
-               Sin loop: la moto llega y el último fotograma queda en pantalla.
-               script.js → inicializarHeroVideo(): pausa fuera del viewport,
-               conserva el estado final y respeta prefers-reduced-motion. -->
+        <!-- ============================================================
+             SECCIÓN 1: HERO CINEMATOGRÁFICO FULL-BLEED
+             Video de fondo a pantalla completa detrás del header fijo.
+             Video PROVISIONAL (marca visible del generador; se sustituirá
+             por la exportación oficial limpia). Sin loop: la moto llega y
+             el último fotograma queda en pantalla.
+             script.js → inicializarHeroVideo(): pausa fuera del viewport,
+             conserva el estado final y respeta prefers-reduced-motion.
+        ============================================================ -->
+        <section id="hero" class="hero-section" aria-labelledby="hero-heading">
           <div class="hero-media" aria-hidden="true">
             <video
               id="hero-video"
@@ -129,28 +129,29 @@
               muted
               playsinline
               preload="metadata"
-              poster="assets/hero/hero-arenas-poster.jpg"
+              poster="assets/hero/hero-arenas-poster-v2.jpg"
               tabindex="-1"
             >
-              <source src="assets/hero/hero-arenas-desktop.mp4" type="video/mp4" />
+              <source src="assets/hero/hero-arenas-desktop-v2.mp4" type="video/mp4" />
             </video>
             <span class="hero-overlay hero-overlay--left"></span>
-            <span class="hero-overlay hero-overlay--bottom"></span>
+            <span class="hero-overlay hero-overlay--vertical"></span>
             <span class="hero-overlay hero-overlay--vignette"></span>
           </div>
 
-          <div class="hero-content section-intro">
-            <span class="eyebrow hero-eyebrow hero-anim hero-anim--1">Concesionario premium · Cusco, Perú</span>
-            <h1 id="hero-heading" class="hero-title">
-              <span class="hero-title__line hero-anim hero-anim--2">Rutas que te definen.</span>
-              <span class="hero-title__line hero-title__line--accent hero-anim hero-anim--3">Libertad que te mueve.</span>
-            </h1>
-            <p class="hero-description hero-anim hero-anim--4">
-              Desde la ciudad hasta la ruta andina, encuentra la experiencia que encaje con tu camino.
-            </p>
-            <div class="hero-actions hero-anim hero-anim--5">
-              <a href="#catalogo" class="btn btn-primary btn-hero" aria-label="Explorar el catálogo de motos">Explorar catálogo</a>
-              <a href="#porque" class="btn btn-secondary btn-hero" aria-label="Conocer más sobre ARENAS MOTOCICLETAS">Conocer ARENAS</a>
+          <div class="hero-content">
+            <div class="hero-copy">
+              <h1 id="hero-heading" class="hero-title">
+                <span class="hero-title__line hero-anim hero-anim--1">Rutas que te definen.</span>
+                <span class="hero-title__line hero-title__line--accent hero-anim hero-anim--2">Libertad que te mueve.</span>
+              </h1>
+              <p class="hero-description hero-anim hero-anim--3">
+                Desde la ciudad hasta la ruta andina, encuentra la experiencia que encaje con tu camino.
+              </p>
+              <div class="hero-actions hero-anim hero-anim--4">
+                <a href="#catalogo" class="btn btn-primary btn-hero" aria-label="Explorar el catálogo de motos">Explorar catálogo</a>
+                <a href="#porque" class="btn btn-secondary btn-hero" aria-label="Conocer más sobre ARENAS MOTOCICLETAS">Conocer ARENAS</a>
+              </div>
             </div>
           </div>
 
@@ -164,7 +165,7 @@
              Reveal por scroll con el observer existente (sin JS nuevo):
              la sección recibe .is-visible y las cifras/gráfico animan por CSS.
         ============================================================ -->
-        <section id="metricas" class="section stats-section reveal-section" aria-label="Nuestra trayectoria en cifras">
+        <section id="metricas" class="stats-section reveal-section" aria-label="Nuestra trayectoria en cifras">
           <!-- Línea de gráfico de crecimiento — puramente decorativa -->
           <svg class="stats-graph" viewBox="0 0 1200 260" preserveAspectRatio="none" aria-hidden="true" focusable="false">
             <defs>
@@ -200,6 +201,12 @@
             </li>
           </ul>
         </section>
+
+        <!-- ============================================================
+             RESTO DE SECCIONES — dentro del shell centrado (diseño aprobado)
+        ============================================================ -->
+        <div class="app-shell">
+          <div class="page-content">
 
         <!-- ============================================================
              SECCIÓN 2: BUSCADOR DE MOTO IDEAL
@@ -770,15 +777,21 @@
           </div>
         </section>
 
+          </div>
+          <!-- /page-content -->
+        </div>
+        <!-- /app-shell -->
+
       </main>
       <!-- /main -->
 
       <!-- ============================================================
            FOOTER — pie de página con nav secundaria y legales
       ============================================================ -->
+      <div class="app-shell app-shell--footer">
       <footer class="site-footer" role="contentinfo">
         <div class="footer-brand">
-          <span class="brand-mark brand-mark--sm" aria-hidden="true"><span class="brand-mark__a">A</span></span>
+          <!-- Logo oficial PENDIENTE de incorporación — wordmark textual provisional -->
           <div class="brand-lockup">
             <p class="brand-name">ARENAS</p>
             <p class="brand-sub">MOTOCICLETAS</p>
