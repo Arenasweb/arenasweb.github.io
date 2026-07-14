@@ -93,11 +93,11 @@
 
       <nav id="site-nav" class="site-nav" aria-label="Navegación principal">
         <a href="#hero" class="nav-link">Inicio</a>
-        <a href="#catalogo" class="nav-link">Catálogo</a>
-        <a href="#financiamiento" class="nav-link">Financiamiento</a>
-        <a href="#servicio" class="nav-link">Servicio</a>
-        <a href="#tiendas" class="nav-link">Tiendas</a>
-        <a href="#cotizacion" class="nav-link btn btn-primary nav-cta">Cotizar</a>
+        <a href="#camino" class="nav-link">Camino</a>
+        <a href="#colecciones" class="nav-link">Colecciones</a>
+        <a href="#experiencia" class="nav-link">Experiencia</a>
+        <a href="#nosotros" class="nav-link">Nosotros</a>
+        <a href="#contacto" class="nav-link btn btn-primary nav-cta">Consultar</a>
       </nav>
     </header>
 
@@ -149,8 +149,8 @@
                 Desde la ciudad hasta la ruta andina, encuentra la experiencia que encaje con tu camino.
               </p>
               <div class="hero-actions hero-anim hero-anim--4">
-                <a href="#catalogo" class="btn btn-primary btn-hero" aria-label="Explorar el catálogo de motos">Explorar catálogo</a>
-                <a href="#porque" class="btn btn-secondary btn-hero" aria-label="Conocer más sobre ARENAS MOTOCICLETAS">Conocer ARENAS</a>
+                <a href="#colecciones" class="btn btn-primary btn-hero" aria-label="Explorar las colecciones de motos">Explorar catálogo</a>
+                <a href="#nosotros" class="btn btn-secondary btn-hero" aria-label="Conocer más sobre ARENAS MOTOCICLETAS">Conocer ARENAS</a>
               </div>
             </div>
           </div>
@@ -203,625 +203,631 @@
         </section>
 
         <!-- ============================================================
-             RESTO DE SECCIONES — dentro del shell centrado (diseño aprobado)
+             SECCIÓN 3: ENCUENTRA TU CAMINO — selector editorial de rutas
+             Sin JS: los seis paneles se muestran apilados (nada se oculta).
+             Con JS (.js-paths): un panel activo + navegación por botones.
+             script.js → inicializarCaminos()
         ============================================================ -->
-        <div class="app-shell">
-          <div class="page-content">
+        <section id="camino" class="path-section reveal-section" data-section="paths" aria-labelledby="camino-heading">
+          <div class="wrap">
+            <header class="block-head">
+              <h2 id="camino-heading" class="block-title">Encuentra tu camino</h2>
+              <p class="block-lead">Cada ruta exige una forma distinta de moverse. Explora el estilo que mejor encaja contigo.</p>
+            </header>
 
-        <!-- ============================================================
-             SECCIÓN 2: BUSCADOR DE MOTO IDEAL
-             Filtros interactivos por línea, cilindrada y uso.
-             JS conectado en script.js → inicializarBuscador()
-        ============================================================ -->
-        <section id="buscador" class="section search-section reveal-section" aria-labelledby="buscador-heading">
-          <div class="section-header">
-            <span class="eyebrow">Busca tu moto ideal</span>
-            <h2 id="buscador-heading">Selecciona tu estilo</h2>
-            <p>Filtra por línea, tipo de uso y cilindrada para encontrar tu modelo.</p>
-          </div>
+            <div class="path-layout">
+              <!-- Rail de categorías (desktop) -->
+              <div class="path-rail" role="group" aria-label="Categorías de camino">
+                <button type="button" class="path-tab" data-path="ciudad" aria-pressed="true">
+                  <span class="path-tab__num" aria-hidden="true">01</span>
+                  <span class="path-tab__name">Ciudad</span>
+                </button>
+                <button type="button" class="path-tab" data-path="trabajo" aria-pressed="false">
+                  <span class="path-tab__num" aria-hidden="true">02</span>
+                  <span class="path-tab__name">Trabajo</span>
+                </button>
+                <button type="button" class="path-tab" data-path="reparto" aria-pressed="false">
+                  <span class="path-tab__num" aria-hidden="true">03</span>
+                  <span class="path-tab__name">Reparto</span>
+                </button>
+                <button type="button" class="path-tab" data-path="aventura" aria-pressed="false">
+                  <span class="path-tab__num" aria-hidden="true">04</span>
+                  <span class="path-tab__name">Aventura</span>
+                </button>
+                <button type="button" class="path-tab" data-path="carretera" aria-pressed="false">
+                  <span class="path-tab__num" aria-hidden="true">05</span>
+                  <span class="path-tab__name">Carretera</span>
+                </button>
+                <button type="button" class="path-tab" data-path="montana" aria-pressed="false">
+                  <span class="path-tab__num" aria-hidden="true">06</span>
+                  <span class="path-tab__name">Montaña</span>
+                </button>
+              </div>
 
-          <!-- Buscador funcional — renderizado por JS -->
-          <div id="search-controls" class="search-controls" role="search" aria-label="Filtros de catálogo">
-            <div class="search-filters">
-              <label for="filtro-linea" class="filter-label">Línea</label>
-              <!-- Las líneas reales del catálogo se administran desde Google Sheets;
-                   este filtro se poblará dinámicamente cuando la integración esté activa. -->
-              <select id="filtro-linea" class="filter-select" aria-label="Filtrar por línea de moto">
-                <option value="">Todas las líneas</option>
-              </select>
+              <!-- Escenario de paneles -->
+              <div class="path-stage" aria-live="polite">
+                <article class="path-panel is-active" data-path="ciudad">
+                  <span class="path-panel__num" aria-hidden="true">01</span>
+                  <svg class="path-panel__scene" viewBox="0 0 640 260" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                    <path d="M40 220 L40 90 M90 220 L90 60 M140 220 L140 110 M190 220 L190 75 M240 220 L240 130" stroke="rgba(151,205,255,0.30)" stroke-width="2"/>
+                    <path d="M0 220 C 180 214 420 214 640 196" stroke="rgba(47,140,255,0.75)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    <path d="M300 208 h34 M356 206 h34 M412 203 h34" stroke="rgba(156,220,255,0.55)" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                  <div class="path-panel__body">
+                    <h3 class="path-panel__title">Ciudad</h3>
+                    <p class="path-panel__desc">Movilidad ágil para el día a día.</p>
+                    <p class="path-panel__meta">Tramos cortos · Tráfico · Precisión</p>
+                  </div>
+                </article>
 
-              <label for="filtro-uso" class="filter-label">Uso</label>
-              <select id="filtro-uso" class="filter-select" aria-label="Filtrar por tipo de uso">
-                <option value="">Todos los usos</option>
-                <option value="deportivo">Deportivo</option>
-                <option value="urbano">Urbano</option>
-                <option value="trabajo">Trabajo</option>
-                <option value="touring">Touring</option>
-              </select>
+                <article class="path-panel" data-path="trabajo">
+                  <span class="path-panel__num" aria-hidden="true">02</span>
+                  <svg class="path-panel__scene" viewBox="0 0 640 260" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                    <path d="M0 200 L640 150" stroke="rgba(47,140,255,0.7)" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M0 216 L640 166" stroke="rgba(151,205,255,0.25)" stroke-width="1.5"/>
+                    <path d="M60 200 l10 -22 M180 190 l10 -22 M300 181 l10 -22 M420 172 l10 -22 M540 162 l10 -22" stroke="rgba(156,220,255,0.5)" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                  <div class="path-panel__body">
+                    <h3 class="path-panel__title">Trabajo</h3>
+                    <p class="path-panel__desc">Una experiencia pensada para jornadas exigentes.</p>
+                    <p class="path-panel__meta">Constancia · Resistencia · Ritmo</p>
+                  </div>
+                </article>
 
-              <label for="filtro-cilindrada" class="filter-label">Cilindrada</label>
-              <select id="filtro-cilindrada" class="filter-select" aria-label="Filtrar por cilindrada">
-                <option value="">Cualquier cilindrada</option>
-                <option value="100-150">100–150 cc</option>
-                <option value="150-250">150–250 cc</option>
-                <option value="250-400">250–400 cc</option>
-                <option value="400+">Más de 400 cc</option>
-              </select>
+                <article class="path-panel" data-path="reparto">
+                  <span class="path-panel__num" aria-hidden="true">03</span>
+                  <svg class="path-panel__scene" viewBox="0 0 640 260" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                    <path d="M30 210 C 150 130 260 250 380 160 C 470 100 560 150 620 110" stroke="rgba(47,140,255,0.75)" stroke-width="2.5" fill="none" stroke-dasharray="10 12" stroke-linecap="round"/>
+                    <circle cx="30" cy="210" r="6" fill="rgba(156,220,255,0.85)"/>
+                    <circle cx="380" cy="160" r="6" fill="rgba(156,220,255,0.55)"/>
+                    <circle cx="620" cy="110" r="6" fill="rgba(156,220,255,0.85)"/>
+                  </svg>
+                  <div class="path-panel__body">
+                    <h3 class="path-panel__title">Reparto</h3>
+                    <p class="path-panel__desc">Control y practicidad para mantenerte en movimiento.</p>
+                    <p class="path-panel__meta">Paradas · Agilidad · Continuidad</p>
+                  </div>
+                </article>
 
-              <button id="btn-buscar" class="btn btn-primary" type="button" aria-label="Aplicar filtros de búsqueda">
-                Buscar moto
+                <article class="path-panel" data-path="aventura">
+                  <span class="path-panel__num" aria-hidden="true">04</span>
+                  <svg class="path-panel__scene" viewBox="0 0 640 260" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                    <path d="M0 190 C 120 170 200 210 320 186 C 460 158 540 196 640 170" stroke="rgba(151,205,255,0.28)" stroke-width="1.5" fill="none"/>
+                    <path d="M0 160 C 140 138 220 178 340 154 C 470 128 560 164 640 140" stroke="rgba(151,205,255,0.20)" stroke-width="1.5" fill="none"/>
+                    <path d="M0 130 C 150 106 240 146 360 122 C 480 100 570 132 640 112" stroke="rgba(151,205,255,0.14)" stroke-width="1.5" fill="none"/>
+                    <path d="M20 226 C 200 210 430 224 620 190" stroke="rgba(47,140,255,0.75)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                  </svg>
+                  <div class="path-panel__body">
+                    <h3 class="path-panel__title">Aventura</h3>
+                    <p class="path-panel__desc">Caminos que comienzan donde termina la rutina.</p>
+                    <p class="path-panel__meta">Tierra · Curvas · Horizonte</p>
+                  </div>
+                </article>
+
+                <article class="path-panel" data-path="carretera">
+                  <span class="path-panel__num" aria-hidden="true">05</span>
+                  <svg class="path-panel__scene" viewBox="0 0 640 260" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                    <path d="M0 120 L640 120" stroke="rgba(151,205,255,0.25)" stroke-width="1.5"/>
+                    <path d="M320 250 L360 120 M320 250 L280 120" stroke="rgba(47,140,255,0.55)" stroke-width="2"/>
+                    <path d="M320 244 L320 200 M320 184 L320 152 M320 140 L320 124" stroke="rgba(156,220,255,0.7)" stroke-width="3" stroke-linecap="round"/>
+                  </svg>
+                  <div class="path-panel__body">
+                    <h3 class="path-panel__title">Carretera</h3>
+                    <p class="path-panel__desc">Libertad y presencia para recorrer rutas largas.</p>
+                    <p class="path-panel__meta">Distancia · Estabilidad · Viaje</p>
+                  </div>
+                </article>
+
+                <article class="path-panel" data-path="montana">
+                  <span class="path-panel__num" aria-hidden="true">06</span>
+                  <svg class="path-panel__scene" viewBox="0 0 640 260" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                    <path d="M0 210 L150 90 L260 180 L390 60 L510 160 L640 100" stroke="rgba(151,205,255,0.35)" stroke-width="2" fill="none" stroke-linejoin="round"/>
+                    <path d="M0 232 C 160 224 300 236 640 212" stroke="rgba(47,140,255,0.75)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    <path d="M370 80 L390 60 L410 80" stroke="rgba(247,251,255,0.65)" stroke-width="2" fill="none"/>
+                  </svg>
+                  <div class="path-panel__body">
+                    <h3 class="path-panel__title">Montaña</h3>
+                    <p class="path-panel__desc">Una experiencia inspirada en la geografía andina.</p>
+                    <p class="path-panel__meta">Altura · Tracción · Paisaje</p>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <!-- Controles (móvil / teclado) -->
+            <div class="path-controls">
+              <button type="button" class="path-arrow" data-dir="-1" aria-label="Camino anterior">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <span class="path-count"><span class="path-count__current">01</span> / 06</span>
+              <button type="button" class="path-arrow" data-dir="1" aria-label="Camino siguiente">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </button>
             </div>
           </div>
         </section>
 
         <!-- ============================================================
-             SECCIÓN 2.5: ELIGE TU RUTA
-             Bloque editorial por tipo de uso. Sin stock, precios ni modelos.
-             Ayuda al usuario a identificarse con un tipo de uso.
+             SECCIÓN 4: SELECTOR GUIADO — tres pasos de orientación
+             Sin JS: los tres pasos se muestran expandidos y utilizables.
+             Con JS (.js-guide): asistente paso a paso con progreso.
+             No guarda, no envía y no recomienda modelos.
+             script.js → inicializarGuia()
         ============================================================ -->
-        <section id="ruta" class="section route-section reveal-section" aria-labelledby="ruta-heading">
-          <div class="section-header">
-            <span class="eyebrow">Elige tu ruta</span>
-            <h2 id="ruta-heading">Encuentra tu estilo de manejo</h2>
-            <p>Cada camino pide una moto distinta. Identifica tu uso y prepárate para explorar el catálogo.</p>
-          </div>
+        <section id="selector" class="guide-section reveal-section" aria-labelledby="selector-heading">
+          <div class="wrap">
+            <header class="block-head">
+              <h2 id="selector-heading" class="block-title">¿Qué camino quieres recorrer?</h2>
+              <p class="block-lead">Descubre el tipo de experiencia que mejor encaja con tu uso, tus prioridades y tu forma de conducir.</p>
+            </header>
 
-          <ul class="route-grid" role="list">
-            <li class="route-card reveal-scale">
-              <span class="route-card__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" focusable="false"><path d="M4 21h16M6 21V7l4-2v16M14 21V4l4 2v15M9 10h1M9 13h1M9 16h1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <h3 class="route-card__title">Ciudad</h3>
-              <p class="route-card__desc">Movilidad ágil para el día a día en Cusco.</p>
-            </li>
-            <li class="route-card reveal-scale">
-              <span class="route-card__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" focusable="false"><path d="M14.5 6.5a3.5 3.5 0 0 0-4.8 4.3l-5.2 5.2 2 2 5.2-5.2a3.5 3.5 0 0 0 4.3-4.8l-2.1 2.1-1.5-1.5 2.1-2.1z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <h3 class="route-card__title">Trabajo</h3>
-              <p class="route-card__desc">Pensada para jornadas exigentes.</p>
-            </li>
-            <li class="route-card reveal-scale">
-              <span class="route-card__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" focusable="false"><path d="M12 3l8 4v8l-8 4-8-4V7l8-4zM4 7l8 4 8-4M12 11v8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <h3 class="route-card__title">Reparto</h3>
-              <p class="route-card__desc">Rendimiento constante para el reparto.</p>
-            </li>
-            <li class="route-card reveal-scale">
-              <span class="route-card__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" focusable="false"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 8.5l-2.2 5-4.8 2.2 2.2-5 4.8-2.2z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <h3 class="route-card__title">Aventura</h3>
-              <p class="route-card__desc">Lista para salir de lo conocido.</p>
-            </li>
-            <li class="route-card reveal-scale">
-              <span class="route-card__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" focusable="false"><path d="M7 21L9.5 3M17 21L14.5 3M12 6v2M12 11v2M12 16v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <h3 class="route-card__title">Carretera</h3>
-              <p class="route-card__desc">Más presencia para rutas largas.</p>
-            </li>
-            <li class="route-card reveal-scale">
-              <span class="route-card__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" focusable="false"><path d="M3 19l6-10 3.5 5 2-3L21 19H3z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <h3 class="route-card__title">Montaña</h3>
-              <p class="route-card__desc">Tracción y control en terreno andino.</p>
-            </li>
-          </ul>
-        </section>
+            <form class="guide" novalidate aria-label="Selector guiado de orientación">
+              <!-- Progreso -->
+              <ol class="guide-progress" aria-hidden="true">
+                <li class="guide-progress__step is-current" data-step="1">01</li>
+                <li class="guide-progress__step" data-step="2">02</li>
+                <li class="guide-progress__step" data-step="3">03</li>
+              </ol>
 
-        <!-- ============================================================
-             SECCIÓN 3: CATÁLOGO DESTACADO
-             Tarjetas generadas dinámicamente desde data/catalogo.json.
-             JS conectado en script.js → renderizarCatalogo()
-        ============================================================ -->
-        <section id="catalogo" class="section catalog-section reveal-section" aria-labelledby="catalogo-heading">
-          <div class="section-header">
-            <span class="eyebrow">Catálogo destacado</span>
-            <h2 id="catalogo-heading">Modelos para Cusco</h2>
-            <p>Catálogo administrado desde canales oficiales, con información comercial sujeta a confirmación.</p>
-          </div>
+              <fieldset class="guide-step is-current" data-step="1">
+                <legend class="guide-step__legend"><span class="guide-step__num" aria-hidden="true">Paso 01</span> ¿Para qué la usarás?</legend>
+                <div class="guide-options">
+                  <label class="guide-option">
+                    <input type="radio" name="uso" value="Movilidad diaria" />
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20V8l5-3v15M14 20V5l5 3v12M4 20h16" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span>Movilidad diaria</span>
+                  </label>
+                  <label class="guide-option">
+                    <input type="radio" name="uso" value="Trabajo" />
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14.5 6.5a3.5 3.5 0 0 0-4.8 4.3l-5.2 5.2 2 2 5.2-5.2a3.5 3.5 0 0 0 4.3-4.8l-2.1 2.1-1.5-1.5 2.1-2.1z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span>Trabajo</span>
+                  </label>
+                  <label class="guide-option">
+                    <input type="radio" name="uso" value="Reparto" />
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 4v8l-8 4-8-4V7l8-4zM4 7l8 4 8-4M12 11v8" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span>Reparto</span>
+                  </label>
+                  <label class="guide-option">
+                    <input type="radio" name="uso" value="Viajes" />
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 17h18M5 17c2-5 5-8 9-9l5-2-2 5c-1 4-4 7-9 9" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span>Viajes</span>
+                  </label>
+                  <label class="guide-option">
+                    <input type="radio" name="uso" value="Aventura" />
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 19l6-10 3.5 5 2-3L21 19H3z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span>Aventura</span>
+                  </label>
+                </div>
+              </fieldset>
 
-          <!-- Zona de tarjetas — JS inserta aquí el catálogo dinámico -->
-          <div id="catalog-grid" class="catalog-grid" role="list" aria-label="Catálogo de motos disponibles">
-            <!-- Las tarjetas se generan con renderizarCatalogo() desde script.js -->
-            <div class="catalog-loading" role="status" aria-live="polite" aria-label="Cargando catálogo">
-              <span>Cargando catálogo...</span>
-            </div>
-          </div>
+              <fieldset class="guide-step" data-step="2">
+                <legend class="guide-step__legend"><span class="guide-step__num" aria-hidden="true">Paso 02</span> ¿Qué priorizas?</legend>
+                <div class="guide-options">
+                  <label class="guide-option">
+                    <input type="radio" name="prioridad" value="Practicidad" />
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span>Practicidad</span>
+                  </label>
+                  <label class="guide-option">
+                    <input type="radio" name="prioridad" value="Agilidad" />
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h9M9 6h11M6 18h11" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+                    <span>Agilidad</span>
+                  </label>
+                  <label class="guide-option">
+                    <input type="radio" name="prioridad" value="Comodidad" />
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 15c0-4 3-7 8-7s8 3 8 7M4 15h16M7 19h10" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span>Comodidad</span>
+                  </label>
+                  <label class="guide-option">
+                    <input type="radio" name="prioridad" value="Presencia" />
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l2.6 5.6L20 9.6l-4 4 1 6-5-3-5 3 1-6-4-4 5.4-1z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/></svg>
+                    <span>Presencia</span>
+                  </label>
+                  <label class="guide-option">
+                    <input type="radio" name="prioridad" value="Estilo" />
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+                    <span>Estilo</span>
+                  </label>
+                </div>
+              </fieldset>
 
-          <div class="catalog-footer">
-            <button id="btn-ver-todos" class="btn btn-secondary" type="button" aria-label="Ver todos los modelos disponibles">
-              Ver todos los modelos
-            </button>
-            <p class="catalog-note">Catálogo administrado desde Google Sheets · Consulta disponible próximamente.</p>
-          </div>
-        </section>
+              <fieldset class="guide-step" data-step="3">
+                <legend class="guide-step__legend"><span class="guide-step__num" aria-hidden="true">Paso 03</span> ¿Cuál es tu experiencia?</legend>
+                <div class="guide-options guide-options--wide">
+                  <label class="guide-option">
+                    <input type="radio" name="experiencia" value="Será mi primera motocicleta" />
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+                    <span>Será mi primera motocicleta</span>
+                  </label>
+                  <label class="guide-option">
+                    <input type="radio" name="experiencia" value="Ya tengo experiencia" />
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 17c3-8 8-11 16-11-1 8-6 12-13 12l-3-1z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg>
+                    <span>Ya tengo experiencia</span>
+                  </label>
+                  <label class="guide-option">
+                    <input type="radio" name="experiencia" value="Quiero renovar mi forma de conducir" />
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a8 8 0 1 0-2.3 6.3M20 5v6h-6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span>Quiero renovar mi forma de conducir</span>
+                  </label>
+                </div>
+              </fieldset>
 
-        <!-- ============================================================
-             SECCIÓN 4: MODELO DESTACADO
-             Moto estrella con presentación visual y CTA directo a WhatsApp.
-             Modelo configurado en data/configuracion.json → modeloDestacado
-        ============================================================ -->
-        <section id="modelo-destacado" class="section featured-model-section reveal-section" aria-labelledby="modelo-destacado-heading">
-          <div class="section-header">
-            <span class="eyebrow">Modelo destacado</span>
-            <h2 id="modelo-destacado-heading">Modelo destacado por confirmar</h2>
-            <p>Información administrada desde canales oficiales.</p>
-          </div>
-          <div class="featured-model-layout">
-            <!-- Zona de imagen principal del modelo destacado -->
-            <div class="featured-model-media" aria-hidden="true">
-              <!-- PENDIENTE: imagen oficial del modelo destacado -->
-              <div class="placeholder-media" aria-label="Imagen del modelo destacado"></div>
-            </div>
-            <div class="featured-model-info">
-              <ul class="feature-list" aria-label="Características del modelo destacado">
-                <li class="feature-item">Especificaciones técnicas: Consultar con un asesor</li>
-              </ul>
-              <!-- Precio: estado neutro por defecto — script.js → actualizarModeloDestacado()
-                   lo reemplaza con el valor real SOLO si precioConfirmado === true en
-                   data/catalogo.json. Si no hay JS o el precio no está confirmado, debe
-                   verse "Consultar", nunca un precio inventado. -->
-              <p class="featured-price" aria-label="Precio">
-                <span class="badge-pendiente" title="Precio no confirmado todavía">Consultar</span>
-              </p>
-              <a
-                href="#cotizacion"
-                class="btn btn-primary"
-                data-accion="whatsapp"
-                aria-label="Consultar por el modelo destacado vía WhatsApp"
-              >Consultar por WhatsApp</a>
-            </div>
-          </div>
-        </section>
+              <!-- Controles del asistente (solo con JS) -->
+              <div class="guide-controls" hidden>
+                <button type="button" class="btn btn-secondary guide-back" disabled>Volver</button>
+                <button type="button" class="btn btn-primary guide-next">Continuar</button>
+              </div>
 
-        <!-- ============================================================
-             SECCIÓN 5: LÍNEAS DE MOTOS
-             Categorías de uso genéricas — las familias reales del catálogo
-             se administran desde Google Sheets.
-        ============================================================ -->
-        <section id="lineas" class="section lines-section reveal-section" aria-labelledby="lineas-heading">
-          <div class="section-header">
-            <span class="eyebrow">Líneas de motos</span>
-            <h2 id="lineas-heading">Encuentra tu categoría</h2>
-            <p>Cuatro familias diseñadas para cada tipo de piloto y necesidad.</p>
-          </div>
-          <div class="lines-grid" role="list" aria-label="Líneas de motos disponibles">
-
-            <!-- Las líneas/familias reales del catálogo se administran desde Google
-                 Sheets. Estas tarjetas usan categorías de uso genéricas (no líneas
-                 comerciales) como estructura visual hasta que la integración esté activa. -->
-            <article class="line-card" role="listitem" aria-label="Categoría urbana">
-              <div class="line-icon" aria-hidden="true"><!-- PENDIENTE: ícono línea --></div>
-              <h3 class="line-name">Urbanas</h3>
-              <p class="line-desc">Movilidad diaria en ciudad. Modelos administrados desde canales oficiales.</p>
-              <a href="#catalogo" class="btn btn-ghost" aria-label="Ver motos urbanas">Ver modelos</a>
-            </article>
-
-            <article class="line-card" role="listitem" aria-label="Categoría deportiva">
-              <div class="line-icon" aria-hidden="true"><!-- PENDIENTE: ícono línea --></div>
-              <h3 class="line-name">Deportivas</h3>
-              <p class="line-desc">Para el piloto exigente. Modelos administrados desde canales oficiales.</p>
-              <a href="#catalogo" class="btn btn-ghost" aria-label="Ver motos deportivas">Ver modelos</a>
-            </article>
-
-            <article class="line-card" role="listitem" aria-label="Categoría aventura">
-              <div class="line-icon" aria-hidden="true"><!-- PENDIENTE: ícono línea --></div>
-              <h3 class="line-name">Aventura</h3>
-              <p class="line-desc">Ruta y touring. Modelos administrados desde canales oficiales.</p>
-              <a href="#catalogo" class="btn btn-ghost" aria-label="Ver motos de aventura">Ver modelos</a>
-            </article>
-
-            <article class="line-card" role="listitem" aria-label="Categoría trabajo y carga">
-              <div class="line-icon" aria-hidden="true"><!-- PENDIENTE: ícono línea --></div>
-              <h3 class="line-name">Trabajo y carga</h3>
-              <p class="line-desc">Reparto y uso intensivo. Modelos administrados desde canales oficiales.</p>
-              <a href="#catalogo" class="btn btn-ghost" aria-label="Ver motos de trabajo y carga">Ver modelos</a>
-            </article>
-
+              <!-- Resultado -->
+              <div class="guide-result" role="status" aria-live="polite">
+                <p class="guide-result__title">Estamos preparando una selección que encaje con tu camino.</p>
+                <p class="guide-result__summary" data-summary hidden></p>
+                <a class="btn btn-primary btn-hero" href="#colecciones">Explorar colecciones</a>
+              </div>
+            </form>
           </div>
         </section>
 
         <!-- ============================================================
-             SECCIÓN 6: POR QUÉ ELEGIR ARENAS
-             Propuesta de valor, confianza y diferenciadores locales.
+             SECCIÓN 5: COLECCIONES EDITORIALES — mosaico asimétrico
+             Sin precios, stock, modelos ni promociones. Los atributos
+             data-* son ganchos para la futura fuente aprobada de datos.
         ============================================================ -->
-        <section id="porque" class="section why-section reveal-section" aria-labelledby="porque-heading">
-          <div class="section-header">
-            <span class="eyebrow">Por qué elegir ARENAS</span>
-            <h2 id="porque-heading">Confianza y respaldo en Cusco</h2>
-            <p>Somos el concesionario de confianza para pilotos que exigen calidad y servicio real.</p>
-          </div>
-          <div class="why-grid" role="list" aria-label="Razones para elegir ARENAS MOTOCICLETAS">
+        <section id="colecciones" class="collections-section reveal-section" data-section="collections" aria-labelledby="colecciones-heading">
+          <div class="wrap">
+            <header class="block-head">
+              <h2 id="colecciones-heading" class="block-title">Explora nuestras colecciones</h2>
+              <p class="block-lead">Diferentes formas de moverse. Una misma pasión por la ruta.</p>
+            </header>
 
-            <article class="why-card" role="listitem">
-              <div class="why-icon" aria-hidden="true"><!-- PENDIENTE: ícono --></div>
-              <h3>Taller propio en Cusco</h3>
-              <p>Área técnica disponible. Mantenimiento sujeto a condiciones comerciales vigentes.</p>
-            </article>
+            <div class="collections-grid">
+              <a href="#camino" class="collection collection--urbana reveal-scale" data-collection="movilidad-urbana" data-dynamic-slot data-fallback-state="editorial">
+                <svg class="collection__scene" viewBox="0 0 600 700" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                  <path d="M80 700 L80 260 M160 700 L160 180 M240 700 L240 320 M320 700 L320 220 M400 700 L400 360 M480 700 L480 260" stroke="rgba(151,205,255,0.18)" stroke-width="3"/>
+                  <path d="M0 560 C 200 540 400 548 600 500" stroke="rgba(47,140,255,0.55)" stroke-width="3" fill="none"/>
+                </svg>
+                <span class="collection__tag">Colección</span>
+                <span class="collection__title">Movilidad urbana</span>
+                <span class="collection__desc">Soluciones visuales para moverte con agilidad en el día a día.</span>
+                <span class="collection__cta">Explorar estilo
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+              </a>
 
-            <article class="why-card" role="listitem">
-              <div class="why-icon" aria-hidden="true"><!-- PENDIENTE: ícono --></div>
-              <h3>Opciones de pago</h3>
-              <p>Financiamiento sujeto a evaluación y disponibilidad vigente. Información administrada desde canales oficiales.</p>
-            </article>
+              <a href="#camino" class="collection collection--trabajo reveal-scale" data-collection="trabajo-productividad" data-dynamic-slot data-fallback-state="editorial">
+                <svg class="collection__scene" viewBox="0 0 600 340" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                  <path d="M0 260 L600 190" stroke="rgba(47,140,255,0.5)" stroke-width="3"/>
+                  <path d="M40 260 l14 -30 M180 244 l14 -30 M320 228 l14 -30 M460 211 l14 -30" stroke="rgba(156,220,255,0.4)" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+                <span class="collection__tag">Colección</span>
+                <span class="collection__title">Trabajo y productividad</span>
+                <span class="collection__desc">Una categoría orientada a jornadas, traslado y movimiento constante.</span>
+                <span class="collection__cta">Explorar estilo
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+              </a>
 
-            <article class="why-card" role="listitem">
-              <div class="why-icon" aria-hidden="true"><!-- PENDIENTE: ícono --></div>
-              <h3>Disponibilidad sujeta a confirmación</h3>
-              <p>Consulta condiciones vigentes con un asesor antes de tu visita.</p>
-            </article>
+              <a href="#camino" class="collection collection--deportivo reveal-scale" data-collection="estilo-deportivo" data-dynamic-slot data-fallback-state="editorial">
+                <svg class="collection__scene" viewBox="0 0 600 340" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                  <path d="M-20 300 C 160 220 300 320 620 160" stroke="rgba(47,140,255,0.6)" stroke-width="3" fill="none"/>
+                  <path d="M-20 320 C 170 245 310 340 620 190" stroke="rgba(151,205,255,0.22)" stroke-width="2" fill="none"/>
+                </svg>
+                <span class="collection__tag">Colección</span>
+                <span class="collection__title">Estilo deportivo</span>
+                <span class="collection__desc">Diseño, presencia y una experiencia de conducción con carácter.</span>
+                <span class="collection__cta">Explorar estilo
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+              </a>
 
-            <article class="why-card" role="listitem">
-              <div class="why-icon" aria-hidden="true"><!-- PENDIENTE: ícono --></div>
-              <h3>Asesoría personalizada</h3>
-              <p>Te ayudamos a elegir el modelo ideal según tu uso, presupuesto y estilo de vida.</p>
-            </article>
-
-          </div>
-        </section>
-
-        <!-- ============================================================
-             SECCIÓN 7: TU MOTO INCLUYE
-             Beneficios y servicios incluidos en cada compra.
-        ============================================================ -->
-        <section id="incluye" class="section includes-section reveal-section" aria-labelledby="incluye-heading">
-          <div class="section-header">
-            <span class="eyebrow">Tu moto incluye</span>
-            <h2 id="incluye-heading">Más que una moto, una experiencia completa</h2>
-            <p>Cada compra en ARENAS incluye los siguientes beneficios, sujetos a condiciones comerciales vigentes.</p>
-          </div>
-          <!-- Los beneficios reales por compra se administran desde Google Sheets
-               y se publicarán solo cuando estén aprobados. No listar beneficios
-               concretos (garantía, mantenimientos, accesorios) en este HTML. -->
-          <ul class="includes-list" aria-label="Beneficios incluidos en la compra">
-            <li class="include-item">
-              <span class="include-check" aria-hidden="true">✓</span>
-              <span>Beneficios sujetos a condiciones comerciales vigentes.</span>
-            </li>
-            <li class="include-item">
-              <span class="include-check" aria-hidden="true">✓</span>
-              <span>Información administrada desde canales oficiales.</span>
-            </li>
-            <li class="include-item">
-              <span class="include-check" aria-hidden="true">✓</span>
-              <span>Consulta condiciones vigentes con un asesor autorizado.</span>
-            </li>
-          </ul>
-          <p class="includes-disclaimer" aria-label="Nota sobre beneficios incluidos">
-            * Beneficios sujetos a condiciones comerciales vigentes.
-          </p>
-        </section>
-
-        <!-- ============================================================
-             SECCIÓN 8: FINANCIAMIENTO
-             Estado y entidades administrados desde Google Sheets.
-             No mostrar plazos, cuotas, entidades ni financiamiento como activo sin aprobación.
-        ============================================================ -->
-        <section id="financiamiento" class="section financing-section reveal-section" aria-labelledby="financiamiento-heading">
-          <div class="section-header">
-            <span class="eyebrow">Financiamiento</span>
-            <h2 id="financiamiento-heading">Opciones de financiamiento</h2>
-            <p>Financiamiento sujeto a evaluación y disponibilidad vigente. Información administrada desde canales oficiales.</p>
-          </div>
-          <!-- Las entidades financieras reales y el estado del financiamiento se
-               administran desde Google Sheets. No nombrar entidades en este HTML. -->
-          <div class="financing-grid" role="list" aria-label="Estado del financiamiento">
-
-            <article class="financing-card" role="listitem">
-              <h3 class="financing-plan">Entidad administrada desde Google Sheets</h3>
-              <p class="financing-months">Información por confirmar</p>
-              <p class="financing-note">Estado: <span class="badge-pendiente" title="Información pendiente de publicación">Por confirmar</span></p>
-            </article>
-
-          </div>
-          <p class="financing-disclaimer" aria-label="Nota sobre datos de financiamiento">
-            * Financiamiento sujeto a evaluación y disponibilidad vigente. Consulta condiciones vigentes con un asesor autorizado.
-          </p>
-        </section>
-
-        <!-- ============================================================
-             SECCIÓN 9: SERVICIO TÉCNICO
-             Taller propio, repuestos y mantenimiento.
-        ============================================================ -->
-        <section id="servicio" class="section service-section reveal-section" aria-labelledby="servicio-heading">
-          <div class="section-header">
-            <span class="eyebrow">Servicio técnico</span>
-            <h2 id="servicio-heading">Taller especializado en Cusco</h2>
-            <p>Mantenimiento preventivo y correctivo. Servicio postventa sujeto a condiciones comerciales vigentes.</p>
-          </div>
-          <div class="service-layout">
-            <div class="service-info">
-              <ul class="service-list" aria-label="Servicios técnicos disponibles">
-                <li>Mantenimiento preventivo según condiciones comerciales vigentes</li>
-                <li>Diagnóstico electrónico de sistemas</li>
-                <li>Reparación de motor, frenos y suspensión</li>
-                <li>Repuestos sujetos a disponibilidad</li>
-                <li>Área técnica disponible</li>
-                <li>Servicio postventa sujeto a condiciones comerciales vigentes</li>
-              </ul>
-              <a href="#cotizacion" class="btn btn-primary" aria-label="Agendar revisión técnica por WhatsApp">
-                Agendar revisión
+              <a href="#camino" class="collection collection--aventura reveal-scale" data-collection="ruta-aventura" data-dynamic-slot data-fallback-state="editorial">
+                <svg class="collection__scene" viewBox="0 0 1240 300" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                  <path d="M0 210 L260 90 L430 190 L640 60 L840 170 L1040 90 L1240 150" stroke="rgba(151,205,255,0.28)" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+                  <path d="M0 250 C 400 232 800 244 1240 208" stroke="rgba(47,140,255,0.6)" stroke-width="3" fill="none"/>
+                </svg>
+                <span class="collection__tag">Colección panorámica</span>
+                <span class="collection__title">Ruta y aventura</span>
+                <span class="collection__desc">Una propuesta para quienes buscan caminos más largos.</span>
+                <span class="collection__cta">Explorar estilo
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
               </a>
             </div>
-            <!-- PENDIENTE: imagen del taller o equipo técnico -->
-            <div class="service-media" aria-hidden="true">
-              <div class="placeholder-media" aria-label="Imagen del taller técnico"></div>
+
+            <!-- Zona reservada para el catálogo dinámico futuro (fuente aprobada).
+                 Permanece oculta y sin fetch hasta la fase de integración. -->
+            <div id="catalog-grid" data-dynamic-slot="catalogo" data-fallback-state="editorial" hidden></div>
+            <p class="collections-note">Las fichas comerciales se incorporarán desde la fuente de información aprobada.</p>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             SECCIÓN 6: EXPERIENCIA DESTACADA — full-width de impacto
+             Usa el fotograma final del video (asset local existente)
+             como imagen editorial referencial. Sin ficha de producto.
+        ============================================================ -->
+        <section id="experiencia" class="feature-section reveal-section" aria-labelledby="experiencia-heading">
+          <svg class="feature-lines" viewBox="0 0 1400 620" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <path d="M0 90 L360 90 L400 130" stroke="rgba(151,205,255,0.22)" stroke-width="1.5" fill="none"/>
+            <path d="M0 560 C 300 540 600 552 900 520" stroke="rgba(47,140,255,0.35)" stroke-width="2" fill="none"/>
+            <path d="M40 40 v70 M40 40 h70" stroke="rgba(151,205,255,0.35)" stroke-width="1.5"/>
+            <path d="M1360 580 v-70 M1360 580 h-70" stroke="rgba(151,205,255,0.35)" stroke-width="1.5"/>
+          </svg>
+          <div class="wrap feature-layout">
+            <div class="feature-copy">
+              <h2 id="experiencia-heading" class="block-title">Una moto para cada forma de avanzar</h2>
+              <p class="block-lead">Ciudad, trabajo, carretera o montaña. Cada decisión comienza por entender el camino.</p>
+              <div class="feature-actions">
+                <a href="#camino" class="btn btn-primary btn-hero">Descubrir estilos</a>
+              </div>
+            </div>
+            <figure class="feature-media">
+              <img
+                src="assets/hero/hero-arenas-poster-v2.jpg"
+                alt="Motocicleta sobre una carretera andina de montaña"
+                width="1280"
+                height="720"
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption class="feature-caption">Imagen referencial</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             SECCIÓN 7: POR QUÉ ARENAS — narrativa vertical de pilares
+        ============================================================ -->
+        <section id="nosotros" class="pillars-section reveal-section" aria-labelledby="nosotros-heading">
+          <div class="wrap">
+            <header class="block-head block-head--center">
+              <h2 id="nosotros-heading" class="block-title block-title--stack">
+                <span>No se trata solo de elegir una motocicleta.</span>
+                <span class="block-title__accent">Se trata de encontrar la que encaje con tu camino.</span>
+              </h2>
+            </header>
+
+            <div class="pillars">
+              <span class="pillars-line" aria-hidden="true"></span>
+
+              <article class="pillar pillar--left reveal-slide-up">
+                <span class="pillar__num" aria-hidden="true">01</span>
+                <div class="pillar__body">
+                  <h3 class="pillar__title">Orientación</h3>
+                  <p class="pillar__desc">Exploramos contigo el uso, el estilo y el tipo de ruta que buscas.</p>
+                </div>
+                <svg class="pillar__glyph" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+                  <circle cx="60" cy="60" r="44" stroke="rgba(151,205,255,0.35)" stroke-width="2" fill="none"/>
+                  <path d="M78 42 L66 66 L42 78 L54 54 Z" stroke="rgba(47,140,255,0.9)" stroke-width="2" fill="none" stroke-linejoin="round"/>
+                </svg>
+              </article>
+
+              <article class="pillar pillar--right reveal-slide-up">
+                <span class="pillar__num" aria-hidden="true">02</span>
+                <div class="pillar__body">
+                  <h3 class="pillar__title">Experiencia</h3>
+                  <p class="pillar__desc">Una trayectoria construida alrededor del mundo de las motocicletas.</p>
+                </div>
+                <svg class="pillar__glyph" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+                  <path d="M20 90 C 40 40 80 40 100 66" stroke="rgba(47,140,255,0.9)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                  <path d="M92 58 L100 66 L90 70" stroke="rgba(156,220,255,0.9)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </article>
+
+              <article class="pillar pillar--left reveal-slide-up">
+                <span class="pillar__num" aria-hidden="true">03</span>
+                <div class="pillar__body">
+                  <h3 class="pillar__title">Acompañamiento</h3>
+                  <p class="pillar__desc">Una experiencia que continúa después de tomar una decisión.</p>
+                </div>
+                <svg class="pillar__glyph" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+                  <path d="M24 76 C 24 56 42 44 60 44 C 78 44 96 56 96 76" stroke="rgba(151,205,255,0.4)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                  <path d="M36 76 h48" stroke="rgba(47,140,255,0.9)" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+              </article>
             </div>
           </div>
         </section>
 
         <!-- ============================================================
-             SECCIÓN 10: PROMOCIONES
-             Promociones y campañas comerciales sujetas a confirmación.
-             PENDIENTE: conectar con campo "promocion" del catálogo JSON, solo
-             cuando existan promociones con promocionConfirmada=true y
-             estadoAprobacion="aprobado".
+             SECCIÓN 8: PREPARA TU DECISIÓN — guía de tres pasos
+             Sin financiamiento, bancos, tasas, cuotas ni montos.
         ============================================================ -->
-        <section id="promociones" class="section promos-section reveal-section" aria-labelledby="promociones-heading">
-          <div class="section-header">
-            <span class="eyebrow">Promociones</span>
-            <h2 id="promociones-heading">Promociones y campañas comerciales</h2>
-            <p>Promociones y campañas comerciales sujetas a confirmación. Consulta condiciones vigentes con un asesor.</p>
-          </div>
-          <div id="promos-grid" class="promos-grid" role="list" aria-label="Promociones sujetas a confirmación">
-            <!-- Promos extraídas dinámicamente del catálogo JSON via script.js -->
-            <div class="placeholder-card">
-              <p>No hay promociones aprobadas para publicación en este momento. Consulta condiciones vigentes con un asesor.</p>
-              <!-- PENDIENTE: activar render de promos desde catalogo.json solo cuando existan promociones con promocionConfirmada=true y estadoAprobacion="aprobado" -->
+        <section id="decision" class="prep-section reveal-section" aria-labelledby="decision-heading">
+          <div class="wrap">
+            <header class="block-head">
+              <h2 id="decision-heading" class="block-title">Prepara tu decisión</h2>
+              <p class="block-lead">Conocer tus prioridades es el primer paso para elegir mejor.</p>
+            </header>
+
+            <ol class="prep-steps">
+              <li class="prep-step reveal-slide-up">
+                <span class="prep-step__num" aria-hidden="true">01</span>
+                <h3 class="prep-step__title">Define tu uso</h3>
+                <p class="prep-step__desc">Piensa en la frecuencia, la ruta y el tipo de desplazamiento que realizarás.</p>
+              </li>
+              <li class="prep-step reveal-slide-up">
+                <span class="prep-step__num" aria-hidden="true">02</span>
+                <h3 class="prep-step__title">Organiza tu presupuesto</h3>
+                <p class="prep-step__desc">Establece un rango realista antes de revisar opciones comerciales.</p>
+              </li>
+              <li class="prep-step reveal-slide-up">
+                <span class="prep-step__num" aria-hidden="true">03</span>
+                <h3 class="prep-step__title">Revisa la información aprobada</h3>
+                <p class="prep-step__desc">Compara las alternativas cuando las fichas oficiales estén disponibles.</p>
+              </li>
+            </ol>
+
+            <div class="prep-cta">
+              <a href="#contacto" class="btn btn-primary btn-hero">Recibir orientación</a>
             </div>
           </div>
         </section>
 
         <!-- ============================================================
-             SECCIÓN 11: TESTIMONIOS Y ENTREGAS REALES
-             Validación social de clientes satisfechos.
-             PENDIENTE: recolectar testimonios reales antes del lanzamiento.
+             SECCIÓN 9: RUTA DE ACOMPAÑAMIENTO — timeline de etapas
         ============================================================ -->
-        <section id="testimonios" class="section testimonials-section reveal-section" aria-labelledby="testimonios-heading">
-          <div class="section-header">
-            <span class="eyebrow">Testimonios · Entregas reales</span>
-            <h2 id="testimonios-heading">Pilotos que ya aceleraron</h2>
-            <p>Experiencias reales de clientes que eligieron ARENAS MOTOCICLETAS.</p>
+        <section id="acompanamiento" class="journey-section reveal-section" aria-labelledby="acompanamiento-heading">
+          <div class="wrap">
+            <header class="block-head">
+              <h2 id="acompanamiento-heading" class="block-title">Tu ruta no termina en la elección</h2>
+              <p class="block-lead">Una experiencia clara se construye paso a paso.</p>
+            </header>
+
+            <ol class="journey">
+              <svg class="journey-track" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path class="journey-track__line" d="M10 20 H1190" stroke="rgba(47,140,255,0.6)" stroke-width="2.5" fill="none" pathLength="1" stroke-linecap="round"/>
+              </svg>
+
+              <li class="journey-stage reveal-slide-up">
+                <span class="journey-stage__dot" aria-hidden="true"></span>
+                <span class="journey-stage__num" aria-hidden="true">01</span>
+                <svg class="journey-stage__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M15.5 8.5l-2.2 5-4.8 2.2 2.2-5 4.8-2.2z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/></svg>
+                <h3 class="journey-stage__title">Orientación</h3>
+                <p class="journey-stage__desc">Comprender el tipo de uso y ruta.</p>
+              </li>
+              <li class="journey-stage reveal-slide-up">
+                <span class="journey-stage__dot" aria-hidden="true"></span>
+                <span class="journey-stage__num" aria-hidden="true">02</span>
+                <svg class="journey-stage__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 4h9l4 4v12H6z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/><path d="M9 12h6M9 16h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                <h3 class="journey-stage__title">Preparación</h3>
+                <p class="journey-stage__desc">Revisar la información necesaria antes de decidir.</p>
+              </li>
+              <li class="journey-stage reveal-slide-up">
+                <span class="journey-stage__dot" aria-hidden="true"></span>
+                <span class="journey-stage__num" aria-hidden="true">03</span>
+                <svg class="journey-stage__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 17h13M13 7l4 4-4 4M4 7h6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <h3 class="journey-stage__title">Entrega</h3>
+                <p class="journey-stage__desc">Organizar el siguiente paso de la experiencia.</p>
+              </li>
+              <li class="journey-stage reveal-slide-up">
+                <span class="journey-stage__dot" aria-hidden="true"></span>
+                <span class="journey-stage__num" aria-hidden="true">04</span>
+                <svg class="journey-stage__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21c-4-3.5-8-6.6-8-10.4C4 7.4 6.2 5 9 5c1.2 0 2.3.5 3 1.4C12.7 5.5 13.8 5 15 5c2.8 0 5 2.4 5 5.6 0 3.8-4 6.9-8 10.4z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg>
+                <h3 class="journey-stage__title">Acompañamiento</h3>
+                <p class="journey-stage__desc">Mantener una relación clara después de la elección.</p>
+              </li>
+            </ol>
           </div>
-          <div class="testimonials-grid" role="list" aria-label="Testimonios de clientes">
-            <!-- PENDIENTE: insertar testimonios reales con nombre, ciudad y modelo comprado -->
-            <div class="placeholder-card">
-              <p>Los testimonios reales se publicarán tras el lanzamiento oficial del servicio.</p>
+        </section>
+
+        <!-- ============================================================
+             SECCIÓN 10: CIERRE DE CONVERSIÓN — consulta honesta
+             No envía ni almacena datos. script.js → inicializarConsulta()
+        ============================================================ -->
+        <section id="contacto" class="contact-section reveal-section" aria-labelledby="contacto-heading">
+          <svg class="contact-road" viewBox="0 0 800 600" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <path d="M-40 620 C 200 420 260 300 210 40" stroke="rgba(47,140,255,0.4)" stroke-width="3" fill="none"/>
+            <path d="M-10 640 C 240 440 300 310 250 30" stroke="rgba(151,205,255,0.16)" stroke-width="2" fill="none"/>
+            <path d="M105 520 l16 -28 M150 420 l14 -30 M180 310 l10 -32 M196 200 l6 -34" stroke="rgba(156,220,255,0.4)" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <div class="wrap contact-layout">
+            <div class="contact-copy">
+              <h2 id="contacto-heading" class="block-title block-title--xl">Tu próxima ruta comienza aquí</h2>
+              <p class="block-lead">Cuéntanos qué estás buscando y prepara tu consulta.</p>
             </div>
-          </div>
-        </section>
 
-        <!-- ============================================================
-             SECCIÓN 12: COMPARADOR
-             Comparación lado a lado de hasta 3 modelos.
-             PENDIENTE: implementar lógica de selección y tabla comparativa.
-        ============================================================ -->
-        <section id="comparador" class="section comparator-section reveal-section" aria-labelledby="comparador-heading">
-          <div class="section-header">
-            <span class="eyebrow">Comparador</span>
-            <h2 id="comparador-heading">Compara modelos lado a lado</h2>
-            <p>Elige hasta 3 motos y revisa sus características en paralelo.</p>
-          </div>
-          <div id="comparator-panel" class="comparator-panel" role="region" aria-label="Panel de comparación de motos">
-            <!-- PENDIENTE: implementar comparador dinámico en script.js → inicializarComparador() -->
-            <div class="placeholder-card">
-              <p>El comparador de modelos estará disponible próximamente.</p>
-              <p>Podrás seleccionar hasta 3 motos y comparar ficha técnica, precio y beneficios.</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- ============================================================
-             SECCIÓN 13: TIENDAS Y UBICACIONES
-             Sedes físicas, horarios y datos de contacto.
-             PENDIENTE: validar direcciones reales con el equipo.
-        ============================================================ -->
-        <section id="tiendas" class="section stores-section reveal-section" aria-labelledby="tiendas-heading">
-          <div class="section-header">
-            <span class="eyebrow">Tiendas</span>
-            <h2 id="tiendas-heading">Encuéntranos en Cusco</h2>
-            <p>Visítanos en tienda para asesoría personalizada, prueba de manejo y trámites.</p>
-          </div>
-          <div id="stores-grid" class="stores-grid" role="list" aria-label="Ubicaciones de ARENAS MOTOCICLETAS">
-            <!-- Las tiendas se renderizan dinámicamente desde data/slots/sedes.json vía script.js → renderizarTiendas().
-                 Si una sede no está confirmada (estadoAprobacion: pendiente-confirmar-existencia), no se muestra.
-                 Ver docs/fuente-unica-datos.md -->
-            <p class="empty-state" role="status" aria-live="polite">Cargando ubicaciones...</p>
-          </div>
-        </section>
-
-        <!-- ============================================================
-             SECCIÓN 14: FORMULARIO DE COTIZACIÓN
-             Formulario principal + enlace a WhatsApp.
-             Validación en script.js → inicializarFormulario()
-        ============================================================ -->
-        <section id="cotizacion" class="section quote-section reveal-section" aria-labelledby="cotizacion-heading">
-          <div class="section-header">
-            <span class="eyebrow">Cotización</span>
-            <h2 id="cotizacion-heading">Solicita tu cotización personalizada</h2>
-            <p>Completa el formulario o escríbenos directamente por WhatsApp.</p>
-          </div>
-
-          <div class="quote-layout">
-            <!-- Formulario de contacto con validación JS -->
-            <form
-              id="form-cotizacion"
-              class="quote-form"
-              novalidate
-              aria-label="Formulario de cotización de moto"
-            >
+            <form id="form-consulta" class="contact-form" novalidate aria-label="Formulario de preparación de consulta">
               <div class="form-group">
-                <label for="campo-nombre" class="form-label">Nombre completo <span aria-hidden="true">*</span></label>
+                <label for="consulta-nombre" class="form-label">Nombre</label>
                 <input
                   type="text"
-                  id="campo-nombre"
+                  id="consulta-nombre"
                   name="nombre"
                   class="form-input"
                   placeholder="Tu nombre"
-                  required
                   autocomplete="name"
-                  aria-required="true"
-                  aria-invalid="false"
-                  aria-describedby="error-nombre"
                   maxlength="100"
                 />
-                <span id="error-nombre" class="form-error" role="alert" aria-live="polite"></span>
               </div>
 
               <div class="form-group">
-                <label for="campo-telefono" class="form-label">Teléfono o WhatsApp <span aria-hidden="true">*</span></label>
-                <input
-                  type="tel"
-                  id="campo-telefono"
-                  name="telefono"
-                  class="form-input"
-                  placeholder="Ej: tu número de contacto"
-                  required
-                  autocomplete="tel"
-                  aria-required="true"
-                  aria-invalid="false"
-                  aria-describedby="error-telefono"
-                  maxlength="20"
-                />
-                <span id="error-telefono" class="form-error" role="alert" aria-live="polite"></span>
-              </div>
-
-              <div class="form-group">
-                <label for="campo-modelo" class="form-label">Modelo de interés</label>
-                <select
-                  id="campo-modelo"
-                  name="modelo"
-                  class="form-select"
-                  aria-label="Selecciona el modelo que te interesa"
-                >
-                  <!-- La lista real de modelos se administra desde Google Sheets.
-                       No enumerar el catálogo comercial en este HTML. -->
-                  <option value="">¿Qué moto te interesa?</option>
-                  <option value="Modelo urbano">Modelo urbano</option>
-                  <option value="Modelo deportivo">Modelo deportivo</option>
-                  <option value="Modelo de aventura">Modelo de aventura</option>
-                  <option value="Modelo de trabajo / carga">Modelo de trabajo / carga</option>
-                  <option value="No sé, necesito asesoría">No sé, necesito asesoría</option>
+                <label for="consulta-interes" class="form-label">Tipo de interés</label>
+                <select id="consulta-interes" name="interes" class="form-select">
+                  <option value="">Selecciona una opción</option>
+                  <option value="Movilidad diaria">Movilidad diaria</option>
+                  <option value="Trabajo">Trabajo</option>
+                  <option value="Reparto">Reparto</option>
+                  <option value="Viajes">Viajes</option>
+                  <option value="Aventura">Aventura</option>
+                  <option value="Orientación general">Orientación general</option>
                 </select>
               </div>
 
               <div class="form-group">
-                <label for="campo-mensaje" class="form-label">Mensaje o consulta</label>
+                <label for="consulta-mensaje" class="form-label">Mensaje</label>
                 <textarea
-                  id="campo-mensaje"
+                  id="consulta-mensaje"
                   name="mensaje"
                   class="form-textarea"
-                  placeholder="Cuéntanos qué necesitas: modelo, uso, presupuesto, financiamiento..."
+                  placeholder="Cuéntanos qué camino quieres recorrer"
                   rows="4"
-                  aria-label="Escribe tu consulta o mensaje"
                   maxlength="500"
                 ></textarea>
               </div>
 
               <div class="form-group form-group--check">
-                <input
-                  type="checkbox"
-                  id="campo-datos"
-                  name="autoriza_datos"
-                  class="form-checkbox"
-                  required
-                  aria-required="true"
-                  aria-invalid="false"
-                  aria-describedby="error-datos"
-                />
-                <label for="campo-datos" class="form-label-check">
-                  Autorizo el tratamiento de mis datos personales según la
-                  <a href="legales/datos-personales.html" target="_blank" rel="noopener noreferrer">
-                    política de datos personales
-                  </a>.
+                <input type="checkbox" id="consulta-privacidad" name="privacidad" class="form-checkbox" />
+                <label for="consulta-privacidad" class="form-label-check">
+                  He leído la
+                  <a href="legales/privacidad.html" target="_blank" rel="noopener noreferrer">política de privacidad</a>.
                 </label>
-                <span id="error-datos" class="form-error" role="alert" aria-live="polite"></span>
               </div>
 
               <div class="form-actions">
-                <button type="submit" class="btn btn-primary" id="btn-cotizar" data-accion="whatsapp" aria-label="Enviar solicitud de cotización">
-                  Enviar solicitud
-                </button>
-                <p class="form-hint">El canal de contacto se habilitará cuando sea aprobado. Recibiremos tu solicitud y te contactaremos por los canales oficiales vigentes.</p>
-                <!-- Mensaje de éxito — visible solo tras envío exitoso vía JS -->
-                <div id="form-success" class="form-success" role="status" aria-live="polite" hidden>
-                  <p>¡Gracias! Tu consulta fue enviada. Nos contactaremos pronto.</p>
-                </div>
+                <button type="submit" class="btn btn-primary btn-hero" id="btn-consulta">Preparar mi consulta</button>
+                <!-- Aviso honesto: este canal aún no envía información -->
+                <p id="consulta-aviso" class="contact-notice" role="status" aria-live="polite"></p>
               </div>
             </form>
-
-            <!-- Contacto directo alternativo -->
-            <aside class="quote-direct" aria-label="Contacto directo">
-              <h3>Contacto directo</h3>
-              <p>Prefiero escribir directamente:</p>
-              <!-- Sin href fijo a propósito: no debe existir ningún enlace wa.me con
-                   número placeholder en el HTML. script.js → abrirWhatsAppGeneral()
-                   abre el chat real SOLO si whatsappConfirmado === true en
-                   data/configuracion.json; si no, muestra el aviso de pendiente. -->
-              <button
-                type="button"
-                id="btn-whatsapp-directo"
-                class="btn btn-whatsapp"
-                data-accion="whatsapp"
-                aria-label="Abrir chat de WhatsApp con ARENAS MOTOCICLETAS"
-              >
-                <span aria-hidden="true">💬</span> Abrir WhatsApp
-              </button>
-              <p class="quote-hours">Horario de atención por confirmar. Consulta disponibilidad de atención antes de visitar tienda.</p>
-            </aside>
           </div>
         </section>
-
-          </div>
-          <!-- /page-content -->
-        </div>
-        <!-- /app-shell -->
 
       </main>
       <!-- /main -->
 
       <!-- ============================================================
-           FOOTER — pie de página con nav secundaria y legales
+           FOOTER PREMIUM — cierre editorial con horizonte de carretera
       ============================================================ -->
-      <div class="app-shell app-shell--footer">
       <footer class="site-footer" role="contentinfo">
-        <div class="footer-brand">
-          <!-- Logo oficial PENDIENTE de incorporación — wordmark textual provisional -->
-          <div class="brand-lockup">
-            <p class="brand-name">ARENAS</p>
-            <p class="brand-sub">MOTOCICLETAS</p>
+        <svg class="footer-horizon" viewBox="0 0 1400 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <path d="M0 70 H1400" stroke="rgba(151,205,255,0.18)" stroke-width="1.5"/>
+          <path d="M0 92 C 350 84 1050 84 1400 92" stroke="rgba(47,140,255,0.5)" stroke-width="2" fill="none"/>
+          <path d="M640 92 h28 M700 92 h28 M760 92 h28" stroke="rgba(156,220,255,0.55)" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+
+        <div class="wrap footer-grid">
+          <div class="footer-brand">
+            <!-- Logo oficial PENDIENTE de incorporación — wordmark textual provisional -->
+            <div class="brand-lockup">
+              <p class="brand-name">ARENAS</p>
+              <p class="brand-sub">MOTOCICLETAS</p>
+            </div>
+            <p class="footer-claim">Rutas que te definen. Libertad que te mueve.</p>
           </div>
+
+          <nav class="footer-links" aria-label="Navegación de pie de página">
+            <a href="#camino">Camino</a>
+            <a href="#colecciones">Colecciones</a>
+            <a href="#experiencia">Experiencia</a>
+            <a href="#nosotros">Nosotros</a>
+            <a href="#contacto">Contacto</a>
+          </nav>
+
+          <nav class="footer-legal" aria-label="Páginas legales">
+            <a href="legales/privacidad.html">Privacidad</a>
+            <a href="legales/terminos.html">Términos</a>
+            <a href="legales/cookies.html">Cookies</a>
+            <a href="legales/datos-personales.html">Datos personales</a>
+            <a href="legales/condiciones-financiamiento.html">Financiamiento</a>
+            <a href="legales/libro-reclamaciones.html">Libro de reclamaciones</a>
+          </nav>
+
+          <p class="footer-copy">
+            &copy; <span id="footer-year">2025</span> ARENAS MOTOCICLETAS &bull; Todos los derechos reservados
+          </p>
         </div>
-
-        <nav class="footer-links" aria-label="Navegación de pie de página">
-          <a href="#catalogo">Catálogo</a>
-          <a href="#financiamiento">Financiamiento</a>
-          <a href="#servicio">Servicio</a>
-          <a href="#tiendas">Tiendas</a>
-          <a href="#cotizacion">Cotización</a>
-        </nav>
-
-        <nav class="footer-legal" aria-label="Páginas legales">
-          <a href="legales/privacidad.html">Privacidad</a>
-          <a href="legales/terminos.html">Términos</a>
-          <a href="legales/cookies.html">Cookies</a>
-          <a href="legales/datos-personales.html">Datos personales</a>
-          <a href="legales/condiciones-financiamiento.html">Financiamiento</a>
-          <a href="legales/libro-reclamaciones.html">Libro de reclamaciones</a>
-        </nav>
-
-        <p class="footer-copy">
-          &copy; <span id="footer-year">2025</span> ARENAS MOTOCICLETAS &bull; Todos los derechos reservados
-        </p>
       </footer>
-
-    </div>
-    <!-- /app-shell -->
 
     <script src="script.js" defer></script>
   </body>

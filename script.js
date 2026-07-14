@@ -1428,6 +1428,181 @@ function inicializarHeaderScroll() {
 
 
 /* ================================================================
+   MÓDULO 9c: NARRATIVA EDITORIAL — FASE 5
+   - Selector de caminos (Encuentra tu camino): panel activo en
+     desktop, carrusel con scroll-snap en móvil, contador 01/06.
+   - Selector guiado de tres pasos: asistente accesible; sin JS los
+     pasos quedan expandidos (no se oculta contenido).
+   - Formulario de consulta honesto: no envía ni almacena datos.
+   Sin fetch, sin localStorage, sin datos comerciales.
+   ================================================================ */
+
+function inicializarCaminos() {
+  const seccion = $("#camino");
+  if (!seccion) return;
+
+  const tabs = Array.from($$(".path-tab", seccion));
+  const paneles = Array.from($$(".path-panel", seccion));
+  const stage = $(".path-stage", seccion);
+  const flechas = Array.from($$(".path-arrow", seccion));
+  const contador = $(".path-count__current", seccion);
+  if (!tabs.length || !paneles.length) return;
+
+  // Modo interactivo: sin JS los seis paneles permanecen visibles
+  seccion.classList.add("js-paths");
+
+  const esMovil = window.matchMedia("(max-width: 900px)");
+  let indice = 0;
+
+  const pintar = (i, desplazar) => {
+    indice = (i + paneles.length) % paneles.length;
+    tabs.forEach((tab, t) => tab.setAttribute("aria-pressed", String(t === indice)));
+    paneles.forEach((panel, p) => panel.classList.toggle("is-active", p === indice));
+    if (contador) contador.textContent = String(indice + 1).padStart(2, "0");
+    // En móvil el escenario es un carrusel: desplazar al panel activo
+    if (desplazar && esMovil.matches && stage) {
+      const destino = paneles[indice];
+      stage.scrollTo({
+        left: destino.offsetLeft - (stage.clientWidth - destino.clientWidth) / 2,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  tabs.forEach((tab, t) => {
+    tab.addEventListener("click", () => pintar(t, true));
+  });
+  flechas.forEach((flecha) => {
+    flecha.addEventListener("click", () => {
+      pintar(indice + Number(flecha.dataset.dir || 1), true);
+    });
+  });
+
+  // En móvil, sincronizar el contador con el panel más centrado al deslizar
+  if (stage) {
+    let tick = false;
+    stage.addEventListener(
+      "scroll",
+      () => {
+        if (tick || !esMovil.matches) return;
+        tick = true;
+        requestAnimationFrame(() => {
+          const centro = stage.scrollLeft + stage.clientWidth / 2;
+          let cercano = 0;
+          let menor = Infinity;
+          paneles.forEach((panel, p) => {
+            const d = Math.abs(panel.offsetLeft + panel.clientWidth / 2 - centro);
+            if (d < menor) { menor = d; cercano = p; }
+          });
+          if (cercano !== indice) pintar(cercano, false);
+          tick = false;
+        });
+      },
+      { passive: true }
+    );
+  }
+
+  pintar(0, false);
+}
+
+function inicializarGuia() {
+  const guia = $(".guide");
+  if (!guia) return;
+
+  const pasos = Array.from($$(".guide-step", guia));
+  const marcas = Array.from($$(".guide-progress__step", guia));
+  const controles = $(".guide-controls", guia);
+  const btnVolver = $(".guide-back", guia);
+  const btnSeguir = $(".guide-next", guia);
+  const resultado = $(".guide-result", guia);
+  const resumen = $("[data-summary]", guia);
+  if (!pasos.length || !controles || !btnVolver || !btnSeguir || !resultado) return;
+
+  // Modo asistente: sin JS los tres pasos quedan visibles y usables
+  guia.classList.add("js-guide");
+  controles.hidden = false;
+
+  // El formulario no envía nada en esta fase
+  guia.addEventListener("submit", (e) => e.preventDefault());
+
+  let actual = 0;
+
+  const pintar = () => {
+    pasos.forEach((paso, p) => paso.classList.toggle("is-current", p === actual));
+    marcas.forEach((marca, m) => {
+      marca.classList.toggle("is-current", m === actual);
+      marca.classList.toggle("is-done", m < actual);
+    });
+    btnVolver.disabled = actual === 0;
+    btnSeguir.textContent = actual === pasos.length - 1 ? "Ver resultado" : "Continuar";
+    resultado.classList.remove("is-done");
+  };
+
+  const terminar = () => {
+    // Resumen legible de la selección — solo en pantalla, nunca se envía
+    if (resumen) {
+      const valores = ["uso", "prioridad", "experiencia"]
+        .map((nombre) => {
+          const marcado = guia.querySelector(`input[name="${nombre}"]:checked`);
+          return marcado ? marcado.value : null;
+        })
+        .filter(Boolean);
+      if (valores.length) {
+        resumen.textContent = "Tu camino: " + valores.join(" · ");
+        resumen.hidden = false;
+      } else {
+        resumen.hidden = true;
+      }
+    }
+    pasos.forEach((paso) => paso.classList.remove("is-current"));
+    marcas.forEach((marca) => {
+      marca.classList.add("is-done");
+      marca.classList.remove("is-current");
+    });
+    controles.hidden = true;
+    resultado.classList.add("is-done");
+  };
+
+  btnSeguir.addEventListener("click", () => {
+    if (actual < pasos.length - 1) {
+      actual += 1;
+      pintar();
+    } else {
+      terminar();
+    }
+  });
+  btnVolver.addEventListener("click", () => {
+    if (resultado.classList.contains("is-done")) {
+      resultado.classList.remove("is-done");
+      controles.hidden = false;
+      pintar();
+      return;
+    }
+    if (actual > 0) {
+      actual -= 1;
+      pintar();
+    }
+  });
+
+  pintar();
+}
+
+function inicializarConsulta() {
+  const form = $("#form-consulta");
+  const aviso = $("#consulta-aviso");
+  if (!form || !aviso) return;
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    // Mensaje honesto: no se envía ni se almacena nada en esta fase.
+    // Los campos se conservan tal cual para no simular un envío.
+    aviso.textContent =
+      "Este canal será habilitado en la siguiente fase. Ningún dato fue enviado.";
+  });
+}
+
+
+/* ================================================================
    MÓDULO 10: FORM HANDLING
    Validación del formulario de cotización y envío por WhatsApp.
    ================================================================ */
@@ -1723,6 +1898,11 @@ async function inicializarApp() {
 
     // 7c. Header transparente → oscuro con blur al hacer scroll
     inicializarHeaderScroll();
+
+    // 7d. Narrativa editorial: caminos, selector guiado y consulta
+    inicializarCaminos();
+    inicializarGuia();
+    inicializarConsulta();
 
     // 8. Inicializar formulario de cotización
     inicializarFormulario();
