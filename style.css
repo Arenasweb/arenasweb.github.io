@@ -2206,6 +2206,10 @@ main > section { scroll-margin-top: 84px; }
   border-color: var(--color-border-soft);
   transform: translateY(-4px);
 }
+.collection:focus-visible {
+  outline: 2px solid var(--brand-blue-ice);
+  outline-offset: 4px;
+}
 .collection__scene {
   position: absolute;
   inset: 0;
@@ -2773,6 +2777,9 @@ main > section { scroll-margin-top: 84px; }
 
   .js-paths .path-stage .path-panel { flex-basis: 86vw; }
   .path-panel { min-height: 360px; }
+  /* La escena no debe competir con el meta en pantallas estrechas */
+  .path-panel__scene { opacity: 0.6; }
+  .path-panel__meta { text-shadow: 0 1px 8px rgba(3, 5, 9, 0.8); }
 }
 
 /* ================================================================
@@ -2798,4 +2805,3 @@ main > section { scroll-margin-top: 84px; }
 /* ================================================================
    FIN DEL SISTEMA CSS — ARENAS MOTOCICLETAS
    ================================================================ */
-
