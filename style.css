@@ -865,21 +865,25 @@ body {
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%);
   mask-image: linear-gradient(90deg, transparent, #000 12%);
 }
+/* Estados iniciales del gráfico bajo html.js: sin JavaScript la línea,
+   el área y la flecha se muestran completas desde el inicio. */
 .stats-graph__area {
-  opacity: 0;
   transition: opacity 1.2s var(--ease-out) 0.25s;
 }
+.js .stats-graph__area { opacity: 0; }
 .stats-graph__line {
+  filter: drop-shadow(0 0 6px rgba(91, 147, 255, 0.45));
+}
+.js .stats-graph__line {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  filter: drop-shadow(0 0 6px rgba(91, 147, 255, 0.45));
 }
 /* Punta de flecha: aparece cuando la línea termina de dibujarse */
 .stats-graph__arrow {
-  opacity: 0;
   transition: opacity 0.5s var(--ease-out) 1.7s;
   filter: drop-shadow(0 0 6px rgba(91, 147, 255, 0.45));
 }
+.js .stats-graph__arrow { opacity: 0; }
 .stats-section.is-visible .stats-graph__line {
   transition: stroke-dashoffset 1.8s var(--ease-cinematic) 0.2s;
   stroke-dashoffset: 0;
@@ -920,12 +924,14 @@ body {
   flex-direction: column;
   align-items: center;
   gap: var(--space-2);
-  /* estado inicial: entra desde abajo con leve escala */
-  opacity: 0;
-  transform: translateY(28px) scale(0.94);
   transition:
     opacity 0.7s var(--ease-out),
     transform 0.8s var(--ease-cinematic);
+}
+/* Estado inicial (entra desde abajo) solo con JavaScript activo */
+.js .stat-item {
+  opacity: 0;
+  transform: translateY(28px) scale(0.94);
 }
 .stats-section.is-visible .stat-item {
   opacity: 1;
@@ -1353,13 +1359,15 @@ body {
    Clases pasivas — activas en script.js → inicializarAnimaciones()
    ================================================================ */
 
-/* Base: elementos con animación de reveal (partida invisible) */
-.reveal-section,
-.reveal-fade,
-.reveal-slide-up,
-.reveal-slide-left,
-.reveal-slide-right,
-.reveal-scale {
+/* Base: elementos con animación de reveal (partida invisible).
+   El estado inicial oculto SOLO se aplica bajo html.js: sin JavaScript
+   ningún contenido queda con opacity 0 ni desplazado. */
+.js .reveal-section,
+.js .reveal-fade,
+.js .reveal-slide-up,
+.js .reveal-slide-left,
+.js .reveal-slide-right,
+.js .reveal-scale {
   opacity: 0;
   transition-property: opacity, transform;
   transition-duration: var(--duration-reveal);
@@ -1374,20 +1382,17 @@ body {
 }
 
 /* Slide hacia arriba */
-.reveal-slide-up  { transform: translateY(32px); }
+.js .reveal-slide-up  { transform: translateY(32px); }
 
 /* Slide lateral */
-.reveal-slide-left  { transform: translateX(-32px); }
-.reveal-slide-right { transform: translateX(32px); }
+.js .reveal-slide-left  { transform: translateX(-32px); }
+.js .reveal-slide-right { transform: translateX(32px); }
 
 /* Escala sutil */
-.reveal-scale { transform: scale(0.97); }
-
-/* Fade puro sin transform */
-.reveal-fade { /* sin transform extra */ }
+.js .reveal-scale { transform: scale(0.97); }
 
 /* Secciones completas (aplicado por JS a cada .section) */
-.reveal-section {
+.js .reveal-section {
   transform: translateY(20px);
   transition-duration: var(--duration-slower);
 }
@@ -2503,7 +2508,8 @@ main > section { scroll-margin-top: 84px; }
   height: 40px;
   pointer-events: none;
 }
-.journey-track__line {
+/* La línea se dibuja al entrar en viewport; sin JS queda completa */
+.js .journey-track__line {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
 }
