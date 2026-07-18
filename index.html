@@ -212,147 +212,193 @@
         </section>
 
         <!-- ============================================================
-             SECCIÓN 3: ENCUENTRA TU CAMINO — selector editorial de rutas
-             Sin JS: los seis paneles se muestran apilados (nada se oculta).
-             Con JS (.js-paths): un panel activo + navegación por botones.
+             SECCIÓN 3: ENCUENTRA TU CAMINO — portadas editoriales full-bleed
+             Cuatro categorías como portadas de campaña. Sin fotografías
+             reales todavía: cada portada usa un fallback visual sobrio
+             (gradientes + SVG) y queda preparada para recibir imagen.
+
+             RUTAS DE ASSETS ESPERADAS (no referenciadas hasta que existan):
+               assets/portadas/camino-ciudad-desktop.avif|.webp
+               assets/portadas/camino-ciudad-mobile.avif|.webp
+               assets/portadas/camino-trabajo-desktop.avif|.webp
+               assets/portadas/camino-trabajo-mobile.avif|.webp
+               assets/portadas/camino-deportiva-desktop.avif|.webp
+               assets/portadas/camino-deportiva-mobile.avif|.webp
+               assets/portadas/camino-aventura-desktop.avif|.webp
+               assets/portadas/camino-aventura-mobile.avif|.webp
+
+             Campos futuros de Google Sheets por portada: category_id,
+             category_slug, title, description, *_image_url, *_focal_position,
+             alt_text, cta_label, cta_url, associated_models, display_order,
+             is_active, overlay_strength, text_alignment, theme.
+
+             Sin JS: las cuatro portadas se muestran apiladas y completas.
+             Con JS (.js-paths): una portada activa + rail + flechas + 01/04.
              script.js → inicializarCaminos()
         ============================================================ -->
         <section id="camino" class="path-section reveal-section" data-section="paths" aria-labelledby="camino-heading">
           <div class="wrap">
             <header class="block-head">
               <h2 id="camino-heading" class="block-title">Encuentra tu camino</h2>
-              <p class="block-lead">Cada ruta exige una forma distinta de moverse. Explora el estilo que mejor encaja contigo.</p>
+              <p class="block-lead">Cada ruta exige una forma distinta de moverse.</p>
             </header>
+          </div>
 
-            <div class="path-layout">
-              <!-- Rail de categorías (desktop) -->
-              <div class="path-rail" role="group" aria-label="Categorías de camino">
-                <button type="button" class="path-tab" data-path="ciudad" aria-pressed="true">
-                  <span class="path-tab__num" aria-hidden="true">01</span>
-                  <span class="path-tab__name">Ciudad</span>
-                </button>
-                <button type="button" class="path-tab" data-path="trabajo" aria-pressed="false">
-                  <span class="path-tab__num" aria-hidden="true">02</span>
-                  <span class="path-tab__name">Trabajo</span>
-                </button>
-                <button type="button" class="path-tab" data-path="reparto" aria-pressed="false">
-                  <span class="path-tab__num" aria-hidden="true">03</span>
-                  <span class="path-tab__name">Reparto</span>
-                </button>
-                <button type="button" class="path-tab" data-path="aventura" aria-pressed="false">
-                  <span class="path-tab__num" aria-hidden="true">04</span>
-                  <span class="path-tab__name">Aventura</span>
-                </button>
-                <button type="button" class="path-tab" data-path="carretera" aria-pressed="false">
-                  <span class="path-tab__num" aria-hidden="true">05</span>
-                  <span class="path-tab__name">Carretera</span>
-                </button>
-                <button type="button" class="path-tab" data-path="montana" aria-pressed="false">
-                  <span class="path-tab__num" aria-hidden="true">06</span>
-                  <span class="path-tab__name">Montaña</span>
-                </button>
+          <div class="path-stage" aria-live="polite">
+
+            <article
+              class="path-panel is-active"
+              data-path="ciudad"
+              data-category-id="01"
+              data-category-slug="ciudad"
+              data-dynamic-slot
+              data-fallback-state="editorial"
+              data-associated-line="urban"
+              data-order="1"
+              data-active="true"
+            >
+              <svg class="path-panel__scene" viewBox="0 0 1440 520" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path d="M120 520 L120 200 M240 520 L240 120 M360 520 L360 250 M480 520 L480 160 M600 520 L600 290 M720 520 L720 210" stroke="rgba(151,205,255,0.14)" stroke-width="3"/>
+                <path d="M0 440 C 400 424 900 428 1440 380" stroke="rgba(47,140,255,0.55)" stroke-width="3" fill="none" stroke-linecap="round"/>
+                <path d="M760 416 h60 M880 410 h60 M1000 403 h60 M1120 396 h60" stroke="rgba(156,220,255,0.4)" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+              <span class="path-panel__num" aria-hidden="true">01</span>
+              <div class="path-panel__inner">
+                <div class="path-panel__body">
+                  <h3 class="path-panel__title">Ciudad</h3>
+                  <p class="path-panel__desc">Movilidad ágil para el ritmo de cada día.</p>
+                  <p class="path-panel__models">
+                    <span class="path-panel__models-label">Línea asociada</span>
+                    CT125 · Discover 125 · Pulsar 125 LS · Pulsar N125 FI
+                  </p>
+                  <a href="#colecciones" class="btn btn-primary btn-hero path-panel__cta">Explorar ciudad</a>
+                </div>
               </div>
+            </article>
 
-              <!-- Escenario de paneles -->
-              <div class="path-stage" aria-live="polite">
-                <article class="path-panel is-active" data-path="ciudad">
-                  <span class="path-panel__num" aria-hidden="true">01</span>
-                  <svg class="path-panel__scene" viewBox="0 0 640 260" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                    <path d="M40 220 L40 90 M90 220 L90 60 M140 220 L140 110 M190 220 L190 75 M240 220 L240 130" stroke="rgba(151,205,255,0.30)" stroke-width="2"/>
-                    <path d="M0 220 C 180 214 420 214 640 196" stroke="rgba(47,140,255,0.75)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                    <path d="M300 208 h34 M356 206 h34 M412 203 h34" stroke="rgba(156,220,255,0.55)" stroke-width="2.5" stroke-linecap="round"/>
-                  </svg>
-                  <div class="path-panel__body">
-                    <h3 class="path-panel__title">Ciudad</h3>
-                    <p class="path-panel__desc">Movilidad ágil para el día a día.</p>
-                    <p class="path-panel__meta">Tramos cortos · Tráfico · Precisión</p>
-                  </div>
-                </article>
-
-                <article class="path-panel" data-path="trabajo">
-                  <span class="path-panel__num" aria-hidden="true">02</span>
-                  <svg class="path-panel__scene" viewBox="0 0 640 260" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                    <path d="M0 200 L640 150" stroke="rgba(47,140,255,0.7)" stroke-width="2.5" stroke-linecap="round"/>
-                    <path d="M0 216 L640 166" stroke="rgba(151,205,255,0.25)" stroke-width="1.5"/>
-                    <path d="M60 200 l10 -22 M180 190 l10 -22 M300 181 l10 -22 M420 172 l10 -22 M540 162 l10 -22" stroke="rgba(156,220,255,0.5)" stroke-width="2" stroke-linecap="round"/>
-                  </svg>
-                  <div class="path-panel__body">
-                    <h3 class="path-panel__title">Trabajo</h3>
-                    <p class="path-panel__desc">Una experiencia pensada para jornadas exigentes.</p>
-                    <p class="path-panel__meta">Constancia · Resistencia · Ritmo</p>
-                  </div>
-                </article>
-
-                <article class="path-panel" data-path="reparto">
-                  <span class="path-panel__num" aria-hidden="true">03</span>
-                  <svg class="path-panel__scene" viewBox="0 0 640 260" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                    <path d="M30 210 C 150 130 260 250 380 160 C 470 100 560 150 620 110" stroke="rgba(47,140,255,0.75)" stroke-width="2.5" fill="none" stroke-dasharray="10 12" stroke-linecap="round"/>
-                    <circle cx="30" cy="210" r="6" fill="rgba(156,220,255,0.85)"/>
-                    <circle cx="380" cy="160" r="6" fill="rgba(156,220,255,0.55)"/>
-                    <circle cx="620" cy="110" r="6" fill="rgba(156,220,255,0.85)"/>
-                  </svg>
-                  <div class="path-panel__body">
-                    <h3 class="path-panel__title">Reparto</h3>
-                    <p class="path-panel__desc">Control y practicidad para mantenerte en movimiento.</p>
-                    <p class="path-panel__meta">Paradas · Agilidad · Continuidad</p>
-                  </div>
-                </article>
-
-                <article class="path-panel" data-path="aventura">
-                  <span class="path-panel__num" aria-hidden="true">04</span>
-                  <svg class="path-panel__scene" viewBox="0 0 640 260" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                    <path d="M0 190 C 120 170 200 210 320 186 C 460 158 540 196 640 170" stroke="rgba(151,205,255,0.28)" stroke-width="1.5" fill="none"/>
-                    <path d="M0 160 C 140 138 220 178 340 154 C 470 128 560 164 640 140" stroke="rgba(151,205,255,0.20)" stroke-width="1.5" fill="none"/>
-                    <path d="M0 130 C 150 106 240 146 360 122 C 480 100 570 132 640 112" stroke="rgba(151,205,255,0.14)" stroke-width="1.5" fill="none"/>
-                    <path d="M20 226 C 200 210 430 224 620 190" stroke="rgba(47,140,255,0.75)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                  </svg>
-                  <div class="path-panel__body">
-                    <h3 class="path-panel__title">Aventura</h3>
-                    <p class="path-panel__desc">Caminos que comienzan donde termina la rutina.</p>
-                    <p class="path-panel__meta">Tierra · Curvas · Horizonte</p>
-                  </div>
-                </article>
-
-                <article class="path-panel" data-path="carretera">
-                  <span class="path-panel__num" aria-hidden="true">05</span>
-                  <svg class="path-panel__scene" viewBox="0 0 640 260" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                    <path d="M0 120 L640 120" stroke="rgba(151,205,255,0.25)" stroke-width="1.5"/>
-                    <path d="M320 250 L360 120 M320 250 L280 120" stroke="rgba(47,140,255,0.55)" stroke-width="2"/>
-                    <path d="M320 244 L320 200 M320 184 L320 152 M320 140 L320 124" stroke="rgba(156,220,255,0.7)" stroke-width="3" stroke-linecap="round"/>
-                  </svg>
-                  <div class="path-panel__body">
-                    <h3 class="path-panel__title">Carretera</h3>
-                    <p class="path-panel__desc">Libertad y presencia para recorrer rutas largas.</p>
-                    <p class="path-panel__meta">Distancia · Estabilidad · Viaje</p>
-                  </div>
-                </article>
-
-                <article class="path-panel" data-path="montana">
-                  <span class="path-panel__num" aria-hidden="true">06</span>
-                  <svg class="path-panel__scene" viewBox="0 0 640 260" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                    <path d="M0 210 L150 90 L260 180 L390 60 L510 160 L640 100" stroke="rgba(151,205,255,0.35)" stroke-width="2" fill="none" stroke-linejoin="round"/>
-                    <path d="M0 232 C 160 224 300 236 640 212" stroke="rgba(47,140,255,0.75)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                    <path d="M370 80 L390 60 L410 80" stroke="rgba(247,251,255,0.65)" stroke-width="2" fill="none"/>
-                  </svg>
-                  <div class="path-panel__body">
-                    <h3 class="path-panel__title">Montaña</h3>
-                    <p class="path-panel__desc">Una experiencia inspirada en la geografía andina.</p>
-                    <p class="path-panel__meta">Altura · Tracción · Paisaje</p>
-                  </div>
-                </article>
+            <article
+              class="path-panel"
+              data-path="trabajo"
+              data-category-id="02"
+              data-category-slug="trabajo"
+              data-dynamic-slot
+              data-fallback-state="editorial"
+              data-associated-line="carga"
+              data-order="2"
+              data-active="false"
+            >
+              <svg class="path-panel__scene" viewBox="0 0 1440 520" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path d="M0 420 L1440 320" stroke="rgba(47,140,255,0.5)" stroke-width="3" stroke-linecap="round"/>
+                <path d="M0 452 L1440 352" stroke="rgba(151,205,255,0.16)" stroke-width="2"/>
+                <path d="M140 420 l22 -46 M420 400 l22 -46 M700 381 l22 -46 M980 361 l22 -46 M1260 342 l22 -46" stroke="rgba(156,220,255,0.35)" stroke-width="3" stroke-linecap="round"/>
+                <path d="M1050 268 h120 v54 h-120 z M1190 240 h90 v82 h-90 z" stroke="rgba(151,205,255,0.2)" stroke-width="2" fill="none"/>
+              </svg>
+              <span class="path-panel__num" aria-hidden="true">02</span>
+              <div class="path-panel__inner">
+                <div class="path-panel__body">
+                  <h3 class="path-panel__title">Trabajo</h3>
+                  <p class="path-panel__desc">Resistencia y practicidad para mantener tu negocio en movimiento.</p>
+                  <p class="path-panel__models">
+                    <span class="path-panel__models-label">Línea asociada</span>
+                    Boxer 150
+                  </p>
+                  <a href="#colecciones" class="btn btn-primary btn-hero path-panel__cta">Explorar trabajo</a>
+                </div>
               </div>
-            </div>
+            </article>
 
-            <!-- Controles (móvil / teclado) -->
-            <div class="path-controls">
-              <button type="button" class="path-arrow" data-dir="-1" aria-label="Camino anterior">
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-              <span class="path-count"><span class="path-count__current">01</span> / 06</span>
-              <button type="button" class="path-arrow" data-dir="1" aria-label="Camino siguiente">
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-            </div>
+            <article
+              class="path-panel"
+              data-path="deportiva"
+              data-category-id="03"
+              data-category-slug="deportiva"
+              data-dynamic-slot
+              data-fallback-state="editorial"
+              data-associated-line="street"
+              data-order="3"
+              data-active="false"
+            >
+              <svg class="path-panel__scene" viewBox="0 0 1440 520" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path d="M-40 480 L720 240 M1480 480 L760 240" stroke="rgba(47,140,255,0.35)" stroke-width="2.5" fill="none"/>
+                <path d="M200 520 C 500 380 900 320 1440 300" stroke="rgba(47,140,255,0.65)" stroke-width="3" fill="none" stroke-linecap="round"/>
+                <path d="M360 470 h130 M620 420 h110 M860 382 h90 M1060 352 h74" stroke="rgba(156,220,255,0.5)" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+              <span class="path-panel__num" aria-hidden="true">03</span>
+              <div class="path-panel__inner">
+                <div class="path-panel__body">
+                  <h3 class="path-panel__title">Deportiva</h3>
+                  <p class="path-panel__desc">Diseño, presencia y carácter para una experiencia más intensa.</p>
+                  <p class="path-panel__models">
+                    <span class="path-panel__models-label">Línea asociada</span>
+                    Pulsar 180 Neón · Pulsar 200 NS · Pulsar N160 FI · Pulsar RS 200
+                  </p>
+                  <a href="#colecciones" class="btn btn-primary btn-hero path-panel__cta">Explorar deportiva</a>
+                </div>
+              </div>
+            </article>
+
+            <article
+              class="path-panel"
+              data-path="aventura"
+              data-category-id="04"
+              data-category-slug="aventura"
+              data-dynamic-slot
+              data-fallback-state="editorial"
+              data-associated-line="touring"
+              data-order="4"
+              data-active="false"
+            >
+              <svg class="path-panel__scene" viewBox="0 0 1440 520" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path d="M0 380 L300 160 L520 330 L800 100 L1080 290 L1440 170" stroke="rgba(151,205,255,0.25)" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+                <path d="M780 120 L800 100 L820 120" stroke="rgba(247,251,255,0.5)" stroke-width="2.5" fill="none"/>
+                <path d="M0 470 C 360 430 560 490 880 440 C 1120 402 1300 430 1440 400" stroke="rgba(47,140,255,0.6)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                <path d="M240 452 h56 M560 462 h56 M940 428 h56 M1240 414 h48" stroke="rgba(156,220,255,0.4)" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+              <span class="path-panel__num" aria-hidden="true">04</span>
+              <div class="path-panel__inner">
+                <div class="path-panel__body">
+                  <h3 class="path-panel__title">Ruta y aventura</h3>
+                  <p class="path-panel__desc">Carreteras más largas para descubrir hasta dónde puedes llegar.</p>
+                  <p class="path-panel__models">
+                    <span class="path-panel__models-label">Línea asociada</span>
+                    Dominar 400 · Pulsar 400 NS · Dominar 250 · Pulsar N250
+                  </p>
+                  <a href="#colecciones" class="btn btn-primary btn-hero path-panel__cta">Explorar ruta</a>
+                </div>
+              </div>
+            </article>
+
+          </div>
+
+          <!-- Rail editorial de categorías (desktop, superpuesto) -->
+          <div class="path-rail" role="group" aria-label="Categorías de camino">
+            <button type="button" class="path-tab" data-path="ciudad" aria-pressed="true">
+            <span class="path-tab__num" aria-hidden="true">01</span>
+            <span class="path-tab__name">Ciudad</span>
+            </button>
+            <button type="button" class="path-tab" data-path="trabajo" aria-pressed="false">
+            <span class="path-tab__num" aria-hidden="true">02</span>
+            <span class="path-tab__name">Trabajo</span>
+            </button>
+            <button type="button" class="path-tab" data-path="deportiva" aria-pressed="false">
+            <span class="path-tab__num" aria-hidden="true">03</span>
+            <span class="path-tab__name">Deportiva</span>
+            </button>
+            <button type="button" class="path-tab" data-path="aventura" aria-pressed="false">
+            <span class="path-tab__num" aria-hidden="true">04</span>
+            <span class="path-tab__name">Ruta y aventura</span>
+            </button>
+          </div>
+
+          <!-- Flechas + indicador (superpuestos abajo) -->
+          <div class="path-controls">
+            <button type="button" class="path-arrow" data-dir="-1" aria-label="Camino anterior">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <span class="path-count"><span class="path-count__current">01</span> / 04</span>
+            <button type="button" class="path-arrow" data-dir="1" aria-label="Camino siguiente">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
           </div>
         </section>
 
