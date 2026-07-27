@@ -1369,6 +1369,13 @@ function inicializarHeroVideo() {
   if (prefersReduced) {
     video.removeAttribute("autoplay");
     video.pause();
+    // El autoplay ya programado por el navegador puede dispararse más tarde,
+    // cuando el archivo termina de bufferizar: hay que frenarlo también ahí
+    // para no decodificar vídeo invisible con movimiento reducido.
+    video.addEventListener("play", () => {
+      video.pause();
+      video.currentTime = 0;
+    });
     return;
   }
 
@@ -1448,7 +1455,7 @@ function inicializarCaminos() {
   const contador = $(".path-count__current", seccion);
   if (!tabs.length || !paneles.length) return;
 
-  // Modo interactivo: sin JS los seis paneles permanecen visibles
+  // Modo interactivo: sin JS las cuatro portadas permanecen visibles
   seccion.classList.add("js-paths");
 
   const esMovil = window.matchMedia("(max-width: 900px)");
@@ -1456,8 +1463,18 @@ function inicializarCaminos() {
 
   const pintar = (i, desplazar) => {
     indice = (i + paneles.length) % paneles.length;
-    tabs.forEach((tab, t) => tab.setAttribute("aria-pressed", String(t === indice)));
-    paneles.forEach((panel, p) => panel.classList.toggle("is-active", p === indice));
+    tabs.forEach((tab, t) => {
+      const activo = t === indice;
+      tab.setAttribute("aria-pressed", String(activo));
+      // aria-current refuerza "categoría actual del conjunto" para lectores
+      if (activo) tab.setAttribute("aria-current", "true");
+      else tab.removeAttribute("aria-current");
+    });
+    paneles.forEach((panel, p) => {
+      const activo = p === indice;
+      panel.classList.toggle("is-active", activo);
+      panel.dataset.active = String(activo);
+    });
     if (contador) contador.textContent = String(indice + 1).padStart(2, "0");
     // En móvil el escenario es un carrusel: desplazar al panel activo
     if (desplazar && esMovil.matches && stage) {
@@ -1784,25 +1801,41 @@ function inicializarNavMobile() {
 
   if (!toggle || !nav) return;
 
+  const cerrarMenu = ({ devolverFoco = false } = {}) => {
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.setAttribute("aria-label", "Abrir menú de navegación");
+    nav.classList.remove("nav-open");
+    if (devolverFoco) toggle.focus();
+  };
+
   toggle.addEventListener("click", () => {
     const isOpen = toggle.getAttribute("aria-expanded") === "true";
     toggle.setAttribute("aria-expanded", String(!isOpen));
+    toggle.setAttribute(
+      "aria-label",
+      isOpen ? "Abrir menú de navegación" : "Cerrar menú de navegación"
+    );
     nav.classList.toggle("nav-open", !isOpen);
   });
 
   // Cerrar al hacer clic en un enlace
   $$(".nav-link", nav).forEach(link => {
-    link.addEventListener("click", () => {
-      toggle.setAttribute("aria-expanded", "false");
-      nav.classList.remove("nav-open");
-    });
+    link.addEventListener("click", () => cerrarMenu());
   });
 
   // Cerrar al hacer clic fuera del menú
   document.addEventListener("click", (e) => {
     if (!toggle.contains(e.target) && !nav.contains(e.target)) {
-      toggle.setAttribute("aria-expanded", "false");
-      nav.classList.remove("nav-open");
+      cerrarMenu();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (
+      e.key === "Escape" &&
+      toggle.getAttribute("aria-expanded") === "true"
+    ) {
+      cerrarMenu({ devolverFoco: true });
     }
   });
 }

@@ -19,13 +19,11 @@
     <meta property="og:url" content="https://arenasweb.github.io/" />
     <meta property="og:site_name" content="ARENAS MOTOCICLETAS" />
     <!--
-      og:image DESACTIVADO: assets/og/arenas-og-cover.jpg todavía no existe.
-      Una meta og:image apuntando a un archivo inexistente genera una vista
-      previa rota al compartir el enlace (Facebook, WhatsApp, etc.), peor que
-      no tener imagen. Cuando exista el archivo real (1200×630px, JPG ≤300KB),
-      descomentar estas 4 líneas. Ver docs/pendientes-produccion.md.
+      og:image DESACTIVADO: assets/og/arenas-og-cover.jpg todavía no existe
+      como pieza oficial aprobada. Una meta activa hacia un archivo pendiente
+      generaría una vista previa inconsistente. Activar solo tras aprobación.
 
-      <meta property="og:image" content="assets/og/arenas-og-cover.jpg" />
+      <meta property="og:image" content="https://arenasweb.github.io/assets/og/arenas-og-cover.jpg" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content="ARENAS MOTOCICLETAS — Motos en Cusco" />
@@ -36,12 +34,8 @@
     <meta name="twitter:title" content="ARENAS MOTOCICLETAS — Motos en Cusco" />
     <meta name="twitter:description" content="Rutas que te definen. Libertad que te mueve. Motocicletas para ciudad, trabajo y ruta andina." />
     <!--
-      twitter:image DESACTIVADO por el mismo motivo que og:image (archivo
-      todavía no existe). "summary" arriba no requiere imagen grande;
-      cuando exista el archivo, restaurar "summary_large_image" y
-      descomentar la línea de abajo.
-
-      <meta name="twitter:image" content="assets/og/arenas-og-cover.jpg" />
+      twitter:image DESACTIVADO hasta que la pieza social sea aprobada.
+      <meta name="twitter:image" content="https://arenasweb.github.io/assets/og/arenas-og-cover.jpg" />
     -->
 
     <title>ARENAS MOTOCICLETAS — Motos en Cusco | Rutas que te definen</title>
@@ -74,6 +68,8 @@
   </head>
 
   <body>
+    <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
+
     <!-- ============================================================
          HEADER — fijo y transparente, superpuesto al video del hero.
          script.js → inicializarHeaderScroll() añade .is-scrolled
@@ -90,6 +86,7 @@
 
       <!-- Botón hamburguesa para móvil -->
       <button
+        type="button"
         class="nav-toggle"
         aria-expanded="false"
         aria-controls="site-nav"
@@ -113,7 +110,7 @@
     <!-- ============================================================
          MAIN — contenido principal de la página
     ============================================================ -->
-    <main id="main-content" role="main">
+    <main id="main-content" role="main" tabindex="-1">
 
         <!-- ============================================================
              SECCIÓN 1: HERO
@@ -213,24 +210,30 @@
 
         <!-- ============================================================
              SECCIÓN 3: ENCUENTRA TU CAMINO — portadas editoriales full-bleed
-             Cuatro categorías como portadas de campaña. Sin fotografías
-             reales todavía: cada portada usa un fallback visual sobrio
-             (gradientes + SVG) y queda preparada para recibir imagen.
+             Cuatro portadas de campaña con fotografía referencial local.
+             Cada una sirve la variante adecuada mediante <picture>:
+               móvil  (<=900px): assets/portadas/camino-<slug>-mobile.webp
+               desktop (>900px): assets/portadas/camino-<slug>-desktop.webp
+             El corte está en 900px (no 768px) para que coincida con el
+             cambio de layout de esta sección: por debajo de 900px la
+             portada es vertical y necesita el asset 9:16; con el 16:9 se
+             perdería la mitad del encuadre y la moto quedaría cortada.
 
-             RUTAS DE ASSETS ESPERADAS (no referenciadas hasta que existan):
-               assets/portadas/camino-ciudad-desktop.avif|.webp
-               assets/portadas/camino-ciudad-mobile.avif|.webp
-               assets/portadas/camino-trabajo-desktop.avif|.webp
-               assets/portadas/camino-trabajo-mobile.avif|.webp
-               assets/portadas/camino-deportiva-desktop.avif|.webp
-               assets/portadas/camino-deportiva-mobile.avif|.webp
-               assets/portadas/camino-aventura-desktop.avif|.webp
-               assets/portadas/camino-aventura-mobile.avif|.webp
+             WebP es la variante optimizada actual y JPG el fallback
+             universal. Los PNG master se archivan fuera del árbol público
+             para futuras reconversiones. AVIF queda pendiente hasta disponer
+             de un conversor aprobado.
+
+             Encuadre y overlays se resuelven en CSS (object-position por
+             categoría/breakpoint, degradado horizontal en desktop y vertical
+             en móvil). Los degradados se mantienen separados de los assets.
 
              Campos futuros de Google Sheets por portada: category_id,
-             category_slug, title, description, *_image_url, *_focal_position,
-             alt_text, cta_label, cta_url, associated_models, display_order,
-             is_active, overlay_strength, text_alignment, theme.
+             category_slug, title, description, associated_line,
+             desktop_image_url, mobile_image_url, desktop_focal_position,
+             mobile_focal_position, alt_text, cta_label, cta_url,
+             display_order, is_active, overlay_strength, text_alignment,
+             theme, updated_at.
 
              Sin JS: las cuatro portadas se muestran apiladas y completas.
              Con JS (.js-paths): una portada activa + rail + flechas + 01/04.
@@ -257,18 +260,37 @@
               data-order="1"
               data-active="true"
             >
-              <svg class="path-panel__scene" viewBox="0 0 1440 520" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                <path d="M120 520 L120 200 M240 520 L240 120 M360 520 L360 250 M480 520 L480 160 M600 520 L600 290 M720 520 L720 210" stroke="rgba(151,205,255,0.14)" stroke-width="3"/>
-                <path d="M0 440 C 400 424 900 428 1440 380" stroke="rgba(47,140,255,0.55)" stroke-width="3" fill="none" stroke-linecap="round"/>
-                <path d="M760 416 h60 M880 410 h60 M1000 403 h60 M1120 396 h60" stroke="rgba(156,220,255,0.4)" stroke-width="3" stroke-linecap="round"/>
-              </svg>
+              <picture class="path-panel__media">
+                <source
+                  media="(max-width: 900px)"
+                  type="image/webp"
+                  srcset="assets/portadas/camino-ciudad-mobile.webp"
+                  width="941"
+                  height="1672"
+                />
+                <source
+                  type="image/webp"
+                  srcset="assets/portadas/camino-ciudad-desktop.webp"
+                  width="1672"
+                  height="941"
+                />
+                <img
+                  class="path-panel__img"
+                  src="assets/portadas/camino-ciudad-desktop.jpg"
+                  alt="Motocicleta urbana referencial en una calle de arquitectura tradicional cusqueña."
+                  width="1672"
+                  height="941"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
               <span class="path-panel__num" aria-hidden="true">01</span>
               <div class="path-panel__inner">
                 <div class="path-panel__body">
                   <h3 class="path-panel__title">Ciudad</h3>
                   <p class="path-panel__desc">Movilidad ágil para el ritmo de cada día.</p>
                   <p class="path-panel__models">
-                    <span class="path-panel__models-label">Línea asociada</span>
+                    <span class="path-panel__models-label">Referencias editoriales</span>
                     CT125 · Discover 125 · Pulsar 125 LS · Pulsar N125 FI
                   </p>
                   <a href="#colecciones" class="btn btn-primary btn-hero path-panel__cta">Explorar ciudad</a>
@@ -287,19 +309,37 @@
               data-order="2"
               data-active="false"
             >
-              <svg class="path-panel__scene" viewBox="0 0 1440 520" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                <path d="M0 420 L1440 320" stroke="rgba(47,140,255,0.5)" stroke-width="3" stroke-linecap="round"/>
-                <path d="M0 452 L1440 352" stroke="rgba(151,205,255,0.16)" stroke-width="2"/>
-                <path d="M140 420 l22 -46 M420 400 l22 -46 M700 381 l22 -46 M980 361 l22 -46 M1260 342 l22 -46" stroke="rgba(156,220,255,0.35)" stroke-width="3" stroke-linecap="round"/>
-                <path d="M1050 268 h120 v54 h-120 z M1190 240 h90 v82 h-90 z" stroke="rgba(151,205,255,0.2)" stroke-width="2" fill="none"/>
-              </svg>
+              <picture class="path-panel__media">
+                <source
+                  media="(max-width: 900px)"
+                  type="image/webp"
+                  srcset="assets/portadas/camino-trabajo-mobile.webp"
+                  width="941"
+                  height="1672"
+                />
+                <source
+                  type="image/webp"
+                  srcset="assets/portadas/camino-trabajo-desktop.webp"
+                  width="1672"
+                  height="941"
+                />
+                <img
+                  class="path-panel__img"
+                  src="assets/portadas/camino-trabajo-desktop.jpg"
+                  alt="Motocicleta utilitaria referencial frente a un almacén comercial."
+                  width="1672"
+                  height="941"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
               <span class="path-panel__num" aria-hidden="true">02</span>
               <div class="path-panel__inner">
                 <div class="path-panel__body">
                   <h3 class="path-panel__title">Trabajo</h3>
-                  <p class="path-panel__desc">Resistencia y practicidad para mantener tu negocio en movimiento.</p>
+                  <p class="path-panel__desc">Fuerza y resistencia para impulsar cada jornada.</p>
                   <p class="path-panel__models">
-                    <span class="path-panel__models-label">Línea asociada</span>
+                    <span class="path-panel__models-label">Referencia editorial</span>
                     Boxer 150
                   </p>
                   <a href="#colecciones" class="btn btn-primary btn-hero path-panel__cta">Explorar trabajo</a>
@@ -318,19 +358,38 @@
               data-order="3"
               data-active="false"
             >
-              <svg class="path-panel__scene" viewBox="0 0 1440 520" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                <path d="M-40 480 L720 240 M1480 480 L760 240" stroke="rgba(47,140,255,0.35)" stroke-width="2.5" fill="none"/>
-                <path d="M200 520 C 500 380 900 320 1440 300" stroke="rgba(47,140,255,0.65)" stroke-width="3" fill="none" stroke-linecap="round"/>
-                <path d="M360 470 h130 M620 420 h110 M860 382 h90 M1060 352 h74" stroke="rgba(156,220,255,0.5)" stroke-width="3" stroke-linecap="round"/>
-              </svg>
+              <picture class="path-panel__media">
+                <source
+                  media="(max-width: 900px)"
+                  type="image/webp"
+                  srcset="assets/portadas/camino-deportiva-mobile.webp"
+                  width="941"
+                  height="1672"
+                />
+                <source
+                  type="image/webp"
+                  srcset="assets/portadas/camino-deportiva-desktop.webp"
+                  width="1672"
+                  height="941"
+                />
+                <img
+                  class="path-panel__img"
+                  src="assets/portadas/camino-deportiva-desktop.jpg"
+                  alt="Motocicleta deportiva referencial en una avenida urbana al atardecer."
+                  width="1672"
+                  height="941"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
               <span class="path-panel__num" aria-hidden="true">03</span>
               <div class="path-panel__inner">
                 <div class="path-panel__body">
                   <h3 class="path-panel__title">Deportiva</h3>
-                  <p class="path-panel__desc">Diseño, presencia y carácter para una experiencia más intensa.</p>
+                  <p class="path-panel__desc">Diseño, carácter y rendimiento para destacar en cada ruta.</p>
                   <p class="path-panel__models">
-                    <span class="path-panel__models-label">Línea asociada</span>
-                    Pulsar 180 Neón · Pulsar 200 NS · Pulsar N160 FI · Pulsar RS 200
+                    <span class="path-panel__models-label">Referencias editoriales</span>
+                    Pulsar 150R · Pulsar 160 NS UG2 · Pulsar N160 FI · Pulsar 180 Neon · Pulsar 200 NS UG2
                   </p>
                   <a href="#colecciones" class="btn btn-primary btn-hero path-panel__cta">Explorar deportiva</a>
                 </div>
@@ -348,56 +407,73 @@
               data-order="4"
               data-active="false"
             >
-              <svg class="path-panel__scene" viewBox="0 0 1440 520" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                <path d="M0 380 L300 160 L520 330 L800 100 L1080 290 L1440 170" stroke="rgba(151,205,255,0.25)" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
-                <path d="M780 120 L800 100 L820 120" stroke="rgba(247,251,255,0.5)" stroke-width="2.5" fill="none"/>
-                <path d="M0 470 C 360 430 560 490 880 440 C 1120 402 1300 430 1440 400" stroke="rgba(47,140,255,0.6)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-                <path d="M240 452 h56 M560 462 h56 M940 428 h56 M1240 414 h48" stroke="rgba(156,220,255,0.4)" stroke-width="3" stroke-linecap="round"/>
-              </svg>
+              <picture class="path-panel__media">
+                <source
+                  media="(max-width: 900px)"
+                  type="image/webp"
+                  srcset="assets/portadas/camino-aventura-mobile.webp"
+                  width="941"
+                  height="1672"
+                />
+                <source
+                  type="image/webp"
+                  srcset="assets/portadas/camino-aventura-desktop.webp"
+                  width="1672"
+                  height="941"
+                />
+                <img
+                  class="path-panel__img"
+                  src="assets/portadas/camino-aventura-desktop.jpg"
+                  alt="Motocicleta de ruta referencial en una carretera andina rodeada de montañas."
+                  width="1672"
+                  height="941"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
               <span class="path-panel__num" aria-hidden="true">04</span>
               <div class="path-panel__inner">
                 <div class="path-panel__body">
                   <h3 class="path-panel__title">Ruta y aventura</h3>
-                  <p class="path-panel__desc">Carreteras más largas para descubrir hasta dónde puedes llegar.</p>
+                  <p class="path-panel__desc">Potencia y confianza para descubrir nuevos caminos.</p>
                   <p class="path-panel__models">
-                    <span class="path-panel__models-label">Línea asociada</span>
-                    Dominar 400 · Pulsar 400 NS · Dominar 250 · Pulsar N250
+                    <span class="path-panel__models-label">Referencias editoriales</span>
+                    Pulsar N250 UG · Dominar 250 · Dominar 400 · Pulsar 400 NS
                   </p>
-                  <a href="#colecciones" class="btn btn-primary btn-hero path-panel__cta">Explorar ruta</a>
+                  <a href="#colecciones" class="btn btn-primary btn-hero path-panel__cta">Explorar aventura</a>
                 </div>
               </div>
             </article>
-
+              <!-- Rail editorial de categorías (desktop, superpuesto) -->
+              <div class="path-rail" role="group" aria-label="Categorías de camino">
+                <button type="button" class="path-tab" data-path="ciudad" aria-pressed="true" aria-current="true">
+                  <span class="path-tab__num" aria-hidden="true">01</span>
+                  <span class="path-tab__name">Ciudad</span>
+                </button>
+                <button type="button" class="path-tab" data-path="trabajo" aria-pressed="false">
+                  <span class="path-tab__num" aria-hidden="true">02</span>
+                  <span class="path-tab__name">Trabajo</span>
+                </button>
+                <button type="button" class="path-tab" data-path="deportiva" aria-pressed="false">
+                  <span class="path-tab__num" aria-hidden="true">03</span>
+                  <span class="path-tab__name">Deportiva</span>
+                </button>
+                <button type="button" class="path-tab" data-path="aventura" aria-pressed="false">
+                  <span class="path-tab__num" aria-hidden="true">04</span>
+                  <span class="path-tab__name">Ruta y aventura</span>
+                </button>
+              </div>
           </div>
 
-          <!-- Rail editorial de categorías (desktop, superpuesto) -->
-          <div class="path-rail" role="group" aria-label="Categorías de camino">
-            <button type="button" class="path-tab" data-path="ciudad" aria-pressed="true">
-            <span class="path-tab__num" aria-hidden="true">01</span>
-            <span class="path-tab__name">Ciudad</span>
-            </button>
-            <button type="button" class="path-tab" data-path="trabajo" aria-pressed="false">
-            <span class="path-tab__num" aria-hidden="true">02</span>
-            <span class="path-tab__name">Trabajo</span>
-            </button>
-            <button type="button" class="path-tab" data-path="deportiva" aria-pressed="false">
-            <span class="path-tab__num" aria-hidden="true">03</span>
-            <span class="path-tab__name">Deportiva</span>
-            </button>
-            <button type="button" class="path-tab" data-path="aventura" aria-pressed="false">
-            <span class="path-tab__num" aria-hidden="true">04</span>
-            <span class="path-tab__name">Ruta y aventura</span>
-            </button>
-          </div>
 
           <!-- Flechas + indicador (superpuestos abajo) -->
           <div class="path-controls">
             <button type="button" class="path-arrow" data-dir="-1" aria-label="Camino anterior">
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
             <span class="path-count"><span class="path-count__current">01</span> / 04</span>
             <button type="button" class="path-arrow" data-dir="1" aria-label="Camino siguiente">
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
           </div>
         </section>
@@ -517,10 +593,11 @@
 
             <div class="collections-grid">
               <a href="#camino" class="collection collection--urbana reveal-scale" data-collection="movilidad-urbana" data-dynamic-slot data-fallback-state="editorial">
-                <svg class="collection__scene" viewBox="0 0 600 700" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                  <path d="M80 700 L80 260 M160 700 L160 180 M240 700 L240 320 M320 700 L320 220 M400 700 L400 360 M480 700 L480 260" stroke="rgba(151,205,255,0.18)" stroke-width="3"/>
-                  <path d="M0 560 C 200 540 400 548 600 500" stroke="rgba(47,140,255,0.55)" stroke-width="3" fill="none"/>
-                </svg>
+                <picture class="collection__media" aria-hidden="true">
+                  <source media="(max-width: 900px)" type="image/webp" srcset="assets/portadas/camino-ciudad-mobile.webp" />
+                  <source type="image/webp" srcset="assets/portadas/camino-ciudad-desktop.webp" />
+                  <img class="collection__img" src="assets/portadas/camino-ciudad-desktop.jpg" alt="" width="1672" height="941" loading="lazy" decoding="async" />
+                </picture>
                 <span class="collection__tag">Colección</span>
                 <span class="collection__title">Movilidad urbana</span>
                 <span class="collection__desc">Soluciones visuales para moverte con agilidad en el día a día.</span>
@@ -530,10 +607,11 @@
               </a>
 
               <a href="#camino" class="collection collection--trabajo reveal-scale" data-collection="trabajo-productividad" data-dynamic-slot data-fallback-state="editorial">
-                <svg class="collection__scene" viewBox="0 0 600 340" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                  <path d="M0 260 L600 190" stroke="rgba(47,140,255,0.5)" stroke-width="3"/>
-                  <path d="M40 260 l14 -30 M180 244 l14 -30 M320 228 l14 -30 M460 211 l14 -30" stroke="rgba(156,220,255,0.4)" stroke-width="2.5" stroke-linecap="round"/>
-                </svg>
+                <picture class="collection__media" aria-hidden="true">
+                  <source media="(max-width: 900px)" type="image/webp" srcset="assets/portadas/camino-trabajo-mobile.webp" />
+                  <source type="image/webp" srcset="assets/portadas/camino-trabajo-desktop.webp" />
+                  <img class="collection__img" src="assets/portadas/camino-trabajo-desktop.jpg" alt="" width="1672" height="941" loading="lazy" decoding="async" />
+                </picture>
                 <span class="collection__tag">Colección</span>
                 <span class="collection__title">Trabajo y productividad</span>
                 <span class="collection__desc">Una categoría orientada a jornadas, traslado y movimiento constante.</span>
@@ -543,10 +621,11 @@
               </a>
 
               <a href="#camino" class="collection collection--deportivo reveal-scale" data-collection="estilo-deportivo" data-dynamic-slot data-fallback-state="editorial">
-                <svg class="collection__scene" viewBox="0 0 600 340" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                  <path d="M-20 300 C 160 220 300 320 620 160" stroke="rgba(47,140,255,0.6)" stroke-width="3" fill="none"/>
-                  <path d="M-20 320 C 170 245 310 340 620 190" stroke="rgba(151,205,255,0.22)" stroke-width="2" fill="none"/>
-                </svg>
+                <picture class="collection__media" aria-hidden="true">
+                  <source media="(max-width: 900px)" type="image/webp" srcset="assets/portadas/camino-deportiva-mobile.webp" />
+                  <source type="image/webp" srcset="assets/portadas/camino-deportiva-desktop.webp" />
+                  <img class="collection__img" src="assets/portadas/camino-deportiva-desktop.jpg" alt="" width="1672" height="941" loading="lazy" decoding="async" />
+                </picture>
                 <span class="collection__tag">Colección</span>
                 <span class="collection__title">Estilo deportivo</span>
                 <span class="collection__desc">Diseño, presencia y una experiencia de conducción con carácter.</span>
@@ -556,10 +635,11 @@
               </a>
 
               <a href="#camino" class="collection collection--aventura reveal-scale" data-collection="ruta-aventura" data-dynamic-slot data-fallback-state="editorial">
-                <svg class="collection__scene" viewBox="0 0 1240 300" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                  <path d="M0 210 L260 90 L430 190 L640 60 L840 170 L1040 90 L1240 150" stroke="rgba(151,205,255,0.28)" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
-                  <path d="M0 250 C 400 232 800 244 1240 208" stroke="rgba(47,140,255,0.6)" stroke-width="3" fill="none"/>
-                </svg>
+                <picture class="collection__media" aria-hidden="true">
+                  <source media="(max-width: 900px)" type="image/webp" srcset="assets/portadas/camino-aventura-mobile.webp" />
+                  <source type="image/webp" srcset="assets/portadas/camino-aventura-desktop.webp" />
+                  <img class="collection__img" src="assets/portadas/camino-aventura-desktop.jpg" alt="" width="1672" height="941" loading="lazy" decoding="async" />
+                </picture>
                 <span class="collection__tag">Colección panorámica</span>
                 <span class="collection__title">Ruta y aventura</span>
                 <span class="collection__desc">Una propuesta para quienes buscan caminos más largos.</span>
@@ -572,7 +652,6 @@
             <!-- Zona reservada para el catálogo dinámico futuro (fuente aprobada).
                  Permanece oculta y sin fetch hasta la fase de integración. -->
             <div id="catalog-grid" data-dynamic-slot="catalogo" data-fallback-state="editorial" hidden></div>
-            <p class="collections-note">Las fichas comerciales se incorporarán desde la fuente de información aprobada.</p>
           </div>
         </section>
 
@@ -661,6 +740,7 @@
                 </svg>
               </article>
             </div>
+
           </div>
         </section>
 
@@ -688,8 +768,8 @@
               </li>
               <li class="prep-step reveal-slide-up">
                 <span class="prep-step__num" aria-hidden="true">03</span>
-                <h3 class="prep-step__title">Revisa la información aprobada</h3>
-                <p class="prep-step__desc">Compara las alternativas cuando las fichas oficiales estén disponibles.</p>
+                <h3 class="prep-step__title">Aclara tus preguntas</h3>
+                <p class="prep-step__desc">Anota lo que quieres consultar antes de tomar una decisión.</p>
               </li>
             </ol>
 

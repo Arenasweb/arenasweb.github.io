@@ -226,10 +226,10 @@ body {
   color: var(--color-white);
 }
 
-/* Headings — escala fluida con clamp */
-h1 { font-size: clamp(2.2rem, 4vw, 3.8rem); line-height: 1.05; font-weight: 800; letter-spacing: -0.02em; }
-h2 { font-size: clamp(1.5rem, 2.5vw, 2.2rem); line-height: 1.1;  font-weight: 700; }
-h3 { font-size: clamp(1.1rem, 1.8vw, 1.4rem); line-height: 1.2;  font-weight: 600; }
+/* Headings — tamaños estables; los ajustes móviles viven en responsive */
+h1 { font-size: 3.8rem; line-height: 1.05; font-weight: 800; letter-spacing: 0; }
+h2 { font-size: 2.2rem; line-height: 1.1;  font-weight: 700; }
+h3 { font-size: 1.4rem; line-height: 1.2;  font-weight: 600; }
 h4 { font-size: var(--text-lg); line-height: 1.3; font-weight: 600; }
 
 h1, h2, h3, h4 {
@@ -697,7 +697,7 @@ body {
   font-family: var(--font-display);
   font-weight: 700;
   text-transform: uppercase;
-  font-size: clamp(3.2rem, 5.5vw, 6rem);
+  font-size: 5rem;
   color: var(--color-white);
   text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
   text-wrap: balance;
@@ -713,7 +713,7 @@ body {
 
 .hero-description {
   font-family: var(--font-body);
-  font-size: clamp(1rem, 1.3vw, 1.15rem);
+  font-size: 1.1rem;
   max-width: 470px;
   line-height: 1.6;
   margin-top: var(--space-2);
@@ -950,7 +950,7 @@ body {
   font-weight: 900;
   line-height: 1;
   letter-spacing: 0;
-  font-size: clamp(3.2rem, 11vw, 6rem);
+  font-size: 6rem;
   color: var(--color-white);
   background: linear-gradient(180deg, #ffffff 0%, var(--stat-blue-ice) 55%, var(--stat-blue-bright) 100%);
   -webkit-background-clip: text;
@@ -966,7 +966,7 @@ body {
   -webkit-text-fill-color: var(--stat-blue-bright);
 }
 .stat-label {
-  font-size: clamp(var(--text-xs), 1.4vw, var(--text-sm));
+  font-size: var(--text-sm);
   text-transform: uppercase;
   letter-spacing: 0.18em;
   font-weight: 700;
@@ -1055,7 +1055,7 @@ body {
   font-size: var(--text-xl);
   font-weight: 800;
   color: var(--color-white);
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
 }
 
 .moto-card__badge {
@@ -1491,6 +1491,13 @@ body {
 
 /* Tablet — 900px */
 @media (max-width: 900px) {
+  h1 { font-size: 3rem; }
+  h2 { font-size: 1.9rem; }
+  h3 { font-size: 1.25rem; }
+
+  .hero-title__line { font-size: 4rem; }
+  .stat-number { font-size: 4.5rem; }
+
   .hero-section {
     min-height: max(600px, 100svh);
     padding-block: clamp(112px, 16vh, 150px) clamp(64px, 9vh, 100px);
@@ -1507,6 +1514,16 @@ body {
 
 /* Móvil — 680px */
 @media (max-width: 680px) {
+  h1 { font-size: 2.2rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.1rem; }
+
+  .hero-title__line { font-size: 3.2rem; }
+  .hero-description,
+  .block-lead { font-size: 1rem; }
+  .stat-number { font-size: 3.2rem; }
+  .stat-label { font-size: var(--text-xs); }
+
   .app-shell {
     padding: var(--space-4) var(--space-4) var(--space-10);
   }
@@ -1523,8 +1540,8 @@ body {
   }
   .hero-video,
   .hero-media.video-failed {
-    object-position: 65% center;
-    background-position: 65% center;
+    object-position: 40% center;
+    background-position: 40% center;
   }
 
   /* Métricas: apilar en una columna, sin separador vertical */
@@ -1719,6 +1736,23 @@ body {
   border: 0;
 }
 
+/* Salto de navegación: oculto hasta recibir foco por teclado. */
+.skip-link {
+  position: fixed;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: calc(var(--z-toast) + 1);
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-white);
+  background: var(--brand-blue);
+  border-radius: var(--radius-sm);
+  transform: translateY(calc(-100% - var(--space-6)));
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
 /* Texto centrado */
 .text-center { text-align: center; }
 .text-left   { text-align: left;   }
@@ -1809,12 +1843,12 @@ body {
   text-transform: uppercase;
   letter-spacing: 0;
   line-height: 0.95;
-  font-size: clamp(2.6rem, 5.4vw, 5rem);
+  font-size: 4.6rem;
   color: var(--color-white);
   text-wrap: balance;
 }
 .block-title--xl {
-  font-size: clamp(3rem, 6vw, 6.2rem);
+  font-size: 5.1rem;
 }
 .block-title--stack {
   display: grid;
@@ -1828,7 +1862,7 @@ body {
 }
 .block-lead {
   margin-top: var(--space-4);
-  font-size: clamp(1rem, 1.3vw, 1.15rem);
+  font-size: 1.1rem;
   line-height: 1.65;
   color: var(--color-silver);
   max-width: 560px;
@@ -1840,10 +1874,12 @@ main > section { scroll-margin-top: 84px; }
 
 /* ================================================================
    16.1 ENCUENTRA TU CAMINO — portadas editoriales full-bleed
-   Cuatro portadas de campaña (90svh aprox.). Fallback visual sobrio
-   con gradientes + SVG hasta disponer de fotografías reales en
-   assets/portadas/. Rail lateral, flechas e indicador 01/04 solo
-   con JS; sin JS las cuatro portadas se apilan completas.
+   Cuatro portadas de campaña con fotografía referencial local.
+   Capas: [0] imagen · [1] overlay + número · [2] contenido HTML.
+   El encuadre se controla con object-position por categoría y
+   breakpoint; los degradados son CSS y nunca se hornean en el PNG.
+   Rail lateral, flechas e indicador 01/04 solo con JS; sin JS las
+   cuatro portadas se apilan completas y legibles.
    ================================================================ */
 .path-section {
   position: relative;
@@ -1863,59 +1899,72 @@ main > section { scroll-margin-top: 84px; }
   align-items: flex-end;
   padding-block: clamp(56px, 9vh, 110px);
   isolation: isolate;
+  /* Color base bajo la fotografía: evita destello blanco mientras carga */
+  background: linear-gradient(180deg, #0a1424 0%, #050914 100%);
 }
-/* Overlay de legibilidad: esquina inferior-izquierda para el texto */
+
+/* Fotografía de la portada */
+.path-panel__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+}
+.path-panel__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Overlay de legibilidad (desktop: horizontal hacia la izquierda) */
 .path-panel::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
-  background:
-    linear-gradient(90deg, rgba(3, 5, 9, 0.80) 0%, rgba(3, 5, 9, 0.34) 44%, transparent 70%),
-    linear-gradient(0deg, rgba(3, 5, 9, 0.85) 0%, transparent 48%);
+  background: linear-gradient(
+    90deg,
+    rgba(2, 8, 18, 0.90) 0%,
+    rgba(2, 8, 18, 0.76) 28%,
+    rgba(2, 8, 18, 0.38) 52%,
+    rgba(2, 8, 18, 0.08) 78%,
+    rgba(2, 8, 18, 0) 100%
+  );
   pointer-events: none;
 }
-
-/* Fondos por categoría — una sola campaña, temperatura coherente */
-.path-panel[data-path="ciudad"] {
-  background:
-    radial-gradient(80% 55% at 80% 10%, rgba(156, 220, 255, 0.10), transparent 62%),
-    radial-gradient(90% 70% at 10% 100%, rgba(31, 107, 255, 0.14), transparent 60%),
-    linear-gradient(180deg, #0a1424 0%, #050914 100%);
-}
-.path-panel[data-path="trabajo"] {
-  background:
-    radial-gradient(70% 60% at 88% 88%, rgba(31, 107, 255, 0.10), transparent 58%),
-    linear-gradient(160deg, #0d1420 0%, #060a12 72%);
-}
-.path-panel[data-path="deportiva"] {
-  background:
-    radial-gradient(60% 80% at 84% 42%, rgba(31, 107, 255, 0.22), transparent 55%),
-    linear-gradient(200deg, #081020 0%, #04070f 70%);
-}
-.path-panel[data-path="aventura"] {
-  background:
-    radial-gradient(90% 50% at 50% 82%, rgba(120, 170, 255, 0.12), transparent 60%),
-    linear-gradient(180deg, #071021 0%, #050914 100%);
-}
-
-.path-panel__scene {
+/* Refuerzo inferior muy sutil: asienta el CTA y el borde de sección */
+.path-panel::after {
+  content: "";
   position: absolute;
   inset: auto 0 0 0;
-  width: 100%;
-  height: 66%;
+  height: 38%;
+  z-index: 1;
+  background: linear-gradient(0deg, rgba(2, 8, 18, 0.72) 0%, rgba(2, 8, 18, 0) 100%);
   pointer-events: none;
 }
+
+/* ---- Encuadre por categoría (desktop) ---- */
+.path-panel[data-path="ciudad"]    .path-panel__img { object-position: 58% center; }
+.path-panel[data-path="trabajo"]   .path-panel__img { object-position: 58% center; }
+.path-panel[data-path="deportiva"] .path-panel__img { object-position: 62% center; }
+.path-panel[data-path="aventura"]  .path-panel__img { object-position: 62% center; }
+
+/* Número de capítulo: marca de agua. En desktop el índice de capítulos ya
+   comunica la posición, así que se reserva para móvil (donde la zona alta
+   del encuadre vertical queda libre de motocicleta). */
 .path-panel__num {
+  display: none;
   position: absolute;
-  top: clamp(12px, 4vh, 44px);
-  right: clamp(16px, 4vw, 64px);
+  top: clamp(56px, 9vh, 96px);
+  right: clamp(16px, 5vw, 48px);
+  z-index: 1;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(6.5rem, 17vw, 16rem);
+  font-size: 7rem;
   line-height: 1;
   color: transparent;
-  -webkit-text-stroke: 1px rgba(151, 205, 255, 0.14);
+  -webkit-text-stroke: 1px rgba(247, 251, 255, 0.22);
   pointer-events: none;
   user-select: none;
 }
@@ -1935,23 +1984,27 @@ main > section { scroll-margin-top: 84px; }
   font-family: var(--font-display);
   font-weight: 700;
   text-transform: uppercase;
-  font-size: clamp(3rem, 7.2vw, 6.6rem);
-  line-height: 0.92;
+  font-size: 6.2rem;
+  line-height: 1;
   color: var(--color-white);
   text-wrap: balance;
+  text-shadow: 0 2px 24px rgba(2, 8, 18, 0.5);
 }
 .path-panel__desc {
-  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+  font-size: 1.15rem;
   line-height: 1.6;
-  color: #d8dee9;
+  color: #e6ecf5;
   max-width: 44ch;
+  text-shadow: 0 1px 12px rgba(2, 8, 18, 0.6);
 }
 .path-panel__models {
   font-size: var(--text-sm);
   letter-spacing: 0.05em;
   line-height: 1.7;
-  color: var(--color-muted);
-  max-width: 52ch;
+  color: #c3cddb;
+  max-width: 60ch;
+  text-wrap: pretty;
+  text-shadow: 0 1px 10px rgba(2, 8, 18, 0.6);
 }
 .path-panel__models-label {
   display: block;
@@ -1959,56 +2012,69 @@ main > section { scroll-margin-top: 84px; }
   font-weight: 700;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--brand-blue-bright);
+  color: var(--brand-blue-ice);
   margin-bottom: 4px;
 }
 .path-panel__cta { margin-top: var(--space-2); }
 
-/* Con JS: una sola portada activa con entrada suave */
-.js-paths .path-panel { display: none; }
-.js-paths .path-panel.is-active {
-  display: flex;
-  animation: pathIn var(--duration-medium) var(--ease-cinematic) both;
+/* Con JS: portadas apiladas en la misma celda con fundido cruzado.
+   Se conserva el alto del stage (sin salto de layout) y las inactivas
+   no reciben interacción ni lectura de pantalla. */
+.js-paths .path-stage { display: grid; }
+.js-paths .path-panel {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity var(--duration-medium) var(--ease-cinematic),
+    visibility 0s linear var(--duration-medium);
 }
-@keyframes pathIn {
-  from { opacity: 0; transform: translateX(24px); }
-  to   { opacity: 1; transform: translateX(0); }
+.js-paths .path-panel.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    opacity var(--duration-medium) var(--ease-cinematic),
+    visibility 0s;
 }
 
 /* ---- Rail editorial de categorías (desktop, superpuesto) ---- */
 .path-rail { display: none; }
+/* Índice de capítulos: banda horizontal sobre la franja oscura superior
+   izquierda. Es la única zona libre de motocicleta en las cuatro
+   portadas, de modo que la navegación nunca tapa faro, espejos ni ruedas. */
 .js-paths .path-rail {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: var(--space-1);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(var(--space-4), 2.4vw, var(--space-8));
   position: absolute;
-  right: clamp(20px, 4vw, 64px);
-  bottom: clamp(96px, 16vh, 170px);
+  left: max(calc((100% - 1400px) / 2), clamp(20px, 4vw, 64px));
+  top: clamp(84px, 12vh, 120px);
   z-index: 3;
 }
 .path-tab {
   display: flex;
   align-items: baseline;
-  justify-content: flex-end;
-  gap: var(--space-3);
+  gap: var(--space-2);
   padding: var(--space-2) 0;
   min-height: 44px;
-  color: var(--color-muted);
-  text-align: right;
+  color: #c3cddb;
   position: relative;
+  text-shadow: 0 1px 10px rgba(2, 8, 18, 0.85);
   transition: color var(--duration-base) var(--ease-out);
 }
 .path-tab::after {
   content: "";
   position: absolute;
-  right: 0;
+  left: 0;
   bottom: 8px;
   width: 100%;
   height: 2px;
   background: var(--brand-blue-bright);
   transform: scaleX(0);
-  transform-origin: right;
+  transform-origin: left;
   transition: transform var(--duration-base) var(--ease-out);
 }
 .path-tab__num {
@@ -2020,7 +2086,7 @@ main > section { scroll-margin-top: 84px; }
   font-family: var(--font-display);
   font-weight: 700;
   text-transform: uppercase;
-  font-size: clamp(1rem, 1.3vw, 1.25rem);
+  font-size: 1.15rem;
   line-height: 1.15;
 }
 .path-tab:hover { color: var(--color-white); }
@@ -2047,7 +2113,7 @@ main > section { scroll-margin-top: 84px; }
   height: 46px;
   border-radius: var(--radius-pill);
   border: 1px solid var(--color-border-soft);
-  background: rgba(3, 5, 9, 0.45);
+  background: rgba(2, 8, 18, 0.55);
   color: var(--color-silver);
   transition:
     color var(--duration-base) var(--ease-out),
@@ -2065,7 +2131,8 @@ main > section { scroll-margin-top: 84px; }
   font-family: var(--font-mono);
   font-size: var(--text-sm);
   letter-spacing: 0.12em;
-  color: var(--color-muted);
+  color: #c3cddb;
+  text-shadow: 0 1px 10px rgba(2, 8, 18, 0.7);
 }
 .path-count__current { color: var(--brand-blue-ice); }
 
@@ -2122,14 +2189,18 @@ main > section { scroll-margin-top: 84px; }
 .js-guide .guide-step { display: none; }
 .js-guide .guide-step.is-current {
   display: block;
-  animation: pathIn var(--duration-medium) var(--ease-cinematic) both;
+  animation: guideIn var(--duration-medium) var(--ease-cinematic) both;
+}
+@keyframes guideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
 .guide-step__legend {
   font-family: var(--font-display);
   font-weight: 700;
   text-transform: uppercase;
-  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-size: 1.75rem;
   color: var(--color-white);
   margin-bottom: var(--space-5);
 }
@@ -2225,7 +2296,7 @@ main > section { scroll-margin-top: 84px; }
   font-family: var(--font-display);
   font-weight: 700;
   text-transform: uppercase;
-  font-size: clamp(1.3rem, 2.2vw, 1.9rem);
+  font-size: 1.65rem;
   line-height: 1.1;
   color: var(--brand-blue-ice);
   max-width: 24ch;
@@ -2265,6 +2336,16 @@ main > section { scroll-margin-top: 84px; }
     border-color var(--duration-base) var(--ease-out),
     transform var(--duration-base) var(--ease-out);
 }
+.collection::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(2, 8, 18, 0.08) 12%, rgba(2, 8, 18, 0.92) 88%),
+    linear-gradient(90deg, rgba(2, 8, 18, 0.48), rgba(2, 8, 18, 0.08));
+  pointer-events: none;
+}
 .collection:hover,
 .collection:focus-visible {
   border-color: var(--color-border-soft);
@@ -2274,15 +2355,23 @@ main > section { scroll-margin-top: 84px; }
   outline: 2px solid var(--brand-blue-ice);
   outline-offset: 4px;
 }
-.collection__scene {
+.collection__media {
   position: absolute;
   inset: 0;
+  display: block;
+  overflow: hidden;
+  z-index: -2;
+}
+.collection__img {
   width: 100%;
   height: 100%;
-  z-index: -1;
-  transition: transform var(--duration-medium) var(--ease-out);
+  display: block;
+  object-fit: cover;
+  transform: scale(1.015);
+  transition: transform var(--duration-slower) var(--ease-out);
 }
-.collection:hover .collection__scene { transform: translateX(-10px); }
+.collection:hover .collection__img,
+.collection:focus-visible .collection__img { transform: scale(1.045); }
 
 /* Composición del mosaico */
 .collection--urbana {
@@ -2294,6 +2383,7 @@ main > section { scroll-margin-top: 84px; }
     radial-gradient(110% 70% at 20% 0%, rgba(31, 107, 255, 0.16), transparent 60%),
     linear-gradient(195deg, var(--color-surface) 0%, var(--color-deep) 78%);
 }
+.collection--urbana .collection__img { object-position: 72% center; }
 .collection--trabajo {
   grid-column: 6 / 13;
   min-height: clamp(200px, 22vw, 300px);
@@ -2301,6 +2391,7 @@ main > section { scroll-margin-top: 84px; }
   background:
     linear-gradient(115deg, var(--color-night) 0%, var(--color-deep) 70%);
 }
+.collection--trabajo .collection__img { object-position: 66% 58%; }
 .collection--deportivo {
   grid-column: 6 / 13;
   min-height: clamp(200px, 22vw, 300px);
@@ -2309,6 +2400,7 @@ main > section { scroll-margin-top: 84px; }
     radial-gradient(80% 120% at 90% 100%, rgba(31, 107, 255, 0.18), transparent 55%),
     linear-gradient(295deg, var(--color-night) 0%, var(--color-deep) 70%);
 }
+.collection--deportivo .collection__img { object-position: 66% 56%; }
 .collection--aventura {
   grid-column: 1 / 13;
   min-height: clamp(220px, 24vw, 320px);
@@ -2317,6 +2409,7 @@ main > section { scroll-margin-top: 84px; }
     radial-gradient(60% 120% at 50% 130%, rgba(31, 107, 255, 0.14), transparent 62%),
     linear-gradient(180deg, var(--color-deep) 0%, var(--color-night) 100%);
 }
+.collection--aventura .collection__img { object-position: 58% 58%; }
 
 .collection__tag {
   font-size: var(--text-xs);
@@ -2324,20 +2417,23 @@ main > section { scroll-margin-top: 84px; }
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--brand-blue-bright);
+  text-shadow: 0 1px 12px rgba(2, 8, 18, 0.8);
 }
 .collection__title {
   font-family: var(--font-display);
   font-weight: 700;
   text-transform: uppercase;
   line-height: 0.95;
-  font-size: clamp(1.7rem, 3vw, 2.9rem);
+  font-size: 2.4rem;
+  text-shadow: 0 2px 20px rgba(2, 8, 18, 0.8);
 }
-.collection--urbana .collection__title { font-size: clamp(2.2rem, 3.8vw, 3.6rem); }
+.collection--urbana .collection__title { font-size: 3.2rem; }
 .collection__desc {
   color: var(--color-silver);
   font-size: var(--text-sm);
   line-height: 1.55;
   max-width: 46ch;
+  text-shadow: 0 1px 12px rgba(2, 8, 18, 0.8);
 }
 .collection__cta {
   display: inline-flex;
@@ -2356,14 +2452,6 @@ main > section { scroll-margin-top: 84px; }
   transition: transform var(--duration-base) var(--ease-out);
 }
 .collection:hover .collection__cta svg { transform: translateX(6px); }
-
-.collections-note {
-  margin-top: clamp(var(--space-6), 4vw, var(--space-8));
-  font-size: var(--text-xs);
-  letter-spacing: 0.04em;
-  color: var(--color-muted);
-  text-align: center;
-}
 
 /* ================================================================
    16.4 EXPERIENCIA DESTACADA — full-width de impacto
@@ -2463,7 +2551,7 @@ main > section { scroll-margin-top: 84px; }
   transform: translate(-50%, -50%);
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  font-size: 1.15rem;
   color: var(--brand-blue-ice);
   background: var(--color-deep);
   border: 1px solid var(--color-border-soft);
@@ -2480,13 +2568,13 @@ main > section { scroll-margin-top: 84px; }
   font-family: var(--font-display);
   font-weight: 700;
   text-transform: uppercase;
-  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+  font-size: 1.9rem;
   color: var(--color-white);
 }
 .pillar__desc {
   margin-top: var(--space-3);
   color: var(--color-silver);
-  font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+  font-size: 1rem;
   line-height: 1.6;
 }
 
@@ -2495,10 +2583,14 @@ main > section { scroll-margin-top: 84px; }
    ================================================================ */
 .prep-section {
   padding-block: var(--sec-pad);
-  background:
-    linear-gradient(180deg, rgba(31, 107, 255, 0.05), transparent 26%),
-    var(--color-night);
-  border-block: 1px solid var(--color-border-faint);
+  background: #edf2f8;
+  border-block: 1px solid #cdd7e4;
+}
+.prep-section .block-title {
+  color: #07101c;
+}
+.prep-section .block-lead {
+  color: #4c5a6c;
 }
 
 .prep-steps {
@@ -2510,31 +2602,28 @@ main > section { scroll-margin-top: 84px; }
 .prep-step {
   position: relative;
   padding-top: var(--space-5);
-  border-top: 2px solid var(--color-border-faint);
+  border-top: 2px solid #c7d2df;
 }
 .prep-step__num {
   display: block;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2.6rem, 4.4vw, 4rem);
+  font-size: 3.4rem;
   line-height: 1;
-  color: transparent;
-  background: linear-gradient(180deg, var(--brand-blue-ice) 0%, var(--brand-blue-bright) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
+  color: var(--brand-blue);
 }
 .prep-step__title {
   margin-top: var(--space-3);
   font-family: var(--font-display);
   font-weight: 700;
   text-transform: uppercase;
-  font-size: clamp(1.15rem, 1.8vw, 1.5rem);
-  color: var(--color-white);
+  font-size: 1.35rem;
+  color: #07101c;
 }
 .prep-step__desc {
   margin-top: var(--space-2);
   font-size: var(--text-sm);
-  color: var(--color-silver);
+  color: #4c5a6c;
   line-height: 1.6;
   max-width: 34ch;
 }
@@ -2605,7 +2694,7 @@ main > section { scroll-margin-top: 84px; }
   font-family: var(--font-display);
   font-weight: 700;
   text-transform: uppercase;
-  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+  font-size: 1.25rem;
   color: var(--color-white);
 }
 .journey-stage__desc {
@@ -2744,6 +2833,11 @@ main > section { scroll-margin-top: 84px; }
 }
 
 @media (max-width: 900px) {
+  .block-title { font-size: 3.6rem; }
+  .block-title--xl { font-size: 4.2rem; }
+  .path-panel__title { font-size: 4.5rem; }
+  .path-panel__num { font-size: 6.5rem; }
+
   /* Portadas: una por vista con snap horizontal; rail oculto,
      flechas + indicador pasan a una barra estática bajo la portada */
   .js-paths .path-rail { display: none; }
@@ -2756,17 +2850,23 @@ main > section { scroll-margin-top: 84px; }
     scrollbar-width: none;
   }
   .js-paths .path-stage::-webkit-scrollbar { display: none; }
+  /* En carrusel todas las portadas son visibles y navegables: se anula
+     el apilado con fundido que usa el desktop. */
   .js-paths .path-stage .path-panel {
     display: flex;
     flex: 0 0 100%;
     scroll-snap-align: center;
-    animation: none;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: none;
   }
   .path-panel {
     min-height: clamp(520px, 84svh, 780px);
     padding-block: clamp(40px, 7vh, 72px);
   }
-  .path-panel__num { font-size: clamp(5rem, 26vw, 9rem); }
+  /* En vertical la zona alta del encuadre queda libre: el número vuelve */
+  .path-panel__num { display: block; }
   .path-panel__inner { width: min(100% - 40px, 1400px); }
 
   .js-paths .path-controls {
@@ -2813,6 +2913,19 @@ main > section { scroll-margin-top: 84px; }
 }
 
 @media (max-width: 680px) {
+  .block-title { font-size: 2rem; }
+  .block-title--xl { font-size: 2.6rem; }
+  .path-panel__title { font-size: 3rem; }
+  .path-panel__desc { font-size: 1.05rem; }
+  .guide-step__legend { font-size: 1.4rem; }
+  .guide-result__title { font-size: 1.3rem; }
+  .collection__title { font-size: 1.9rem; }
+  .collection--urbana .collection__title { font-size: 2.4rem; }
+  .pillar__title { font-size: 1.5rem; }
+  .prep-step__num { font-size: 2.6rem; }
+  .prep-step__title { font-size: 1.15rem; }
+  .journey-stage__title { font-size: 1.1rem; }
+
   .wrap { width: min(100% - 40px, 1400px); }
 
   .collections-grid { grid-template-columns: 1fr; }
@@ -2832,10 +2945,37 @@ main > section { scroll-margin-top: 84px; }
   .guide-controls { justify-content: stretch; }
   .guide-controls .btn { flex: 1; }
 
-  /* Portadas en móviles pequeños: escena atenuada bajo el texto */
-  .path-panel__scene { opacity: 0.7; }
   .path-panel__models { font-size: var(--text-xs); }
   .path-panel__cta { width: 100%; }
+}
+
+/* ================================================================
+   16.1b PORTADAS EN MÓVIL Y TABLET (<=900px) — variante vertical
+   Mismo corte que el cambio de layout de la sección: el <picture>
+   sirve el archivo 1080×1920 y aquí solo cambian el encuadre y el
+   overlay, que pasa a vertical para proteger el texto inferior sin
+   apagar la motocicleta.
+   ================================================================ */
+@media (max-width: 900px) {
+  .path-panel::before {
+    background: linear-gradient(
+      180deg,
+      rgba(2, 8, 18, 0.72) 0%,
+      rgba(2, 8, 18, 0.32) 38%,
+      rgba(2, 8, 18, 0.10) 58%,
+      rgba(2, 8, 18, 0.78) 100%
+    );
+  }
+  .path-panel::after {
+    height: 46%;
+    background: linear-gradient(0deg, rgba(2, 8, 18, 0.86) 0%, rgba(2, 8, 18, 0) 100%);
+  }
+
+  /* Encuadre por categoría en el asset vertical */
+  .path-panel[data-path="ciudad"]    .path-panel__img { object-position: 52% center; }
+  .path-panel[data-path="trabajo"]   .path-panel__img { object-position: 50% center; }
+  .path-panel[data-path="deportiva"] .path-panel__img { object-position: 52% center; }
+  .path-panel[data-path="aventura"]  .path-panel__img { object-position: 53% center; }
 }
 
 /* ================================================================
@@ -2852,7 +2992,13 @@ main > section { scroll-margin-top: 84px; }
   .js-guide .guide-step.is-current {
     animation: none !important;
   }
-  .collection:hover .collection__scene,
+  /* Portadas: cambio inmediato, sin fundido ni retardo de visibilidad */
+  .js-paths .path-panel,
+  .js-paths .path-panel.is-active {
+    transition: none !important;
+  }
+  .collection:hover .collection__img,
+  .collection:focus-visible .collection__img,
   .collection:hover .collection__cta svg {
     transform: none !important;
   }
