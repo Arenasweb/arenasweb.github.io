@@ -1,0 +1,630 @@
+/* ================================================================
+   ARENAS MOTOCICLETAS — catalogo.css
+   Hoja de la página de catálogo y cáscara común de las páginas
+   interiores (catalogo.html y modelo.html).
+
+   Se carga SIEMPRE después de style.css: reutiliza sus variables,
+   su tipografía, sus botones y su tarjeta de modelo (BLOQUE 17).
+   Aquí solo vive lo que no existe en la portada: cabecera sólida,
+   miga de pan, introducción editorial, filtros y estados de rejilla.
+
+   modelo.html también carga este archivo, porque comparte la cáscara.
+   ================================================================ */
+
+/* ================================================================
+   1. CÁSCARA DE PÁGINA INTERIOR
+   ================================================================ */
+
+/* En la portada el header flota sobre el video; aquí no hay hero, así
+   que la cabecera es sólida desde el primer píxel y el contenido
+   arranca por debajo de ella. */
+.site-header--solid {
+  background: rgba(3, 5, 10, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom-color: rgba(91, 147, 255, 0.16);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.page-interior {
+  background: var(--color-deep);
+}
+
+.page-interior #main-content {
+  padding-top: clamp(88px, 12vw, 116px);
+}
+
+.brand--link {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* La navegación interior no depende de JavaScript: no hay botón
+   hamburguesa, así que los enlaces siguen visibles en móvil. */
+.site-nav--interior {
+  gap: clamp(var(--space-3), 3vw, var(--space-6));
+}
+
+@media (max-width: 680px) {
+  .site-nav--interior {
+    position: static;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-3);
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+  .site-nav--interior .nav-link {
+    font-size: var(--text-sm);
+  }
+  .site-nav--interior .nav-cta {
+    width: auto;
+    padding-inline: var(--space-4);
+  }
+}
+
+@media (max-width: 380px) {
+  .site-nav--interior {
+    gap: var(--space-2);
+  }
+  .site-nav--interior .nav-link {
+    font-size: var(--text-xs);
+  }
+}
+
+/* ================================================================
+   2. MIGA DE PAN
+   ================================================================ */
+
+.breadcrumb {
+  margin-bottom: var(--space-6);
+}
+
+.breadcrumb__lista {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.breadcrumb__item + .breadcrumb__item::before {
+  content: "/";
+  margin-right: var(--space-2);
+  color: rgba(151, 205, 255, 0.35);
+}
+
+.breadcrumb__item a {
+  color: var(--color-silver);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color var(--duration-base) var(--ease-out),
+              border-color var(--duration-base) var(--ease-out);
+}
+
+.breadcrumb__item a:hover {
+  color: var(--color-white);
+  border-bottom-color: var(--brand-blue-bright);
+}
+
+.breadcrumb__item [aria-current="page"] {
+  color: var(--brand-blue-ice);
+}
+
+/* ================================================================
+   3. INTRODUCCIÓN EDITORIAL
+   ================================================================ */
+
+.catalog-intro {
+  padding-block: clamp(var(--space-8), 5vw, var(--space-16)) clamp(var(--space-8), 4vw, var(--space-12));
+  background:
+    radial-gradient(70% 60% at 20% 0%, rgba(31, 107, 255, 0.10), transparent 62%),
+    var(--color-deep);
+}
+
+.catalog-intro__kicker {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--brand-blue-bright);
+  margin-bottom: var(--space-3);
+}
+
+.catalog-intro__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  font-size: clamp(2.2rem, 6vw, 4.2rem);
+  line-height: 0.98;
+  color: var(--color-white);
+  margin-bottom: var(--space-5);
+  max-width: 16ch;
+}
+
+.catalog-intro__lead {
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  line-height: 1.65;
+  color: var(--color-silver);
+  max-width: 62ch;
+  margin-bottom: var(--space-4);
+}
+
+.catalog-intro__text {
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--color-muted);
+  max-width: 62ch;
+}
+
+.catalog-noscript {
+  margin-top: var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  color: var(--brand-blue-ice);
+  background: rgba(31, 107, 255, 0.10);
+  border-left: 2px solid var(--brand-blue-bright);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.catalog-noscript a {
+  color: var(--color-white);
+}
+
+/* ================================================================
+   4. SECCIÓN DE REJILLA
+   ================================================================ */
+
+.catalog-section {
+  padding-block: clamp(var(--space-6), 3vw, var(--space-10)) var(--sec-pad);
+  background: var(--color-deep);
+}
+
+/* Aviso de previsualización local: visualmente distinto de un mensaje
+   comercial, para que nadie lo confunda con contenido publicado. */
+.catalog-preview {
+  margin-bottom: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #ffd9a8;
+  background: rgba(245, 158, 11, 0.10);
+  border: 1px dashed rgba(245, 158, 11, 0.45);
+  border-radius: var(--radius-sm);
+}
+
+.catalog-notice {
+  margin-bottom: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--brand-blue-ice);
+  background: rgba(31, 107, 255, 0.10);
+  border-left: 2px solid var(--brand-blue-bright);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+/* ================================================================
+   4b. FILTROS
+   Barra oscura integrada en la página, no una caja blanca de
+   marketplace ni un panel administrativo. El azul eléctrico se usa
+   solo para marcar el estado activo.
+
+   Una sola estructura sirve a las dos experiencias: en escritorio los
+   campos se ven desplegados; por debajo de 860px se recogen en un
+   panel lateral y los chips quedan como filtro rápido permanente.
+   ================================================================ */
+
+.catalog-filters {
+  margin-bottom: var(--space-6);
+  padding: clamp(var(--space-4), 2vw, var(--space-5));
+  background:
+    radial-gradient(80% 100% at 0% 0%, rgba(31, 107, 255, 0.10), transparent 60%),
+    rgba(12, 23, 40, 0.6);
+  border: 1px solid var(--color-border-faint);
+  border-radius: var(--radius-md);
+}
+
+.catalog-filters__barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+}
+
+.catalog-filters__titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+  line-height: 1.1;
+  color: var(--color-white);
+  margin-right: auto;
+}
+
+/* ---- Chips de categoría ---- */
+.catalog-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.catalog-chip {
+  min-height: 40px;
+  padding: 8px 18px;
+  font-family: inherit;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-silver);
+  background: rgba(7, 18, 37, 0.7);
+  border: 1px solid var(--color-border-faint);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition:
+    color var(--duration-base) var(--ease-out),
+    background var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out);
+}
+
+.catalog-chip:hover {
+  color: var(--color-white);
+  border-color: var(--color-border-soft);
+}
+
+/* Estado activo por color Y por contorno: nunca solo por color */
+.catalog-chip.is-active {
+  color: var(--color-white);
+  background: rgba(31, 107, 255, 0.20);
+  border-color: var(--brand-blue-bright);
+  box-shadow: inset 0 0 0 1px rgba(91, 147, 255, 0.35);
+}
+
+/* ---- Campos ---- */
+.catalog-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  flex: 1 1 180px;
+}
+
+.catalog-filter--search {
+  flex: 2 1 260px;
+}
+
+.catalog-filter__label {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* 44px de alto mínimo: objetivo táctil cómodo en móvil */
+.catalog-filters .form-input,
+.catalog-filters .form-select,
+.catalog-filter__reset,
+.catalog-filters__abrir {
+  min-height: 44px;
+}
+
+.catalog-filter__reset {
+  flex: 0 0 auto;
+  align-self: flex-end;
+}
+
+/* ---- Panel ----
+   En escritorio no es un panel: es la fila de campos bajo la barra. */
+.catalog-panel__campos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border-faint);
+}
+
+.catalog-panel__cabecera,
+.catalog-panel__pie,
+.catalog-filters__abrir,
+.catalog-panel__velo {
+  display: none;
+}
+
+/* NOTA SOBRE [hidden]:
+   varios componentes de esta hoja se ocultan desde JavaScript con el
+   atributo `hidden` teniendo a la vez un `display` propio (.catalog-chips,
+   .catalog-filter, .btn del botón de limpiar…). Eso normalmente sería un
+   problema, porque `[hidden] { display: none }` del agente de usuario
+   pierde ante cualquier `display` de autor.
+
+   Aquí NO hace falta ninguna regla extra: style.css (bloque de
+   utilidades) ya declara `[hidden] { display: none !important }`, y una
+   declaración importante de autor vence a las normales de autor sea cual
+   sea su especificidad. Si algún día se retirase esa línea de style.css,
+   estos componentes dejarían de ocultarse. */
+
+.catalog-count {
+  font-size: var(--text-sm);
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+  margin-bottom: var(--space-5);
+  min-height: 1.2em;
+}
+
+/* ---- Estados de la rejilla ---- */
+.catalog-state {
+  grid-column: 1 / -1;
+  padding: clamp(var(--space-10), 7vw, var(--space-20)) var(--space-6);
+  text-align: center;
+  border: 1px dashed var(--color-border-soft);
+  border-radius: var(--radius-md);
+  background: rgba(12, 23, 40, 0.4);
+}
+
+.catalog-state__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: clamp(1.2rem, 2.4vw, 1.7rem);
+  color: var(--color-white);
+}
+
+.catalog-state__text {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  color: var(--color-silver);
+  max-width: 52ch;
+  margin-inline: auto;
+}
+
+.catalog-state--loading .catalog-state__title {
+  color: var(--color-muted);
+}
+
+.catalog-state--error {
+  border-style: solid;
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+/* ================================================================
+   5. CIERRE DE PÁGINA
+   ================================================================ */
+
+.catalog-outro {
+  padding-block: var(--sec-pad);
+  background:
+    radial-gradient(70% 60% at 50% 100%, rgba(31, 107, 255, 0.10), transparent 62%),
+    var(--color-night);
+  border-top: 1px solid var(--color-border-faint);
+}
+
+.catalog-outro__inner {
+  text-align: center;
+}
+
+.catalog-outro__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  line-height: 1;
+  color: var(--color-white);
+  margin-bottom: var(--space-4);
+}
+
+.catalog-outro__text {
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--color-silver);
+  max-width: 56ch;
+  margin: 0 auto var(--space-8);
+}
+
+.catalog-outro__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-4);
+}
+
+/* ================================================================
+   6. RESPONSIVE
+   Verificado en 320, 360, 390, 430, 768, 1024, 1366, 1440 y 1920 px.
+   ================================================================ */
+
+@media (max-width: 900px) {
+  .catalog-intro__title {
+    max-width: 100%;
+  }
+}
+
+/* ---- Filtros en móvil/tableta: los campos pasan a un panel ----
+   Por debajo de 860px la fila de campos ocuparía media pantalla antes
+   de ver una sola moto. Se recoge en un panel que abre «Filtrar»; los
+   chips de categoría se quedan fuera porque son el filtro que más se
+   usa y no debe costar un toque extra. */
+@media (max-width: 860px) {
+  .catalog-filters__barra {
+    gap: var(--space-3);
+  }
+  .catalog-filters__titulo {
+    flex: 1 1 100%;
+    margin-right: 0;
+  }
+  .catalog-chips {
+    /* Tira desplazable: no envuelve ni empuja la rejilla hacia abajo. */
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    flex: 1 1 auto;
+    padding-bottom: 2px;
+  }
+  .catalog-chips::-webkit-scrollbar {
+    display: none;
+  }
+  .catalog-filters__abrir {
+    display: inline-flex;
+    flex: 0 0 auto;
+  }
+
+  /* Cajón CERRADO por defecto. El estado abierto lo marca la clase
+     .is-abierto, no el atributo `hidden`: en escritorio este mismo
+     elemento es contenido visible (la fila de campos), y `hidden`
+     tendría que significar lo mismo en los dos anchos. «Abierto» es un
+     concepto exclusivo del móvil, así que es una clase. */
+  .catalog-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(92vw, 380px);
+    z-index: var(--z-modal);
+    display: none;
+    flex-direction: column;
+    padding: var(--space-5);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--color-night);
+    border-left: 1px solid var(--color-border-soft);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .catalog-panel.is-abierto {
+    display: flex;
+  }
+
+  /* El velo solo se dibuja con el panel abierto; cerrado lleva `hidden`
+     y la regla de protección de arriba lo retira del flujo, de modo que
+     nunca intercepta pulsaciones. */
+  .catalog-panel__velo {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-overlay);
+    background: rgba(2, 4, 8, 0.7);
+  }
+
+  .catalog-panel__cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-bottom: var(--space-4);
+    margin-bottom: var(--space-5);
+    border-bottom: 1px solid var(--color-border-faint);
+  }
+
+  .catalog-panel__titulo {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: var(--text-lg);
+    color: var(--color-white);
+  }
+
+  .catalog-panel__cerrar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--color-silver);
+    background: none;
+    border: 1px solid var(--color-border-faint);
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+  }
+  .catalog-panel__cerrar:hover {
+    color: var(--color-white);
+    border-color: var(--color-border-soft);
+  }
+
+  .catalog-panel__campos {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-5);
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+  .catalog-filter,
+  .catalog-filter--search {
+    flex: 1 1 auto;
+  }
+  .catalog-filter__reset {
+    width: 100%;
+    align-self: stretch;
+  }
+
+  .catalog-panel__pie {
+    display: block;
+    margin-top: auto;
+    padding-top: var(--space-5);
+  }
+  .catalog-panel__pie .btn {
+    width: 100%;
+  }
+
+  /* Bloquea el desplazamiento del fondo mientras el panel está abierto */
+  body.has-panel-abierto {
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 680px) {
+  .catalog-outro__acciones .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .catalog-intro__title {
+    font-size: 2rem;
+  }
+  .catalog-state {
+    padding-inline: var(--space-4);
+  }
+}
+
+/* ================================================================
+   7. MOVIMIENTO REDUCIDO
+   ================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .breadcrumb__item a,
+  .catalog-chip {
+    transition: none;
+  }
+}
+
+/* Acción de salida dentro del estado «sin resultados» */
+.catalog-state__accion {
+  margin-top: var(--space-6);
+}

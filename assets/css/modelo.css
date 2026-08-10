@@ -1,0 +1,469 @@
+/* ================================================================
+   ARENAS MOTOCICLETAS — modelo.css
+   Ficha individual de modelo (modelo.html).
+
+   Se carga después de style.css y de catalogo.css: hereda las
+   variables, la tipografía, los botones, la tarjeta de modelo y la
+   cáscara de página interior. Aquí solo vive la ficha.
+   ================================================================ */
+
+.modelo-wrap {
+  padding-block: clamp(var(--space-8), 5vw, var(--space-16)) var(--sec-pad);
+}
+
+/* ================================================================
+   1. ESTADOS DE PÁGINA
+   ================================================================ */
+
+.modelo-cargando {
+  padding-block: clamp(var(--space-10), 8vw, var(--space-20));
+  text-align: center;
+  font-size: var(--text-sm);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.modelo-error {
+  padding: clamp(var(--space-10), 7vw, var(--space-20)) clamp(var(--space-5), 4vw, var(--space-10));
+  text-align: center;
+  border: 1px dashed var(--color-border-soft);
+  border-radius: var(--radius-md);
+  background: rgba(12, 23, 40, 0.4);
+}
+
+.modelo-error__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(1.8rem, 4.4vw, 3rem);
+  line-height: 1;
+  color: var(--color-white);
+  margin-bottom: var(--space-4);
+}
+
+.modelo-error__text {
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--color-silver);
+  max-width: 54ch;
+  margin: 0 auto var(--space-8);
+}
+
+.modelo-error__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-4);
+}
+
+/* ================================================================
+   2. CABECERA DE LA FICHA
+   ================================================================ */
+
+.modelo-ficha__cabecera {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(var(--space-6), 4vw, var(--space-12));
+  align-items: start;
+}
+
+/* ---- Galería ---- */
+.modelo-galeria__marco {
+  border-radius: var(--radius-md);
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--color-border-faint);
+}
+
+.modelo-galeria__miniaturas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  list-style: none;
+  padding: 0;
+  margin-top: var(--space-4);
+}
+
+.modelo-galeria__miniatura {
+  display: block;
+  width: 96px;
+  padding: 0;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-faint);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color var(--duration-base) var(--ease-out),
+              transform var(--duration-base) var(--ease-out);
+}
+
+.modelo-galeria__miniatura img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.modelo-galeria__miniatura:hover {
+  border-color: var(--color-border-soft);
+  transform: translateY(-2px);
+}
+
+/* Estado activo por borde Y por sombra: nunca solo por color */
+.modelo-galeria__miniatura.is-active {
+  border-color: var(--brand-blue-bright);
+  box-shadow: 0 0 0 1px var(--brand-blue-bright);
+}
+
+/* ---- Transición al cambiar de color ----
+   Solo opacity: ni desplazamientos ni escalados que muevan el layout.
+   La imagen se atenúa, se sustituye y vuelve. */
+.modelo-galeria__principal,
+.modelo-galeria__miniaturas {
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+
+.modelo-galeria.is-cambiando .modelo-galeria__principal,
+.modelo-galeria.is-cambiando .modelo-galeria__miniaturas {
+  opacity: 0.35;
+}
+
+/* ---- Columna de texto ---- */
+.modelo-intro {
+  display: grid;
+  gap: var(--space-4);
+  justify-items: start;
+}
+
+.modelo-meta {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--brand-blue-bright);
+}
+
+.modelo-titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  line-height: 0.98;
+  color: var(--color-white);
+}
+
+.modelo-etiquetas .moto-card__tags {
+  margin: 0;
+}
+
+/* ================================================================
+   2b. SELECTOR DE COLOR
+   Muestras circulares sobrias. El estado seleccionado se distingue por
+   contorno Y por el nombre en texto, nunca solo por el color: quien no
+   percibe la diferencia cromática sigue sabiendo qué ha elegido.
+   ================================================================ */
+
+.modelo-colores-wrap {
+  width: 100%;
+}
+
+.modelo-colores-sel {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+}
+
+.modelo-colores-sel__label,
+.modelo-colores-sel__unico-label {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.modelo-colores-sel__grupo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.modelo-colores-sel__nombre {
+  font-size: var(--text-sm);
+  letter-spacing: 0.04em;
+  color: var(--color-white);
+  min-height: 1.2em;
+}
+
+.modelo-colores-sel__unico {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-silver);
+}
+
+/* ---- Muestra de color ---- */
+.color-dot {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  /* El relleno llega por style desde un hex ya validado (#RGB/#RRGGBB).
+     Este fondo es el que se ve si no hubiera hex utilizable. */
+  background: linear-gradient(160deg, #1b2942, #0a1424);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+}
+
+/* Sin hex válido: se marca con una diagonal para que no parezca un
+   color oscuro real. El nombre en texto sigue siendo la referencia. */
+.color-dot--sin-hex {
+  background-image: linear-gradient(
+    135deg,
+    transparent 44%,
+    rgba(151, 205, 255, 0.5) 44%,
+    rgba(151, 205, 255, 0.5) 56%,
+    transparent 56%
+  );
+}
+
+.color-dot--mini {
+  width: 14px;
+  height: 14px;
+}
+
+.color-dot--swatch {
+  width: 26px;
+  height: 26px;
+}
+
+/* Objetivo táctil de 44px garantizado por el botón, aunque el círculo
+   visible sea menor. */
+.color-swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--color-border-faint);
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.color-swatch:hover {
+  border-color: var(--color-border-soft);
+}
+
+.color-swatch.is-active {
+  border-color: var(--brand-blue-bright);
+  box-shadow: 0 0 0 1px var(--brand-blue-bright);
+  transform: scale(1.04);
+}
+
+/* Variante sin publicar: solo puede verse en previsualización local */
+.color-swatch--borrador {
+  border-style: dashed;
+  border-color: rgba(245, 158, 11, 0.55);
+}
+
+.modelo-desc-corta {
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  line-height: 1.65;
+  color: var(--color-silver);
+  max-width: 52ch;
+}
+
+.modelo-precio {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  color: var(--color-white);
+}
+
+.modelo-cta {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+  margin-top: var(--space-2);
+}
+
+.modelo-cta__nota {
+  font-size: var(--text-xs);
+  line-height: 1.6;
+  color: var(--color-muted);
+  max-width: 44ch;
+}
+
+/* ================================================================
+   3. CUERPO DE LA FICHA
+   ================================================================ */
+
+.modelo-cuerpo {
+  display: grid;
+  gap: clamp(var(--space-8), 4vw, var(--space-12));
+  margin-top: clamp(var(--space-10), 6vw, var(--space-16));
+  padding-top: clamp(var(--space-8), 4vw, var(--space-12));
+  border-top: 1px solid var(--color-border-faint);
+}
+
+.modelo-bloque__titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+  line-height: 1.05;
+  color: var(--color-white);
+  margin-bottom: var(--space-5);
+}
+
+.modelo-prosa {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 68ch;
+}
+
+.modelo-prosa p {
+  font-size: var(--text-base);
+  line-height: 1.8;
+  color: var(--color-silver);
+}
+
+.modelo-beneficios {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  list-style: none;
+  padding: 0;
+}
+
+.modelo-beneficios li {
+  position: relative;
+  padding: var(--space-5) var(--space-5) var(--space-5) var(--space-8);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  color: var(--color-silver);
+  background: rgba(12, 23, 40, 0.6);
+  border: 1px solid var(--color-border-faint);
+  border-radius: var(--radius-md);
+}
+
+.modelo-beneficios li::before {
+  content: "";
+  position: absolute;
+  left: var(--space-5);
+  top: calc(var(--space-5) + 0.6em);
+  width: 12px;
+  height: 1px;
+  background: var(--brand-blue-bright);
+}
+
+.modelo-colores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  list-style: none;
+  padding: 0;
+}
+
+.modelo-color {
+  font-size: var(--text-sm);
+  letter-spacing: 0.04em;
+  color: var(--color-silver);
+  padding: 8px 16px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-pill);
+}
+
+.modelo-volver {
+  margin-top: clamp(var(--space-8), 4vw, var(--space-12));
+  font-size: var(--text-sm);
+}
+
+.modelo-volver a {
+  color: var(--brand-blue-ice);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--duration-base) var(--ease-out);
+}
+
+.modelo-volver a:hover {
+  border-bottom-color: var(--brand-blue-bright);
+}
+
+/* ================================================================
+   4. RELACIONADOS
+   ================================================================ */
+
+.modelo-relacionados {
+  margin-top: var(--sec-pad);
+  padding-top: clamp(var(--space-8), 4vw, var(--space-12));
+  border-top: 1px solid var(--color-border-faint);
+}
+
+.catalog-grid--compacta {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+}
+
+/* ================================================================
+   5. RESPONSIVE
+   ================================================================ */
+
+@media (max-width: 900px) {
+  .modelo-ficha__cabecera {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .modelo-galeria__miniatura {
+    width: 76px;
+  }
+  .modelo-cta .btn,
+  .modelo-error__acciones .btn {
+    width: 100%;
+  }
+  .modelo-cta {
+    justify-items: stretch;
+    width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .modelo-titulo {
+    font-size: 1.8rem;
+  }
+  .modelo-galeria__miniatura {
+    width: 64px;
+  }
+}
+
+/* ================================================================
+   6. MOVIMIENTO REDUCIDO
+   ================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .modelo-galeria__miniatura,
+  .modelo-volver a,
+  .color-swatch,
+  .modelo-galeria__principal,
+  .modelo-galeria__miniaturas {
+    transition: none;
+  }
+  .modelo-galeria__miniatura:hover,
+  .color-swatch.is-active {
+    transform: none;
+  }
+  /* Sin atenuación: el cambio de color es instantáneo */
+  .modelo-galeria.is-cambiando .modelo-galeria__principal,
+  .modelo-galeria.is-cambiando .modelo-galeria__miniaturas {
+    opacity: 1;
+  }
+}

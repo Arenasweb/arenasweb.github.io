@@ -1,0 +1,150 @@
+{
+  "_ADVERTENCIA": "DATOS DE DEMOSTRACIÓN — NO SON COLORES REALES DE NINGUNA MOTOCICLETA. Existen únicamente para validar el componente selector de color antes de que existan fotografías y colores confirmados. NINGÚN dato de este archivo procede de gerencia ni del Google Sheets real.",
+  "_carga": "catalogo-data.js solo solicita este archivo cuando previewActivo() es cierto, es decir: ?preview=1 Y host local (localhost / 127.0.0.1) a la vez. En GitHub Pages nunca se pide, así que no puede alcanzar producción bajo ninguna circunstancia.",
+  "_espejo": "Cada fila replica exactamente las 15 columnas del contrato COLORES_MODELO_WEB. Ver docs/colores-modelo-web.md.",
+  "_imagenes": "Las rutas apuntan a las portadas editoriales que YA existen en assets/portadas/. Se reutilizan solo para que el cambio de imagen sea visible en QA: NO representan el color indicado ni el modelo indicado. Por eso este archivo nunca debe publicarse.",
+  "_cobertura": "El conjunto cubre a propósito los casos límite de la batería de pruebas: modelo con cinco colores, con dos, con uno, color inactivo, color en BORRADOR, color sin imagen, hex inválido, ruta insegura y color de un modelo inexistente.",
+
+  "ok": true,
+  "version": "2.0",
+  "hoja": "COLORES_MODELO_WEB",
+  "source": "local-demo",
+  "generatedAt": "",
+
+  "colores": [
+    {
+      "id": "DEMO-C01", "modelo_id": "MW-10", "slug_color": "demo-negro",
+      "nombre_color": "DEMO Negro", "hex_color": "#111111",
+      "imagen_principal": "assets/portadas/camino-deportiva-desktop.webp",
+      "imagen_mobile": "assets/portadas/camino-deportiva-mobile.webp",
+      "galeria_1": "assets/portadas/camino-ciudad-desktop.webp",
+      "galeria_2": "assets/portadas/camino-aventura-desktop.webp",
+      "orden": 10, "activo": true, "estado_aprobacion": "APROBADO",
+      "alt_text": "Imagen de demostración para QA del selector de color",
+      "foco_imagen": "center center", "ultima_revision": ""
+    },
+    {
+      "id": "DEMO-C02", "modelo_id": "MW-10", "slug_color": "demo-azul",
+      "nombre_color": "DEMO Azul", "hex_color": "#184FA3",
+      "imagen_principal": "assets/portadas/camino-aventura-desktop.webp",
+      "imagen_mobile": "assets/portadas/camino-aventura-mobile.webp",
+      "galeria_1": "assets/portadas/camino-trabajo-desktop.webp",
+      "galeria_2": "",
+      "orden": 20, "activo": true, "estado_aprobacion": "APROBADO",
+      "alt_text": "Imagen de demostración para QA del selector de color",
+      "foco_imagen": "center center", "ultima_revision": ""
+    },
+    {
+      "id": "DEMO-C03", "modelo_id": "MW-10", "slug_color": "demo-rojo",
+      "nombre_color": "DEMO Rojo", "hex_color": "#B51623",
+      "imagen_principal": "assets/portadas/camino-ciudad-desktop.webp",
+      "imagen_mobile": "assets/portadas/camino-ciudad-mobile.webp",
+      "galeria_1": "", "galeria_2": "",
+      "orden": 30, "activo": true, "estado_aprobacion": "APROBADO",
+      "alt_text": "", "foco_imagen": "50% 40%", "ultima_revision": ""
+    },
+    {
+      "_caso": "hex inválido: la muestra cae al relleno neutro con diagonal y el nombre sigue identificando la variante",
+      "id": "DEMO-C04", "modelo_id": "MW-10", "slug_color": "demo-hex-invalido",
+      "nombre_color": "DEMO Hex inválido", "hex_color": "rojo brillante; background:url(x)",
+      "imagen_principal": "assets/portadas/camino-trabajo-desktop.webp",
+      "imagen_mobile": "", "galeria_1": "", "galeria_2": "",
+      "orden": 40, "activo": true, "estado_aprobacion": "APROBADO",
+      "alt_text": "", "foco_imagen": "", "ultima_revision": ""
+    },
+    {
+      "_caso": "quinto color: comprueba que la fila de muestras envuelve bien",
+      "id": "DEMO-C05", "modelo_id": "MW-10", "slug_color": "demo-plata",
+      "nombre_color": "DEMO Plata", "hex_color": "#c9ced8",
+      "imagen_principal": "assets/portadas/camino-deportiva-desktop.webp",
+      "imagen_mobile": "", "galeria_1": "", "galeria_2": "",
+      "orden": 50, "activo": true, "estado_aprobacion": "APROBADO",
+      "alt_text": "", "foco_imagen": "", "ultima_revision": ""
+    },
+
+    {
+      "_caso": "modelo con exactamente DOS colores aprobados",
+      "id": "DEMO-C06", "modelo_id": "MW-11", "slug_color": "demo-negro",
+      "nombre_color": "DEMO Negro", "hex_color": "#111111",
+      "imagen_principal": "assets/portadas/camino-deportiva-desktop.webp",
+      "imagen_mobile": "assets/portadas/camino-deportiva-mobile.webp",
+      "galeria_1": "", "galeria_2": "",
+      "orden": 10, "activo": true, "estado_aprobacion": "APROBADO",
+      "alt_text": "", "foco_imagen": "", "ultima_revision": ""
+    },
+    {
+      "id": "DEMO-C07", "modelo_id": "MW-11", "slug_color": "demo-blanco",
+      "nombre_color": "DEMO Blanco", "hex_color": "#eef1f6",
+      "imagen_principal": "assets/portadas/camino-ciudad-desktop.webp",
+      "imagen_mobile": "", "galeria_1": "", "galeria_2": "",
+      "orden": 20, "activo": true, "estado_aprobacion": "APROBADO",
+      "alt_text": "", "foco_imagen": "", "ultima_revision": ""
+    },
+
+    {
+      "_caso": "modelo con UN SOLO color: no debe dibujarse selector, solo el dato",
+      "id": "DEMO-C08", "modelo_id": "MW-05", "slug_color": "demo-unico",
+      "nombre_color": "DEMO Color único", "hex_color": "#2f5d3a",
+      "imagen_principal": "assets/portadas/camino-trabajo-desktop.webp",
+      "imagen_mobile": "assets/portadas/camino-trabajo-mobile.webp",
+      "galeria_1": "", "galeria_2": "",
+      "orden": 10, "activo": true, "estado_aprobacion": "APROBADO",
+      "alt_text": "", "foco_imagen": "", "ultima_revision": ""
+    },
+
+    {
+      "_caso": "activo=false: fuera en producción, visible en preview marcado como borrador",
+      "id": "DEMO-C09", "modelo_id": "MW-13", "slug_color": "demo-inactivo",
+      "nombre_color": "DEMO Inactivo", "hex_color": "#7a4fd0",
+      "imagen_principal": "assets/portadas/camino-deportiva-desktop.webp",
+      "imagen_mobile": "", "galeria_1": "", "galeria_2": "",
+      "orden": 10, "activo": false, "estado_aprobacion": "APROBADO",
+      "alt_text": "", "foco_imagen": "", "ultima_revision": ""
+    },
+    {
+      "_caso": "estado BORRADOR: mismo tratamiento que el inactivo",
+      "id": "DEMO-C10", "modelo_id": "MW-13", "slug_color": "demo-borrador",
+      "nombre_color": "DEMO Borrador", "hex_color": "#d08a4f",
+      "imagen_principal": "assets/portadas/camino-aventura-desktop.webp",
+      "imagen_mobile": "", "galeria_1": "", "galeria_2": "",
+      "orden": 20, "activo": true, "estado_aprobacion": "BORRADOR",
+      "alt_text": "", "foco_imagen": "", "ultima_revision": ""
+    },
+
+    {
+      "_caso": "sin imagen_principal: debe descartarse siempre, con aviso en consola",
+      "id": "DEMO-C11", "modelo_id": "MW-13", "slug_color": "demo-sin-imagen",
+      "nombre_color": "DEMO Sin imagen", "hex_color": "#333333",
+      "imagen_principal": "", "imagen_mobile": "", "galeria_1": "", "galeria_2": "",
+      "orden": 30, "activo": true, "estado_aprobacion": "APROBADO",
+      "alt_text": "", "foco_imagen": "", "ultima_revision": ""
+    },
+    {
+      "_caso": "ruta insegura (host externo): rutaImagen la rechaza, la variante se descarta",
+      "id": "DEMO-C12", "modelo_id": "MW-13", "slug_color": "demo-ruta-insegura",
+      "nombre_color": "DEMO Ruta insegura", "hex_color": "#444444",
+      "imagen_principal": "https://ejemplo-no-autorizado.test/moto.jpg",
+      "imagen_mobile": "", "galeria_1": "", "galeria_2": "",
+      "orden": 40, "activo": true, "estado_aprobacion": "APROBADO",
+      "alt_text": "", "foco_imagen": "", "ultima_revision": ""
+    },
+    {
+      "_caso": "escape de directorio: también debe rechazarse",
+      "id": "DEMO-C13", "modelo_id": "MW-13", "slug_color": "demo-ruta-traversal",
+      "nombre_color": "DEMO Traversal", "hex_color": "#555555",
+      "imagen_principal": "assets/../../secreto.png",
+      "imagen_mobile": "", "galeria_1": "", "galeria_2": "",
+      "orden": 50, "activo": true, "estado_aprobacion": "APROBADO",
+      "alt_text": "", "foco_imagen": "", "ultima_revision": ""
+    },
+    {
+      "_caso": "modelo_id inexistente: los colores se descartan sin crear ningún modelo fantasma",
+      "id": "DEMO-C14", "modelo_id": "MW-NO-EXISTE", "slug_color": "demo-huerfano",
+      "nombre_color": "DEMO Huérfano", "hex_color": "#666666",
+      "imagen_principal": "assets/portadas/camino-ciudad-desktop.webp",
+      "imagen_mobile": "", "galeria_1": "", "galeria_2": "",
+      "orden": 10, "activo": true, "estado_aprobacion": "APROBADO",
+      "alt_text": "", "foco_imagen": "", "ultima_revision": ""
+    }
+  ]
+}

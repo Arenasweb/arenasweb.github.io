@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO base. modelo-app.js sustituye title, description y canonical
+         por los del modelo abierto en cuanto los datos están validados. -->
+    <meta name="description" content="Ficha de modelo del catálogo de ARENAS MOTOCICLETAS, Cusco." />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="ARENAS MOTOCICLETAS" />
+    <meta name="theme-color" content="#050608" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_PE" />
+    <meta property="og:title" content="Ficha de modelo — ARENAS MOTOCICLETAS" />
+    <meta property="og:description" content="Ficha de modelo del catálogo de ARENAS MOTOCICLETAS, Cusco." />
+    <meta property="og:url" content="https://arenasweb.github.io/modelo.html" />
+    <meta property="og:site_name" content="ARENAS MOTOCICLETAS" />
+    <!-- og:image DESACTIVADO hasta que exista la pieza social oficial aprobada. -->
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Ficha de modelo — ARENAS MOTOCICLETAS" />
+    <meta name="twitter:description" content="Ficha de modelo del catálogo de ARENAS MOTOCICLETAS, Cusco." />
+
+    <title>Ficha de modelo — ARENAS MOTOCICLETAS</title>
+
+    <link rel="icon" href="data:," />
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="assets/css/catalogo.css" />
+    <link rel="stylesheet" href="assets/css/modelo.css" />
+    <link rel="canonical" href="https://arenasweb.github.io/modelo.html" />
+
+    <!--
+      Datos estructurados: modelo-app.js escribe aquí SOLO un BreadcrumbList.
+      No se emite Product mientras no haya precio y disponibilidad
+      verificados: publicar un Product incompleto sería una afirmación
+      comercial que este proyecto no puede sostener.
+    -->
+    <script type="application/ld+json" id="modelo-jsonld"></script>
+
+    <script>document.documentElement.classList.add("js");</script>
+  </head>
+
+  <body class="page-interior">
+    <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
+
+    <header class="site-header site-header--solid" role="banner">
+      <a class="brand brand--link" href="index.html" aria-label="ARENAS MOTOCICLETAS, ir al inicio">
+        <!-- Logo oficial PENDIENTE de incorporación — wordmark textual provisional -->
+        <div class="brand-lockup">
+          <p class="brand-name">ARENAS</p>
+          <p class="brand-sub">MOTOCICLETAS</p>
+        </div>
+      </a>
+
+      <nav class="site-nav site-nav--interior" aria-label="Navegación principal">
+        <a href="index.html" class="nav-link">Inicio</a>
+        <a href="catalogo.html" class="nav-link">Catálogo</a>
+        <a href="index.html#contacto" class="nav-link btn btn-primary nav-cta">Consultar</a>
+      </nav>
+    </header>
+
+    <main id="main-content" role="main" tabindex="-1">
+      <div class="wrap modelo-wrap">
+        <nav class="breadcrumb" aria-label="Ruta de navegación">
+          <ol class="breadcrumb__lista" id="modelo-breadcrumb-lista">
+            <li class="breadcrumb__item"><a href="index.html">Inicio</a></li>
+            <li class="breadcrumb__item"><a href="catalogo.html">Catálogo</a></li>
+          </ol>
+        </nav>
+
+        <!-- Aviso de previsualización: solo en localhost con ?preview=1 -->
+        <p id="modelo-preview" class="catalog-preview" role="status" hidden>
+          Previsualización local: este modelo todavía no está publicado.
+        </p>
+
+        <!-- Estado de carga: se retira en cuanto la capa de datos responde,
+             tanto si hay ficha como si no. Nunca queda visible de forma
+             indefinida. -->
+        <p id="modelo-cargando" class="modelo-cargando" role="status">Cargando ficha…</p>
+
+        <!-- ========================================================
+             ESTADO DE ERROR / SLUG INEXISTENTE
+             Encabezado propio para que la página conserve un H1 útil
+             aunque el modelo pedido no exista.
+        ======================================================== -->
+        <section id="modelo-error" class="modelo-error" hidden>
+          <h1 id="modelo-titulo-error" class="modelo-error__title">Modelo no encontrado</h1>
+          <p id="modelo-error-texto" class="modelo-error__text">
+            La dirección no corresponde a ningún modelo del catálogo.
+          </p>
+          <div class="modelo-error__acciones">
+            <a class="btn btn-primary btn-hero" href="catalogo.html">Volver al catálogo</a>
+            <a class="btn btn-secondary btn-hero" href="index.html">Ir al inicio</a>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             FICHA DEL MODELO
+        ======================================================== -->
+        <article id="modelo-ficha" class="modelo-ficha" hidden>
+          <div class="modelo-ficha__cabecera">
+            <div class="modelo-galeria" id="modelo-galeria"></div>
+
+            <div class="modelo-intro">
+              <p id="modelo-meta" class="modelo-meta" hidden></p>
+              <h1 id="modelo-titulo" class="modelo-titulo">Ficha de modelo</h1>
+              <div id="modelo-etiquetas" class="modelo-etiquetas" hidden></div>
+
+              <!-- Selector de color. Lo rellena modelo-app.js desde las
+                   variantes aprobadas de COLORES_MODELO_WEB. Sin
+                   variantes permanece oculto: no se muestra una caja
+                   vacía ni un «color no disponible». -->
+              <div id="modelo-colores" class="modelo-colores-wrap" hidden></div>
+
+              <p id="modelo-desc-corta" class="modelo-desc-corta" hidden></p>
+              <p id="modelo-precio" class="modelo-precio" hidden></p>
+              <div id="modelo-cta" class="modelo-cta"></div>
+            </div>
+          </div>
+
+          <div id="modelo-cuerpo" class="modelo-cuerpo" hidden></div>
+
+          <p class="modelo-volver">
+            <a href="catalogo.html">&larr; Volver al catálogo completo</a>
+          </p>
+        </article>
+
+        <!-- ========================================================
+             MODELOS RELACIONADOS
+        ======================================================== -->
+        <section id="modelo-relacionados" class="modelo-relacionados" aria-labelledby="modelo-relacionados-heading" hidden>
+          <h2 id="modelo-relacionados-heading" class="modelo-bloque__titulo">También te puede interesar</h2>
+          <div id="modelo-relacionados-grid" class="catalog-grid catalog-grid--compacta"></div>
+        </section>
+
+        <noscript>
+          <p class="catalog-noscript">
+            Esta ficha necesita JavaScript para cargarse. Puedes ver el listado completo en el
+            <a href="catalogo.html">catálogo</a> o volver al <a href="index.html">inicio</a>.
+          </p>
+        </noscript>
+      </div>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+      <div class="wrap footer-grid">
+        <div class="footer-brand">
+          <!-- Logo oficial PENDIENTE de incorporación — wordmark textual provisional -->
+          <div class="brand-lockup">
+            <p class="brand-name">ARENAS</p>
+            <p class="brand-sub">MOTOCICLETAS</p>
+          </div>
+          <p class="footer-claim">Rutas que te definen. Libertad que te mueve.</p>
+        </div>
+
+        <nav class="footer-links" aria-label="Navegación de pie de página">
+          <a href="index.html">Inicio</a>
+          <a href="catalogo.html">Catálogo</a>
+          <a href="index.html#camino">Camino</a>
+          <a href="index.html#nosotros">Nosotros</a>
+          <a href="index.html#contacto">Contacto</a>
+        </nav>
+
+        <nav class="footer-legal" aria-label="Páginas legales">
+          <a href="legales/privacidad.html">Privacidad</a>
+          <a href="legales/terminos.html">Términos</a>
+          <a href="legales/cookies.html">Cookies</a>
+          <a href="legales/datos-personales.html">Datos personales</a>
+          <a href="legales/condiciones-financiamiento.html">Financiamiento</a>
+          <a href="legales/libro-reclamaciones.html">Libro de reclamaciones</a>
+        </nav>
+
+        <p class="footer-copy">
+          &copy; 2026 ARENAS MOTOCICLETAS &bull; Todos los derechos reservados
+        </p>
+      </div>
+    </footer>
+
+    <script src="assets/js/catalogo/catalogo-utils.js" defer></script>
+    <script src="assets/js/catalogo/catalogo-schema.js" defer></script>
+    <script src="assets/js/catalogo/catalogo-data.js" defer></script>
+    <script src="assets/js/catalogo/catalogo-ui.js" defer></script>
+    <script src="assets/js/catalogo/modelo-app.js" defer></script>
+  </body>
+</html>

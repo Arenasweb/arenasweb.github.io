@@ -100,6 +100,7 @@
       <nav id="site-nav" class="site-nav" aria-label="Navegación principal">
         <a href="#hero" class="nav-link">Inicio</a>
         <a href="#camino" class="nav-link">Camino</a>
+        <a href="catalogo.html" class="nav-link">Catálogo</a>
         <a href="#colecciones" class="nav-link">Colecciones</a>
         <a href="#experiencia" class="nav-link">Experiencia</a>
         <a href="#nosotros" class="nav-link">Nosotros</a>
@@ -649,9 +650,36 @@
               </a>
             </div>
 
-            <!-- Zona reservada para el catálogo dinámico futuro (fuente aprobada).
-                 Permanece oculta y sin fetch hasta la fase de integración. -->
-            <div id="catalog-grid" data-dynamic-slot="catalogo" data-fallback-state="editorial" hidden></div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             SECCIÓN 5b: MODELOS DESTACADOS
+             La portada NO es un catálogo: muestra como máximo cuatro
+             modelos activos y marcados como destacados, y deriva el
+             resto a catalogo.html.
+             assets/js/catalogo/catalogo-app.js → iniciarDestacados().
+             Mientras no haya destacados publicables la sección queda
+             oculta: preferimos que no exista a dejar un hueco vacío.
+        ============================================================ -->
+        <section
+          id="destacados"
+          class="featured-section"
+          data-section="featured"
+          aria-labelledby="destacados-heading"
+          hidden
+        >
+          <div class="wrap">
+            <header class="block-head">
+              <h2 id="destacados-heading" class="block-title">Modelos destacados</h2>
+              <p class="block-lead">Una selección breve. El catálogo completo, con todas las categorías y líneas, está a un clic.</p>
+            </header>
+
+            <div id="destacados-grid" class="catalog-grid"></div>
+
+            <div class="featured-actions">
+              <a class="btn btn-primary btn-hero" href="catalogo.html">Ver catálogo completo</a>
+            </div>
           </div>
         </section>
 
@@ -943,6 +971,14 @@
           </p>
         </div>
       </footer>
+
+    <!-- Subsistema de catálogo, compartido con catalogo.html y modelo.html.
+         En la portada solo alimenta la tira de modelos destacados. -->
+    <script src="assets/js/catalogo/catalogo-utils.js" defer></script>
+    <script src="assets/js/catalogo/catalogo-schema.js" defer></script>
+    <script src="assets/js/catalogo/catalogo-data.js" defer></script>
+    <script src="assets/js/catalogo/catalogo-ui.js" defer></script>
+    <script src="assets/js/catalogo/catalogo-app.js" defer></script>
 
     <script src="script.js" defer></script>
   </body>

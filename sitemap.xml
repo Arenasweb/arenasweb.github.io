@@ -9,4 +9,14 @@
     <loc>https://arenasweb.github.io/</loc>
     <priority>1.00</priority>
   </url>
+  <url>
+    <loc>https://arenasweb.github.io/catalogo.html</loc>
+    <priority>0.80</priority>
+  </url>
+  <!--
+    modelo.html NO se lista: es una plantilla paramétrica (?slug=…) cuyo
+    contenido se construye en el cliente. Cuando existan fichas con
+    contenido aprobado y una forma de servirlas como HTML indexable,
+    añadir aquí una URL por modelo publicado.
+  -->
 </urlset>

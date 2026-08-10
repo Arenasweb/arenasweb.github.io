@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO base -->
+    <meta name="description" content="Catálogo de motocicletas de ARENAS MOTOCICLETAS en Cusco: modelos para ciudad, trabajo, deportiva, ruta y aventura, y carga y transporte." />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="ARENAS MOTOCICLETAS" />
+    <meta name="theme-color" content="#050608" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_PE" />
+    <meta property="og:title" content="Catálogo de motocicletas — ARENAS MOTOCICLETAS" />
+    <meta property="og:description" content="Modelos para ciudad, trabajo, deportiva, ruta y aventura, y carga y transporte. Filtra por categoría o por línea." />
+    <meta property="og:url" content="https://arenasweb.github.io/catalogo.html" />
+    <meta property="og:site_name" content="ARENAS MOTOCICLETAS" />
+    <!-- og:image DESACTIVADO hasta que exista la pieza social oficial aprobada. -->
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Catálogo de motocicletas — ARENAS MOTOCICLETAS" />
+    <meta name="twitter:description" content="Modelos para ciudad, trabajo, deportiva, ruta y aventura, y carga y transporte." />
+
+    <title>Catálogo de motocicletas — ARENAS MOTOCICLETAS</title>
+
+    <!-- Favicon vacío provisional: evita el 404 automático a /favicon.ico -->
+    <link rel="icon" href="data:," />
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="assets/css/catalogo.css" />
+    <link rel="canonical" href="https://arenasweb.github.io/catalogo.html" />
+
+    <!--
+      Datos estructurados: SOLO miga de pan y descripción de la página.
+      No se publica ItemList de productos ni Product: exigirían precio y
+      disponibilidad verificados por modelo, y este catálogo todavía no
+      publica ninguno de los dos. Un schema incompleto es una afirmación
+      comercial que no se puede sostener.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://arenasweb.github.io/" },
+          { "@type": "ListItem", "position": 2, "name": "Catálogo", "item": "https://arenasweb.github.io/catalogo.html" }
+        ]
+      }
+    </script>
+
+    <script>document.documentElement.classList.add("js");</script>
+  </head>
+
+  <body class="page-interior">
+    <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
+
+    <!-- ============================================================
+         HEADER de página interior: sólido desde el primer píxel y sin
+         menú desplegable. La navegación funciona sin JavaScript.
+    ============================================================ -->
+    <header class="site-header site-header--solid" role="banner">
+      <a class="brand brand--link" href="index.html" aria-label="ARENAS MOTOCICLETAS, ir al inicio">
+        <!-- Logo oficial PENDIENTE de incorporación — wordmark textual provisional -->
+        <div class="brand-lockup">
+          <p class="brand-name">ARENAS</p>
+          <p class="brand-sub">MOTOCICLETAS</p>
+        </div>
+      </a>
+
+      <nav class="site-nav site-nav--interior" aria-label="Navegación principal">
+        <a href="index.html" class="nav-link">Inicio</a>
+        <a href="catalogo.html" class="nav-link" aria-current="page">Catálogo</a>
+        <a href="index.html#contacto" class="nav-link btn btn-primary nav-cta">Consultar</a>
+      </nav>
+    </header>
+
+    <main id="main-content" role="main" tabindex="-1">
+      <!-- ============================================================
+           INTRODUCCIÓN ESTÁTICA
+           Este bloque es HTML plano a propósito: es el contenido que ven
+           los buscadores y quien navegue sin JavaScript. La rejilla se
+           construye después en el cliente.
+      ============================================================ -->
+      <section class="catalog-intro" aria-labelledby="catalogo-heading">
+        <div class="wrap">
+          <nav class="breadcrumb" aria-label="Ruta de navegación">
+            <ol class="breadcrumb__lista">
+              <li class="breadcrumb__item"><a href="index.html">Inicio</a></li>
+              <li class="breadcrumb__item"><span aria-current="page">Catálogo</span></li>
+            </ol>
+          </nav>
+
+          <p class="catalog-intro__kicker">Catálogo ARENAS</p>
+          <h1 id="catalogo-heading" class="catalog-intro__title">Todos nuestros modelos</h1>
+          <p class="catalog-intro__lead">
+            Reunimos aquí cada modelo del catálogo de ARENAS MOTOCICLETAS, organizado por la
+            forma en que se usa: ciudad, trabajo, deportiva, ruta y aventura, y carga y transporte.
+          </p>
+          <p class="catalog-intro__text">
+            Filtra por categoría o por línea, o escribe directamente el nombre del modelo que
+            buscas. Cada ficha reúne únicamente la información confirmada de ese modelo: cuando
+            un dato todavía está en revisión, simplemente no aparece.
+          </p>
+
+          <noscript>
+            <p class="catalog-noscript">
+              La rejilla de modelos necesita JavaScript para cargarse. Puedes seguir navegando
+              por el sitio con normalidad: vuelve al
+              <a href="index.html">inicio</a>, revisa las secciones
+              <a href="index.html#camino">Encuentra tu camino</a> y
+              <a href="index.html#colecciones">Colecciones</a>, o escríbenos desde la sección de
+              <a href="index.html#contacto">contacto</a>.
+            </p>
+          </noscript>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           REJILLA DEL CATÁLOGO
+           assets/js/catalogo/catalogo-app.js rellena #catalogo-grid.
+      ============================================================ -->
+      <section class="catalog-section" aria-label="Modelos del catálogo">
+        <div class="wrap">
+          <!-- Aviso de previsualización: solo aparece en localhost con ?preview=1 -->
+          <p id="catalogo-preview" class="catalog-preview" role="status" hidden>
+            Previsualización local: se están mostrando también los modelos sin publicar.
+          </p>
+
+          <!-- Aviso de fuente degradada: solo si el origen remoto falló -->
+          <p id="catalogo-aviso" class="catalog-notice" role="status" aria-live="polite" hidden></p>
+
+          <!-- ========================================================
+               FILTROS
+               Las opciones NO están escritas aquí: catalogo-app.js las
+               genera a partir de los datos, y oculta cualquier filtro
+               que se quedaría sin opciones utilizables.
+
+               Una sola estructura para las dos experiencias. En
+               escritorio los controles se ven desplegados; por debajo
+               de 860px se recogen en un panel que abre el botón
+               «Filtrar», y los chips de categoría quedan siempre a la
+               vista como filtro rápido.
+          ======================================================== -->
+          <div id="catalogo-filtros" class="catalog-filters" hidden>
+            <div class="catalog-filters__barra">
+              <p class="catalog-filters__titulo">Encuentra la moto ideal para ti</p>
+
+              <!-- Filtro rápido de categoría. Siempre visible. -->
+              <div
+                id="catalogo-chips"
+                class="catalog-chips"
+                role="group"
+                aria-label="Filtrar por categoría"
+                hidden
+              ></div>
+
+              <button
+                type="button"
+                id="catalogo-abrir-filtros"
+                class="btn btn-secondary catalog-filters__abrir"
+                aria-expanded="false"
+                aria-controls="catalogo-panel"
+              >
+                Filtrar
+              </button>
+            </div>
+
+            <!-- Velo: solo pinta y cierra al tocar fuera en móvil. -->
+            <div id="catalogo-panel-velo" class="catalog-panel__velo" hidden></div>
+
+            <div
+              id="catalogo-panel"
+              class="catalog-panel"
+              role="search"
+              aria-label="Filtros del catálogo"
+            >
+              <div class="catalog-panel__cabecera">
+                <p class="catalog-panel__titulo">Filtros</p>
+                <button
+                  type="button"
+                  id="catalogo-cerrar-filtros"
+                  class="catalog-panel__cerrar"
+                  aria-label="Cerrar filtros"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+
+              <div class="catalog-panel__campos">
+                <div class="catalog-filter catalog-filter--search">
+                  <label for="filtro-busqueda" class="catalog-filter__label">Buscar modelo</label>
+                  <input
+                    type="search"
+                    id="filtro-busqueda"
+                    class="form-input"
+                    placeholder="Ej.: Pulsar, Dominar, Torito"
+                    autocomplete="off"
+                  />
+                </div>
+
+                <div class="catalog-filter">
+                  <label for="filtro-linea" class="catalog-filter__label">Línea</label>
+                  <select id="filtro-linea" class="form-select">
+                    <option value="">Todas las líneas</option>
+                  </select>
+                </div>
+
+                <button type="button" id="filtro-limpiar" class="btn btn-secondary catalog-filter__reset" hidden>
+                  Limpiar filtros
+                </button>
+              </div>
+
+              <!-- Solo se ve dentro del panel móvil: en escritorio no hay
+                   nada que «aplicar», el filtrado ya es inmediato. -->
+              <div class="catalog-panel__pie">
+                <button type="button" id="catalogo-aplicar-filtros" class="btn btn-primary">
+                  Ver resultados
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <p id="catalogo-contador" class="catalog-count" role="status" aria-live="polite"></p>
+
+          <div id="catalogo-grid" class="catalog-grid"></div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           CIERRE — derivación al contacto, sin prometer canal activo
+      ============================================================ -->
+      <section class="catalog-outro" aria-labelledby="catalogo-outro-heading">
+        <div class="wrap catalog-outro__inner">
+          <h2 id="catalogo-outro-heading" class="catalog-outro__title">¿No sabes cuál elegir?</h2>
+          <p class="catalog-outro__text">
+            La sección <em>Encuentra tu camino</em> ordena los modelos por el tipo de recorrido
+            que haces cada día. Es un buen punto de partida antes de mirar fichas.
+          </p>
+          <div class="catalog-outro__acciones">
+            <a class="btn btn-primary btn-hero" href="index.html#camino">Encuentra tu camino</a>
+            <a class="btn btn-secondary btn-hero" href="index.html#contacto">Ir a contacto</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ============================================================
+         FOOTER
+    ============================================================ -->
+    <footer class="site-footer" role="contentinfo">
+      <div class="wrap footer-grid">
+        <div class="footer-brand">
+          <!-- Logo oficial PENDIENTE de incorporación — wordmark textual provisional -->
+          <div class="brand-lockup">
+            <p class="brand-name">ARENAS</p>
+            <p class="brand-sub">MOTOCICLETAS</p>
+          </div>
+          <p class="footer-claim">Rutas que te definen. Libertad que te mueve.</p>
+        </div>
+
+        <nav class="footer-links" aria-label="Navegación de pie de página">
+          <a href="index.html">Inicio</a>
+          <a href="catalogo.html">Catálogo</a>
+          <a href="index.html#camino">Camino</a>
+          <a href="index.html#nosotros">Nosotros</a>
+          <a href="index.html#contacto">Contacto</a>
+        </nav>
+
+        <nav class="footer-legal" aria-label="Páginas legales">
+          <a href="legales/privacidad.html">Privacidad</a>
+          <a href="legales/terminos.html">Términos</a>
+          <a href="legales/cookies.html">Cookies</a>
+          <a href="legales/datos-personales.html">Datos personales</a>
+          <a href="legales/condiciones-financiamiento.html">Financiamiento</a>
+          <a href="legales/libro-reclamaciones.html">Libro de reclamaciones</a>
+        </nav>
+
+        <p class="footer-copy">
+          &copy; 2026 ARENAS MOTOCICLETAS &bull; Todos los derechos reservados
+        </p>
+      </div>
+    </footer>
+
+    <script src="assets/js/catalogo/catalogo-utils.js" defer></script>
+    <script src="assets/js/catalogo/catalogo-schema.js" defer></script>
+    <script src="assets/js/catalogo/catalogo-data.js" defer></script>
+    <script src="assets/js/catalogo/catalogo-ui.js" defer></script>
+    <script src="assets/js/catalogo/catalogo-app.js" defer></script>
+  </body>
+</html>

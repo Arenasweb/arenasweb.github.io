@@ -6,10 +6,8 @@
  *   1. CONFIG              — constantes globales y referencia a configuracion.json
  *   2. DOM helpers         — selectores reutilizables
  *   3. WhatsApp helpers    — generación de mensajes y URLs
- *   4. Catalog loader      — carga desde data/catalogo.json y data/slots/*.json (cargarSlots)
- *   5. Render catalog      — construcción de tarjetas HTML
- *   6. Search / filters    — filtrado del catálogo
- *   7. Featured model      — modelo destacado dinámico
+ *   4. Config / slots      — carga de configuracion.json y data/slots/*.json
+ *   5. Datos pendientes    — señalización de contenido no confirmado
  *   8. Stores render       — renderizar sedes desde configuracion.json
  *   9. Motion observer     — IntersectionObserver para reveals
  *  10. Form handling       — validación y envío del formulario
@@ -17,6 +15,11 @@
  *  12. Footer year         — año actual en footer
  *  13. Analytics           — placeholders de eventos
  *  14. Init                — orquestación de arranque
+ *
+ * EL CATÁLOGO NO VIVE AQUÍ. Su capa de datos, su esquema, sus tarjetas y
+ * sus controladores están en assets/js/catalogo/, porque los comparten
+ * index.html, catalogo.html y modelo.html. Este archivo solo se carga en
+ * la portada. Ver docs/catalogo-modelos-web.md.
  */
 
 
@@ -27,7 +30,9 @@
 
 const CONFIG = {
   whatsapp:       "PENDIENTE",      // valor de arranque — cargarConfiguracion() lo sobrescribe con data/configuracion.json → whatsapp. whatsappConfirmado() bloquea cualquier enlace mientras no haya aprobación, independientemente de este valor.
-  catalogPath:    "data/catalogo.json",
+  // El catálogo ya no se carga desde aquí: su origen y su fallback los
+  // gestiona assets/js/catalogo/catalogo-data.js (CONFIG.rutaLocal),
+  // compartido por index.html, catalogo.html y modelo.html.
   configPath:     "data/configuracion.json",
   slotsPath:      "data/slots",     // carpeta de slots editables
   slotsArchivos: [
@@ -337,18 +342,6 @@ function normalizarEstadoAprobacion(valor) {
   return ESTADOS_APROBACION_VALIDOS.includes(limpio) ? limpio : "pendiente";
 }
 
-/** Esquemas mínimos de tipos esperados por dominio de datos */
-const ESQUEMA_MOTO = {
-  id: "string", linea: "string", modelo: "string",
-  visible: "boolean", destacado: "boolean", orden: "number",
-  precio: "string", precioConfirmado: "boolean",
-  cuotaInicial: "string", cuotaConfirmada: "boolean",
-  stock: "string", stockConfirmado: "boolean",
-  descripcion: "string",
-  promocion: "string", promocionConfirmada: "boolean",
-  estadoAprobacion: "string",
-};
-
 const ESQUEMA_SEDE = {
   id: "string", nombre: "string", direccion: "string",
   telefono: "string", whatsapp: "string",
@@ -443,23 +436,6 @@ function validarCamposRequeridos(objeto, camposRequeridos, etiqueta) {
  * (ej. un precio marcado como confirmado pero sin valor real).
  * @returns {string[]} lista de errores (vacía si es consistente)
  */
-function validarConsistenciaMoto(moto) {
-  const errores = [];
-  if (moto.precioConfirmado === true && !moto.precio) {
-    errores.push(`catalogo:${moto.id}: precioConfirmado=true pero falta "precio"`);
-  }
-  if (moto.cuotaConfirmada === true && !moto.cuotaInicial) {
-    errores.push(`catalogo:${moto.id}: cuotaConfirmada=true pero falta "cuotaInicial"`);
-  }
-  if (moto.stockConfirmado === true && !moto.stock) {
-    errores.push(`catalogo:${moto.id}: stockConfirmado=true pero falta "stock"`);
-  }
-  if (moto.promocionConfirmada === true && !moto.promocion) {
-    errores.push(`catalogo:${moto.id}: promocionConfirmada=true pero falta "promocion"`);
-  }
-  return errores;
-}
-
 function validarConsistenciaSede(sede) {
   const errores = [];
   const aprobada = normalizarEstadoAprobacion(sede.estadoAprobacion) === "aprobado";
@@ -479,31 +455,9 @@ function validarConsistenciaPromocion(promo) {
 }
 
 /**
- * Filtra el catálogo crudo dejando solo registros que cumplen:
- * tipos correctos (ESQUEMA_MOTO), campos obligatorios presentes, y
+ * Filtra las sedes crudas dejando solo registros que cumplen:
+ * tipos correctos (ESQUEMA_SEDE), campos obligatorios presentes, y
  * consistencia entre los flags *Confirmado y su valor real asociado.
- */
-function validarYFiltrarCatalogo(catalogoRaw) {
-  if (!Array.isArray(catalogoRaw)) return [];
-  return catalogoRaw.filter((moto) => {
-    const etiqueta = `catalogo:${moto && moto.id}`;
-    const errores = [
-      ...validarContraEsquema(moto, ESQUEMA_MOTO, etiqueta),
-      ...validarCamposRequeridos(moto, CAMPOS_REQUERIDOS_MOTO, etiqueta),
-      ...(moto && typeof moto === "object" ? validarConsistenciaMoto(moto) : []),
-    ];
-    if (errores.length) {
-      console.warn("[ARENAS] Registro de catálogo inválido, se omite:", errores);
-      return false;
-    }
-    return true;
-  });
-}
-
-/**
- * Filtra sedes crudas dejando solo registros que cumplen: tipos
- * correctos (ESQUEMA_SEDE), campos obligatorios presentes, y consistencia
- * entre estadoAprobacion y los datos reales de la sede.
  */
 function validarYFiltrarSedes(sedesRaw) {
   if (!Array.isArray(sedesRaw)) return [];
@@ -657,30 +611,12 @@ function validarSlotsCargados() {
 
 
 /* ================================================================
-   MÓDULO 4: CATALOG LOADER
-   Carga el catálogo desde data/catalogo.json (fuente local, fallback
-   permanente — ver punto 7 de docs/correcciones-auditoria-codex.md).
-   Preparado para evaluar Google Sheets en una fase futura, sin
-   conectarlo todavía. Ver docs/contrato-datos-google-sheets.md.
+   MÓDULO 4: CARGA DE CONFIGURACIÓN Y SLOTS
+   El cliente de datos del catálogo dejó de vivir aquí: ahora está en
+   assets/js/catalogo/catalogo-data.js y lo comparten las tres páginas
+   (index.html, catalogo.html y modelo.html). Este módulo conserva solo
+   la carga de data/configuracion.json y de data/slots/*.json.
    ================================================================ */
-
-/**
- * Carga y retorna el catálogo como array de objetos.
- * @returns {Promise<Array>}
- */
-async function cargarCatalogo() {
-  try {
-    const res = await fetch(CONFIG.catalogPath);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    STATE.catalogo = validarYFiltrarCatalogo(Array.isArray(data) ? data : []);
-    return STATE.catalogo;
-  } catch (err) {
-    console.error("[ARENAS] Error cargando catálogo:", err);
-    STATE.catalogo = [];
-    return [];
-  }
-}
 
 /**
  * Carga la configuración general desde data/configuracion.json.
@@ -746,60 +682,11 @@ async function cargarSlots() {
 
 
 /* ================================================================
-   MÓDULO 5: RENDER CATALOG
-   Genera las tarjetas HTML del catálogo desde el array de datos.
+   MÓDULO 5: SEÑALIZACIÓN DE DATOS PENDIENTES
+   El render del catálogo se trasladó a assets/js/catalogo/catalogo-ui.js
+   y a catalogo-app.js. Aquí queda la utilidad compartida que marca un
+   dato como no confirmado en el resto de la página.
    ================================================================ */
-
-/**
- * Construye el nodo de imagen de una tarjeta. Si la ruta no carga
- * (asset aún no subido), se reemplaza por el placeholder visual en
- * lugar de dejar una imagen rota — ver docs/correcciones-auditoria-codex.md.
- * @param {Object} moto
- * @returns {HTMLElement}
- */
-function crearImagenMoto(moto) {
-  const wrapper = createElement("div", { class: "moto-card__image" });
-
-  // Sin ruta, o ruta externa no permitida (regla: no imágenes externas)
-  if (!moto.fotoPrincipal || !esRutaLocalSegura(moto.fotoPrincipal)) {
-    if (moto.fotoPrincipal && !esRutaLocalSegura(moto.fotoPrincipal)) {
-      console.warn(`[ARENAS] Imagen externa no permitida para "${moto.modelo}", se usa placeholder.`);
-    }
-    wrapper.appendChild(crearPlaceholderImagen(moto));
-    return wrapper;
-  }
-
-  const img = createElement("img", {
-    src: moto.fotoPrincipal,
-    alt: `Moto ${moto.modelo}${moto.version ? " " + moto.version : ""}`,
-    loading: "lazy",
-    width: "400",
-    height: "225",
-  });
-
-  // Si el archivo aún no existe en assets/, se sustituye por el placeholder
-  // en vez de mostrar una imagen rota (evita el problema de assets faltantes).
-  img.addEventListener("error", () => {
-    wrapper.replaceChildren(crearPlaceholderImagen(moto));
-  }, { once: true });
-
-  wrapper.appendChild(img);
-  return wrapper;
-}
-
-function crearPlaceholderImagen(moto) {
-  const mensaje =
-    (STATE.slots &&
-      STATE.slots["ui-placeholders"] &&
-      STATE.slots["ui-placeholders"].mensajesEstadoPendiente &&
-      STATE.slots["ui-placeholders"].mensajesEstadoPendiente.imagenNoDisponible) ||
-    "Imagen no disponible";
-
-  return createElement("div", {
-    class: "placeholder-media",
-    "aria-label": `${mensaje}: ${moto.modelo}`,
-  });
-}
 
 /**
  * Crea un badge de dato pendiente/no confirmado. Por defecto usa la
@@ -829,323 +716,6 @@ function crearBadgePendiente(titulo, etiquetaPersonalizada) {
   badge.textContent = etiquetaPersonalizada || etiquetaDefault;
   return badge;
 }
-
-/**
- * Construye una tarjeta de moto completa usando DOM seguro (sin innerHTML
- * con datos provenientes de JSON editable) para evitar inyección de HTML
- * si data/catalogo.json llega a contener texto no controlado.
- * @param {Object} moto - objeto del catálogo
- * @returns {HTMLElement}
- */
-function crearTarjetaMoto(moto) {
-  const nombreCompleto = `${moto.linea} ${moto.modelo} ${moto.version || ""}`.trim();
-
-  const card = createElement("article", {
-    class: "moto-card reveal-fade",
-    role: "listitem",
-    "aria-label": nombreCompleto,
-    "data-id":    moto.id || "",
-    "data-linea": moto.linea || "",
-  });
-
-  card.appendChild(crearImagenMoto(moto));
-
-  // --- Cuerpo de la tarjeta ---
-  const body = createElement("div", { class: "moto-card__body" });
-
-  const linea = createElement("span", { class: "moto-card__linea" });
-  linea.textContent = moto.linea || "";
-  body.appendChild(linea);
-
-  const nombre = createElement("h3", { class: "moto-card__nombre" });
-  nombre.textContent = `${moto.modelo || ""}${moto.version ? " " + moto.version : ""}`;
-  body.appendChild(nombre);
-
-  const desc = createElement("p", { class: "moto-card__desc" });
-  desc.textContent = moto.descripcion || "";
-  body.appendChild(desc);
-
-  // La promoción solo se publica como beneficio confirmado si el negocio
-  // la aprobó explícitamente. Sin esas dos condiciones, no se renderiza
-  // nada — no hay badge "pendiente" aquí porque mostrar el texto de la
-  // promoción (aunque marcado como referencial) seguiría siendo una
-  // promesa comercial no autorizada. Ver docs/control-publicacion-datos.md.
-  if (
-    moto.promocion &&
-    moto.promocionConfirmada === true &&
-    normalizarEstadoAprobacion(moto.estadoAprobacion) === "aprobado"
-  ) {
-    const promoBadge = createElement("span", { class: "moto-card__badge" });
-    promoBadge.textContent = moto.promocion;
-    body.appendChild(promoBadge);
-  }
-
-  // Precio: nunca se muestra el valor real si no está confirmado por gerencia
-  const placeholdersUI = STATE.slots && STATE.slots["ui-placeholders"] && STATE.slots["ui-placeholders"].mensajesEstadoPendiente;
-
-  const priceRow = createElement("p", { class: "moto-card__price" });
-  if (moto.precioConfirmado === true && moto.precio) {
-    priceRow.textContent = moto.precio;
-  } else {
-    priceRow.appendChild(
-      crearBadgePendiente(
-        (placeholdersUI && placeholdersUI.consultarPrecioTitulo) || "Precio no confirmado todavía",
-        (placeholdersUI && placeholdersUI.consultarPrecio) || "Consultar"
-      )
-    );
-  }
-  body.appendChild(priceRow);
-
-  // Cuota inicial: misma regla — solo se muestra si cuotaConfirmada === true
-  const cuotaRow = createElement("p", { class: "moto-card__meta" });
-  cuotaRow.appendChild(document.createTextNode("Cuota inicial: "));
-  if (moto.cuotaConfirmada === true && moto.cuotaInicial) {
-    cuotaRow.appendChild(document.createTextNode(moto.cuotaInicial));
-  } else {
-    cuotaRow.appendChild(
-      crearBadgePendiente(
-        (placeholdersUI && placeholdersUI.consultarCuotaTitulo) || "Cuota no confirmada todavía",
-        (placeholdersUI && placeholdersUI.consultarCuota) || "Consultar"
-      )
-    );
-  }
-  body.appendChild(cuotaRow);
-
-  // Stock: misma regla — solo se muestra si stockConfirmado === true
-  const stockRow = createElement("p", { class: "moto-card__meta" });
-  stockRow.appendChild(document.createTextNode("Disponibilidad: "));
-  if (moto.stockConfirmado === true && moto.stock) {
-    stockRow.appendChild(document.createTextNode(moto.stock));
-  } else {
-    stockRow.appendChild(
-      crearBadgePendiente(
-        (placeholdersUI && placeholdersUI.consultarDisponibilidadTitulo) || "Stock no confirmado todavía",
-        (placeholdersUI && placeholdersUI.consultarDisponibilidad) || "Consultar disponibilidad"
-      )
-    );
-  }
-  body.appendChild(stockRow);
-
-  card.appendChild(body);
-
-  // --- Footer de la tarjeta ---
-  const footer = createElement("div", { class: "moto-card__footer" });
-
-  const btnCotizar = createElement("button", {
-    class: "btn btn-primary",
-    type: "button",
-    "aria-label": `Consultar por ${nombreCompleto || "esta moto"} vía WhatsApp`,
-    "data-modelo": `${moto.modelo || ""} ${moto.version || ""}`.trim(),
-    "data-accion": "whatsapp",
-  });
-  btnCotizar.textContent = "Cotizar";
-  if (!whatsappConfirmado()) {
-    btnCotizar.setAttribute("aria-disabled", "true");
-  }
-  btnCotizar.addEventListener("click", () => {
-    consultarPorWhatsApp(`${moto.modelo || ""} ${moto.version || ""}`.trim());
-  });
-  footer.appendChild(btnCotizar);
-
-  const meta = createElement("span", { class: "moto-card__meta" });
-  meta.textContent = moto.cilindrada || "";
-  footer.appendChild(meta);
-
-  card.appendChild(footer);
-
-  return card;
-}
-
-/**
- * Renderiza el catálogo filtrado en el grid del DOM.
- * @param {Array} motos - array filtrado de motos a mostrar
- */
-function renderizarCatalogo(motos = STATE.catalogo) {
-  const grid = $("#catalog-grid");
-  if (!grid) return;
-
-  clearElement(grid);
-
-  const visibles = motos.filter(m => m.visible !== false);
-
-  if (visibles.length === 0) {
-    const mensaje =
-      (STATE.slots &&
-        STATE.slots["ui-placeholders"] &&
-        STATE.slots["ui-placeholders"].mensajesError &&
-        STATE.slots["ui-placeholders"].mensajesError.catalogoSinResultados) ||
-      "No se encontraron motos con los filtros seleccionados.";
-    const aviso = createElement("p", { class: "catalog-loading", role: "status" });
-    aviso.textContent = mensaje;
-    grid.appendChild(aviso);
-    return;
-  }
-
-  // Ordenar por campo "orden" si existe
-  const ordenados = [...visibles].sort((a, b) => (a.orden || 99) - (b.orden || 99));
-
-  const fragment = document.createDocumentFragment();
-  ordenados.forEach((moto, i) => {
-    const card = crearTarjetaMoto(moto);
-    // Retraso escalonado para stagger effect
-    if (i < 6) card.classList.add(`stagger-${i + 1}`);
-    fragment.appendChild(card);
-  });
-
-  grid.appendChild(fragment);
-
-  // Activar observers en nuevas tarjetas
-  inicializarAnimaciones();
-}
-
-
-/* ================================================================
-   MÓDULO 6: SEARCH / FILTERS
-   Filtrado del catálogo por línea, uso y cilindrada.
-   ================================================================ */
-
-/**
- * Aplica los filtros activos al catálogo y re-renderiza.
- */
-function filtrarCatalogo() {
-  const { linea, uso, cilindrada } = STATE.filtroActivo;
-
-  const resultado = STATE.catalogo.filter(moto => {
-    if (linea && moto.linea !== linea) return false;
-
-    // Filtro por cilindrada (rangos aproximados en cc numérico)
-    if (cilindrada) {
-      const cc = parseCilindrada(moto.cilindrada);
-      if (!matchCilindrada(cc, cilindrada)) return false;
-    }
-
-    // Filtro por uso — campo opcional "uso" en el JSON (pendiente de añadir)
-    if (uso && moto.uso && moto.uso !== uso) return false;
-
-    return true;
-  });
-
-  renderizarCatalogo(resultado);
-  trackEvent("catalogo_filtrado", STATE.filtroActivo);
-}
-
-/** Extrae los cc numéricos del string de cilindrada */
-function parseCilindrada(str = "") {
-  const match = str.match(/(\d+)/);
-  return match ? parseInt(match[1], 10) : 0;
-}
-
-/** Compara cc con el rango del filtro seleccionado */
-function matchCilindrada(cc, rango) {
-  switch (rango) {
-    case "100-150": return cc >= 100 && cc <= 150;
-    case "150-250": return cc > 150 && cc <= 250;
-    case "250-400": return cc > 250 && cc <= 400;
-    case "400+":    return cc > 400;
-    default:        return true;
-  }
-}
-
-/**
- * Inicializa los controles de búsqueda y sus listeners.
- */
-function inicializarBuscador() {
-  const selectLinea      = $("#filtro-linea");
-  const selectUso        = $("#filtro-uso");
-  const selectCilindrada = $("#filtro-cilindrada");
-  const btnBuscar        = $("#btn-buscar");
-
-  if (!selectLinea || !selectUso || !selectCilindrada || !btnBuscar) return;
-
-  // Sincronizar estado al cambiar selects
-  selectLinea.addEventListener("change", () => {
-    STATE.filtroActivo.linea = selectLinea.value;
-  });
-
-  selectUso.addEventListener("change", () => {
-    STATE.filtroActivo.uso = selectUso.value;
-  });
-
-  selectCilindrada.addEventListener("change", () => {
-    STATE.filtroActivo.cilindrada = selectCilindrada.value;
-  });
-
-  btnBuscar.addEventListener("click", () => {
-    filtrarCatalogo();
-    // Scroll suave hacia el catálogo
-    $("#catalogo")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    trackEvent("busqueda_ejecutada", STATE.filtroActivo);
-  });
-
-  // Ver todos los modelos
-  const btnVerTodos = $("#btn-ver-todos");
-  if (btnVerTodos) {
-    btnVerTodos.addEventListener("click", () => {
-      STATE.filtroActivo = { linea: "", uso: "", cilindrada: "" };
-      selectLinea.value = "";
-      selectUso.value = "";
-      selectCilindrada.value = "";
-      renderizarCatalogo();
-      trackEvent("ver_todos_catalogo");
-    });
-  }
-}
-
-
-/* ================================================================
-   MÓDULO 7: FEATURED MODEL
-   Modelo destacado dinámico basado en CONFIG.modeloDestacadoId
-   PENDIENTE: implementar render completo cuando diseño esté definido
-   ================================================================ */
-
-function actualizarModeloDestacado() {
-  if (!STATE.catalogo.length) return;
-
-  const moto = STATE.catalogo.find(m => m.id === CONFIG.modeloDestacadoId);
-  if (!moto) return;
-
-  // Actualizar encabezado y descripción con el modelo real configurado
-  const headingEl = $("#modelo-destacado-heading");
-  if (headingEl) {
-    headingEl.textContent = `${moto.linea} ${moto.modelo}${moto.version ? " " + moto.version : ""}`.trim();
-  }
-  const descEl = $("#modelo-destacado .section-header p");
-  if (descEl && moto.descripcion) {
-    descEl.textContent = moto.descripcion;
-  }
-
-  // Precio del modelo destacado: misma regla que en el catálogo — nunca
-  // se muestra el valor real si precioConfirmado no es exactamente true.
-  const precioContainer = $(".featured-price");
-  if (precioContainer) {
-    clearElement(precioContainer); // seguro: solo limpiamos markup propio, no inyectamos datos externos
-    if (moto.precioConfirmado === true && moto.precio) {
-      precioContainer.appendChild(document.createTextNode("Desde "));
-      const strong = createElement("strong");
-      strong.textContent = moto.precio;
-      precioContainer.appendChild(strong);
-    } else {
-      const placeholdersUI = STATE.slots && STATE.slots["ui-placeholders"] && STATE.slots["ui-placeholders"].mensajesEstadoPendiente;
-      precioContainer.appendChild(
-        crearBadgePendiente(
-          (placeholdersUI && placeholdersUI.consultarPrecioTitulo) || "Precio no confirmado todavía",
-          (placeholdersUI && placeholdersUI.consultarPrecio) || "Consultar"
-        )
-      );
-    }
-  }
-
-  // Actualizar CTA WhatsApp del modelo destacado
-  const ctaDestacado = $("#modelo-destacado .btn-primary");
-  if (ctaDestacado) {
-    ctaDestacado.setAttribute("data-accion", "whatsapp");
-    ctaDestacado.addEventListener("click", (e) => {
-      e.preventDefault();
-      consultarPorWhatsApp(moto.modelo);
-    });
-  }
-}
-
 
 /* ================================================================
    MÓDULO 8: STORES RENDER
@@ -1908,20 +1478,8 @@ async function inicializarApp() {
     // 1c. Deshabilitar visualmente WhatsApp si el número no está confirmado
     aplicarEstadoWhatsApp();
 
-    // 2. Cargar catálogo
-    await cargarCatalogo();
-
-    // 3. Renderizar catálogo en el DOM
-    renderizarCatalogo();
-
-    // 4. Actualizar modelo destacado
-    actualizarModeloDestacado();
-
-    // 5. Renderizar tiendas (fuente: data/slots/sedes.json)
+    // 4. Renderizar tiendas (fuente: data/slots/sedes.json)
     renderizarTiendas();
-
-    // 6. Inicializar buscador y filtros
-    inicializarBuscador();
 
     // 7. Inicializar sistema de animaciones
     inicializarAnimaciones();
