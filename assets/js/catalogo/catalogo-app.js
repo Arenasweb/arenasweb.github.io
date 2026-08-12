@@ -53,7 +53,22 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     { valor: "nombre-desc", texto: "Nombre: Z a A" },
   ];
 
-  var filtros = { texto: "", categoria: "", linea: "", color: "", orden: ORDEN_RECOMENDADO };
+  /**
+   * EL ÚNICO ESTADO DE FILTRADO DEL CATÁLOGO.
+   *
+   * Lo leen y lo escriben el buscador directo, el asistente guiado, el
+   * panel lateral, los chips de categoría y la URL. No hay una segunda
+   * copia en ningún sitio: se accede a él por `NS.app.store`, y quien
+   * necesite enterarse de un cambio se suscribe en vez de espiar el DOM
+   * o de disparar eventos falsos sobre controles.
+   */
+  var filtros = { texto: "", categoria: "", linea: "", color: "", precio: "", orden: ORDEN_RECOMENDADO };
+
+  /** Avisados en cada repintado. Ver `suscribir`. */
+  var suscriptores = [];
+
+  /** Estado del catálogo, una vez cargado. Lo necesita el store. */
+  var estadoActual = null;
 
   /** Referencias de la interfaz de filtros, resueltas una sola vez. */
   var dom = {};
@@ -66,31 +81,27 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
      ESTADO DE LOS FILTROS
      ================================================================ */
 
+  /** Claves de `filtros` que son criterios; `orden` no lo es. */
+  var CRITERIOS = ["texto", "categoria", "linea", "color", "precio"];
+
   function hayFiltrosActivos() {
-    return !!(filtros.texto || filtros.categoria || filtros.linea || filtros.color);
+    return numeroFiltrosActivos() > 0;
   }
 
   function numeroFiltrosActivos() {
-    return [filtros.texto, filtros.categoria, filtros.linea, filtros.color].filter(Boolean).length;
+    return CRITERIOS.filter(function (k) { return !!filtros[k]; }).length;
   }
 
-  /** ¿Este modelo cumple TODOS los criterios activos? */
+  /**
+   * ¿Este modelo cumple TODOS los criterios activos?
+   *
+   * La regla vive en `catalogo-finder.js` y aquí solo se le pasa el
+   * estado actual. Tener dos predicados —uno para la rejilla y otro
+   * para el asistente— es exactamente la duplicación que se separa con
+   * el tiempo y acaba mostrando cosas distintas en cada sitio.
+   */
   function coincide(modelo) {
-    if (filtros.categoria && modelo.categoria !== filtros.categoria) return false;
-    if (filtros.linea && modelo.linea !== filtros.linea) return false;
-    if (filtros.color) {
-      var colores = modelo.colors || [];
-      var tieneColor = colores.some(function (color) { return color.slug === filtros.color; });
-      if (!tieneColor) return false;
-    }
-    if (filtros.texto) {
-      var busqueda = U.normalizarBusqueda(filtros.texto);
-      var indice = U.normalizarBusqueda(
-        [modelo.modelo, modelo.titulo, modelo.linea, modelo.subcategoria].filter(Boolean).join(" ")
-      );
-      if (indice.indexOf(busqueda) === -1) return false;
-    }
-    return true;
+    return NS.finder.coincide(modelo, filtros);
   }
 
   function compararNombre(a, b) {
@@ -131,6 +142,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     ["categoria", "categoria"],
     ["linea", "linea"],
     ["color", "color"],
+    ["precio", "precio"],
     ["q", "texto"],
     ["orden", "orden"],
   ];
@@ -157,22 +169,49 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     }
   }
 
+  /**
+   * ¿Es este valor admisible para este criterio, con los datos de hoy?
+   *
+   * Un mismo validador para la URL y para el store: así un valor que la
+   * URL rechazaría tampoco puede entrar por el asistente, y al revés.
+   */
+  function criterioValido(clave, valor, estado) {
+    if (!valor) return true; // vaciar siempre es válido
+    if (clave === "texto") return true;
+    if (clave === "categoria") {
+      return NS.data.categoriasConModelos(estado).some(function (c) { return c.slug === valor; });
+    }
+    if (clave === "linea") return NS.data.lineas(estado).indexOf(valor) !== -1;
+    if (clave === "color") {
+      return coloresDisponibles(estado).some(function (c) { return c.valor === valor; });
+    }
+    if (clave === "precio") {
+      return NS.finder.rangosPrecio(estado.modelos, estado.config)
+        .some(function (t) { return t.valor === valor; });
+    }
+    if (clave === "orden") {
+      return ordenesDisponibles(estado).some(function (o) { return o.valor === valor; });
+    }
+    return false;
+  }
+
   /** Lee los filtros iniciales de la URL, validándolos contra los datos. */
   function leerFiltrosDeUrl(estado) {
-    var categoria = U.paramUrl("categoria", 40).toLowerCase();
-    var linea = U.paramUrl("linea", 60);
-    var color = U.paramUrl("color", 60).toLowerCase();
-    var texto = U.paramUrl("q", 80);
-    var orden = U.paramUrl("orden", 30).toLowerCase();
-
-    var categoriasValidas = NS.data.categoriasConModelos(estado).map(function (c) {
-      return c.slug;
+    var leidos = {
+      categoria: U.paramUrl("categoria", 40).toLowerCase(),
+      linea: U.paramUrl("linea", 60),
+      color: U.paramUrl("color", 60).toLowerCase(),
+      precio: U.paramUrl("precio", 40).toLowerCase(),
+      texto: U.paramUrl("q", NS.finder.MAX_CONSULTA),
+      orden: U.paramUrl("orden", 30).toLowerCase(),
+    };
+    // Un valor desconocido no rompe nada ni deja el catálogo en blanco:
+    // simplemente se ignora y ese criterio queda sin aplicar.
+    Object.keys(leidos).forEach(function (clave) {
+      if (leidos[clave] && criterioValido(clave, leidos[clave], estado)) {
+        filtros[clave] = leidos[clave];
+      }
     });
-    if (categoriasValidas.indexOf(categoria) !== -1) filtros.categoria = categoria;
-    if (NS.data.lineas(estado).indexOf(linea) !== -1) filtros.linea = linea;
-    if (coloresDisponibles(estado).some(function (c) { return c.valor === color; })) filtros.color = color;
-    if (texto) filtros.texto = texto;
-    if (ordenesDisponibles(estado).some(function (o) { return o.valor === orden; })) filtros.orden = orden;
   }
 
   /* ================================================================
@@ -230,6 +269,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     }
     actualizarChips();
     sincronizarUrl();
+    notificar(estado, lista.length);
   }
 
   /* ================================================================
@@ -329,18 +369,94 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     });
   }
 
+  /**
+   * Vuelca el estado a los controles nativos.
+   *
+   * Es la contrapartida de tener un solo estado: cuando el asistente
+   * escribe una categoría, el `select` de línea y el buscador tienen que
+   * enterarse. Se asigna el valor directamente — nada de disparar
+   * eventos `change` falsos, que reentrarían en los escuchadores y
+   * volverían a escribir el estado que acaba de cambiar.
+   */
+  function reflejarEnControles() {
+    if (dom.busqueda && dom.busqueda.value !== filtros.texto) dom.busqueda.value = filtros.texto;
+    if (dom.linea) dom.linea.value = filtros.linea;
+    if (dom.color) dom.color.value = filtros.color;
+    if (dom.orden) dom.orden.value = filtros.orden;
+  }
+
   function limpiarFiltros(estado, devolverFoco) {
-    filtros.texto = "";
-    filtros.categoria = "";
-    filtros.linea = "";
-    filtros.color = "";
+    CRITERIOS.forEach(function (k) { filtros[k] = ""; });
     filtros.orden = ORDEN_RECOMENDADO;
-    if (dom.busqueda) dom.busqueda.value = "";
-    if (dom.linea) dom.linea.value = "";
-    if (dom.color) dom.color.value = "";
-    if (dom.orden) dom.orden.value = ORDEN_RECOMENDADO;
+    reflejarEnControles();
     pintarRejilla(estado);
     if (devolverFoco && dom.busqueda) dom.busqueda.focus();
+  }
+
+  /* ================================================================
+     STORE — la puerta por la que se toca el estado
+     ================================================================ */
+
+  /** Copia del estado. Se devuelve copia para que nadie escriba por detrás. */
+  function obtenerCriterios() {
+    var salida = {};
+    CRITERIOS.concat(["orden"]).forEach(function (k) { salida[k] = filtros[k]; });
+    return salida;
+  }
+
+  /**
+   * Escribe uno o varios criterios y repinta.
+   *
+   * Cada valor se valida contra los datos cargados: un criterio que no
+   * existe se ignora en vez de dejar el catálogo en cero resultados sin
+   * explicación. Devuelve las claves que sí se aplicaron.
+   */
+  function aplicarCriterios(parciales) {
+    if (!parciales || !estadoActual) return [];
+    var aplicadas = [];
+    Object.keys(parciales).forEach(function (clave) {
+      if (CRITERIOS.indexOf(clave) === -1 && clave !== "orden") return;
+      var valor = parciales[clave];
+      valor = valor === null || valor === undefined ? "" : String(valor);
+      if (clave === "texto") valor = U.texto(valor, NS.finder.MAX_CONSULTA);
+      if (!criterioValido(clave, valor, estadoActual)) return;
+      if (clave === "orden" && !valor) valor = ORDEN_RECOMENDADO;
+      if (filtros[clave] === valor) return;
+      filtros[clave] = valor;
+      aplicadas.push(clave);
+    });
+    if (aplicadas.length) {
+      reflejarEnControles();
+      pintarRejilla(estadoActual);
+    }
+    return aplicadas;
+  }
+
+  function limpiarCriterios() {
+    if (estadoActual) limpiarFiltros(estadoActual, false);
+  }
+
+  /**
+   * Avisa tras cada repintado, con el estado y el número de resultados.
+   * Devuelve la función para darse de baja.
+   */
+  function suscribir(fn) {
+    if (typeof fn !== "function") return function () {};
+    suscriptores.push(fn);
+    return function () {
+      var i = suscriptores.indexOf(fn);
+      if (i !== -1) suscriptores.splice(i, 1);
+    };
+  }
+
+  function notificar(estado, visibles) {
+    suscriptores.forEach(function (fn) {
+      try {
+        fn({ criterios: obtenerCriterios(), resultados: visibles, estado: estado });
+      } catch (e) {
+        /* Un suscriptor roto no puede tumbar el catálogo. */
+      }
+    });
   }
 
   /* ================================================================
@@ -483,6 +599,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
 
     NS.data.cargar().then(function (estado) {
       U.vaciar(contenedor);
+      estadoActual = estado;
 
       if (dom.avisoPreview) dom.avisoPreview.hidden = !estado.preview;
 
@@ -494,11 +611,15 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
         }
       }
 
+      // Sin modelos que ofrecer, el buscador tampoco tiene nada que
+      // buscar: se retira entero en vez de dejar un campo que no
+      // encuentra nada y un botón que lleva a cero resultados.
       if (estado.estado === "error") {
         contenedor.appendChild(NS.ui.estadoError());
         if (dom.filtros) dom.filtros.hidden = true;
         if (dom.contador) dom.contador.textContent = "";
         if (dom.toolbar) dom.toolbar.hidden = true;
+        if (NS.finderUi) NS.finderUi.retirar();
         return;
       }
 
@@ -507,6 +628,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
         if (dom.filtros) dom.filtros.hidden = true;
         if (dom.contador) dom.contador.textContent = "";
         if (dom.toolbar) dom.toolbar.hidden = true;
+        if (NS.finderUi) NS.finderUi.retirar();
         return;
       }
 
@@ -533,10 +655,11 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       poblarOrden(estado);
 
       leerFiltrosDeUrl(estado);
-      if (dom.busqueda) dom.busqueda.value = filtros.texto;
-      if (dom.linea) dom.linea.value = filtros.linea;
-      if (dom.color) dom.color.value = filtros.color;
-      if (dom.orden) dom.orden.value = filtros.orden;
+      reflejarEnControles();
+
+      // El buscador se monta ANTES del primer pintado para que reciba
+      // ese primer aviso y pueda mostrar el resumen desde el principio.
+      if (NS.finderUi) NS.finderUi.montar(estado);
 
       pintarRejilla(estado);
 
@@ -640,9 +763,24 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
   }
 
   NS.app = {
+    /**
+     * La puerta de entrada al estado. Cualquier módulo que quiera
+     * cambiar un criterio pasa por aquí, y quien quiera enterarse se
+     * suscribe. No hay otra forma admitida.
+     */
+    store: {
+      obtener: obtenerCriterios,
+      aplicar: aplicarCriterios,
+      limpiar: limpiarCriterios,
+      suscribir: suscribir,
+      criterioValido: function (clave, valor) {
+        return estadoActual ? criterioValido(clave, valor, estadoActual) : false;
+      },
+    },
     aplicarFiltros: aplicarFiltros,
     coincide: coincide,
     filtros: filtros,
+    CRITERIOS: CRITERIOS,
     hayFiltrosActivos: hayFiltrosActivos,
     numeroFiltrosActivos: numeroFiltrosActivos,
     ordenarModelos: ordenarModelos,

@@ -133,6 +133,19 @@
           <p id="catalogo-aviso" class="catalog-notice" role="status" aria-live="polite" hidden></p>
 
           <!-- ========================================================
+               ENCUENTRA LA MOTO PARA TU CAMINO
+               assets/js/catalogo/catalogo-finder-ui.js rellena este
+               contenedor. Empieza oculto y VACÍO a propósito: sin
+               modelos publicados no se monta nada, así que el público
+               nunca ve un buscador que no puede encontrar nada ni un
+               botón que lleva a cero resultados.
+
+               Sin JavaScript queda igual de oculto y el catálogo sigue
+               siendo navegable con sus filtros nativos.
+          ======================================================== -->
+          <div id="catalogo-finder" class="catalog-finder-host" hidden></div>
+
+          <!-- ========================================================
                FILTROS
                Las opciones NO están escritas aquí: catalogo-app.js las
                genera a partir de los datos, y oculta cualquier filtro
@@ -307,6 +320,11 @@
     <script src="assets/js/catalogo/catalogo-utils.js" defer></script>
     <script src="assets/js/catalogo/catalogo-schema.js" defer></script>
     <script src="assets/js/catalogo/catalogo-data.js" defer></script>
+    <!-- El buscador va antes que catalogo-app.js: la lógica (finder) la
+         usa el predicado de filtrado, y la interfaz (finder-ui) la monta
+         el propio catalogo-app.js al terminar de cargar los datos. -->
+    <script src="assets/js/catalogo/catalogo-finder.js" defer></script>
+    <script src="assets/js/catalogo/catalogo-finder-ui.js" defer></script>
     <!-- Herramientas editoriales locales. No dibujan nada fuera del modo
          depuración (?debug=1 + host local + ?preview=1). -->
     <script src="assets/js/catalogo/catalogo-completitud.js" defer></script>

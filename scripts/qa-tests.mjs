@@ -82,6 +82,9 @@ function cargarModulos(location) {
     "assets/js/catalogo/catalogo-schema.js",
     "assets/js/catalogo/catalogo-completitud.js",
     "assets/js/catalogo/catalogo-data.js",
+    // El buscador va ANTES que la aplicación: `catalogo-app.js` delega
+    // en él su predicado de filtrado, igual que en el navegador.
+    "assets/js/catalogo/catalogo-finder.js",
     "assets/js/catalogo/catalogo-app.js",
   ]) {
     runInContext(readFileSync(join(RAIZ, archivo), "utf8"), contexto, { filename: archivo });
@@ -95,6 +98,7 @@ const S = NS.schema;
 const C = NS.completitud;
 const D = NS.data;
 const A = NS.app;
+const FI = NS.finder;
 
 /* ================================================================
    Arnés de pruebas
@@ -1552,6 +1556,476 @@ comprobar("contrato-sheets-frontend: dice que el slug NO se deriva",
   comprobar(`el comprobador marca "${mala.slice(0, 34)}…"`, marcaMala);
   comprobar(`y NO marca su corrección "${buena.slice(0, 34)}…"`, !marcaBuena);
 });
+
+/* ================================================================
+   19. BUSCADOR «ENCUENTRA LA MOTO PARA TU CAMINO»
+   Se prueba la lógica REAL de catalogo-finder.js, cargada arriba en
+   el mismo contexto que el resto de módulos del navegador. Nada de
+   reimplementar el ranking para después comprobar la copia.
+   ================================================================ */
+
+grupo("19. BUSCADOR — BÚSQUEDA DIRECTA");
+
+const mBusca = [
+  {
+    id: "B-1", slug: "pulsar-180-neon", modelo: "Pulsar 180 Neon", titulo: "Pulsar 180 Neon",
+    linea: "Pulsar", categoria: "ciudad", subcategoria: "Naked", orden: 10,
+    colors: [{ slug: "rojo", nombre: "Rojo", hex: "#c81d25" }, { slug: "azul", nombre: "Azul", hex: "#184FA3" }],
+    mostrarPrecio: true, precioPublico: 9990, nuevo: true,
+  },
+  {
+    id: "B-2", slug: "pulsar-ns-200", modelo: "Pulsar NS 200", titulo: "Pulsar NS 200",
+    linea: "Pulsar", categoria: "deportiva", subcategoria: "Sport", orden: 20,
+    colors: [{ slug: "rojo", nombre: "Rojo", hex: "#c81d25" }],
+    mostrarPrecio: true, precioPublico: 13500,
+  },
+  {
+    id: "B-3", slug: "boxer-ct-125", modelo: "Boxer CT 125", titulo: "Boxer CT 125",
+    linea: "Boxer", categoria: "trabajo", subcategoria: "Utilitaria", orden: 30,
+    colors: [], mostrarPrecio: true, precioPublico: 6200,
+  },
+  {
+    id: "B-4", slug: "dominar-400", modelo: "Dominar 400", titulo: "Dominar 400",
+    linea: "Dominar", categoria: "aventura", subcategoria: "Touring", orden: 40,
+    colors: [{ slug: "negro", nombre: "Negro", hex: "#111111" }],
+    mostrarPrecio: true, precioPublico: 21500, destacado: true,
+  },
+  {
+    id: "B-5", slug: "torito-3w-4t", modelo: "Torito 3W 4T", titulo: "Torito 3W 4T",
+    linea: "Torito", categoria: "carga", subcategoria: "Tres ruedas", orden: 50,
+    colors: [], mostrarPrecio: false,
+  },
+];
+
+const cfgPrecios = S.normalizarConfig({ mostrar_precios: true });
+const cfgSinPrecios = S.normalizarConfig({ mostrar_precios: false });
+const estBusca = { modelos: mBusca, config: cfgPrecios, categorias: [] };
+const ids = (lista) => lista.map((r) => (r && typeof r.modelo === "object" ? r.modelo.id : r.id));
+
+/* ---- Coincidencia y normalización ---- */
+
+comprobar("coincidencia exacta con el modelo puntúa por encima de todo",
+  FI.puntuar(mBusca[0], "pulsar 180 neon") === 70);
+comprobar("un prefijo del modelo puntúa por debajo de la coincidencia exacta",
+  FI.puntuar(mBusca[0], "pulsar 180") === 60 && 60 < 70);
+comprobar("coincidencia exacta con la línea puntúa por debajo del prefijo",
+  FI.puntuar(mBusca[0], "pulsar") === 60);
+comprobar("una palabra interna que empieza por la consulta puntúa menos que el prefijo",
+  FI.puntuar(mBusca[0], "neon") === 40);
+comprobar("coincidencia parcial dentro de una palabra puntúa aún menos",
+  FI.puntuar(mBusca[0], "eon") === 30);
+comprobar("coincidencia solo por categoría es la de menor puntuación",
+  FI.puntuar(mBusca[0], "ciudad") === 10);
+comprobar("coincidencia por subcategoría también puntúa",
+  FI.puntuar(mBusca[1], "sport") === 10);
+comprobar("sin coincidencia la puntuación es cero",
+  FI.puntuar(mBusca[0], "zzz") === 0);
+
+comprobar("la búsqueda ignora las tildes",
+  iguales(ids(FI.rankear(mBusca, "TORÍTO")), ["B-5"]));
+comprobar("la búsqueda ignora mayúsculas y minúsculas",
+  iguales(ids(FI.rankear(mBusca, "dOmInAr")), ["B-4"]));
+comprobar("la búsqueda ignora los espacios sobrantes",
+  iguales(ids(FI.rankear(mBusca, "   boxer   ")), ["B-3"]));
+
+comprobar("una consulta vacía no sugiere nada", FI.rankear(mBusca, "").length === 0);
+comprobar("una consulta de solo espacios no sugiere nada", FI.rankear(mBusca, "     ").length === 0);
+comprobar("una consulta nula no rompe", FI.rankear(mBusca, null).length === 0);
+comprobar("una consulta demasiado larga se acota a MAX_CONSULTA",
+  FI.normalizarConsulta("x".repeat(500)).length === FI.MAX_CONSULTA);
+comprobar("y una consulta larguísima no sugiere nada absurdo",
+  FI.rankear(mBusca, "pulsar" + "z".repeat(200)).length === 0);
+
+/* ---- Orden determinista y límite ---- */
+
+comprobar("las dos Pulsar salen ordenadas por relevancia, no por posición",
+  iguales(ids(FI.rankear(mBusca, "pulsar")), ["B-1", "B-2"]));
+comprobar("con puntuación empatada manda el orden editorial",
+  iguales(ids(FI.rankear([mBusca[1], mBusca[0]], "pulsar")), ["B-1", "B-2"]));
+comprobar("el ranking es estable: dos llamadas iguales dan el mismo resultado",
+  iguales(ids(FI.rankear(mBusca, "pulsar")), ids(FI.rankear(mBusca, "pulsar"))));
+comprobar("el ranking NO reordena el catálogo: es una lista aparte",
+  iguales(mBusca.map((m) => m.id), ["B-1", "B-2", "B-3", "B-4", "B-5"]));
+
+const muchos = [];
+for (let i = 0; i < 40; i++) {
+  muchos.push({ id: "M-" + i, modelo: "Pulsar " + i, titulo: "Pulsar " + i, linea: "Pulsar", categoria: "ciudad", orden: i });
+}
+comprobar("las sugerencias se limitan al tope por defecto",
+  FI.sugerencias(muchos, "pulsar").length === FI.LIMITE_SUGERENCIAS);
+comprobar("y el tope se puede bajar", FI.sugerencias(muchos, "pulsar", 3).length === 3);
+comprobar("un tope inválido cae al valor por defecto",
+  FI.sugerencias(muchos, "pulsar", 0).length === FI.LIMITE_SUGERENCIAS);
+
+/* ---- El predicado compartido ---- */
+
+grupo("19 bis. BUSCADOR — UN SOLO PREDICADO");
+
+comprobar("catalogo-app delega su predicado en el buscador",
+  A.coincide === A.coincide && typeof FI.coincide === "function");
+comprobar("el predicado del buscador y el de la rejilla dan el mismo resultado",
+  mBusca.every((m) => {
+    Object.assign(A.filtros, { texto: "pulsar", categoria: "", linea: "", color: "", precio: "", orden: "relevancia" });
+    return A.coincide(m) === FI.coincide(m, { texto: "pulsar" });
+  }));
+Object.assign(A.filtros, { texto: "", categoria: "", linea: "", color: "", precio: "", orden: "relevancia" });
+
+comprobar("sin criterios, todo coincide", FI.filtrar(mBusca, {}).length === 5);
+comprobar("los criterios se combinan con Y lógico",
+  iguales(ids(FI.filtrar(mBusca, { categoria: "ciudad", linea: "Pulsar", color: "azul" })), ["B-1"]));
+comprobar("un criterio que nadie cumple deja cero resultados",
+  FI.filtrar(mBusca, { categoria: "ciudad", linea: "Dominar" }).length === 0);
+comprobar("la búsqueda de texto también encuentra por categoría",
+  iguales(ids(FI.filtrar(mBusca, { texto: "carga" })), ["B-5"]));
+comprobar("el color exige una variante real, no la lista de texto",
+  iguales(ids(FI.filtrar(mBusca, { color: "negro" })), ["B-4"]));
+
+/* ---- Opciones derivadas ---- */
+
+grupo("19 ter. BUSCADOR — OPCIONES DERIVADAS DE LOS DATOS");
+
+comprobar("los usos salen de las categorías que tienen modelos",
+  iguales(FI.usosDisponibles(mBusca).map((u) => u.slug),
+    ["ciudad", "trabajo", "deportiva", "aventura", "carga"]));
+comprobar("un uso sin modelos no se ofrece",
+  iguales(FI.usosDisponibles([mBusca[0]]).map((u) => u.slug), ["ciudad"]));
+comprobar("los usos apuntan solo a categorías de la taxonomía aprobada",
+  FI.USOS.every((u) => S.CATEGORIAS.indexOf(u.slug) !== -1));
+comprobar("no se inventan usos fuera de la taxonomía",
+  FI.USOS.length === S.CATEGORIAS.length);
+
+comprobar("las líneas se derivan del conjunto y se ordenan",
+  iguales(FI.lineasDe(mBusca).map((l) => l.valor), ["Boxer", "Dominar", "Pulsar", "Torito"]));
+comprobar("las líneas no se repiten", FI.lineasDe(mBusca).length === 4);
+comprobar("sin modelos no hay líneas", FI.lineasDe([]).length === 0);
+
+comprobar("los colores salen de colors[] y se deduplican",
+  iguales(FI.coloresDe(mBusca).map((c) => c.valor), ["azul", "negro", "rojo"]));
+comprobar("un hexadecimal válido se conserva",
+  FI.coloresDe(mBusca).some((c) => c.valor === "azul" && c.hex === "#184fa3"));
+comprobar("un hexadecimal inválido se descarta sin romper la opción",
+  FI.coloresDe([{ colors: [{ slug: "x", nombre: "X", hex: "no-es-un-hex" }] }])[0].hex === "");
+comprobar("sin variantes reales no hay colores",
+  FI.coloresDe([mBusca[2], mBusca[4]]).length === 0);
+
+/* ---- Presupuesto ---- */
+
+grupo("19 quater. BUSCADOR — PRESUPUESTO");
+
+comprobar("sin permiso global de precios no hay tramos",
+  FI.rangosPrecio(mBusca, cfgSinPrecios).length === 0);
+comprobar("con permiso global y precios reales sí hay tramos",
+  FI.rangosPrecio(mBusca, cfgPrecios).length >= 2);
+comprobar("un solo precio publicable no forma tramos",
+  FI.rangosPrecio([mBusca[0]], cfgPrecios).length === 0);
+comprobar("sin precios publicables no hay tramos",
+  FI.rangosPrecio([mBusca[4]], cfgPrecios).length === 0);
+
+const conPrecioOculto = [
+  { id: "P-1", modelo: "A", mostrarPrecio: false, precioPublico: 5000 },
+  { id: "P-2", modelo: "B", mostrarPrecio: false, precioPublico: 9000 },
+];
+comprobar("un precio con mostrarPrecio en false nunca forma un tramo",
+  FI.rangosPrecio(conPrecioOculto, cfgPrecios).length === 0);
+comprobar("y ese precio tampoco es publicable",
+  !FI.precioPublicable(conPrecioOculto[0]));
+comprobar("un precio de cero no es publicable",
+  !FI.precioPublicable({ mostrarPrecio: true, precioPublico: 0 }));
+comprobar("un precio negativo no es publicable",
+  !FI.precioPublicable({ mostrarPrecio: true, precioPublico: -100 }));
+comprobar("un precio que no es número no es publicable",
+  !FI.precioPublicable({ mostrarPrecio: true, precioPublico: "9990" }));
+
+const tramos = FI.rangosPrecio(mBusca, cfgPrecios);
+comprobar("ningún tramo derivado queda vacío",
+  tramos.every((t) => mBusca.some((m) => FI.enTramo(m, t.valor))));
+comprobar("los tramos no usan importes fijos inventados",
+  tramos.every((t) => /\d/.test(t.texto)));
+comprobar("un modelo sin precio publicable no cae en ningún tramo",
+  tramos.every((t) => !FI.enTramo(mBusca[4], t.valor)));
+comprobar("un tramo inventado no acepta a nadie",
+  mBusca.every((m) => !FI.enTramo(m, "hasta-x")));
+comprobar("el filtro por tramo se combina con el resto",
+  FI.filtrar(mBusca, { precio: tramos[0].valor, categoria: "aventura" }).length <= 1);
+
+/* ---- Pasos del asistente ---- */
+
+grupo("19 quinquies. BUSCADOR — ASISTENTE");
+
+const pasosTodos = FI.pasos(estBusca, {});
+comprobar("con datos variados el asistente propone el paso de uso",
+  pasosTodos.some((p) => p.id === "categoria"));
+comprobar("y el de línea", pasosTodos.some((p) => p.id === "linea"));
+comprobar("y el de color", pasosTodos.some((p) => p.id === "color"));
+comprobar("y el de presupuesto cuando hay precios",
+  pasosTodos.some((p) => p.id === "precio"));
+
+const pasosSinPrecio = FI.pasos({ modelos: mBusca, config: cfgSinPrecios }, {});
+comprobar("el paso de presupuesto DESAPARECE si los precios están ocultos",
+  !pasosSinPrecio.some((p) => p.id === "precio"));
+
+const soloCiudad = [mBusca[0]];
+comprobar("con una sola categoría el paso de uso desaparece",
+  !FI.pasos({ modelos: soloCiudad, config: cfgPrecios }, {}).some((p) => p.id === "categoria"));
+
+comprobar("elegir ciudad deja una sola línea y el paso de línea desaparece",
+  !FI.pasos(estBusca, { categoria: "ciudad" }).some((p) => p.id === "linea"));
+comprobar("elegir deportiva deja modelos sin más de una línea: sin paso de línea",
+  !FI.pasos(estBusca, { categoria: "deportiva" }).some((p) => p.id === "linea"));
+comprobar("elegir trabajo deja un conjunto sin colores: el paso de color desaparece",
+  !FI.pasos(estBusca, { categoria: "trabajo" }).some((p) => p.id === "color"));
+comprobar("elegir carga deja un conjunto sin precios publicables: sin paso de presupuesto",
+  !FI.pasos(estBusca, { categoria: "carga" }).some((p) => p.id === "precio"));
+
+comprobar("sin modelos el asistente no tiene ningún paso",
+  FI.pasos({ modelos: [], config: cfgPrecios }, {}).length === 0);
+comprobar("un estado inválido no rompe el asistente",
+  FI.pasos(null, {}).length === 0 && FI.pasos({}, {}).length === 0);
+
+comprobar("las respuestas se traducen a criterios del catálogo",
+  JSON.stringify(FI.criteriosDe({ categoria: "ciudad", linea: "Pulsar" })) ===
+  JSON.stringify({ categoria: "ciudad", linea: "Pulsar", color: "", precio: "" }));
+comprobar("«sin preferencia» no aplica ningún criterio",
+  JSON.stringify(FI.criteriosDe({})) ===
+  JSON.stringify({ categoria: "", linea: "", color: "", precio: "" }));
+comprobar("«sin preferencia» en uso deja pasar todas las categorías",
+  FI.filtrar(mBusca, FI.criteriosDe({ categoria: "" })).length === 5);
+
+/* ---- Motivos ---- */
+
+comprobar("se explica la coincidencia por uso",
+  FI.motivos(mBusca[0], { categoria: "ciudad" }, null)
+    .some((m) => /ciudad/i.test(m)));
+comprobar("se explica la coincidencia por línea",
+  FI.motivos(mBusca[0], { linea: "Pulsar" }, null)
+    .some((m) => /l[ií]nea Pulsar/i.test(m)));
+comprobar("se explica la coincidencia por color, con su nombre",
+  FI.motivos(mBusca[0], { color: "azul" }, null)
+    .some((m) => /color Azul/i.test(m)));
+comprobar("un modelo que no cumple el criterio no recibe ese motivo",
+  FI.motivos(mBusca[2], { color: "azul" }, null).length === 0);
+comprobar("los motivos NO afirman superioridad",
+  FI.motivos(mBusca[0], { categoria: "ciudad", linea: "Pulsar", color: "azul" }, null)
+    .every((m) => !/(mejor|ideal|garantiz|imparcial|perfect)/i.test(m)));
+comprobar("ningún texto del asistente promete una recomendación objetiva",
+  FI.USOS.every((u) => !/(mejor|ideal|garantiz|imparcial)/i.test(u.texto)));
+
+/* ---- Estado único y URL ---- */
+
+grupo("19 sexies. BUSCADOR — ESTADO ÚNICO Y URL");
+
+comprobar("el store existe y expone las cuatro operaciones",
+  A.store && typeof A.store.obtener === "function" && typeof A.store.aplicar === "function" &&
+  typeof A.store.limpiar === "function" && typeof A.store.suscribir === "function");
+comprobar("obtener() devuelve una copia, no el estado interno",
+  A.store.obtener() !== A.filtros);
+
+const copia = A.store.obtener();
+copia.categoria = "sabotaje";
+comprobar("escribir en la copia no toca el estado real", A.filtros.categoria !== "sabotaje");
+
+comprobar("el precio es un criterio del catálogo, no un filtro aparte",
+  A.CRITERIOS.indexOf("precio") !== -1);
+comprobar("el orden NO cuenta como criterio", A.CRITERIOS.indexOf("orden") === -1);
+comprobar("los criterios son exactamente los cinco previstos",
+  iguales(A.CRITERIOS.slice().sort(), ["categoria", "color", "linea", "precio", "texto"]));
+
+const suscritos = [];
+const baja = A.store.suscribir((ev) => suscritos.push(ev));
+comprobar("suscribir devuelve una función para darse de baja", typeof baja === "function");
+baja();
+
+/* ---- Publicación: el buscador no abre ninguna puerta ---- */
+
+grupo("19 septies. BUSCADOR — NO DEBILITA LA PUBLICACIÓN");
+
+const modeloBorradorFinder = {
+  id: "X-1", slug: "borrador", modelo: "Borrador", titulo: "Borrador",
+  categoria: "ciudad", linea: "Pulsar",
+  imagenPrincipal: "assets/catalogo/x/portada.webp",
+  altText: "Una fotografía real de la motocicleta de perfil",
+  descripcionCorta: "Un texto real y suficiente para la tarjeta.",
+  activo: true, estadoContenido: "BORRADOR", colors: [],
+};
+comprobar("un borrador no es publicable aunque el buscador lo encuentre",
+  FI.rankear([modeloBorradorFinder], "Borrador").length === 1 && S.esPublicable(modeloBorradorFinder) === false);
+
+const sinFoto = Object.assign({}, modeloBorradorFinder, { estadoContenido: "APROBADO", imagenPrincipal: "" });
+comprobar("un modelo sin fotografía sigue sin publicarse",
+  S.esPublicable(sinFoto) === false);
+const sinAlt = Object.assign({}, modeloBorradorFinder, { estadoContenido: "APROBADO", altText: "" });
+comprobar("un modelo sin alt_text sigue sin publicarse",
+  S.esPublicable(sinAlt) === false);
+const altProvisional = Object.assign({}, modeloBorradorFinder, { estadoContenido: "APROBADO", altText: "PENDIENTE" });
+comprobar("un alt_text provisional sigue sin publicarse",
+  S.esPublicable(altProvisional) === false);
+const bueno = Object.assign({}, modeloBorradorFinder, { estadoContenido: "APROBADO" });
+comprobar("y con todo en regla sí se publica", S.esPublicable(bueno) === true);
+
+comprobar("el buscador NO llama a esPublicable ni la modifica",
+  !/esPublicable/.test(readFileSync(join(RAIZ, "assets/js/catalogo/catalogo-finder.js"), "utf8")));
+
+const fuenteFinder = readFileSync(join(RAIZ, "assets/js/catalogo/catalogo-finder.js"), "utf8");
+const fuenteFinderUi = readFileSync(join(RAIZ, "assets/js/catalogo/catalogo-finder-ui.js"), "utf8");
+
+comprobar("el buscador no usa innerHTML", !/innerHTML/.test(fuenteFinder + fuenteFinderUi));
+comprobar("el buscador no usa eval ni new Function",
+  !/\beval\s*\(|new\s+Function\s*\(/.test(fuenteFinder + fuenteFinderUi));
+comprobar("el buscador no usa document.write", !/document\.write/.test(fuenteFinder + fuenteFinderUi));
+comprobar("el buscador no guarda nada en el navegador",
+  !/localStorage|sessionStorage|indexedDB|document\.cookie/.test(fuenteFinder + fuenteFinderUi));
+comprobar("el buscador no añade telemetría ni peticiones externas",
+  !/fetch\s*\(|XMLHttpRequest|navigator\.sendBeacon|geolocation/.test(fuenteFinder + fuenteFinderUi));
+comprobar("el buscador no escribe categorías a mano en la interfaz",
+  !/scooter|naked|enduro|caf[eé] racer|doble prop[oó]sito/i.test(fuenteFinderUi));
+comprobar("el buscador no lee especificaciones técnicas que hoy no existen",
+  !/\.(cilindrada|potencia|torque|transmision|consumo|freno)\b/i.test(fuenteFinder + fuenteFinderUi));
+comprobar("el buscador no toca stock ni datos internos",
+  !/stock|chasis|costo|margen|proveedor|telefono_cliente/i.test(fuenteFinder + fuenteFinderUi));
+
+/* ================================================================
+   20. BUSCADOR — SINCRONIZACIÓN CON LA URL
+   Se cargan los módulos reales con una `location` controlada y un
+   `history` que apunta lo que se le pide, para poder leer el resultado
+   sin navegador.
+   ================================================================ */
+
+grupo("20. BUSCADOR — URL COMPARTIBLE");
+
+const estadoUrl = {
+  modelos: [
+    {
+      id: "U-1", slug: "pulsar-180-neon", modelo: "Pulsar 180 Neon", titulo: "Pulsar 180 Neon",
+      linea: "Pulsar", categoria: "ciudad", colors: [{ slug: "azul", nombre: "Azul" }],
+      mostrarPrecio: false,
+    },
+    {
+      id: "U-2", slug: "dominar-400", modelo: "Dominar 400", titulo: "Dominar 400",
+      linea: "Dominar", categoria: "aventura", colors: [{ slug: "negro", nombre: "Negro" }],
+      mostrarPrecio: false,
+    },
+  ],
+  categorias: [
+    { slug: "ciudad", titulo: "Ciudad", descripcion: "", orden: 1 },
+    { slug: "aventura", titulo: "Ruta y aventura", descripcion: "", orden: 2 },
+  ],
+  config: S.normalizarConfig({}),
+};
+
+/** Lee los filtros desde una URL dada y devuelve el estado resultante. */
+function leerDesde(busqueda) {
+  const ns = cargarModulos({ hostname: "localhost", search: busqueda, pathname: "/catalogo.html" });
+  ns.app._leerFiltrosDeUrl(estadoUrl);
+  return ns.app.store.obtener ? Object.assign({}, ns.app.filtros) : ns.app.filtros;
+}
+
+const u1 = leerDesde("?categoria=ciudad&linea=Pulsar&color=azul&q=pulsar&orden=nombre-asc");
+comprobar("la URL restaura la categoría", u1.categoria === "ciudad");
+comprobar("la URL restaura la línea", u1.linea === "Pulsar");
+comprobar("la URL restaura el color", u1.color === "azul");
+comprobar("la URL restaura el texto", u1.texto === "pulsar");
+comprobar("la URL restaura el orden", u1.orden === "nombre-asc");
+
+const u2 = leerDesde("?categoria=inventada&linea=NoExiste&color=fucsia&orden=magia");
+comprobar("una categoría inexistente se ignora", u2.categoria === "");
+comprobar("una línea inexistente se ignora", u2.linea === "");
+comprobar("un color inexistente se ignora", u2.color === "");
+comprobar("un orden desconocido se ignora", u2.orden === "relevancia");
+
+const u3 = leerDesde("?precio=hasta-9999");
+comprobar("un tramo de precio sin precios publicables se ignora", u3.precio === "");
+
+const u4 = leerDesde("?q=" + encodeURIComponent("x".repeat(300)));
+comprobar("una consulta larguísima se acota al leerla de la URL",
+  u4.texto.length <= FI.MAX_CONSULTA);
+
+const u5 = leerDesde("?preview=1&categoria=ciudad");
+comprobar("un parámetro ajeno no impide leer los propios", u5.categoria === "ciudad");
+
+const u6 = leerDesde("");
+comprobar("sin parámetros no hay ningún criterio activo",
+  !u6.categoria && !u6.linea && !u6.color && !u6.precio && !u6.texto);
+comprobar("sin parámetros el orden es el recomendado", u6.orden === "relevancia");
+
+/* ---- Escritura de la URL ---- */
+
+/**
+ * Ejecuta `_sincronizarUrl` con un historial simulado y devuelve la
+ * cadena que el catálogo habría dejado en la barra de direcciones.
+ */
+function escribirUrl(busquedaInicial, criterios) {
+  let ultima = null;
+  const ventana = {
+    location: { hostname: "localhost", search: busquedaInicial, pathname: "/catalogo.html" },
+    matchMedia: () => ({ matches: false }),
+    setTimeout,
+    clearTimeout,
+    Image: function () {},
+    history: {
+      replaceState(a, b, url) { ultima = url; },
+      pushState() { throw new Error("filtrar no debe apilar historial"); },
+    },
+  };
+  ventana.window = ventana;
+  const contexto = createContext({
+    window: ventana,
+    URLSearchParams,
+    console,
+    document: {
+      readyState: "loading",
+      addEventListener() {},
+      querySelector() { return null; },
+      getElementById() { return null; },
+      createElement: () => ({ setAttribute() {}, appendChild() {}, style: {} }),
+    },
+  });
+  for (const archivo of [
+    "assets/js/catalogo/catalogo-utils.js",
+    "assets/js/catalogo/catalogo-schema.js",
+    "assets/js/catalogo/catalogo-completitud.js",
+    "assets/js/catalogo/catalogo-data.js",
+    "assets/js/catalogo/catalogo-finder.js",
+    "assets/js/catalogo/catalogo-app.js",
+  ]) {
+    runInContext(readFileSync(join(RAIZ, archivo), "utf8"), contexto, { filename: archivo });
+  }
+  const ns = contexto.window.ARENAS_CATALOGO;
+  Object.assign(ns.app.filtros, criterios);
+  ns.app._sincronizarUrl();
+  return ultima === null ? null : String(ultima);
+}
+
+const w1 = escribirUrl("", { categoria: "ciudad", linea: "Pulsar", texto: "pulsar" });
+comprobar("los criterios activos se escriben en la URL",
+  /categoria=ciudad/.test(w1) && /linea=Pulsar/.test(w1) && /q=pulsar/.test(w1));
+
+const w2 = escribirUrl("", { orden: "relevancia" });
+comprobar("el orden recomendado NO ensucia la URL por ser el valor por defecto",
+  !/orden=/.test(w2 || ""));
+
+const w3 = escribirUrl("", { orden: "nombre-asc" });
+comprobar("un orden distinto del recomendado sí se escribe", /orden=nombre-asc/.test(w3));
+
+const w4 = escribirUrl("?preview=1", { categoria: "ciudad" });
+comprobar("un parámetro ajeno como preview=1 se CONSERVA", /preview=1/.test(w4));
+comprobar("y el criterio propio se añade junto a él", /categoria=ciudad/.test(w4));
+
+const w5 = escribirUrl("?preview=1&categoria=ciudad&linea=Pulsar", { categoria: "", linea: "" });
+comprobar("limpiar retira los parámetros del catálogo",
+  !/categoria=/.test(w5) && !/linea=/.test(w5));
+comprobar("y NO retira los parámetros ajenos", /preview=1/.test(w5));
+
+const w6 = escribirUrl("?categoria=ciudad", { categoria: "aventura" });
+comprobar("un parámetro no se duplica al cambiar de valor",
+  (w6.match(/categoria=/g) || []).length === 1);
+comprobar("y queda el valor nuevo", /categoria=aventura/.test(w6));
+
+comprobar("filtrar usa replaceState, no pushState: no llena el historial",
+  escribirUrl("", { categoria: "ciudad" }) !== null);
+
+const w7 = escribirUrl("?utm_source=demo", { categoria: "ciudad" });
+comprobar("cualquier otro parámetro de terceros también se conserva",
+  /utm_source=demo/.test(w7));
 
 /* ================================================================
    Resultado

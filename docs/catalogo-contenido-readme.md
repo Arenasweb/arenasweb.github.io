@@ -51,6 +51,8 @@ forzar una demostración.
 |---|---|
 | [catalogo-modelos-web.md](catalogo-modelos-web.md) | El contrato: las 28 columnas de `MODELOS_WEB` |
 | [contrato-sheets-frontend.md](contrato-sheets-frontend.md) | Qué consume el frontend de cada columna |
+| [buscador-catalogo.md](buscador-catalogo.md) | «Encuentra la moto para tu camino»: ranking, asistente, estado único y URL — **prototipo local, sin cerrar** |
+| [plan-filtros-tecnicos-futuro.md](plan-filtros-tecnicos-futuro.md) | Cilindrada, frenos, ABS y demás — **propuesta, nada implementado** |
 | [catalogo-api-publica.md](catalogo-api-publica.md) | El contrato del endpoint: petición, respuesta, errores, caché |
 | [contraste-sheets-real.md](contraste-sheets-real.md) | Qué contiene el libro real frente a lo que el backend espera, y por qué hubo que migrarlo |
 | [plan-migracion-cms-sheets.md](plan-migracion-cms-sheets.md) | Registro de la migración de `estado_contenido` — **ejecutada el 10/08/2026** — con la fórmula legacy y la vuelta atrás |

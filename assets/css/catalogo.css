@@ -857,3 +857,554 @@
   border-color: rgba(151, 205, 255, 0.4);
   border-style: solid;
 }
+
+/* ================================================================
+   9. ENCUENTRA LA MOTO PARA TU CAMINO
+   Buscador guiado del catálogo. Dos caminos: escribir un modelo, o
+   responder unas preguntas.
+
+   Decisiones de forma:
+   · Es un MÓDULO COMPACTO, no un hero. Las motos siguen entrando en
+     la primera pantalla; un buscador que empuja el catálogo fuera de
+     la vista resuelve un problema creando otro.
+   · Fondo profundo y acento del sistema. Ni amarillo, ni tarjeta
+     blanca flotante, ni cristal esmerilado: el catálogo ya tiene una
+     identidad y esto forma parte de ella.
+   · En escritorio el asistente se despliega dentro del flujo; por
+     debajo de 860px se convierte en una hoja a pantalla completa,
+     que es lo único manejable con el pulgar.
+   ================================================================ */
+
+.catalog-finder-host[hidden] {
+  display: none;
+}
+
+.finder {
+  margin-bottom: clamp(24px, 4vw, 40px);
+  padding: clamp(20px, 3vw, 32px);
+  background: linear-gradient(160deg, var(--color-surface) 0%, var(--color-night) 100%);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+}
+
+/* ---- Cabecera ---- */
+
+.finder__eyebrow {
+  margin: 0 0 6px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-cyan);
+}
+
+.finder__titulo {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 3vw, 1.9rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--color-white);
+}
+
+.finder__texto {
+  margin: 0;
+  max-width: 62ch;
+  font-size: 0.95rem;
+  color: var(--color-silver);
+}
+
+/* ---- Los dos caminos ---- */
+
+.finder__caminos {
+  display: grid;
+  gap: clamp(14px, 2vw, 20px);
+  margin-top: clamp(18px, 2.5vw, 26px);
+}
+
+@media (min-width: 861px) {
+  /* La búsqueda directa pesa más: quien ya sabe qué quiere es el caso
+     mayoritario y no debería tener que buscar el buscador. */
+  .finder__caminos {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    align-items: stretch;
+  }
+}
+
+.finder__camino {
+  padding: clamp(14px, 2vw, 20px);
+  background: rgba(5, 9, 20, 0.5);
+  border: 1px solid var(--color-border-faint);
+  border-radius: var(--radius-md);
+}
+
+.finder__camino--guia {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.finder__camino-titulo {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  letter-spacing: 0.01em;
+  color: var(--color-white);
+}
+
+.finder__camino-texto {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--color-silver);
+}
+
+.finder__empezar {
+  align-self: flex-start;
+  margin-top: auto;
+  min-height: 44px;
+}
+
+/* ---- Campo de búsqueda ---- */
+
+.finder__label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-silver);
+}
+
+.finder__input-wrap {
+  position: relative;
+}
+
+.finder__input {
+  width: 100%;
+  min-height: 48px;
+}
+
+.finder__ayuda {
+  margin: 8px 0 0;
+  font-size: 0.78rem;
+  color: var(--color-muted);
+}
+
+/* ---- Sugerencias ---- */
+
+.finder__sugerencias {
+  position: absolute;
+  z-index: var(--z-dropdown);
+  inset-inline: 0;
+  top: calc(100% + 6px);
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  max-height: 320px;
+  overflow-y: auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+}
+
+.finder__sugerencias[hidden] {
+  display: none;
+}
+
+.finder__sugerencia {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.finder__sugerencia:hover {
+  background: rgba(20, 117, 196, 0.18);
+}
+
+/* El estado activo no depende solo del fondo: una barra lateral lo
+   marca también para quien no distingue ese contraste. */
+.finder__sugerencia.is-activa {
+  background: rgba(20, 117, 196, 0.18);
+  box-shadow: inset 3px 0 0 var(--color-cyan);
+}
+
+.finder__sugerencia-nombre {
+  font-weight: 600;
+  color: var(--color-white);
+}
+
+.finder__sugerencia-meta {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+.finder__sugerencia-tag {
+  margin-inline-start: auto;
+  padding: 2px 8px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-cyan);
+  border: 1px solid rgba(6, 176, 209, 0.4);
+  border-radius: var(--radius-pill);
+}
+
+/* ---- Atajo a la ficha ---- */
+
+.finder__atajo {
+  margin: 10px 0 0;
+}
+
+.finder__atajo[hidden] {
+  display: none;
+}
+
+.finder__atajo-enlace {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--color-cyan);
+  text-underline-offset: 3px;
+}
+
+/* ---- Asistente ---- */
+
+.finder__wizard-host {
+  display: contents;
+}
+
+/* La hoja del asistente tiene que quedar POR ENCIMA de la cabecera
+   fija del sitio (--z-modal). Con un valor menor, la cabecera tapaba el
+   título y el botón de cerrar: en móvil, donde no hay tecla Escape, eso
+   dejaba la hoja sin salida. */
+.finder__velo {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  background: rgba(2, 4, 8, 0.72);
+}
+
+.finder__velo[hidden] {
+  display: none;
+}
+
+.finder__wizard {
+  margin-top: clamp(16px, 2.5vw, 22px);
+  padding: clamp(16px, 2.5vw, 24px);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+}
+
+.finder__wizard[hidden] {
+  display: none;
+}
+
+.finder__wizard-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.finder__wizard-titulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  color: var(--color-white);
+}
+
+.finder__wizard-cerrar {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--color-silver);
+  background: transparent;
+  border: 1px solid var(--color-border-faint);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.finder__wizard-cerrar:hover {
+  color: var(--color-white);
+  border-color: var(--color-border-soft);
+}
+
+.finder__progreso {
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.finder__progreso[hidden] {
+  display: none;
+}
+
+.finder__pregunta {
+  margin: 0 0 14px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-white);
+}
+
+.finder__opciones {
+  display: grid;
+  gap: 8px;
+}
+
+@media (min-width: 641px) {
+  .finder__opciones {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}
+
+.finder__opcion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 12px 14px;
+  text-align: start;
+  font-size: 0.92rem;
+  color: var(--color-silver);
+  background: rgba(5, 9, 20, 0.55);
+  border: 1px solid var(--color-border-faint);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out);
+}
+
+.finder__opcion:hover {
+  color: var(--color-white);
+  border-color: var(--color-border-soft);
+}
+
+/* La opción elegida se marca con borde, color y una marca visible, no
+   solo con un fondo distinto. El estado real lo lleva aria-checked. */
+.finder__opcion.is-activa {
+  color: var(--color-white);
+  border-color: var(--color-cyan);
+  box-shadow: inset 0 0 0 1px rgba(6, 176, 209, 0.35);
+}
+
+.finder__opcion.is-activa::after {
+  content: "\2713";
+  margin-inline-start: auto;
+  color: var(--color-cyan);
+  font-weight: 700;
+}
+
+.finder__muestra {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.finder__opcion-texto {
+  min-width: 0;
+}
+
+/* ---- Resultados dentro del asistente ---- */
+
+.finder__muestras {
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.finder__muestra-item {
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  background: rgba(5, 9, 20, 0.55);
+  border: 1px solid var(--color-border-faint);
+  border-radius: var(--radius-sm);
+}
+
+.finder__muestra-nombre {
+  font-weight: 600;
+  color: var(--color-white);
+}
+
+.finder__muestra-motivo {
+  font-size: 0.8rem;
+  color: var(--color-cyan);
+}
+
+/* ---- Pie del asistente ---- */
+
+.finder__wizard-pie {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border-faint);
+}
+
+.finder__coincidencias {
+  margin: 0 0 12px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-silver);
+}
+
+.finder__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.finder__acciones .btn {
+  min-height: 44px;
+}
+
+.finder__reset {
+  min-height: 44px;
+  padding: 0 6px;
+  margin-inline-start: auto;
+  font-size: 0.84rem;
+  color: var(--color-muted);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.finder__reset:hover {
+  color: var(--color-white);
+}
+
+/* ---- Resumen de criterios activos ---- */
+
+.finder__resumen {
+  margin-top: clamp(16px, 2.5vw, 22px);
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border-faint);
+}
+
+.finder__resumen[hidden] {
+  display: none;
+}
+
+.finder__resumen-titulo {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  color: var(--color-muted);
+}
+
+.finder__resumen-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.finder__resumen-quitar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  color: var(--color-white);
+  background: rgba(20, 117, 196, 0.18);
+  border: 1px solid rgba(151, 205, 255, 0.28);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+
+.finder__resumen-quitar:hover {
+  border-color: var(--color-cyan);
+}
+
+.finder__resumen-x {
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--color-cyan);
+}
+
+.finder__resumen-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* ================================================================
+   9 bis. EL ASISTENTE EN MÓVIL
+   Por debajo del punto de corte se convierte en una hoja a pantalla
+   completa. El pie queda fijo abajo y el cuerpo se desplaza por
+   dentro: así el teclado virtual nunca tapa el botón principal.
+   ================================================================ */
+
+@media (max-width: 860px) {
+  .finder__wizard:not([hidden]) {
+    position: fixed;
+    inset: 0;
+    z-index: calc(var(--z-modal) + 1);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    border: 0;
+    border-radius: 0;
+    padding: 16px;
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+
+  .finder__wizard-cuerpo {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .finder__wizard-pie {
+    flex: 0 0 auto;
+  }
+
+  .finder__acciones .btn {
+    flex: 1 1 auto;
+  }
+
+  .finder__reset {
+    flex: 1 0 100%;
+    margin-inline-start: 0;
+    text-align: center;
+  }
+
+  /* Bloqueo del fondo SOLO cuando el asistente es realmente una hoja
+     modal. En escritorio la página sigue desplazándose con normalidad. */
+  body.has-finder-abierto {
+    overflow: hidden;
+  }
+}
+
+/* ---- Movimiento reducido ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  .finder__opcion {
+    transition: none;
+  }
+}

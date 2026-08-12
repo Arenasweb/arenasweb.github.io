@@ -977,6 +977,12 @@
     <script src="assets/js/catalogo/catalogo-utils.js" defer></script>
     <script src="assets/js/catalogo/catalogo-schema.js" defer></script>
     <script src="assets/js/catalogo/catalogo-data.js" defer></script>
+    <!-- La portada no filtra: solo pinta la tira de destacados. Pero
+         catalogo-app.js delega su predicado en catalogo-finder.js, y una
+         dependencia que solo falta en una página es la clase de fallo
+         que aparece meses después. La interfaz del buscador (finder-ui)
+         NO se carga aquí: la portada no tiene dónde montarla. -->
+    <script src="assets/js/catalogo/catalogo-finder.js" defer></script>
     <script src="assets/js/catalogo/catalogo-ui.js" defer></script>
     <script src="assets/js/catalogo/catalogo-app.js" defer></script>
 
