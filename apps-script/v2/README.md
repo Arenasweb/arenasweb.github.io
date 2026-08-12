@@ -5,8 +5,8 @@ Endpoint de solo lectura que publica, ya filtrado, el contenido aprobado de
 
 > **Estado del 11/08/2026.** Los tres `.gs` auditados están desplegados como Web
 > App de solo lectura. La Script Property está configurada, el endpoint real y
-> CORS pasaron sus pruebas, y el frontend del árbol de trabajo quedó en remoto
-> con fallback local. Falta publicar el commit y repetir el QA en producción.
+> CORS pasaron sus pruebas, y el frontend publicado quedó en remoto con fallback
+> local. GitHub Pages publicó el commit `274e728` y el QA en producción pasó.
 > La URL `/exec` no se repite aquí: su único origen versionado es
 > `CONFIG.appsScriptEndpoint` en `catalogo-data.js`.
 
@@ -243,8 +243,9 @@ posición: reordenar dos columnas en la hoja es inocuo.
 11. **QA local** con el endpoint ya conectado.
 12. **QA en producción**, vigilando que el fallback local siga funcionando.
 
-Los pasos **0–11 se ejecutaron y validaron** el 11/08/2026. El paso 12, QA en
-producción, queda pendiente hasta que el repositorio se publique.
+Los pasos **0–12 se ejecutaron y validaron** el 11/08/2026. El QA en producción
+pasó contra GitHub Pages: remoto real, fallback, bloqueo de preview público,
+ficha no publicada, portada, errores de runtime/HTTP y desbordamiento horizontal.
 Procedimiento detallado: `docs/runbook-deploy-apps-script-v2.md`.
 
 ### CORS: verificado en navegador

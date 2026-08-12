@@ -91,7 +91,7 @@ python -m http.server 3000
 - [ ] Rótulos reales de la UI escritos en el runbook
 - [ ] `respuesta.json` borrado
 - [x] Frontend conectado después, con autorización separada y QA local completo
-- [ ] QA en producción pendiente hasta publicar el repositorio
+- [x] QA en producción completado: GitHub Pages publicó `274e728` y pasó 9/9 controles
 
 ---
 

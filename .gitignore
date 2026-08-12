@@ -32,6 +32,11 @@ private/
 exports/
 google-sheets-dumps/
 
+# Documentos internos locales: existen para consulta, pero no pertenecen al
+# repositorio público ni deben entrar por accidente en un `git add -A`.
+docs/contexto-cliente-arenas.md
+docs/auditoria-tecnica-estricta-resumen-codex.md
+
 # Basura de sistema operativo
 .DS_Store
 Thumbs.db

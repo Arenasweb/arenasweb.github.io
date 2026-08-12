@@ -2,8 +2,8 @@
 
 Procedimiento para poner en marcha la API del catálogo.
 **Estado: EJECUTADO Y VALIDADO el 11/08/2026.** Se conserva como procedimiento
-repetible para futuras versiones. La publicación del frontend y el QA en
-producción siguen pendientes.
+repetible para futuras versiones. El frontend se publicó en GitHub Pages y el
+QA en producción pasó 9/9 controles sobre el commit `274e728`.
 
 Está escrito para que lo siga una persona de principio a fin sin tener que
 investigar nada por el camino. Si algo obliga a improvisar, ese punto es un
@@ -385,6 +385,7 @@ para una edición normal, el TTL ya se encarga.
 | ☑ | Rótulos reales de la UI anotados en este documento |
 | ☑ | CORS 2/2 desde un origen HTTP local contra el despliegue real |
 | ☑ | Frontend conectado después, con autorización separada y QA local completo |
+| ☑ | GitHub Pages publicó `274e728` y el QA en producción pasó 9/9 controles |
 
 ---
 

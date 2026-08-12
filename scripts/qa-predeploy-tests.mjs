@@ -264,11 +264,11 @@ try {
        .replace(/Estado\s+del\s+11\/08\/2026/gi, "Estado sin registrar"));
   }, "estado de despliegue");
 
-  casoHostil("el README deja de señalar el QA en producción pendiente", (dir) => {
+  casoHostil("el README pierde el veredicto del QA en producción", (dir) => {
     editar(dir, "README.md", (t) =>
-      t.replace(/QA\s+en\s+producci[oó]n/gi, "prueba posterior")
-       .replace(/paso\s+12[^.\n]*pendiente/gi, "paso final sin estado"));
-  }, "QA en producción pendiente");
+      t.replace(/QA\s+en\s+producci[oó]n\s+(pas[oó]|aprobado|completado)/gi, "prueba posterior sin veredicto")
+       .replace(/pasos\s+\*\*0[–-]12[^.\n]*/gi, "pasos sin cierre"));
+  }, "QA en producción registrado como aprobado");
 
   /* --- valor prohibido pasado por parámetro --- */
   console.log("");

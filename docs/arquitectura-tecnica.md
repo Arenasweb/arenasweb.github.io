@@ -190,4 +190,4 @@ WhatsApp chat (nueva pestaña)
 - [ ] Inscripción RNPDP (datos personales)
 - [ ] Activar Google Analytics o Meta Pixel
 - [ ] Validar número de WhatsApp real
-- [ ] Migración a Google Sheets API (Fase 3)
+- [x] Catálogo conectado a Google Sheets mediante Apps Script v2 (Fase 3)

@@ -120,7 +120,7 @@ const README_EXIGE = [
   { clave: "un único doGet", re: /una\s+sola\s+vez|[úu]nico\s*`?doGet|exactamente\s+un\s+`?doGet/i },
   { clave: "Script Property del libro", re: new RegExp(PROP_ESPERADA) },
   { clave: "estado de despliegue registrado", re: /DESPLEGADO\s+Y\s+VALIDADO|Estado\s+del\s+11\/08\/2026/i },
-  { clave: "QA en producción pendiente", re: /QA\s+en\s+producci[oó]n[^.\n]*(pendiente|queda\s+pendiente)|paso\s+12[^.\n]*pendiente/i },
+  { clave: "QA en producción registrado como aprobado", re: /QA\s+en\s+producci[oó]n\s+(pas[oó]|aprobado|completado)|pasos\s+\*\*0[–-]12[^.\n]*(ejecutaron|validaron)/i },
   { clave: "catálogo vacío es correcto", re: /cat[áa]logo\s+vac[íi]o\s+es\s+la\s+respuesta\s+correcta|modelos:\s*\[\]/i },
 ];
 

@@ -13,7 +13,7 @@
 | **3.4A–B** — preparación y auditoría pre-despliegue | **CERRADAS** |
 | **3.4C** — despliegue controlado del backend v2 | **EJECUTADA** el 11/08/2026 |
 | **3.4D** — validación del endpoint real | **CERRADA** · endpoint, contrato y CORS aprobados |
-| Conexión del frontend y QA local | **CERRADA** · publicación y QA en producción pendientes |
+| Conexión, publicación y QA en producción | **CERRADA** el 11/08/2026 · 9/9 controles públicos aprobados |
 
 El backend v2 está desplegado y el frontend del árbol de trabajo usa
 `modoDatos: "remoto"`. El endpoint devuelve correctamente **0 modelos
@@ -22,7 +22,9 @@ El fallback local conserva el mismo cierre en producción y la previsualización
 editorial de localhost conserva los 22 borradores.
 
 Pendiente de una persona: las 22 fotografías y la aprobación modelo por modelo.
-Pendiente técnico: publicar el commit autorizado y ejecutar el QA en producción.
+La integración técnica de la Fase 3 está cerrada. El siguiente trabajo del
+catálogo depende de contenido real aprobado; no se publica ningún modelo para
+forzar una demostración.
 
 ---
 
