@@ -194,9 +194,9 @@ Se aceptan indistintamente las claves en `snake_case` (como en la hoja) y en
 
 ---
 
-## 8. Qué deberá hacer Apps Script
+## 8. Qué hace Apps Script v2
 
-Cuando se autorice el despliegue, el endpoint tendrá que:
+El endpoint v2 desplegado:
 
 1. Leer `COLORES_MODELO_WEB` con **lista blanca** de las 15 columnas: una
    columna nueva en la hoja nunca se publica sola.
@@ -207,12 +207,12 @@ Cuando se autorice el despliegue, el endpoint tendrá que:
 6. No publicar observaciones internas, costos, proveedores ni ninguna columna
    auxiliar que el negocio añada a la derecha.
 
-> **Aviso de desalineación pendiente.** `apps-script/Code.gs` sigue implementando
-> el contrato de la fase 8 (hoja `CATALOGO_PUBLICO`, 44 columnas, 4 categorías),
-> mientras el frontend ya usa el de la fase 9 (`MODELOS_WEB`, 28 columnas, 5
-> categorías con `carga`). Antes de añadir colores a Apps Script hay que
-> reconciliar esa diferencia. Ninguno de los dos está desplegado, así que no hay
-> riesgo inmediato.
+La hoja opcional `COLORES_MODELO_WEB` todavía no existe en producción. Por eso
+el endpoint responde `colors: []` y el frontend oculta los controles de color:
+no inventa variantes ni las deduce del nombre del modelo. Cuando se autorice la
+carga, deberán crearse las filas con fotografías reales, `modelo_id` existente,
+`slug_color` explícito, `activo = TRUE` y `estado_aprobacion = APROBADO`. El
+backend y el frontend ya pueden consumirlas sin cambiar el contrato.
 
 ---
 
@@ -225,6 +225,10 @@ manipulado se ignora en silencio y se muestra el color principal.
 **No genera una URL indexable distinta.** El `canonical` sigue siendo la ficha
 del modelo: los colores son variantes visuales del mismo producto, no páginas
 separadas, y duplicar contenido por color perjudicaría el SEO sin aportar nada.
+
+En `catalogo.html`, el filtro **Color** se genera automáticamente a partir de
+las variantes disponibles y solo aparece si existe al menos una. En cada ficha,
+el selector cambia la imagen principal y conserva `?color=...` en la URL.
 
 ---
 

@@ -144,88 +144,108 @@
                «Filtrar», y los chips de categoría quedan siempre a la
                vista como filtro rápido.
           ======================================================== -->
-          <div id="catalogo-filtros" class="catalog-filters" hidden>
-            <div class="catalog-filters__barra">
-              <p class="catalog-filters__titulo">Encuentra la moto ideal para ti</p>
+          <div class="catalog-workspace">
+            <div id="catalogo-filtros" class="catalog-filters" hidden>
+              <div class="catalog-filters__barra">
+                <p class="catalog-filters__titulo">Filtrar catálogo</p>
 
-              <!-- Filtro rápido de categoría. Siempre visible. -->
-              <div
-                id="catalogo-chips"
-                class="catalog-chips"
-                role="group"
-                aria-label="Filtrar por categoría"
-                hidden
-              ></div>
+                <!-- Filtro rápido de categoría. Siempre visible. -->
+                <div
+                  id="catalogo-chips"
+                  class="catalog-chips"
+                  role="group"
+                  aria-label="Filtrar por categoría"
+                  hidden
+                ></div>
 
-              <button
-                type="button"
-                id="catalogo-abrir-filtros"
-                class="btn btn-secondary catalog-filters__abrir"
-                aria-expanded="false"
-                aria-controls="catalogo-panel"
-              >
-                Filtrar
-              </button>
-            </div>
-
-            <!-- Velo: solo pinta y cierra al tocar fuera en móvil. -->
-            <div id="catalogo-panel-velo" class="catalog-panel__velo" hidden></div>
-
-            <div
-              id="catalogo-panel"
-              class="catalog-panel"
-              role="search"
-              aria-label="Filtros del catálogo"
-            >
-              <div class="catalog-panel__cabecera">
-                <p class="catalog-panel__titulo">Filtros</p>
                 <button
                   type="button"
-                  id="catalogo-cerrar-filtros"
-                  class="catalog-panel__cerrar"
-                  aria-label="Cerrar filtros"
+                  id="catalogo-abrir-filtros"
+                  class="btn btn-secondary catalog-filters__abrir"
+                  aria-expanded="false"
+                  aria-controls="catalogo-panel"
                 >
-                  <span aria-hidden="true">&times;</span>
+                  Filtrar
+                  <span id="catalogo-filtros-activos" class="catalog-filters__badge" hidden></span>
                 </button>
               </div>
 
-              <div class="catalog-panel__campos">
-                <div class="catalog-filter catalog-filter--search">
-                  <label for="filtro-busqueda" class="catalog-filter__label">Buscar modelo</label>
-                  <input
-                    type="search"
-                    id="filtro-busqueda"
-                    class="form-input"
-                    placeholder="Ej.: Pulsar, Dominar, Torito"
-                    autocomplete="off"
-                  />
+              <!-- Velo: solo pinta y cierra al tocar fuera en móvil. -->
+              <div id="catalogo-panel-velo" class="catalog-panel__velo" hidden></div>
+
+              <div
+                id="catalogo-panel"
+                class="catalog-panel"
+                role="search"
+                aria-label="Filtros del catálogo"
+              >
+                <div class="catalog-panel__cabecera">
+                  <p class="catalog-panel__titulo">Filtros</p>
+                  <button
+                    type="button"
+                    id="catalogo-cerrar-filtros"
+                    class="catalog-panel__cerrar"
+                    aria-label="Cerrar filtros"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
 
-                <div class="catalog-filter">
-                  <label for="filtro-linea" class="catalog-filter__label">Línea</label>
-                  <select id="filtro-linea" class="form-select">
-                    <option value="">Todas las líneas</option>
-                  </select>
+                <div class="catalog-panel__campos">
+                  <div class="catalog-filter catalog-filter--search">
+                    <label for="filtro-busqueda" class="catalog-filter__label">Buscar modelo</label>
+                    <input
+                      type="search"
+                      id="filtro-busqueda"
+                      class="form-input"
+                      placeholder="Ej.: Pulsar, Dominar, Torito"
+                      autocomplete="off"
+                    />
+                  </div>
+
+                  <div class="catalog-filter">
+                    <label for="filtro-linea" class="catalog-filter__label">Línea</label>
+                    <select id="filtro-linea" class="form-select">
+                      <option value="">Todas las líneas</option>
+                    </select>
+                  </div>
+
+                  <div class="catalog-filter">
+                    <label for="filtro-color" class="catalog-filter__label">Color</label>
+                    <select id="filtro-color" class="form-select">
+                      <option value="">Todos los colores</option>
+                    </select>
+                  </div>
+
+                  <button type="button" id="filtro-limpiar" class="btn btn-secondary catalog-filter__reset" hidden>
+                    Limpiar filtros
+                  </button>
                 </div>
 
-                <button type="button" id="filtro-limpiar" class="btn btn-secondary catalog-filter__reset" hidden>
-                  Limpiar filtros
-                </button>
-              </div>
-
-              <!-- Solo se ve dentro del panel móvil: en escritorio no hay
-                   nada que «aplicar», el filtrado ya es inmediato. -->
-              <div class="catalog-panel__pie">
-                <button type="button" id="catalogo-aplicar-filtros" class="btn btn-primary">
-                  Ver resultados
-                </button>
+                <!-- Solo se ve dentro del panel móvil: en escritorio no hay
+                     nada que «aplicar», el filtrado ya es inmediato. -->
+                <div class="catalog-panel__pie">
+                  <button type="button" id="catalogo-aplicar-filtros" class="btn btn-primary">
+                    Ver resultados
+                  </button>
+                </div>
               </div>
             </div>
+
+            <div class="catalog-results">
+              <div id="catalogo-toolbar" class="catalog-results__toolbar" hidden>
+                <p id="catalogo-contador" class="catalog-count" role="status" aria-live="polite"></p>
+                <div class="catalog-sort">
+                  <label for="filtro-orden" class="catalog-sort__label">Ordenar</label>
+                  <select id="filtro-orden" class="form-select catalog-sort__select">
+                    <option value="relevancia">Orden recomendado</option>
+                  </select>
+                </div>
+              </div>
+
+              <div id="catalogo-grid" class="catalog-grid"></div>
+            </div>
           </div>
-
-          <p id="catalogo-contador" class="catalog-count" role="status" aria-live="polite"></p>
-
-          <div id="catalogo-grid" class="catalog-grid"></div>
         </div>
       </section>
 

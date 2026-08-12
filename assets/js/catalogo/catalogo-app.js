@@ -8,16 +8,16 @@
    Un mismo archivo porque comparten datos, tarjeta y estados; cada
    superficie se activa solo si su contenedor existe en la página.
 
-   FILTRADO. Tres criterios que se combinan con Y lógico: búsqueda de
-   texto, categoría y línea. Todas las opciones se generan a partir de
-   los datos —nunca están escritas en el código—, así que una categoría
-   o una línea nueva aprobada en la hoja aparece sola. Un filtro que se
+   FILTRADO. Cuatro criterios que se combinan con Y lógico: búsqueda de
+   texto, categoría, línea y variante de color. Todas las opciones se
+   generan a partir de los datos —nunca están escritas en el código—, así
+   que una categoría o una línea nueva aprobada en la hoja aparece sola. Un filtro que se
    quedaría sin opciones utilizables no se muestra.
 
    Los criterios viven en un único objeto `filtros`, y toda la interfaz
    (chips, buscador, selects, panel móvil, URL) se sincroniza desde él.
-   Añadir un criterio futuro —precio, cilindrada— consiste en sumar una
-   clave a ese objeto y una condición en coincide(), sin tocar el resto.
+   El orden se mantiene separado de los criterios: recomendado, nombre y,
+   solo cuando hay importes realmente publicables, precio.
    ================================================================ */
 
 window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
@@ -46,7 +46,14 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
   /** Ancho a partir del cual los filtros se muestran desplegados. */
   var MEDIA_ESCRITORIO = "(min-width: 861px)";
 
-  var filtros = { texto: "", categoria: "", linea: "" };
+  var ORDEN_RECOMENDADO = "relevancia";
+  var ORDENES_BASE = [
+    { valor: ORDEN_RECOMENDADO, texto: "Orden recomendado" },
+    { valor: "nombre-asc", texto: "Nombre: A a Z" },
+    { valor: "nombre-desc", texto: "Nombre: Z a A" },
+  ];
+
+  var filtros = { texto: "", categoria: "", linea: "", color: "", orden: ORDEN_RECOMENDADO };
 
   /** Referencias de la interfaz de filtros, resueltas una sola vez. */
   var dom = {};
@@ -60,13 +67,22 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
      ================================================================ */
 
   function hayFiltrosActivos() {
-    return !!(filtros.texto || filtros.categoria || filtros.linea);
+    return !!(filtros.texto || filtros.categoria || filtros.linea || filtros.color);
+  }
+
+  function numeroFiltrosActivos() {
+    return [filtros.texto, filtros.categoria, filtros.linea, filtros.color].filter(Boolean).length;
   }
 
   /** ¿Este modelo cumple TODOS los criterios activos? */
   function coincide(modelo) {
     if (filtros.categoria && modelo.categoria !== filtros.categoria) return false;
     if (filtros.linea && modelo.linea !== filtros.linea) return false;
+    if (filtros.color) {
+      var colores = modelo.colors || [];
+      var tieneColor = colores.some(function (color) { return color.slug === filtros.color; });
+      if (!tieneColor) return false;
+    }
     if (filtros.texto) {
       var busqueda = U.normalizarBusqueda(filtros.texto);
       var indice = U.normalizarBusqueda(
@@ -77,8 +93,32 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     return true;
   }
 
+  function compararNombre(a, b) {
+    return (a.titulo || a.modelo || "").localeCompare(b.titulo || b.modelo || "", "es", {
+      sensitivity: "base",
+    });
+  }
+
+  function ordenarModelos(lista) {
+    var salida = lista.slice();
+    if (filtros.orden === "nombre-asc") return salida.sort(compararNombre);
+    if (filtros.orden === "nombre-desc") return salida.sort(function (a, b) { return compararNombre(b, a); });
+    if (filtros.orden === "precio-asc" || filtros.orden === "precio-desc") {
+      var sentido = filtros.orden === "precio-asc" ? 1 : -1;
+      return salida.sort(function (a, b) {
+        var precioA = a.mostrarPrecio && typeof a.precioPublico === "number" ? a.precioPublico : null;
+        var precioB = b.mostrarPrecio && typeof b.precioPublico === "number" ? b.precioPublico : null;
+        if (precioA === null && precioB === null) return compararNombre(a, b);
+        if (precioA === null) return 1;
+        if (precioB === null) return -1;
+        return (precioA - precioB) * sentido || compararNombre(a, b);
+      });
+    }
+    return salida;
+  }
+
   function aplicarFiltros(estado) {
-    return estado.modelos.filter(coincide);
+    return ordenarModelos(estado.modelos.filter(coincide));
   }
 
   /**
@@ -90,20 +130,23 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
   var PARAMS_FILTRO = [
     ["categoria", "categoria"],
     ["linea", "linea"],
+    ["color", "color"],
     ["q", "texto"],
+    ["orden", "orden"],
   ];
 
   function sincronizarUrl() {
     if (!window.history || !window.history.replaceState) return;
     try {
-      // Se PARTE de lo que ya hay en la URL y solo se tocan las tres
-      // claves propias del filtro. Cualquier otro parámetro
+      // Se PARTE de lo que ya hay en la URL y solo se tocan las claves
+      // propias de los filtros y el orden. Cualquier otro parámetro
       // —`preview=1`, campañas, o lo que se añada en el futuro— se
       // conserva intacto: el filtro no es dueño de la cadena de
       // consulta, solo de su parte.
       var params = new URLSearchParams(window.location.search);
       PARAMS_FILTRO.forEach(function (par) {
         var valor = filtros[par[1]];
+        if (par[1] === "orden" && valor === ORDEN_RECOMENDADO) valor = "";
         if (valor) params.set(par[0], valor);
         else params.delete(par[0]);
       });
@@ -118,14 +161,18 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
   function leerFiltrosDeUrl(estado) {
     var categoria = U.paramUrl("categoria", 40).toLowerCase();
     var linea = U.paramUrl("linea", 60);
+    var color = U.paramUrl("color", 60).toLowerCase();
     var texto = U.paramUrl("q", 80);
+    var orden = U.paramUrl("orden", 30).toLowerCase();
 
     var categoriasValidas = NS.data.categoriasConModelos(estado).map(function (c) {
       return c.slug;
     });
     if (categoriasValidas.indexOf(categoria) !== -1) filtros.categoria = categoria;
     if (NS.data.lineas(estado).indexOf(linea) !== -1) filtros.linea = linea;
+    if (coloresDisponibles(estado).some(function (c) { return c.valor === color; })) filtros.color = color;
     if (texto) filtros.texto = texto;
+    if (ordenesDisponibles(estado).some(function (o) { return o.valor === orden; })) filtros.orden = orden;
   }
 
   /* ================================================================
@@ -176,6 +223,11 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
         : "Sin resultados";
     }
     if (dom.limpiar) dom.limpiar.hidden = !hayFiltrosActivos();
+    if (dom.badge) {
+      var activos = numeroFiltrosActivos();
+      dom.badge.hidden = activos === 0;
+      dom.badge.textContent = activos || "";
+    }
     actualizarChips();
     sincronizarUrl();
   }
@@ -228,7 +280,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     actualizarChips();
   }
 
-  function poblarSelect(select, opciones, etiquetaTodas) {
+  function poblarSelect(select, opciones, etiquetaTodas, minimoUtil) {
     if (!select) return false;
     U.vaciar(select);
     select.appendChild(U.el("option", { value: "" }, etiquetaTodas));
@@ -237,17 +289,56 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     });
     var campo = select.closest(".catalog-filter");
     // Un filtro con una sola opción real no aporta nada: se oculta.
-    var util = opciones.length > 1;
+    var util = opciones.length >= (typeof minimoUtil === "number" ? minimoUtil : 2);
     if (campo) campo.hidden = !util;
     return util;
+  }
+
+  function coloresDisponibles(estado) {
+    var vistos = Object.create(null);
+    var salida = [];
+    estado.modelos.forEach(function (modelo) {
+      (modelo.colors || []).forEach(function (color) {
+        if (!color.slug || vistos[color.slug]) return;
+        vistos[color.slug] = true;
+        salida.push({ valor: color.slug, texto: color.nombre || color.slug });
+      });
+    });
+    return salida.sort(function (a, b) {
+      return a.texto.localeCompare(b.texto, "es", { sensitivity: "base" });
+    });
+  }
+
+  function ordenesDisponibles(estado) {
+    var salida = ORDENES_BASE.slice();
+    var hayPrecios = estado.modelos.some(function (modelo) {
+      return modelo.mostrarPrecio && typeof modelo.precioPublico === "number";
+    });
+    if (hayPrecios) {
+      salida.push({ valor: "precio-asc", texto: "Precio: menor a mayor" });
+      salida.push({ valor: "precio-desc", texto: "Precio: mayor a menor" });
+    }
+    return salida;
+  }
+
+  function poblarOrden(estado) {
+    if (!dom.orden) return;
+    U.vaciar(dom.orden);
+    ordenesDisponibles(estado).forEach(function (opcion) {
+      dom.orden.appendChild(U.el("option", { value: opcion.valor }, opcion.texto));
+    });
   }
 
   function limpiarFiltros(estado, devolverFoco) {
     filtros.texto = "";
     filtros.categoria = "";
     filtros.linea = "";
+    filtros.color = "";
+    filtros.orden = ORDEN_RECOMENDADO;
     if (dom.busqueda) dom.busqueda.value = "";
     if (dom.linea) dom.linea.value = "";
+    if (dom.color) dom.color.value = "";
+    if (dom.orden) dom.orden.value = ORDEN_RECOMENDADO;
     pintarRejilla(estado);
     if (devolverFoco && dom.busqueda) dom.busqueda.focus();
   }
@@ -370,16 +461,20 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     dom = {
       grid: contenedor,
       contador: $("#catalogo-contador"),
+      toolbar: $("#catalogo-toolbar"),
       filtros: $("#catalogo-filtros"),
       chips: $("#catalogo-chips"),
       busqueda: $("#filtro-busqueda"),
       linea: $("#filtro-linea"),
+      color: $("#filtro-color"),
+      orden: $("#filtro-orden"),
       limpiar: $("#filtro-limpiar"),
       aviso: $("#catalogo-aviso"),
       avisoPreview: $("#catalogo-preview"),
       panel: $("#catalogo-panel"),
       velo: $("#catalogo-panel-velo"),
       abrir: $("#catalogo-abrir-filtros"),
+      badge: $("#catalogo-filtros-activos"),
       cerrar: $("#catalogo-cerrar-filtros"),
       aplicar: $("#catalogo-aplicar-filtros"),
     };
@@ -403,6 +498,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
         contenedor.appendChild(NS.ui.estadoError());
         if (dom.filtros) dom.filtros.hidden = true;
         if (dom.contador) dom.contador.textContent = "";
+        if (dom.toolbar) dom.toolbar.hidden = true;
         return;
       }
 
@@ -410,10 +506,12 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
         contenedor.appendChild(NS.ui.estadoVacio(estado.config.mensajeCatalogoVacio));
         if (dom.filtros) dom.filtros.hidden = true;
         if (dom.contador) dom.contador.textContent = "";
+        if (dom.toolbar) dom.toolbar.hidden = true;
         return;
       }
 
       if (dom.filtros) dom.filtros.hidden = false;
+      if (dom.toolbar) dom.toolbar.hidden = false;
 
       // Panel editorial local. Fuera del modo depuración devuelve null.
       if (NS.debug) {
@@ -431,10 +529,14 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
         }),
         "Todas las líneas"
       );
+      poblarSelect(dom.color, coloresDisponibles(estado), "Todos los colores", 1);
+      poblarOrden(estado);
 
       leerFiltrosDeUrl(estado);
       if (dom.busqueda) dom.busqueda.value = filtros.texto;
       if (dom.linea) dom.linea.value = filtros.linea;
+      if (dom.color) dom.color.value = filtros.color;
+      if (dom.orden) dom.orden.value = filtros.orden;
 
       pintarRejilla(estado);
 
@@ -456,6 +558,20 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       if (dom.linea) {
         dom.linea.addEventListener("change", function () {
           filtros.linea = dom.linea.value || "";
+          pintarRejilla(estado);
+        });
+      }
+
+      if (dom.color) {
+        dom.color.addEventListener("change", function () {
+          filtros.color = dom.color.value || "";
+          pintarRejilla(estado);
+        });
+      }
+
+      if (dom.orden) {
+        dom.orden.addEventListener("change", function () {
+          filtros.orden = dom.orden.value || ORDEN_RECOMENDADO;
           pintarRejilla(estado);
         });
       }
@@ -528,9 +644,14 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     coincide: coincide,
     filtros: filtros,
     hayFiltrosActivos: hayFiltrosActivos,
+    numeroFiltrosActivos: numeroFiltrosActivos,
+    ordenarModelos: ordenarModelos,
+    coloresDisponibles: coloresDisponibles,
+    ordenesDisponibles: ordenesDisponibles,
     MAX_DESTACADOS: MAX_DESTACADOS,
     // Expuestos para comprobaciones locales; no se usan en el flujo normal.
     _sincronizarUrl: sincronizarUrl,
+    _leerFiltrosDeUrl: leerFiltrosDeUrl,
     _fijarEstadoPanel: fijarEstadoPanel,
     _estadoPanel: panel,
     _dom: function (nuevo) {

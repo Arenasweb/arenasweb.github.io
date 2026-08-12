@@ -65,9 +65,16 @@ function cargarModulos(location) {
     window: ventana,
     URLSearchParams,
     console,
-    // document solo se necesita dentro de funciones que estas pruebas no
-    // invocan; se deja un mínimo por si alguna ruta lo roza.
-    document: { createElement: () => ({ setAttribute() {}, appendChild() {}, style: {} }) },
+    // El controlador de catálogo registra su arranque al cargar. Se deja
+    // pendiente el DOMContentLoaded para probar su lógica pura sin iniciar
+    // una interfaz ficticia.
+    document: {
+      readyState: "loading",
+      addEventListener() {},
+      querySelector() { return null; },
+      getElementById() { return null; },
+      createElement: () => ({ setAttribute() {}, appendChild() {}, style: {} }),
+    },
   });
 
   for (const archivo of [
@@ -75,6 +82,7 @@ function cargarModulos(location) {
     "assets/js/catalogo/catalogo-schema.js",
     "assets/js/catalogo/catalogo-completitud.js",
     "assets/js/catalogo/catalogo-data.js",
+    "assets/js/catalogo/catalogo-app.js",
   ]) {
     runInContext(readFileSync(join(RAIZ, archivo), "utf8"), contexto, { filename: archivo });
   }
@@ -86,6 +94,7 @@ const U = NS.utils;
 const S = NS.schema;
 const C = NS.completitud;
 const D = NS.data;
+const A = NS.app;
 
 /* ================================================================
    Arnés de pruebas
@@ -1370,6 +1379,82 @@ comprobar("catálogo real: 0 publicados", resumenReal.publicados === 0);
 comprobar("catálogo real: 0 listos (no hay fotografías)", resumenReal.listosParaPublicar === 0,
   String(resumenReal.listosParaPublicar));
 comprobar("catálogo real: sigue saliendo con código 0", realQa.status === 0, "exit=" + realQa.status);
+
+/* ================================================================
+   17 bis. FILTROS Y ORDEN DEL CATÁLOGO
+   ================================================================ */
+
+grupo("17 bis. FILTROS Y ORDEN DEL CATÁLOGO");
+
+const modelosFiltro = [
+  {
+    id: "F-1", modelo: "Pulsar 180", titulo: "Pulsar 180", categoria: "ciudad",
+    linea: "Pulsar", subcategoria: "Naked", colors: [
+      { slug: "rojo", nombre: "Rojo" }, { slug: "azul", nombre: "Azul" },
+    ], mostrarPrecio: true, precioPublico: 10000,
+  },
+  {
+    id: "F-2", modelo: "Boxer CT 100", titulo: "Boxer CT 100", categoria: "trabajo",
+    linea: "Boxer", subcategoria: "Utilitaria", colors: [], mostrarPrecio: false,
+  },
+  {
+    id: "F-3", modelo: "Pulsar NS 200", titulo: "Pulsar NS 200", categoria: "deportiva",
+    linea: "Pulsar", subcategoria: "Naked", colors: [{ slug: "rojo", nombre: "Rojo" }],
+    mostrarPrecio: true, precioPublico: 13000,
+  },
+  {
+    id: "F-4", modelo: "Dominar 400", titulo: "Dominar 400", categoria: "aventura",
+    linea: "Dominar", subcategoria: "Touring", colors: [{ slug: "negro", nombre: "Negro" }],
+    mostrarPrecio: true, precioPublico: 12000,
+  },
+];
+const estadoFiltro = { modelos: modelosFiltro };
+
+function reiniciarFiltrosApp() {
+  Object.assign(A.filtros, { texto: "", categoria: "", linea: "", color: "", orden: "relevancia" });
+}
+
+reiniciarFiltrosApp();
+Object.assign(A.filtros, { texto: "180", categoria: "ciudad", linea: "Pulsar", color: "rojo" });
+comprobar("búsqueda, categoría, línea y color se combinan con Y lógico",
+  iguales(A.aplicarFiltros(estadoFiltro).map((m) => m.id), ["F-1"]));
+
+reiniciarFiltrosApp();
+A.filtros.color = "azul";
+comprobar("el color solo incluye modelos con una variante real coincidente",
+  iguales(A.aplicarFiltros(estadoFiltro).map((m) => m.id), ["F-1"]));
+comprobar("el color cuenta como filtro activo", A.hayFiltrosActivos() && A.numeroFiltrosActivos() === 1);
+
+reiniciarFiltrosApp();
+A.filtros.orden = "nombre-asc";
+comprobar("orden por nombre A–Z",
+  iguales(A.aplicarFiltros(estadoFiltro).map((m) => m.id), ["F-2", "F-4", "F-1", "F-3"]));
+A.filtros.orden = "nombre-desc";
+comprobar("orden por nombre Z–A",
+  iguales(A.aplicarFiltros(estadoFiltro).map((m) => m.id), ["F-3", "F-1", "F-4", "F-2"]));
+comprobar("cambiar solo el orden no cuenta como filtro activo", !A.hayFiltrosActivos());
+
+A.filtros.orden = "precio-asc";
+comprobar("precio ascendente deja los modelos sin precio al final",
+  iguales(A.aplicarFiltros(estadoFiltro).map((m) => m.id), ["F-1", "F-4", "F-3", "F-2"]));
+A.filtros.orden = "precio-desc";
+comprobar("precio descendente deja los modelos sin precio al final",
+  iguales(A.aplicarFiltros(estadoFiltro).map((m) => m.id), ["F-3", "F-4", "F-1", "F-2"]));
+
+reiniciarFiltrosApp();
+comprobar("orden recomendado conserva el orden editorial de origen",
+  iguales(A.aplicarFiltros(estadoFiltro).map((m) => m.id), ["F-1", "F-2", "F-3", "F-4"]));
+comprobar("los colores disponibles se deduplican y ordenan por nombre",
+  iguales(A.coloresDisponibles(estadoFiltro), [
+    { valor: "azul", texto: "Azul" },
+    { valor: "negro", texto: "Negro" },
+    { valor: "rojo", texto: "Rojo" },
+  ]));
+comprobar("el orden por precio aparece cuando existe un precio publicable",
+  A.ordenesDisponibles(estadoFiltro).some((o) => o.valor === "precio-asc"));
+comprobar("el orden por precio se oculta si ningún precio es publicable",
+  !A.ordenesDisponibles({ modelos: [modelosFiltro[1]] }).some((o) => o.valor.startsWith("precio-")));
+reiniciarFiltrosApp();
 
 /* ================================================================
    18. POST-REAUDITORÍA — la documentación no contradice al código
