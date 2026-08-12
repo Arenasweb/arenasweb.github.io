@@ -13,6 +13,7 @@
 
   "colores": [
     {
+      "_origen": "demo-local",
       "id": "DEMO-C01", "modelo_id": "MW-10", "slug_color": "demo-negro",
       "nombre_color": "DEMO Negro", "hex_color": "#111111",
       "imagen_principal": "assets/portadas/camino-deportiva-desktop.webp",
@@ -24,6 +25,7 @@
       "foco_imagen": "center center", "ultima_revision": ""
     },
     {
+      "_origen": "demo-local",
       "id": "DEMO-C02", "modelo_id": "MW-10", "slug_color": "demo-azul",
       "nombre_color": "DEMO Azul", "hex_color": "#184FA3",
       "imagen_principal": "assets/portadas/camino-aventura-desktop.webp",
@@ -35,6 +37,7 @@
       "foco_imagen": "center center", "ultima_revision": ""
     },
     {
+      "_origen": "demo-local",
       "id": "DEMO-C03", "modelo_id": "MW-10", "slug_color": "demo-rojo",
       "nombre_color": "DEMO Rojo", "hex_color": "#B51623",
       "imagen_principal": "assets/portadas/camino-ciudad-desktop.webp",
@@ -44,6 +47,7 @@
       "alt_text": "", "foco_imagen": "50% 40%", "ultima_revision": ""
     },
     {
+      "_origen": "demo-local",
       "_caso": "hex inválido: la muestra cae al relleno neutro con diagonal y el nombre sigue identificando la variante",
       "id": "DEMO-C04", "modelo_id": "MW-10", "slug_color": "demo-hex-invalido",
       "nombre_color": "DEMO Hex inválido", "hex_color": "rojo brillante; background:url(x)",
@@ -53,6 +57,7 @@
       "alt_text": "", "foco_imagen": "", "ultima_revision": ""
     },
     {
+      "_origen": "demo-local",
       "_caso": "quinto color: comprueba que la fila de muestras envuelve bien",
       "id": "DEMO-C05", "modelo_id": "MW-10", "slug_color": "demo-plata",
       "nombre_color": "DEMO Plata", "hex_color": "#c9ced8",
@@ -63,6 +68,7 @@
     },
 
     {
+      "_origen": "demo-local",
       "_caso": "modelo con exactamente DOS colores aprobados",
       "id": "DEMO-C06", "modelo_id": "MW-11", "slug_color": "demo-negro",
       "nombre_color": "DEMO Negro", "hex_color": "#111111",
@@ -73,6 +79,7 @@
       "alt_text": "", "foco_imagen": "", "ultima_revision": ""
     },
     {
+      "_origen": "demo-local",
       "id": "DEMO-C07", "modelo_id": "MW-11", "slug_color": "demo-blanco",
       "nombre_color": "DEMO Blanco", "hex_color": "#eef1f6",
       "imagen_principal": "assets/portadas/camino-ciudad-desktop.webp",
@@ -82,6 +89,7 @@
     },
 
     {
+      "_origen": "demo-local",
       "_caso": "modelo con UN SOLO color: no debe dibujarse selector, solo el dato",
       "id": "DEMO-C08", "modelo_id": "MW-05", "slug_color": "demo-unico",
       "nombre_color": "DEMO Color único", "hex_color": "#2f5d3a",
@@ -93,6 +101,7 @@
     },
 
     {
+      "_origen": "demo-local",
       "_caso": "activo=false: fuera en producción, visible en preview marcado como borrador",
       "id": "DEMO-C09", "modelo_id": "MW-13", "slug_color": "demo-inactivo",
       "nombre_color": "DEMO Inactivo", "hex_color": "#7a4fd0",
@@ -102,6 +111,7 @@
       "alt_text": "", "foco_imagen": "", "ultima_revision": ""
     },
     {
+      "_origen": "demo-local",
       "_caso": "estado BORRADOR: mismo tratamiento que el inactivo",
       "id": "DEMO-C10", "modelo_id": "MW-13", "slug_color": "demo-borrador",
       "nombre_color": "DEMO Borrador", "hex_color": "#d08a4f",
@@ -112,6 +122,7 @@
     },
 
     {
+      "_origen": "demo-local",
       "_caso": "sin imagen_principal: debe descartarse siempre, con aviso en consola",
       "id": "DEMO-C11", "modelo_id": "MW-13", "slug_color": "demo-sin-imagen",
       "nombre_color": "DEMO Sin imagen", "hex_color": "#333333",
@@ -120,6 +131,7 @@
       "alt_text": "", "foco_imagen": "", "ultima_revision": ""
     },
     {
+      "_origen": "demo-local",
       "_caso": "ruta insegura (host externo): rutaImagen la rechaza, la variante se descarta",
       "id": "DEMO-C12", "modelo_id": "MW-13", "slug_color": "demo-ruta-insegura",
       "nombre_color": "DEMO Ruta insegura", "hex_color": "#444444",
@@ -129,6 +141,7 @@
       "alt_text": "", "foco_imagen": "", "ultima_revision": ""
     },
     {
+      "_origen": "demo-local",
       "_caso": "escape de directorio: también debe rechazarse",
       "id": "DEMO-C13", "modelo_id": "MW-13", "slug_color": "demo-ruta-traversal",
       "nombre_color": "DEMO Traversal", "hex_color": "#555555",
@@ -138,6 +151,7 @@
       "alt_text": "", "foco_imagen": "", "ultima_revision": ""
     },
     {
+      "_origen": "demo-local",
       "_caso": "modelo_id inexistente: los colores se descartan sin crear ningún modelo fantasma",
       "id": "DEMO-C14", "modelo_id": "MW-NO-EXISTE", "slug_color": "demo-huerfano",
       "nombre_color": "DEMO Huérfano", "hex_color": "#666666",

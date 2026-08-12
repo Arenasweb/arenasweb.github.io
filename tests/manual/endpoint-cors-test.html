@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Banco de CORS — endpoint del catálogo · ARENAS</title>
+<!--
+  ================================================================
+  ARENAS MOTOCICLETAS — banco manual de CORS
+  ================================================================
+
+  HERRAMIENTA DE DESARROLLO. No forma parte del sitio.
+  No está enlazada desde ninguna página, lleva noindex y no debe
+  aparecer en la navegación.
+
+  POR QUÉ EXISTE
+  Node puede comprobar que el endpoint responde el JSON correcto, y
+  `scripts/qa-endpoint-real.mjs` lo hace. Lo que Node NO puede
+  comprobar es si un NAVEGADOR, servido desde otro origen, tiene
+  permiso para LEER esa respuesta. Eso es CORS, y solo lo decide el
+  navegador. El despliegue v2 pasó esta prueba el 11/08/2026; la herramienta se
+  conserva para repetirla en cada nueva implementación.
+
+  QUÉ NO HACE
+  · No guarda la URL: ni en localStorage, ni en sessionStorage, ni en
+    cookies, ni en IndexedDB, ni en la barra de direcciones.
+    Se escribe, se usa y desaparece al recargar.
+  · No trae nada de fuera: sin fuentes, sin CDN, sin analítica.
+  · No escribe en ningún sitio. Solo hace peticiones GET.
+
+  CÓMO USARLO
+  Sírvela por HTTP, no la abras con doble clic: con file:// el origen
+  es `null` y el navegador aplica reglas distintas a las que tendrá
+  el sitio real. El resultado no sería representativo.
+
+      python -m http.server 3000
+      → http://localhost:3000/tests/manual/endpoint-cors-test.html
+
+  Ver docs/banco-pruebas-endpoint-real.md.
+  ================================================================
+-->
+<style>
+  :root {
+    --tinta: #16181d;
+    --papel: #ffffff;
+    --borde: #d9dde3;
+    --suave: #f4f6f8;
+    --tenue: #5d646e;
+    --ok: #0f7a3d;
+    --mal: #b3261e;
+    --aviso: #8a5a00;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 24px 20px 64px;
+    font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--tinta);
+    background: var(--papel);
+  }
+  main { max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 21px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  h2 { font-size: 15px; margin: 30px 0 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--tenue); }
+  p { margin: 0 0 12px; }
+  .sub { color: var(--tenue); margin-bottom: 22px; }
+  .aviso {
+    border: 1px solid var(--borde);
+    border-left: 3px solid var(--aviso);
+    background: var(--suave);
+    padding: 12px 14px;
+    border-radius: 4px;
+    margin: 0 0 22px;
+    font-size: 14px;
+  }
+  label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 14px; }
+  input[type="url"] {
+    width: 100%;
+    padding: 10px 12px;
+    font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    border: 1px solid var(--borde);
+    border-radius: 4px;
+    background: var(--papel);
+    color: var(--tinta);
+  }
+  input[type="url"]:focus { outline: 2px solid #2563eb; outline-offset: 1px; }
+  .botones { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0 0; }
+  button {
+    padding: 9px 16px;
+    font: 600 14px/1 inherit;
+    border: 1px solid var(--tinta);
+    border-radius: 4px;
+    background: var(--tinta);
+    color: var(--papel);
+    cursor: pointer;
+  }
+  button.sec { background: var(--papel); color: var(--tinta); }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+  #salida {
+    margin-top: 22px;
+    font: 12.5px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: var(--suave);
+    border: 1px solid var(--borde);
+    border-radius: 4px;
+    padding: 14px;
+    min-height: 60px;
+    overflow-x: auto;
+  }
+  #salida:empty::before { content: "Los resultados aparecerán aquí."; color: var(--tenue); }
+  .ok { color: var(--ok); font-weight: 600; }
+  .mal { color: var(--mal); font-weight: 600; }
+  .av { color: var(--aviso); font-weight: 600; }
+  .tenue { color: var(--tenue); }
+  hr { border: 0; border-top: 1px solid var(--borde); margin: 26px 0; }
+  code { background: var(--suave); padding: 1px 5px; border-radius: 3px; font-size: 0.92em; }
+  footer { margin-top: 34px; font-size: 13px; color: var(--tenue); }
+</style>
+</head>
+<body>
+<main>
+
+  <h1>Banco de CORS del endpoint</h1>
+  <p class="sub">Herramienta de desarrollo. No forma parte del sitio publicado.</p>
+
+  <div class="aviso">
+    <strong>La URL no se guarda.</strong> No se escribe en <code>localStorage</code>,
+    ni en cookies, ni en la barra de direcciones. Al recargar, este campo vuelve a
+    estar vacío.
+    <br><br>
+    <strong>Sírvela por HTTP.</strong> Abrir el archivo con doble clic
+    (<code>file://</code>) da un origen <code>null</code> y el navegador aplica
+    reglas distintas de las que tendrá el sitio real: el resultado no valdría.
+  </div>
+
+  <label for="url">URL del despliegue (<code>…/exec</code>)</label>
+  <input type="url" id="url" placeholder="https://script.google.com/macros/s/…/exec"
+         autocomplete="off" spellcheck="false" inputmode="url">
+
+  <div class="botones">
+    <button id="bSalud" type="button">Probar salud</button>
+    <button id="bCatalogo" type="button">Probar catálogo</button>
+    <button id="bAmbas" type="button">Probar las dos</button>
+    <button id="bLimpiar" type="button" class="sec">Limpiar</button>
+  </div>
+
+  <div id="salida" role="log" aria-live="polite"></div>
+
+  <hr>
+
+  <h2>Cómo leer el resultado</h2>
+  <p><strong class="ok">CORS OK</strong> — el navegador ha podido <em>leer</em> la
+  respuesta desde este origen. Es lo que necesita el sitio.</p>
+  <p><strong class="mal">BLOQUEADO POR CORS</strong> — la petición llegó al servidor,
+  pero el navegador no deja leer la respuesta. El JSON puede ser perfecto: da igual.
+  Hay que revisar el acceso del despliegue.</p>
+  <p><strong class="mal">NO SE ALCANZA</strong> — la petición no llegó siquiera.
+  URL equivocada, sin red, o el despliegue no existe. <em>No</em> es un problema de CORS.</p>
+  <p><strong class="av">RESPONDE PERO NO ES JSON</strong> — se pudo leer, pero el
+  contenido no es el contrato. Suele significar que Google devolvió una página de
+  error o de inicio de sesión: el despliegue no es accesible sin cuenta.</p>
+
+  <h2>Cómo se distinguen</h2>
+  <p class="tenue">Cuando CORS bloquea, <code>fetch</code> falla sin decir por qué:
+  el navegador oculta el motivo a propósito. Para separarlo de un fallo de red, este
+  banco repite la petición con <code>mode: "no-cors"</code>. Esa segunda petición no
+  permite leer nada, pero sí distingue los dos casos: si la normal falla y la opaca
+  funciona, el servidor está ahí y el bloqueo es de CORS.</p>
+
+  <footer>
+    ARENAS MOTOCICLETAS · banco manual · ver <code>docs/banco-pruebas-endpoint-real.md</code>
+  </footer>
+
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var TIMEOUT = 15000;
+  var CONTRATO_ESPERADO = "2";
+
+  var elUrl = document.getElementById("url");
+  var elSalida = document.getElementById("salida");
+  var botones = ["bSalud", "bCatalogo", "bAmbas", "bLimpiar"].map(function (id) {
+    return document.getElementById(id);
+  });
+
+  /* ---------- salida ---------- */
+
+  function esc(t) {
+    return String(t).replace(/[&<>]/g, function (c) {
+      return c === "&" ? "&amp;" : c === "<" ? "&lt;" : "&gt;";
+    });
+  }
+  function escribir(texto, clase) {
+    var span = document.createElement("span");
+    if (clase) span.className = clase;
+    span.textContent = texto + "\n";
+    elSalida.appendChild(span);
+  }
+  function titulo(t) {
+    escribir("");
+    escribir("── " + t + " " + "─".repeat(Math.max(0, 52 - t.length)));
+  }
+
+  /* ---------- utilidades ---------- */
+
+  /** Oculta el identificador del despliegue para que la salida se pueda compartir. */
+  function urlSegura(u) {
+    try {
+      var x = new URL(u);
+      return x.origin + x.pathname.replace(/\/s\/[^/]+/, "/s/…");
+    } catch (e) {
+      return "(URL no interpretable)";
+    }
+  }
+
+  function conTimeout(promesa, ms) {
+    var reloj;
+    return Promise.race([
+      promesa,
+      new Promise(function (_, rechazar) {
+        reloj = setTimeout(function () { rechazar(new Error("timeout")); }, ms);
+      })
+    ]).finally(function () { clearTimeout(reloj); });
+  }
+
+  function construir(base, accion) {
+    var u = new URL(base);
+    u.searchParams.set("action", accion);
+    return u.toString();
+  }
+
+  /**
+   * ¿La petición llega al servidor aunque no podamos leerla?
+   * Una respuesta opaca no se puede inspeccionar —ese es su sentido—
+   * pero que exista demuestra que el servidor está ahí. Es lo único
+   * que separa «CORS bloquea» de «no hay nadie al otro lado».
+   */
+  function alcanzaOpaca(url) {
+    return conTimeout(fetch(url, { mode: "no-cors", redirect: "follow" }), TIMEOUT)
+      .then(function () { return true; })
+      .catch(function () { return false; });
+  }
+
+  /* ---------- prueba ---------- */
+
+  function probar(base, accion) {
+    var url = construir(base, accion);
+    var t0 = performance.now();
+
+    titulo("?action=" + accion);
+
+    return conTimeout(fetch(url, { method: "GET", redirect: "follow" }), TIMEOUT)
+      .then(function (res) {
+        var ms = Math.round(performance.now() - t0);
+        escribir("CORS OK — el navegador puede leer la respuesta", "ok");
+        escribir("HTTP " + res.status + " " + (res.statusText || "") + " · " + ms + " ms");
+        escribir("Content-Type: " + (res.headers.get("content-type") || "(sin cabecera)"));
+        if (res.redirected) escribir("hubo redirección (normal en Apps Script)", "tenue");
+
+        return res.text().then(function (texto) {
+          var datos = null;
+          try { datos = JSON.parse(texto); } catch (e) { /* se informa abajo */ }
+
+          if (datos === null) {
+            escribir("RESPONDE PERO NO ES JSON", "av");
+            escribir("primeros 200 caracteres:", "tenue");
+            escribir(texto.slice(0, 200));
+            if (/inicia|sign in|accounts\.google/i.test(texto)) {
+              escribir("parece una pantalla de inicio de sesión: el despliegue NO es accesible sin cuenta", "mal");
+            }
+            return;
+          }
+
+          escribir("JSON interpretable · " + texto.length + " bytes");
+          escribir("ok=" + JSON.stringify(datos.ok) +
+                   "  version=" + JSON.stringify(datos.version) +
+                   "  api_version=" + JSON.stringify(datos.api_version));
+
+          if (String(datos.version) !== CONTRATO_ESPERADO) {
+            escribir("la versión de contrato NO es " + CONTRATO_ESPERADO +
+                     ": el sitio descartaría la respuesta y usaría el archivo local", "mal");
+          }
+
+          if (accion === "salud") {
+            escribir("servicio=" + JSON.stringify(datos.servicio) +
+                     "  configurado=" + JSON.stringify(datos.configurado));
+            if (datos.configurado !== true) {
+              escribir("configurado:false → falta la Script Property del libro", "mal");
+            }
+          } else {
+            var nm = Array.isArray(datos.modelos) ? datos.modelos.length : "(no es un array)";
+            var nc = Array.isArray(datos.categorias) ? datos.categorias.length : "(no es un array)";
+            var nk = Array.isArray(datos.colores) ? datos.colores.length : "(no es un array)";
+            escribir("modelos=" + nm + "  categorias=" + nc + "  colores=" + nk);
+            escribir("generated_at=" + JSON.stringify(datos.generated_at));
+
+            if (nm === 0) {
+              escribir("0 modelos es LO CORRECTO mientras las 22 filas sigan en BORRADOR", "tenue");
+            }
+            if (datos.models !== undefined || datos.categories !== undefined) {
+              escribir("emite claves en inglés: el sitio no las encontraría", "mal");
+            }
+            if (datos._diagnostico !== undefined || datos._cache_segundos !== undefined) {
+              escribir("viajan campos internos (_diagnostico / _cache_segundos)", "mal");
+            }
+          }
+        });
+      })
+      .catch(function (err) {
+        var ms = Math.round(performance.now() - t0);
+        if (err && err.message === "timeout") {
+          escribir("SIN RESPUESTA — timeout tras " + TIMEOUT + " ms", "mal");
+          return;
+        }
+        // fetch ha fallado sin decir por qué. Distinguimos con la opaca.
+        return alcanzaOpaca(url).then(function (llega) {
+          if (llega) {
+            escribir("BLOQUEADO POR CORS — la petición llega, el navegador no deja leerla", "mal");
+            escribir("(" + ms + " ms) El JSON puede ser correcto: eso aquí no importa.");
+            escribir("Revisar el acceso del despliegue en el editor de Apps Script.", "tenue");
+          } else {
+            escribir("NO SE ALCANZA — la petición no llegó al servidor", "mal");
+            escribir("(" + ms + " ms) URL equivocada, sin red, o el despliegue no existe.");
+            escribir("Esto NO es un problema de CORS.", "tenue");
+          }
+          escribir("detalle del navegador: " + (err && err.message ? err.message : String(err)), "tenue");
+        });
+      });
+  }
+
+  /* ---------- orquestación ---------- */
+
+  function leerUrl() {
+    var v = elUrl.value.trim();
+    if (!v) { escribir("Escribe la URL del despliegue.", "mal"); return null; }
+    var u;
+    try { u = new URL(v); } catch (e) { escribir("Esa URL no es utilizable.", "mal"); return null; }
+    if (u.protocol !== "https:") { escribir("El endpoint debe ser https.", "mal"); return null; }
+    return v;
+  }
+
+  function bloquear(si) {
+    botones.forEach(function (b) { b.disabled = si; });
+  }
+
+  function lanzar(acciones) {
+    elSalida.textContent = "";
+    var base = leerUrl();
+    if (!base) return;
+
+    escribir("origen de esta página: " + window.location.origin);
+    escribir("endpoint: " + urlSegura(base) + "   (identificador oculto)");
+    if (window.location.protocol === "file:") {
+      escribir("ATENCIÓN: estás en file://. El origen es null y el resultado NO es representativo.", "mal");
+    }
+
+    bloquear(true);
+    acciones
+      .reduce(function (cadena, a) {
+        return cadena.then(function () { return probar(base, a); });
+      }, Promise.resolve())
+      .then(function () {
+        escribir("");
+        escribir("── fin ────────────────────────────────────────────────");
+      })
+      .catch(function (e) {
+        escribir("Error inesperado: " + (e && e.message ? e.message : e), "mal");
+      })
+      .finally(function () { bloquear(false); });
+  }
+
+  document.getElementById("bSalud").addEventListener("click", function () { lanzar(["salud"]); });
+  document.getElementById("bCatalogo").addEventListener("click", function () { lanzar(["catalogo"]); });
+  document.getElementById("bAmbas").addEventListener("click", function () { lanzar(["salud", "catalogo"]); });
+  document.getElementById("bLimpiar").addEventListener("click", function () {
+    elUrl.value = "";
+    elSalida.textContent = "";
+    elUrl.focus();
+  });
+
+  // Nada de persistencia: ni se lee ni se escribe almacenamiento alguno.
+})();
+</script>
+</body>
+</html>

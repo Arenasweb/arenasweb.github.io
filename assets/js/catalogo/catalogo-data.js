@@ -10,10 +10,10 @@
    La interfaz nunca llama a fetch: pide datos aquí y recibe siempre un
    estado renderizable. Esta capa no lanza excepciones hacia arriba.
 
-   CONFIGURACIÓN INICIAL DELIBERADA: modoDatos "local" y endpoint vacío.
-   No hay ningún endpoint ficticio en el código. Cuando exista el
-   despliegue real de Apps Script, se rellena `appsScriptEndpoint` y se
-   cambia `modoDatos` a "remoto"; nada más necesita cambiar.
+   CONFIGURACIÓN VIGENTE: el Web App v2 validado es el origen remoto y el
+   archivo local permanece como fallback restrictivo. La previsualización
+   editorial de localhost usa directamente el origen local porque el endpoint
+   público, por diseño, nunca devuelve borradores.
    ================================================================ */
 
 window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
@@ -25,8 +25,8 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
   var S = NS.schema;
 
   var CONFIG = {
-    modoDatos: "local",
-    appsScriptEndpoint: "",
+    modoDatos: "remoto",
+    appsScriptEndpoint: "https://script.google.com/macros/s/AKfycbxLr18pKS9kiMBc3GxHlAzJDouRc7z4phlSKvO8dDsg2b52oe6p3qZ9s7JQvzynolA_/exec",
     fallbackLocal: true,
     rutaLocal: "data/catalogo-publico.local.json",
     timeoutMs: 7000,
@@ -121,14 +121,43 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     var vistos = {};
     var todos = [];
 
-    registros.forEach(function (bruto) {
+    /**
+     * Clave de identidad para descartar duplicados.
+     *
+     * Antes se usaba siempre el slug, y un slug vacío se comportaba como
+     * una identidad compartida: dos borradores distintos sin slug
+     * colisionaban y solo sobrevivía el primero. Justo los registros que
+     * hay que ver para poder arreglarlos desaparecían de la
+     * previsualización.
+     *
+     * Ahora se usa, en este orden:
+     *   1. el slug, cuando existe — es la identidad pública y la que
+     *      no puede repetirse porque define la URL;
+     *   2. el id, cuando no hay slug — sigue siendo una identidad real,
+     *      así que dos filas con el mismo id siguen siendo ambiguas y
+     *      una se descarta;
+     *   3. la posición en el origen, cuando no hay ni slug ni id — solo
+     *      para no perder registros al procesarlos.
+     *
+     * Esta tercera clave es interna y efímera: no se guarda en el
+     * modelo, no genera ninguna URL y no convierte al registro en
+     * publicable. Un registro sin slug sigue siendo NO PUBLICABLE.
+     */
+    function claveIdentidad(modelo, indice) {
+      if (modelo.slug) return "slug:" + modelo.slug;
+      if (modelo.id) return "id:" + modelo.id;
+      return "pos:" + indice;
+    }
+
+    registros.forEach(function (bruto, indice) {
       var modelo = S.normalizarModelo(bruto, config, avisos);
       if (!modelo) return;
-      if (vistos[modelo.slug]) {
-        avisos.push('Modelo duplicado descartado: "' + modelo.slug + '".');
+      var clave = claveIdentidad(modelo, indice);
+      if (vistos[clave]) {
+        avisos.push('Modelo duplicado descartado: identidad "' + clave + '".');
         return;
       }
-      vistos[modelo.slug] = true;
+      vistos[clave] = true;
       todos.push(modelo);
     });
 
@@ -239,6 +268,15 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
 
     promesaEnCurso = cargarColoresDemo(preview)
       .then(function (coloresExtra) {
+        // La previsualizacion editorial necesita los borradores locales.
+        // El endpoint publico nunca los devuelve, por diseno.
+        if (preview) {
+          return cargarLocal(true, coloresExtra).catch(function (err) {
+            console.warn("[ARENAS] Origen local no disponible:", err && err.message);
+            return estadoVacio("local", true, "error");
+          });
+        }
+
         var cadena = Promise.resolve(null);
 
         if (CONFIG.modoDatos === "remoto" && endpointValido(CONFIG.appsScriptEndpoint)) {
@@ -302,16 +340,18 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
   function relacionados(estado, modelo, maximo) {
     if (!estado || !modelo) return [];
     var tope = typeof maximo === "number" ? maximo : 3;
-    var mismaCategoria = estado.modelos.filter(function (m) {
-      return m.slug !== modelo.slug && m.categoria === modelo.categoria;
+    // Los relacionados existen para llevar a otra ficha. Un modelo sin
+    // slug no tiene ficha a la que llevar, así que no entra aquí ni
+    // siquiera en previsualización: sería una tarjeta que no lleva a
+    // ninguna parte en el único sitio donde su única función es llevar.
+    var candidatos = estado.modelos.filter(function (m) {
+      return m.slug && m.slug !== modelo.slug;
     });
-    var mismaLinea = estado.modelos.filter(function (m) {
-      return (
-        m.slug !== modelo.slug &&
-        m.categoria !== modelo.categoria &&
-        m.linea &&
-        m.linea === modelo.linea
-      );
+    var mismaCategoria = candidatos.filter(function (m) {
+      return m.categoria === modelo.categoria;
+    });
+    var mismaLinea = candidatos.filter(function (m) {
+      return m.categoria !== modelo.categoria && m.linea && m.linea === modelo.linea;
     });
     return mismaCategoria.concat(mismaLinea).slice(0, tope);
   }

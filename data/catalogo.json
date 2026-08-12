@@ -1,32 +1,59 @@
-[
-  {
-    "id": "modelo-ejemplo",
-    "visible": false,
-    "destacado": false,
-    "orden": 1,
-    "categoria": "Categoría administrada desde Google Sheets",
-    "linea": "Línea administrada desde Google Sheets",
-    "modelo": "Modelo administrado desde Google Sheets",
-    "cilindrada": "Consultar",
-    "precio": "Consultar",
-    "precioDesde": "Consultar",
-    "precioConfirmado": false,
-    "cuotaInicial": "Consultar",
-    "cuotaConfirmada": false,
-    "financiamiento": "Dato administrado desde Google Sheets",
-    "stock": "Consultar",
-    "stockConfirmado": false,
-    "colores": "Consultar",
-    "descripcion": "Registro de ejemplo técnico no comercial. El catálogo real se administra desde Google Sheets y se publicará mediante Apps Script filtrado cuando la integración esté activa y aprobada.",
-    "beneficio": "Consultar",
-    "promocion": "Consultar condiciones vigentes",
-    "fotoPrincipal": "PENDIENTE",
-    "fotoSecundaria": "PENDIENTE",
-    "fichaTecnica": "PENDIENTE",
-    "promocionConfirmada": false,
-    "estadoAprobacion": "pendiente",
-    "fuenteDato": "google-sheets-pendiente",
-    "estado": "placeholder",
-    "_nota": "Este archivo es únicamente un fallback público neutro que documenta la estructura esperada por script.js (ESQUEMA_MOTO). NO es el catálogo comercial: no agregar modelos, líneas, versiones, precios, stock ni promociones reales aquí. Esos datos viven en Google Sheets."
+{
+  "_reemplazado": "ARCHIVO HEREDADO — NO EDITAR. Desde la fase 9 la fuente local del catálogo es data/catalogo-publico.local.json, con el contrato de la hoja MODELOS_WEB. Ningún archivo del sitio lee ya este JSON. Se conserva solo como referencia del contrato anterior; puede eliminarse cuando gerencia lo apruebe.",
+
+  "_nota": "FALLBACK PÚBLICO LOCAL del catálogo. Sigue el mismo contrato que devuelve Apps Script en ?action=catalogo, para que el frontend no cambie su forma de leer datos. NO es el catálogo comercial: no se agregan modelos, precios, stock ni promociones reales aquí. El catálogo real se administra en Google Sheets (pestaña CATALOGO_PUBLICO) y llega sanitizado por apps-script/Code.gs. Ver apps-script/SETUP.md.",
+  "_estructuraAnterior": "Hasta la fase 7 este archivo era un array de motos con el esquema ESQUEMA_MOTO de script.js. Desde la fase 8 usa el contrato público {ok, version, config, categories, items}. El registro placeholder anterior no aportaba contenido publicable y se sustituyó por items: [].",
+
+  "ok": true,
+  "version": "1.0",
+  "generatedAt": "",
+  "source": "local-fallback",
+
+  "config": {
+    "monedaDefault": "PEN",
+    "mostrarPrecios": false,
+    "mostrarStock": false,
+    "mostrarPromociones": false,
+    "mensajeSinResultados": "No encontramos modelos con esos filtros."
+  },
+
+  "categories": [
+    {
+      "id": "ciudad",
+      "slug": "ciudad",
+      "titulo": "Ciudad",
+      "descripcion": "Movilidad ágil para el ritmo de cada día.",
+      "orden": 1
+    },
+    {
+      "id": "trabajo",
+      "slug": "trabajo",
+      "titulo": "Trabajo",
+      "descripcion": "Fuerza y resistencia para impulsar cada jornada.",
+      "orden": 2
+    },
+    {
+      "id": "deportiva",
+      "slug": "deportiva",
+      "titulo": "Deportiva",
+      "descripcion": "Diseño, carácter y rendimiento para destacar en cada ruta.",
+      "orden": 3
+    },
+    {
+      "id": "aventura",
+      "slug": "aventura",
+      "titulo": "Ruta y aventura",
+      "descripcion": "Potencia y confianza para descubrir nuevos caminos.",
+      "orden": 4
+    }
+  ],
+
+  "items": [],
+
+  "meta": {
+    "cacheSeconds": 0,
+    "generatedAt": "",
+    "totalItems": 0,
+    "version": "1.0"
   }
-]
+}

@@ -1,7 +1,21 @@
 .claude/
 
-# Fase separada, auditada aparte — no forma parte del commit de limpieza web actual
-apps-script/
+# Backend Apps Script.
+#
+# El paquete LEGACY (Code.gs, Schema.gs, Seguridad.gs, Endpoint.gs de raíz y sus
+# anexos) sigue fuera de Git: no se despliega, no se mantiene y no debe copiarse.
+#
+# El paquete V2 —el que se desplegará— SÍ se versiona: es el backend de esta
+# misma web y el despliegue tiene que ser reproducible. No contiene secretos; el
+# ID del libro vive en una Script Property, nunca en el código.
+# Ver docs/decision-versionado-apps-script-v2.md
+apps-script/*
+!apps-script/v2/
+apps-script/v2/*
+!apps-script/v2/Configuracion.gs
+!apps-script/v2/Nucleo.gs
+!apps-script/v2/Endpoint.gs
+!apps-script/v2/README.md
 
 # Plantilla madre independiente, ya publicada en su propio repositorio
 # (pixdeah-coder/business-static-web-framework) — no debe mezclarse con ARENAS

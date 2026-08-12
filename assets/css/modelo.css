@@ -211,9 +211,11 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  /* El relleno llega por style desde un hex ya validado (#RGB/#RRGGBB).
-     Este fondo es el que se ve si no hubiera hex utilizable. */
-  background: linear-gradient(160deg, #1b2942, #0a1424);
+  /* SOLO background-color, nunca la abreviatura `background` con degradado:
+     el JS fija el color validado con style.backgroundColor, y un
+     background-image lo taparía por completo. Esto es exactamente lo que
+     pasaba antes — las cinco muestras se veían del mismo azul oscuro. */
+  background-color: #16233a;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
 }
 

@@ -5,12 +5,21 @@ Una carpeta por modelo, nombrada con el mismo `slug` que aparece en
 
 ## Archivos esperados en cada carpeta
 
-| Archivo               | Uso                          | Tamaño sugerido | Relación |
+| Archivo               | Uso                          | Tamaño          | Relación |
 |-----------------------|------------------------------|-----------------|----------|
 | `portada.webp`        | Tarjeta y ficha en escritorio| 1600 × 1000 px  | 16:10    |
-| `portada-mobile.webp` | Tarjeta y ficha en celular   | 900 × 1000 px   | 9:10     |
+| `portada-mobile.webp` | Tarjeta y ficha en celular   | 1280 × 800 px   | 16:10    |
 | `galeria-01.webp`     | Galería de la ficha          | 1600 × 1000 px  | 16:10    |
 | `galeria-02.webp`     | Galería de la ficha          | 1600 × 1000 px  | 16:10    |
+
+> **Todas en 16:10, también la de celular.** Una versión anterior de esta
+> tabla pedía `900 × 1000 px` (9:10) para móvil. Era un error: la caja de
+> imagen declara `aspect-ratio: 16 / 10` en **todos** los anchos de pantalla
+> —no existe ninguna sobreescritura en `@media`— y usa `object-fit: cover`.
+> Una imagen 9:10 en esa caja pierde el **44 % de su altura** recortada.
+> La versión móvil existe para pesar menos y permitir un encuadre más
+> cerrado, no para cambiar de proporción.
+> Medidas y razonamiento completos en `docs/especificacion-imagenes-catalogo.md`.
 
 ## Reglas
 

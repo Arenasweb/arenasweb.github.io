@@ -3044,6 +3044,46 @@ main > section { scroll-margin-top: 84px; }
   border-color: var(--color-border-soft);
 }
 
+/* Distinción de modelo destacado. Viene del dato `destacado` de la hoja,
+   nunca de un modelo escrito en el código. Es deliberadamente mínima —un
+   filo superior y un borde algo más presente—: mantiene la tarjeta en la
+   misma rejilla y con el mismo tamaño, sin romper el ritmo. */
+.moto-card--destacado {
+  border-color: rgba(91, 147, 255, 0.26);
+}
+.moto-card--destacado::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 2;
+  background: linear-gradient(90deg, transparent, var(--brand-blue), transparent);
+}
+
+/* Aparición al primer pintado. Solo opacity y un desplazamiento de 8px:
+   sin rebotes, sin zooms, sin entradas laterales. `backwards` aplica el
+   estado inicial durante el retardo y, al terminar, la animación deja de
+   pesar sobre la tarjeta para que el hover siga funcionando. */
+@media (prefers-reduced-motion: no-preference) {
+  .moto-card.is-entrando {
+    animation: motoCardEntra var(--duration-slow) var(--ease-out) backwards;
+    animation-delay: calc(var(--i, 0) * 45ms);
+  }
+}
+
+@keyframes motoCardEntra {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* Relación estable: la imagen nunca provoca saltos de layout (CLS) */
 .moto-card__media {
   position: relative;
@@ -3062,6 +3102,11 @@ main > section { scroll-margin-top: 84px; }
 
 /* Marcador de fotografía pendiente: vectorial en línea, sin peticiones
    de red. Va rotulado para que nadie lo confunda con una foto real. */
+/* Deliberadamente APAGADO. Este marcador se repite en cada tarjeta sin
+   fotografía, así que no debe competir por la atención: tiene que leerse
+   como un hueco de trabajo pendiente, no como una pieza terminada. En
+   cuanto lleguen las fotografías reales, la diferencia entre una tarjeta
+   con foto y una sin ella debe ser evidente de un vistazo. */
 .moto-card__fallback {
   position: absolute;
   inset: 0;
@@ -3070,31 +3115,30 @@ main > section { scroll-margin-top: 84px; }
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  background:
-    radial-gradient(70% 60% at 50% 40%, rgba(31, 107, 255, 0.14), transparent 65%),
-    linear-gradient(160deg, #0a1424, #050914);
+  background: linear-gradient(160deg, #0a1424, #050914);
 }
 .moto-card__fallback-art {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  opacity: 0.55;
 }
 .moto-card__fallback-mark {
   position: relative;
   font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: 0.3em;
-  font-size: clamp(1rem, 2.4vw, 1.5rem);
+  font-size: clamp(0.85rem, 1.8vw, 1.1rem);
   color: transparent;
-  -webkit-text-stroke: 1px rgba(151, 205, 255, 0.35);
+  -webkit-text-stroke: 1px rgba(151, 205, 255, 0.14);
 }
 .moto-card__fallback-nota {
   position: relative;
   font-size: var(--text-xs);
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: rgba(138, 146, 160, 0.65);
 }
 
 .moto-card__body {
@@ -3137,10 +3181,18 @@ main > section { scroll-margin-top: 84px; }
   color: var(--brand-blue-ice);
 }
 
+/* Dos líneas como máximo: la descripción corta acompaña, no explica.
+   Si el texto que llegue de la hoja es más largo, se recorta en lugar de
+   descuadrar la altura de la rejilla. */
 .moto-card__desc {
   font-size: var(--text-sm);
   line-height: 1.65;
   color: var(--color-silver);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 
 /* Indicador de variantes de color. NO es un selector: solo anuncia que
@@ -3162,12 +3214,14 @@ main > section { scroll-margin-top: 84px; }
 .moto-card__colores-puntos .color-dot--mini + .color-dot--mini {
   margin-left: -5px;
 }
+/* background-color, no la abreviatura `background`: el color real llega
+   por style desde el hex validado y un degradado lo taparía. */
 .moto-card__colores .color-dot {
   display: inline-block;
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: linear-gradient(160deg, #1b2942, #0a1424);
+  background-color: #16233a;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16), 0 0 0 1px rgba(5, 9, 20, 0.9);
 }
 .moto-card__colores-texto {
@@ -3239,6 +3293,8 @@ main > section { scroll-margin-top: 84px; }
   }
   .moto-card:hover { transform: none !important; }
   .moto-card:hover .moto-card__img { transform: none !important; }
+  /* Sin aparición: la tarjeta ya está en su sitio desde el primer frame */
+  .moto-card.is-entrando { animation: none !important; }
 }
 
 /* ================================================================

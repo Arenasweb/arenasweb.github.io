@@ -70,12 +70,34 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
   }
 
   /**
-   * Número positivo o null. Nunca devuelve NaN, 0 negativo ni Infinity.
-   * Acepta el formato de hoja de cálculo "S/ 12,990.00".
+   * Importe positivo o null. Nunca devuelve NaN, 0, negativo ni Infinity.
+   *
+   * Solo se aceptan formatos SIN AMBIGÜEDAD, con el punto como separador
+   * decimal:
+   *
+   *     12990          ✓        12990,50       ✗  ¿12 990,50 o 1 299 050?
+   *     12990.50       ✓        12.990,50      ✗  formato europeo
+   *     S/ 12,990.00   ✓        1,23           ✗  coma fuera de millar
+   *
+   * Antes se borraba todo lo que no fuera dígito o punto, de modo que
+   * "12990,50" se leía como 1 299 050 —cien veces más— y se publicaba
+   * sin ningún aviso. Un formato ambiguo devuelve null y el precio no se
+   * muestra: es preferible no enseñar precio a enseñar uno equivocado.
+   *
+   * Esta regla es idéntica a normNumero_() del backend, y hay una
+   * prueba de equivalencia que compara ambas.
    */
+  var PRECIO_TEXTO = /^(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d{1,2})?$/;
+
   function numero(valor) {
     if (valor === null || valor === undefined || valor === "") return null;
-    var n = typeof valor === "number" ? valor : parseFloat(String(valor).replace(/[^\d.-]/g, ""));
+    if (typeof valor === "number") return isFinite(valor) && valor > 0 ? valor : null;
+    if (typeof valor !== "string") return null;
+
+    var limpio = valor.replace(/^\s*(?:S\/\.?|PEN|USD|\$)\s*/i, "").trim();
+    if (!PRECIO_TEXTO.test(limpio)) return null;
+
+    var n = parseFloat(limpio.replace(/,/g, ""));
     return isFinite(n) && n > 0 ? n : null;
   }
 
@@ -188,15 +210,33 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
 
   /**
    * Punto focal para object-position. Solo se aceptan palabras clave y
-   * porcentajes; cualquier otra cosa cae al centro.
+   * porcentajes de 0 a 100; cualquier otra cosa cae al centro.
+   *
+   * El tope de 100 % no es cosmético. La expresión anterior admitía hasta
+   * tres dígitos, así que un "999%" tecleado en la hoja pasaba el filtro:
+   * no es inyección —solo hay dígitos y el signo—, pero desplaza la
+   * fotografía fuera de la caja y deja la tarjeta aparentemente vacía,
+   * sin ningún mensaje que explique por qué. Es preferible ignorar el
+   * valor y encuadrar al centro.
    */
+  var PORCENTAJE = "(?:100|[0-9]{1,2})%";
+  // En la sintaxis de dos valores de object-position el primero es el eje
+  // horizontal y el segundo el vertical. Con una sola lista de palabras
+  // pasaban combinaciones que CSS no admite —"top bottom", "left right"—
+  // y que el navegador descarta en silencio, dejando un encuadre
+  // distinto del que se creía haber puesto.
+  var FOCO_X = "left|center|right";
+  var FOCO_Y = "top|center|bottom";
+  var FOCO_UNO = new RegExp("^(?:" + FOCO_X + "|" + FOCO_Y + "|" + PORCENTAJE + ")$");
+  var FOCO_DOS = new RegExp(
+    "^(?:" + FOCO_X + "|" + PORCENTAJE + ")\\s+(?:" + FOCO_Y + "|" + PORCENTAJE + ")$"
+  );
+
   function foco(valor) {
     var v = texto(valor, 40).toLowerCase();
     if (!v) return "center center";
-    if (/^(left|center|right|top|bottom|\d{1,3}%)(\s+(left|center|right|top|bottom|\d{1,3}%))?$/.test(v)) {
-      return v;
-    }
-    return "center center";
+    if (v.indexOf(" ") === -1) return FOCO_UNO.test(v) ? v : "center center";
+    return FOCO_DOS.test(v) ? v : "center center";
   }
 
   /**
@@ -229,12 +269,22 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
   /**
    * Precio público. Devuelve "" si no hay un importe positivo real, de
    * modo que la interfaz nunca imprima 0, NaN, null ni "undefined".
+   *
+   * El separador de miles lo pone toLocaleString, que ya es Intl por
+   * dentro. El símbolo se antepone a mano y no por
+   * `Intl.NumberFormat({style:"currency"})` a propósito: con la moneda
+   * USD y el idioma es-PE, esa API devuelve «USD 1,200» en vez de
+   * «$ 1,200», que es lo que espera quien lee esta web. Con PEN ambas
+   * coinciden, así que la única diferencia real habría sido a peor.
+   *
+   * El espacio SÍ es duro ( ): impide que el símbolo se quede solo
+   * al final de una línea, separado de su importe.
    */
   function precio(valor, moneda) {
     var n = numero(valor);
     if (n === null) return "";
     var simbolo = moneda === "USD" ? "$" : "S/";
-    return simbolo + " " + n.toLocaleString("es-PE", { maximumFractionDigits: 0 });
+    return simbolo + " " + n.toLocaleString("es-PE", { maximumFractionDigits: 0 });
   }
 
   /* ---------------- Entorno y URL ---------------- */

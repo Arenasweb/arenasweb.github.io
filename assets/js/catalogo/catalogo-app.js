@@ -33,6 +33,16 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
   /** Espera antes de filtrar mientras se escribe. */
   var RETARDO_BUSQUEDA = 200;
 
+  /**
+   * Tope del retardo escalonado de aparición. Con 22 tarjetas, escalonar
+   * todas dejaría la última entrando casi un segundo después; a partir de
+   * este índice todas comparten el mismo retardo.
+   */
+  var MAX_STAGGER = 8;
+
+  /** La aparición escalonada solo ocurre en el primer pintado. */
+  var primerPintado = true;
+
   /** Ancho a partir del cual los filtros se muestran desplegados. */
   var MEDIA_ESCRITORIO = "(min-width: 861px)";
 
@@ -146,11 +156,18 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     } else {
       var fragmento = document.createDocumentFragment();
       lista.forEach(function (modelo, i) {
-        fragmento.appendChild(
-          NS.ui.tarjeta(modelo, { indice: i, preview: estado.preview, estado: estado })
-        );
+        var card = NS.ui.tarjeta(modelo, { indice: i, preview: estado.preview, estado: estado });
+        // La aparición escalonada es SOLO del primer pintado. Al filtrar
+        // la rejilla debe cambiar al instante: reanimarla en cada
+        // pulsación se sentiría lento, justo lo contrario de lo buscado.
+        if (primerPintado) {
+          card.classList.add("is-entrando");
+          card.style.setProperty("--i", Math.min(i, MAX_STAGGER));
+        }
+        fragmento.appendChild(card);
       });
       contenedor.appendChild(fragmento);
+      primerPintado = false;
     }
 
     if (dom.contador) {
@@ -397,6 +414,14 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       }
 
       if (dom.filtros) dom.filtros.hidden = false;
+
+      // Panel editorial local. Fuera del modo depuración devuelve null.
+      if (NS.debug) {
+        var panelQa = NS.debug.panel(estado);
+        if (panelQa && contenedor.parentNode) {
+          contenedor.parentNode.insertBefore(panelQa, contenedor);
+        }
+      }
 
       construirChips(estado);
       poblarSelect(

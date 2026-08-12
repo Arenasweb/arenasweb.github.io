@@ -95,14 +95,14 @@
 
           <p class="catalog-intro__kicker">Catálogo ARENAS</p>
           <h1 id="catalogo-heading" class="catalog-intro__title">Todos nuestros modelos</h1>
+          <!-- Copy deliberadamente breve. Medido en móvil real (320/390/430):
+               con el texto anterior había que recorrer una pantalla entera de
+               prosa antes de ver la primera motocicleta. La explicación de cómo
+               filtrar sobraba: los filtros están justo debajo y se explican
+               solos. -->
           <p class="catalog-intro__lead">
-            Reunimos aquí cada modelo del catálogo de ARENAS MOTOCICLETAS, organizado por la
-            forma en que se usa: ciudad, trabajo, deportiva, ruta y aventura, y carga y transporte.
-          </p>
-          <p class="catalog-intro__text">
-            Filtra por categoría o por línea, o escribe directamente el nombre del modelo que
-            buscas. Cada ficha reúne únicamente la información confirmada de ese modelo: cuando
-            un dato todavía está en revisión, simplemente no aparece.
+            Cada modelo del catálogo, organizado por la forma en que se usa: ciudad, trabajo,
+            deportiva, ruta y aventura, y carga y transporte.
           </p>
 
           <noscript>
@@ -287,6 +287,10 @@
     <script src="assets/js/catalogo/catalogo-utils.js" defer></script>
     <script src="assets/js/catalogo/catalogo-schema.js" defer></script>
     <script src="assets/js/catalogo/catalogo-data.js" defer></script>
+    <!-- Herramientas editoriales locales. No dibujan nada fuera del modo
+         depuración (?debug=1 + host local + ?preview=1). -->
+    <script src="assets/js/catalogo/catalogo-completitud.js" defer></script>
+    <script src="assets/js/catalogo/catalogo-debug.js" defer></script>
     <script src="assets/js/catalogo/catalogo-ui.js" defer></script>
     <script src="assets/js/catalogo/catalogo-app.js" defer></script>
   </body>

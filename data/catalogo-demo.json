@@ -1,0 +1,112 @@
+{
+  "_nota": "CATÁLOGO DE DEMOSTRACIÓN — solo para validar el diseño y las pruebas del catálogo en local. Los modelos son ficticios ('MODELO DE EJEMPLO …'), sin precio ni disponibilidad reales. Se carga ÚNICAMENTE si data/slots/control.json → catalogoDemoActivo es true, que por defecto es false. Nunca debe activarse en producción.",
+
+  "ok": true,
+  "version": "1.0",
+  "generatedAt": "",
+  "source": "local-demo",
+
+  "config": {
+    "monedaDefault": "PEN",
+    "mostrarPrecios": false,
+    "mostrarStock": false,
+    "mostrarPromociones": false,
+    "mensajeSinResultados": "No encontramos modelos con esos filtros."
+  },
+
+  "categories": [
+    { "id": "ciudad", "slug": "ciudad", "titulo": "Ciudad", "orden": 1 },
+    { "id": "trabajo", "slug": "trabajo", "titulo": "Trabajo", "orden": 2 },
+    { "id": "deportiva", "slug": "deportiva", "titulo": "Deportiva", "orden": 3 },
+    { "id": "aventura", "slug": "aventura", "titulo": "Ruta y aventura", "orden": 4 }
+  ],
+
+  "items": [
+    {
+      "id": "EJEMPLO-001",
+      "slug": "ejemplo-modelo-urbano",
+      "modelo": "MODELO DE EJEMPLO URBANO",
+      "categoria": "ciudad",
+      "linea": "Línea de ejemplo",
+      "orden": 1,
+      "descripcionCorta": "Descripción corta de ejemplo para la tarjeta del catálogo.",
+      "descripcionLarga": "Descripción larga de ejemplo para el panel de detalle. Este registro sirve únicamente para validar la maquetación.",
+      "imagenPrincipal": "assets/portadas/camino-ciudad-desktop.webp",
+      "imagenMobile": "assets/portadas/camino-ciudad-mobile.webp",
+      "cilindradaCc": 125,
+      "transmision": "Ejemplo de transmisión",
+      "colores": ["Color de ejemplo A", "Color de ejemplo B"],
+      "caracteristicas": ["Característica de ejemplo 1", "Característica de ejemplo 2", "Característica de ejemplo 3"],
+      "destacado": true,
+      "nuevo": false,
+      "mostrarPrecio": false,
+      "mostrarStock": false,
+      "estadoStock": "consultar",
+      "mostrarStockExacto": false,
+      "ctaLabel": "Ver detalles",
+      "ctaUrl": "#contacto"
+    },
+    {
+      "id": "EJEMPLO-002",
+      "slug": "ejemplo-modelo-trabajo",
+      "modelo": "MODELO DE EJEMPLO TRABAJO",
+      "categoria": "trabajo",
+      "linea": "Línea de ejemplo",
+      "orden": 2,
+      "descripcionCorta": "Descripción corta de ejemplo para la tarjeta del catálogo.",
+      "imagenPrincipal": "assets/portadas/camino-trabajo-desktop.webp",
+      "imagenMobile": "assets/portadas/camino-trabajo-mobile.webp",
+      "caracteristicas": ["Característica de ejemplo 1", "Característica de ejemplo 2"],
+      "destacado": false,
+      "nuevo": true,
+      "mostrarPrecio": false,
+      "mostrarStock": false,
+      "estadoStock": "consultar",
+      "mostrarStockExacto": false,
+      "ctaLabel": "Ver detalles",
+      "ctaUrl": "#contacto"
+    },
+    {
+      "id": "EJEMPLO-003",
+      "slug": "ejemplo-modelo-deportivo",
+      "modelo": "MODELO DE EJEMPLO DEPORTIVO",
+      "categoria": "deportiva",
+      "linea": "Línea de ejemplo",
+      "orden": 3,
+      "descripcionCorta": "Descripción corta de ejemplo para la tarjeta del catálogo.",
+      "imagenPrincipal": "assets/portadas/camino-deportiva-desktop.webp",
+      "imagenMobile": "assets/portadas/camino-deportiva-mobile.webp",
+      "caracteristicas": ["Característica de ejemplo 1", "Característica de ejemplo 2", "Característica de ejemplo 3"],
+      "destacado": false,
+      "nuevo": false,
+      "mostrarPrecio": false,
+      "mostrarStock": false,
+      "estadoStock": "consultar",
+      "mostrarStockExacto": false,
+      "ctaLabel": "Ver detalles",
+      "ctaUrl": "#contacto"
+    },
+    {
+      "id": "EJEMPLO-004",
+      "slug": "ejemplo-modelo-aventura",
+      "modelo": "MODELO DE EJEMPLO AVENTURA",
+      "categoria": "aventura",
+      "linea": "Línea de ejemplo",
+      "orden": 4,
+      "descripcionCorta": "Descripción corta de ejemplo para la tarjeta del catálogo.",
+      "imagenPrincipal": "assets/portadas/camino-aventura-desktop.webp",
+      "imagenMobile": "assets/portadas/camino-aventura-mobile.webp",
+      "caracteristicas": ["Característica de ejemplo 1", "Característica de ejemplo 2"],
+      "destacado": false,
+      "nuevo": false,
+      "mostrarPrecio": false,
+      "mostrarStock": false,
+      "estadoStock": "consultar",
+      "mostrarStockExacto": false,
+      "ctaLabel": "Ver detalles",
+      "ctaUrl": "#contacto"
+    }
+  ],
+
+  "meta": { "cacheSeconds": 0, "generatedAt": "", "totalItems": 4, "version": "1.0" }
+}

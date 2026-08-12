@@ -167,6 +167,24 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     return caja;
   }
 
+  /* ---------------- Precio ---------------- */
+
+  /**
+   * ÚNICA decisión sobre publicar un precio, compartida por la tarjeta,
+   * la ficha y los relacionados. Devuelve el texto ya formateado o
+   * cadena vacía; quien la llama solo tiene que preguntar «¿hay algo que
+   * pintar?», sin repetir condiciones.
+   *
+   * El esquema ya exigió las tres condiciones al normalizar
+   * (config.mostrarPrecios && mostrar_precio && importe > 0), así que
+   * `mostrarPrecio` las resume. Aquí se vuelve a pasar por el formateador
+   * porque es el que garantiza que nunca salga 0, NaN ni undefined.
+   */
+  function textoPrecio(modelo) {
+    if (!modelo || !modelo.mostrarPrecio) return "";
+    return U.precio(modelo.precioPublico, modelo.moneda);
+  }
+
   /* ---------------- Colores ---------------- */
 
   /**
@@ -246,11 +264,13 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
 
     // Nombre del color elegido, en texto: la información nunca depende
     // solo del color de la muestra.
+    // role="status" ya implica aria-live="polite" y aria-atomic="true";
+    // declararlo otra vez era redundante. Se conserva el rol, que es el
+    // que da la semántica, y se retira la duplicación.
     var nombreActivo = U.el("p", {
       class: "modelo-colores-sel__nombre",
       "data-rol": "nombre-color",
       role: "status",
-      "aria-live": "polite",
     });
 
     var botones = [];
@@ -296,9 +316,16 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
 
   /* ---------------- Tarjeta ---------------- */
 
-  /** URL de la ficha de un modelo. El slug ya viene validado. */
+  /**
+   * URL de la ficha, o cadena vacía si el modelo no tiene slug.
+   *
+   * Sin slug no hay ficha y no se le inventa una: en previsualización
+   * puede haber registros sin slug —para poder verlos y corregirlos— y
+   * enlazarlos daría un `?slug=` vacío que lleva a una página de error.
+   * Con cadena vacía, el ayudante `el()` no escribe el atributo `href`.
+   */
   function urlModelo(modelo) {
-    return "modelo.html?slug=" + encodeURIComponent(modelo.slug);
+    return modelo.slug ? "modelo.html?slug=" + encodeURIComponent(modelo.slug) : "";
   }
 
   /**
@@ -309,7 +336,13 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
    */
   function tarjeta(modelo, opciones) {
     var o = opciones || {};
-    var card = U.el("article", { class: "moto-card", "data-slug": modelo.slug });
+    // La distinción de destacado sale del dato, no de una lista de
+    // modelos en el código: si mañana la hoja destaca otro modelo, la
+    // tarjeta cambia sola.
+    var card = U.el("article", {
+      class: "moto-card" + (modelo.destacado ? " moto-card--destacado" : ""),
+      "data-slug": modelo.slug,
+    });
 
     card.appendChild(media(modelo, { prioritaria: o.indice < 3 }));
 
@@ -320,9 +353,15 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       .join(" · ");
     if (meta) cuerpo.appendChild(U.el("p", { class: "moto-card__meta" }, meta));
 
+    // Sin slug la tarjeta se dibuja igual pero sin navegación: se ve el
+    // modelo, se lee lo que le falta y no hay ningún enlace roto.
     var titulo = U.el("h3", { class: "moto-card__title" });
-    var enlace = U.el("a", { class: "moto-card__link", href: urlModelo(modelo) }, modelo.titulo);
-    titulo.appendChild(enlace);
+    var destino = urlModelo(modelo);
+    if (destino) {
+      titulo.appendChild(U.el("a", { class: "moto-card__link", href: destino }, modelo.titulo));
+    } else {
+      titulo.appendChild(U.el("span", { class: "moto-card__title-texto" }, modelo.titulo));
+    }
     cuerpo.appendChild(titulo);
 
     var tags = etiquetas(modelo, o.preview);
@@ -335,10 +374,17 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     var colores = indicadorColores(modelo);
     if (colores) cuerpo.appendChild(colores);
 
+    // Distintivos de QA. NS.debug solo devuelve algo en modo depuración
+    // local; en previsualización normal y en producción es null.
+    if (NS.debug) {
+      var marcas = NS.debug.marcasTarjeta(modelo);
+      if (marcas) cuerpo.appendChild(marcas);
+    }
+
     var pie = U.el("div", { class: "moto-card__footer" });
-    var textoPrecio = modelo.mostrarPrecio ? U.precio(modelo.precioPublico, modelo.moneda) : "";
-    if (textoPrecio) {
-      pie.appendChild(U.el("p", { class: "moto-card__price" }, textoPrecio));
+    var precio = textoPrecio(modelo);
+    if (precio) {
+      pie.appendChild(U.el("p", { class: "moto-card__price" }, precio));
     }
     pie.appendChild(
       U.el("span", { class: "moto-card__cta", "aria-hidden": "true" }, modelo.ctaLabel || "Ver modelo")
@@ -398,6 +444,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     MEDIA_MOBILE: MEDIA_MOBILE,
     marcadorPendiente: marcadorPendiente,
     altSeguro: altSeguro,
+    textoPrecio: textoPrecio,
     vistaColor: vistaColor,
     puntoColor: puntoColor,
     indicadorColores: indicadorColores,

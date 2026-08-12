@@ -216,15 +216,37 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
    * color sea inmediato. Solo la imagen principal: cargar de golpe todas
    * las galerías de todos los colores penalizaría la carga inicial sin
    * que el usuario lo haya pedido.
+   *
+   * El registro de rutas ya pedidas se acota: solo evita repetir la
+   * petición de las últimas variantes vistas. No es una caché —de eso ya
+   * se encarga el navegador—, únicamente un anti-duplicado inmediato.
    */
-  var precargadas = {};
+  var MAX_PRECARGADAS = 12;
+  var precargadas = [];
   function precargar(color) {
     if (!color || !color.imagenPrincipal) return;
-    if (precargadas[color.imagenPrincipal]) return;
-    precargadas[color.imagenPrincipal] = true;
+    if (precargadas.indexOf(color.imagenPrincipal) !== -1) return;
+    precargadas.push(color.imagenPrincipal);
+    if (precargadas.length > MAX_PRECARGADAS) precargadas.shift();
     var img = new Image();
     img.decoding = "async";
     img.src = color.imagenPrincipal;
+  }
+
+  /**
+   * Temporizador de la transición de color. Se guarda para poder
+   * cancelarlo: si alguien pulsa Rojo → Negro → Azul en menos de lo que
+   * dura la atenuación, solo debe aplicarse Azul. Sin esta cancelación
+   * los repintados pendientes se encadenaban y la fotografía llegaba a
+   * mostrar un color distinto del que marcaba la muestra activa (M-3).
+   */
+  var cambioPendiente = null;
+
+  function cancelarCambioPendiente() {
+    if (cambioPendiente !== null) {
+      window.clearTimeout(cambioPendiente);
+      cambioPendiente = null;
+    }
   }
 
   /**
@@ -237,14 +259,18 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     var galeria = $("#modelo-galeria");
     var vista = NS.ui.vistaColor(modelo, color);
 
+    // Cualquier cambio en vuelo queda anulado: manda siempre el último.
+    cancelarCambioPendiente();
+
     var repintar = function () {
+      cambioPendiente = null;
       pintarGaleria(modelo, vista);
       if (galeria) galeria.classList.remove("is-cambiando");
     };
 
     if (galeria && !U.movimientoReducido()) {
       galeria.classList.add("is-cambiando");
-      window.setTimeout(repintar, 160);
+      cambioPendiente = window.setTimeout(repintar, 160);
     } else {
       repintar();
     }
@@ -252,6 +278,39 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     // Se precarga la variante siguiente, no todas.
     if (colores && colores.length > 1) {
       precargar(colores[(indice + 1) % colores.length]);
+    }
+  }
+
+  /**
+   * Refleja el color elegido en la URL para que la ficha se pueda
+   * compartir o recargar en esa variante.
+   *
+   * · replaceState, no pushState: elegir un color no es navegar, y
+   *   llenar el historial obligaría a pulsar «atrás» una vez por color.
+   * · Se parte de los parámetros existentes: `preview`, y cualquier otro
+   *   que llegue, se conservan intactos.
+   * · El color por defecto RETIRA el parámetro en lugar de escribirlo.
+   *   Así la URL canónica de la ficha es la corta, y solo aparece
+   *   `?color=` cuando el usuario ha elegido algo distinto de lo que
+   *   vería por defecto.
+   *
+   * El `canonical` del documento NO cambia: sigue apuntando a la ficha
+   * del modelo. Un color es una variante visual, no una página nueva.
+   */
+  function sincronizarUrlColor(modelo, color) {
+    if (!window.history || !window.history.replaceState) return;
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var porDefecto = NS.data.colorPorDefecto(modelo);
+      if (color && porDefecto && color.slug !== porDefecto.slug) {
+        params.set("color", color.slug);
+      } else {
+        params.delete("color");
+      }
+      var cadena = params.toString();
+      window.history.replaceState(null, "", cadena ? "?" + cadena : window.location.pathname);
+    } catch (e) {
+      /* La URL es una comodidad: si falla, la ficha sigue funcionando. */
     }
   }
 
@@ -275,6 +334,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       preview: estado.preview,
       alCambiar: function (color, indice) {
         aplicarColor(modelo, color, colores, indice);
+        sincronizarUrlColor(modelo, color);
       },
     });
 
@@ -325,9 +385,10 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
 
     var precio = $("#modelo-precio");
     if (precio) {
-      var textoPrecio = modelo.mostrarPrecio ? U.precio(modelo.precioPublico, modelo.moneda) : "";
-      precio.textContent = textoPrecio;
-      precio.hidden = !textoPrecio;
+      // Misma decisión que en la tarjeta: una sola función manda.
+      var texto = NS.ui.textoPrecio(modelo);
+      precio.textContent = texto;
+      precio.hidden = !texto;
     }
 
     // El selector se pinta antes que la galería para poder arrancar ya
@@ -440,6 +501,15 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     if (error) error.hidden = false;
 
     document.title = titulo + " — ARENAS MOTOCICLETAS";
+
+    // Una ficha que no existe no debe entrar en el índice de Google.
+    // `modelo.html` es una plantilla paramétrica: sin `?slug=` válido —o
+    // con un modelo aún sin publicar— lo único que hay es este mensaje de
+    // error, y una página de error indexada perjudica al sitio. El
+    // documento nace con `index, follow` para las fichas correctas; aquí,
+    // y solo aquí, se cambia.
+    var robots = $('meta[name="robots"]');
+    if (robots) robots.setAttribute("content", "noindex, follow");
   }
 
   /* ---------------- Arranque ---------------- */

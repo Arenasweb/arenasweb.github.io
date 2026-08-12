@@ -127,8 +127,12 @@
    3. INTRODUCCIÓN EDITORIAL
    ================================================================ */
 
+/* Respiración contenida a propósito: esta es una página interior y el
+   protagonista son las motocicletas, no su encabezado. El hero
+   cinematográfico vive en la portada; aquí basta con presentar y dejar
+   paso a la rejilla cuanto antes. */
 .catalog-intro {
-  padding-block: clamp(var(--space-8), 5vw, var(--space-16)) clamp(var(--space-8), 4vw, var(--space-12));
+  padding-block: clamp(var(--space-6), 3.5vw, var(--space-10)) clamp(var(--space-6), 3vw, var(--space-8));
   background:
     radial-gradient(70% 60% at 20% 0%, rgba(31, 107, 255, 0.10), transparent 62%),
     var(--color-deep);
@@ -148,10 +152,12 @@
   font-weight: 700;
   letter-spacing: 0;
   text-transform: uppercase;
-  font-size: clamp(2.2rem, 6vw, 4.2rem);
-  line-height: 0.98;
+  /* Algo por debajo del titular de portada: sigue mandando en la página
+     sin empujar la primera fila de motos fuera de la pantalla. */
+  font-size: clamp(2rem, 4.6vw, 3.4rem);
+  line-height: 1;
   color: var(--color-white);
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-4);
   max-width: 16ch;
 }
 
@@ -481,6 +487,12 @@
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
     flex: 1 1 auto;
+    /* IMPRESCINDIBLE. Un elemento flexible arranca con min-width:auto, que
+       le impide encogerse por debajo de su contenido: los seis chips
+       estiraban la barra, la barra estiraba la página y TODO el texto se
+       desbordaba horizontalmente. Con min-width:0 el elemento sí puede
+       encoger y entonces su overflow-x entra en juego de verdad. */
+    min-width: 0;
     padding-bottom: 2px;
   }
   .catalog-chips::-webkit-scrollbar {
@@ -627,4 +639,136 @@
 /* Acción de salida dentro del estado «sin resultados» */
 .catalog-state__accion {
   margin-top: var(--space-6);
+}
+
+/* ================================================================
+   8. PANEL EDITORIAL LOCAL (?debug=1)
+   Herramienta interna, nunca parte del sitio público. Se viste de
+   ámbar y con trazo discontinuo —el mismo lenguaje que el aviso de
+   previsualización— para que sea imposible confundirla con contenido
+   real. Solo existe en localhost con ?preview=1&debug=1.
+   ================================================================ */
+
+.qa-panel {
+  margin-bottom: var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  background: rgba(245, 158, 11, 0.06);
+  border: 1px dashed rgba(245, 158, 11, 0.45);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+}
+
+.qa-panel__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.qa-panel__titulo {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #ffd9a8;
+}
+
+.qa-panel__plegar {
+  min-height: 32px;
+  padding: 4px 12px;
+  font-family: inherit;
+  font-size: var(--text-xs);
+  color: #ffd9a8;
+  background: none;
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+
+.qa-panel__cuerpo {
+  margin-top: var(--space-4);
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+}
+
+/* Cada bloque es una celda de la rejilla: así las listas se reparten en
+   columnas en vez de apilarse. */
+.qa-panel__bloque {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+}
+
+.qa-panel__sub {
+  margin: 0;
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.qa-panel__lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.qa-panel__fila {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.12);
+}
+
+.qa-panel__etiqueta { color: var(--color-silver); }
+.qa-panel__valor {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--color-white);
+}
+.qa-panel__fila.is-alerta .qa-panel__valor { color: #ffd9a8; }
+
+.qa-panel__nota {
+  grid-column: 1 / -1;
+  font-size: var(--text-xs);
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+
+/* ---- Distintivos por tarjeta ---- */
+.qa-marcas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.qa-marca {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 2px 7px;
+  color: var(--color-muted);
+  border: 1px dashed rgba(138, 146, 160, 0.4);
+  border-radius: var(--radius-pill);
+}
+
+/* Falta algo obligatorio para publicar */
+.qa-marca--critica {
+  color: #ffd9a8;
+  border-color: rgba(245, 158, 11, 0.5);
+  border-style: solid;
+}
+
+/* Estado editorial del modelo: ocupa toda la fila para que se lea antes
+   que los distintivos de lo que falta, y para no romper el flujo cuando
+   son muchos. */
+.qa-marca--estado {
+  flex: 1 0 100%;
+  color: #cfe6ff;
+  border-color: rgba(151, 205, 255, 0.4);
+  border-style: solid;
 }

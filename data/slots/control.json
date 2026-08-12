@@ -13,7 +13,20 @@
   "mostrarGarantiaNoConfirmada": false,
   "mostrarFinanciamientoNoConfirmado": false,
 
+  "_notaCatalogoVigente": "DESDE LA FASE 9 LA CONFIGURACIÓN DEL CATÁLOGO NO SE LEE DESDE AQUÍ. El origen de datos (modoDatos, appsScriptEndpoint, fallbackLocal) vive en assets/js/catalogo/catalogo-data.js → CONFIG, porque catalogo.html y modelo.html no cargan data/slots/. Las banderas 'catalogo*' y 'mostrar*Publicas' de abajo quedan DEPRECADAS: ningún archivo del sitio las lee. Se conservan como registro de la decisión gerencial hasta que se reimplante un control de publicación por datos. Lo que sí manda hoy sobre precios es el bloque config de data/catalogo-publico.local.json (mostrar_precios) más el campo mostrar_precio de cada modelo.",
+
+  "_notaCatalogo": "Banderas del catálogo público (fase 8, DEPRECADAS). PRECEDENCIA, de mayor a menor: (1) catalogoRemotoActivo decide si se intenta el endpoint remoto, y requiere appsScriptEndpoint no vacío — si falta la URL se ignora y se usa el fallback local. (2) La respuesta remota manda sobre el resto: su bloque config (mostrarPrecios, mostrarStock, mostrarPromociones) se aplica tal cual, porque ya viene sanitizado por Apps Script. (3) Las banderas mostrar*Publicas de este archivo son un TOPE local adicional: si una está en false, ese dato no se muestra aunque el remoto lo permita; nunca al revés (poner true aquí no publica nada que el remoto no haya autorizado). (4) mostrarStockExacto solo aplica si mostrarStockPublico es true.",
+
+  "catalogoRemotoActivo": false,
+  "catalogoDemoActivo": false,
+  "mostrarPreciosPublicos": true,
+  "mostrarStockPublico": true,
+  "mostrarStockExacto": false,
+  "mostrarPromocionesPublicas": false,
+
   "ultimaRevisionGerencial": "pendiente",
 
-  "_notaBanderas": "Todas las banderas 'mostrar*' y 'permitirDatosPendientes' deben permanecer en false por defecto. Cambiarlas a true es una decisión explícita de gerencia para habilitar una excepción puntual, nunca un valor por defecto del sistema."
+  "_notaBanderas": "Todas las banderas 'mostrar*' y 'permitirDatosPendientes' deben permanecer en false por defecto. Cambiarlas a true es una decisión explícita de gerencia para habilitar una excepción puntual, nunca un valor por defecto del sistema. Excepción documentada: mostrarPreciosPublicos y mostrarStockPublico quedan en true porque solo actúan como tope sobre datos que Apps Script ya aprobó; mientras catalogoRemotoActivo sea false y el fallback local no traiga precios, no publican absolutamente nada.",
+
+  "_notaDemo": "catalogoDemoActivo carga data/catalogo-demo.json (modelos ficticios 'MODELO DE EJEMPLO') únicamente para validar la maquetación en local. Debe permanecer en false en producción."
 }

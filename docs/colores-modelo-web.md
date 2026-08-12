@@ -41,8 +41,19 @@ alt_text · foco_imagen · ultima_revision
 | Columna | Obligatoria | Valores admitidos |
 |---|---|---|
 | `id` | recomendada | Identificador único y estable de la fila. Si se deja vacío se genera como `modelo_id-slug_color`. |
+
+> ### `modelo_id` debe usar el id REAL del libro
+>
+> `MODELOS_WEB.id` en el libro real sigue el patrón **`moto-…`**:
+> `moto-pulsar-180-neon`, `moto-boxer-bm150x-disc`. Cuando se cree esta hoja,
+> `modelo_id` debe referirse a **ese** valor.
+>
+> **No usar `MW-10`, `MW-05` ni similares.** Esos identificadores pertenecen al
+> archivo local de previsualización y al fixture de colores de QA, no al libro.
+> Una fila de color con un `modelo_id` que no exista se descarta y el color no
+> se publica.
 | `modelo_id` | **sí** | Debe coincidir con un `id` de `MODELOS_WEB` (p. ej. `MW-10`). Si no existe ese modelo, la fila se descarta. |
-| `slug_color` | **sí** | Minúsculas, números y guiones (`azul-electrico`). Si se deja vacío se deriva de `nombre_color`. |
+| `slug_color` | **sí** | Minúsculas, números y guiones (`azul-electrico`). **Debe escribirse explícitamente**: no se deriva de `nombre_color`. Identifica la variante en el enlace directo (`?color=…`), así que derivarlo haría que renombrar «Azul» a «Azul eléctrico» cambiase la URL sin que nadie lo pidiera. Una fila sin `slug_color` válido se descarta. |
 | `nombre_color` | **sí** | Nombre comercial visible (`Azul`, `Negro mate`). Es lo que lee una persona. |
 | `hex_color` | no | `#RRGGBB` o `#RGB`. Cualquier otro formato se ignora sin romper nada. |
 | `imagen_principal` | **sí** | Ruta `assets/...` de la foto de escritorio. **Sin esta columna la fila no se publica** (ver §4). |
