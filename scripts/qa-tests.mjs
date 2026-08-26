@@ -2202,6 +2202,57 @@ comprobar("todas las categorías enlazadas existen en el catálogo",
   catsMalas.length === 0, catsMalas.join(", "));
 
 /* ================================================================
+   19. LA POLÍTICA DE CONTENIDO SIGUE VIVA
+
+   El sitio va en GitHub Pages, que no deja poner cabeceras HTTP, así que
+   la CSP viaja en un `<meta>`. Eso trae una trampa: el único script en
+   línea —el guardia anti-parpadeo— está autorizado por su hash. Si
+   alguien le cambia un espacio y no recalcula el hash, el navegador deja
+   de ejecutarlo SIN error visible: la página se ve casi igual y el fallo
+   pasa desapercibido durante meses.
+
+   Estas pruebas recalculan el hash desde el script real de cada página y
+   exigen que coincida con el declarado. Si dejan de cuadrar, el mensaje
+   dice cuál es el hash bueno.
+   ================================================================ */
+
+const { createHash } = await import("node:crypto");
+const PAGINAS = ["index.html", "catalogo.html", "modelo.html"];
+
+PAGINAS.forEach((pagina) => {
+  const html = readFileSync(join(RAIZ, pagina), "utf8");
+  const csp = /http-equiv="Content-Security-Policy"[\s\S]{0,80}?content="([^"]+)"/.exec(html);
+
+  comprobar(pagina + ": declara una política de contenido", !!csp);
+  if (!csp) return;
+  const politica = csp[1];
+
+  // El hash tiene que corresponder al script que hay HOY en el archivo.
+  const enLinea = /<script>([\s\S]*?)<\/script>/.exec(html);
+  comprobar(pagina + ": el hash autoriza al script en línea que hay ahora",
+    !enLinea || politica.indexOf("sha256-" + createHash("sha256").update(enLinea[1], "utf8").digest("base64")) !== -1,
+    enLinea ? "recalcula: 'sha256-" + createHash("sha256").update(enLinea[1], "utf8").digest("base64") + "'" : "");
+
+  // Abrir estas dos puertas anularía la política entera.
+  comprobar(pagina + ": no abre unsafe-inline ni unsafe-eval para scripts",
+    !/script-src[^;]*unsafe-(inline|eval)/.test(politica));
+
+  // Sin esto, una etiqueta <base> inyectada reescribe todas las rutas.
+  comprobar(pagina + ": cierra object-src, base-uri y form-action",
+    /object-src 'none'/.test(politica) && /base-uri 'self'/.test(politica) &&
+    /form-action 'self'/.test(politica));
+
+  // El catálogo vive detrás de Apps Script, que redirige a otro host: si
+  // falta el segundo, el catálogo se cae al respaldo local sin avisar.
+  comprobar(pagina + ": permite los dos hosts del endpoint del catálogo",
+    /connect-src[^;]*script\.google\.com/.test(politica) &&
+    /connect-src[^;]*script\.googleusercontent\.com/.test(politica));
+
+  comprobar(pagina + ": declara política de referente",
+    /name="referrer"\s+content="strict-origin-when-cross-origin"/.test(html));
+});
+
+/* ================================================================
    Resultado
    ================================================================ */
 

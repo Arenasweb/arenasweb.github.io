@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- Seguridad: misma política que index.html. Ver allí el porqué de
+         cada directiva y qué no cubre. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'sha256-WZRJfWvsnNCPcxzZwvyhovnZGqhZaC+8gPGPRbx6wTk='; style-src 'self'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; upgrade-insecure-requests"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
     <!-- SEO base -->
     <meta name="description" content="Catálogo de motocicletas de ARENAS MOTOCICLETAS en Cusco: modelos para ciudad, trabajo, deportiva, ruta y aventura, y carga y transporte." />
     <meta name="robots" content="index, follow" />

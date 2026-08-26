@@ -4,6 +4,35 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- ============================================================
+         SEGURIDAD — política de contenido
+
+         El sitio no carga NADA de terceros: ni tipografías, ni CDN, ni
+         analítica. La única salida a la red es el endpoint del catálogo
+         en Apps Script, que redirige a googleusercontent, y por eso
+         aparecen los dos hosts en `connect-src`.
+
+         El único script en línea es el guardia anti-parpadeo, que tiene
+         que correr antes del primer pintado: va firmado por hash en vez
+         de abrir `unsafe-inline`. Si alguna vez cambia ese script, aunque
+         sea un espacio, hay que recalcular el hash — y hasta entonces
+         dejará de ejecutarse. Es incómodo a propósito.
+
+         El resto del código ya venía limpio: cero `innerHTML`, cero
+         `eval`, cero `style=` en línea, cero manejadores `on*`. Por eso
+         esta política se puede permitir ser estricta sin romper nada.
+
+         LO QUE ESTO NO CUBRE: `frame-ancestors` y `X-Frame-Options` solo
+         valen como cabecera HTTP real, y GitHub Pages no deja poner
+         cabeceras. Contra el secuestro de clics no hay defensa aquí; la
+         habría detrás de un CDN o un dominio propio.
+    ============================================================ -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'sha256-WZRJfWvsnNCPcxzZwvyhovnZGqhZaC+8gPGPRbx6wTk='; style-src 'self'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; upgrade-insecure-requests"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
     <!-- SEO base -->
     <meta name="description" content="Motocicletas en Cusco para ciudad, trabajo y ruta andina. Encuentra tu camino con ARENAS: 12+ años de experiencia y más de 5000 motos vendidas." />
     <meta name="keywords" content="Arenas Motocicletas, motos en Cusco, motocicletas Cusco, moto para ciudad, moto para trabajo, ruta andina" />
