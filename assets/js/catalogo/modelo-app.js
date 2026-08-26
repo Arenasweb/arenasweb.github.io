@@ -356,6 +356,53 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
 
   /* ---------------- Ficha ---------------- */
 
+  /* ---------------- Datos rápidos ---------------- */
+
+  /**
+   * Convierte «Motor FI: 249.1 cc · 24.2 HP» en etiqueta y valor.
+   *
+   * Las características llegan de la hoja como una sola cadena. Mostrarlas
+   * en crudo, una debajo de otra, es lo que hacía que la ficha se leyera
+   * como una lista de la compra. Partidas en dos, se pueden maquetar como
+   * dato: rótulo pequeño arriba, cifra grande abajo.
+   *
+   * Sin dos puntos NO se inventa un rótulo: se muestra el texto entero
+   * como valor suelto. Poner «Dato:» delante sería relleno.
+   */
+  function partirDato(texto) {
+    var t = String(texto == null ? "" : texto).trim();
+    var i = t.indexOf(":");
+    if (i === -1) return { etiqueta: "", valor: t };
+    return { etiqueta: t.slice(0, i).trim(), valor: t.slice(i + 1).trim() };
+  }
+
+  /**
+   * Rejilla de datos, junto al título y no al final de la página.
+   * Quien mira una moto quiere cilindrada y potencia antes que prosa.
+   */
+  function pintarDatos(modelo) {
+    var caja = $("#modelo-datos");
+    if (!caja) return;
+    U.vaciar(caja);
+
+    var lista = modelo.caracteristicas || [];
+    if (!lista.length) { caja.hidden = true; return; }
+
+    var rejilla = U.el("ul", { class: "modelo-datos__rejilla" });
+    lista.forEach(function (c) {
+      var d = partirDato(c);
+      if (!d.valor) return;
+      var li = U.el("li", { class: "modelo-dato" + (d.etiqueta ? "" : " modelo-dato--suelto") });
+      if (d.etiqueta) li.appendChild(U.el("span", { class: "modelo-dato__etiqueta" }, d.etiqueta));
+      li.appendChild(U.el("span", { class: "modelo-dato__valor" }, d.valor));
+      rejilla.appendChild(li);
+    });
+
+    if (!rejilla.childNodes.length) { caja.hidden = true; return; }
+    caja.appendChild(rejilla);
+    caja.hidden = false;
+  }
+
   function pintarFicha(estado, modelo) {
     var meta = [NS.data.tituloCategoria(estado, modelo.categoria), modelo.linea]
       .filter(Boolean)
@@ -383,6 +430,8 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       corta.hidden = !modelo.descripcionCorta;
     }
 
+    pintarDatos(modelo);
+
     var precio = $("#modelo-precio");
     if (precio) {
       // Misma decisión que en la tarjeta: una sola función manda.
@@ -402,22 +451,25 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       U.vaciar(cuerpo);
 
       if (modelo.descripcionLarga) {
-        var bloqueTexto = U.el("div", { class: "modelo-bloque" });
-        bloqueTexto.appendChild(U.el("h2", { class: "modelo-bloque__titulo" }, "Sobre este modelo"));
-        bloqueTexto.appendChild(NS.ui.parrafos(modelo.descripcionLarga, "modelo-prosa"));
+        var bloqueTexto = U.el("div", { class: "modelo-bloque modelo-bloque--editorial" });
+
+        // Encabezado y texto en columnas separadas. Con el titular encima
+        // y el párrafo debajo, la mitad derecha de la página se quedaba en
+        // blanco y la ficha se leía a medio terminar.
+        var enc = U.el("div", { class: "modelo-bloque__encabezado" });
+        enc.appendChild(U.el("p", { class: "modelo-bloque__kicker" }, "En detalle"));
+        enc.appendChild(U.el("h2", { class: "modelo-bloque__titulo" }, "Sobre este modelo"));
+        bloqueTexto.appendChild(enc);
+
+        var cont = U.el("div", { class: "modelo-bloque__contenido" });
+        cont.appendChild(NS.ui.parrafos(modelo.descripcionLarga, "modelo-prosa"));
+        bloqueTexto.appendChild(cont);
         cuerpo.appendChild(bloqueTexto);
       }
 
-      if (modelo.caracteristicas.length) {
-        var bloqueCar = U.el("div", { class: "modelo-bloque" });
-        bloqueCar.appendChild(U.el("h2", { class: "modelo-bloque__titulo" }, "Lo que destaca"));
-        var ul = U.el("ul", { class: "modelo-beneficios" });
-        modelo.caracteristicas.forEach(function (c) {
-          ul.appendChild(U.el("li", null, c));
-        });
-        bloqueCar.appendChild(ul);
-        cuerpo.appendChild(bloqueCar);
-      }
+      // Las características viven ahora en la rejilla de datos, junto al
+      // título. Repetirlas aquí como lista era decir dos veces lo mismo y
+      // empujaba la descripción hacia abajo.
 
       // La lista de colores en texto solo se muestra si NO hay variantes
       // visuales: con selector arriba, repetir los nombres abajo sería
@@ -443,9 +495,25 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       var enlace = U.el(
         "a",
         { class: "btn btn-primary btn-hero", href: "index.html#contacto" },
-        modelo.ctaLabel || "Consultar por este modelo"
+        // NO se usa `cta_label`: esa etiqueta es la de la tarjeta del
+        // catálogo, y su trabajo es traer aquí («Ver detalles»). Repetirla
+        // en esta página invita a hacer lo que ya se ha hecho.
+        "Consultar por este modelo"
       );
       cta.appendChild(enlace);
+
+      // Acción secundaria, discreta: quien duda entre modelos quiere
+      // comparar, no volver al catálogo entero y filtrar otra vez. El
+      // catálogo ya sabe leer ?categoria=, así que se aprovecha.
+      if (modelo.categoria) {
+        var comparar = U.el(
+          "a",
+          { class: "modelo-cta__secundario",
+            href: "catalogo.html?categoria=" + encodeURIComponent(modelo.categoria) },
+          "Ver otras de su categoría"
+        );
+        cta.appendChild(comparar);
+      }
       cta.appendChild(
         U.el(
           "p",

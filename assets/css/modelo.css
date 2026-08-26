@@ -469,3 +469,245 @@
     opacity: 1;
   }
 }
+
+/* ================================================================
+   6. PRESENCIA — datos, marco y jerarquía
+
+   La ficha tenía todo lo necesario y aun así se leía vacía: título,
+   una línea de texto, un botón y mucho aire sin usar. El problema no
+   era falta de contenido, era falta de JERARQUÍA — todo pesaba igual,
+   así que nada destacaba.
+
+   Aquí no se añade ningún color nuevo. Se usa el azul que ya existe
+   (--brand-blue y sus variantes) en sitios donde antes no había nada:
+   rótulos, filos, la línea que separa un dato del siguiente. Un azul
+   bien puesto en el borde de una caja hace más que un azul grande en
+   el centro.
+   ================================================================ */
+
+/* ---- La categoría, como etiqueta y no como texto suelto ---- */
+.modelo-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 6px 12px;
+  border: 1px solid rgba(91, 147, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(31, 107, 255, 0.09);
+}
+
+/* El punto delante ancla la etiqueta y le da un foco de color mínimo. */
+.modelo-meta::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--brand-blue-bright);
+  flex: none;
+}
+
+/* ---- El marco de la moto ---- */
+/* La fotografía llega con fondo transparente sobre un fondo casi negro:
+   sin un plano detrás, la moto flotaba en la nada. Este degradado le da
+   suelo sin ensuciar la imagen, y el filo azul la separa de la página. */
+.modelo-galeria__marco {
+  position: relative;
+  border-color: rgba(91, 147, 255, 0.16);
+  background:
+    radial-gradient(120% 90% at 50% 18%, rgba(31, 107, 255, 0.13), transparent 62%),
+    linear-gradient(180deg, rgba(26, 34, 54, 0.55), rgba(5, 6, 8, 0.9));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 18px 44px -28px rgba(0, 0, 0, 0.9);
+  overflow: hidden;
+}
+
+/* Filo superior: una línea de luz de un píxel. Es el detalle que hace
+   que la caja parezca un objeto y no un rectángulo. */
+.modelo-galeria__marco::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(91, 147, 255, 0.5) 32%,
+    rgba(91, 147, 255, 0.5) 68%,
+    transparent
+  );
+  pointer-events: none;
+}
+
+/* ---- Datos rápidos ---- */
+/* Junto al título, no al final de la página: quien mira una moto quiere
+   cilindrada y potencia antes que prosa. */
+.modelo-datos {
+  width: 100%;
+  margin-top: var(--space-1);
+}
+
+.modelo-datos__rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.modelo-dato {
+  display: grid;
+  gap: 3px;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border-faint);
+  /* El filo izquierdo azul es lo único que marca cada dato. Un borde
+     completo de color convertiría la rejilla en un semáforo. */
+  border-left: 2px solid rgba(31, 107, 255, 0.55);
+  border-radius: 0 var(--radius-sm, 8px) var(--radius-sm, 8px) 0;
+  background: rgba(255, 255, 255, 0.022);
+  transition: background var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+}
+
+.modelo-dato:hover {
+  background: rgba(31, 107, 255, 0.07);
+  border-left-color: var(--brand-blue-bright);
+}
+
+.modelo-dato__etiqueta {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.modelo-dato__valor {
+  font-size: var(--text-md);
+  line-height: 1.35;
+  color: var(--color-white);
+}
+
+/* Un dato sin rótulo ocupa la fila entera: partirlo en dos columnas
+   dejaría un hueco a su lado que parecería un error. */
+.modelo-dato--suelto {
+  grid-column: 1 / -1;
+}
+
+.modelo-dato--suelto .modelo-dato__valor {
+  font-size: var(--text-base);
+  color: var(--color-silver);
+}
+
+/* ---- Llamada a la acción ---- */
+.modelo-cta__secundario {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--brand-blue-bright);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+}
+
+.modelo-cta__secundario::after {
+  content: "\2192";
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.modelo-cta__secundario:hover {
+  color: var(--brand-blue-ice);
+  border-bottom-color: rgba(188, 212, 255, 0.45);
+}
+
+.modelo-cta__secundario:hover::after {
+  transform: translateX(3px);
+}
+
+/* ---- Bloques de texto ---- */
+.modelo-bloque__kicker {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--brand-blue-bright);
+  margin-bottom: var(--space-2);
+}
+
+/* Un párrafo que cruza toda la pantalla no se lee: el ojo pierde el
+   renglón al volver. Entre 60 y 70 caracteres es donde se lee cómodo. */
+.modelo-prosa {
+  max-width: 68ch;
+}
+
+.modelo-prosa p {
+  line-height: 1.78;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modelo-dato,
+  .modelo-cta__secundario,
+  .modelo-cta__secundario::after {
+    transition: none;
+  }
+}
+
+/* ---- Bloque editorial a dos columnas ---- */
+/* El titular encima y el párrafo debajo dejaban la mitad derecha de la
+   página en blanco: el texto llegaba a los 68ch y ahí se acababa la
+   ficha. Puesto el rótulo a un lado y la prosa al otro, el ancho se
+   ocupa entero sin escribir una palabra de más. */
+.modelo-bloque--editorial {
+  display: grid;
+  gap: clamp(var(--space-4), 3vw, var(--space-10));
+  align-items: start;
+}
+
+@media (min-width: 860px) {
+  .modelo-bloque--editorial {
+    grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+  }
+
+  /* El rótulo acompaña a la lectura en textos largos en vez de perderse
+     arriba. Con textos cortos no se nota, y no estorba. */
+  .modelo-bloque--editorial .modelo-bloque__encabezado {
+    position: sticky;
+    top: calc(var(--space-16, 64px) + var(--space-4));
+  }
+}
+
+/* En este bloque el titular ya no separa del párrafo: lo hace la rejilla. */
+.modelo-bloque--editorial .modelo-bloque__titulo {
+  margin-bottom: 0;
+}
+
+/* Filo azul de un píxel al inicio del texto: marca dónde empieza la
+   lectura sin necesidad de un recuadro. */
+.modelo-bloque--editorial .modelo-bloque__contenido {
+  padding-left: clamp(var(--space-4), 2vw, var(--space-6));
+  border-left: 1px solid rgba(91, 147, 255, 0.22);
+}
+
+@media (max-width: 859px) {
+  .modelo-bloque--editorial .modelo-bloque__contenido {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+/* Aquí manda la rejilla, así que el texto puede respirar más ancho. */
+.modelo-bloque--editorial .modelo-prosa {
+  max-width: 72ch;
+}
+
+/* El corte entre la cabecera y el cuerpo era un salto demasiado largo:
+   se leía como el final de la página y no como el siguiente bloque. */
+.modelo-cuerpo {
+  margin-top: clamp(var(--space-8), 4vw, var(--space-12));
+  padding-top: clamp(var(--space-6), 3vw, var(--space-10));
+}
