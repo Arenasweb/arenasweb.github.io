@@ -2165,6 +2165,43 @@ comprobar("debug no se propaga a la ficha",
   cargarUi("localhost", "?preview=1&debug=1").ui.urlModelo({ slug: "x" }));
 
 /* ================================================================
+   18. LA PORTADA LLEVA AL CATÁLOGO CON SU FILTRO
+
+   Los ocho «Explorar …» de la portada apuntaban a anclas de la propia
+   portada — `#colecciones` y `#camino` —, así que prometían un catálogo
+   y entregaban un salto de scroll. Quien entraba por la portada de
+   Trabajo y pulsaba «Explorar trabajo» acababa en la misma página, sin
+   catálogo y sin filtro.
+
+   El catálogo ya sabía leer `?categoria=` y validarlo. Solo faltaba que
+   la portada lo usara. Estas pruebas atan las dos mitades: el enlace
+   existe, apunta al catálogo, y su categoría es una de verdad.
+   ================================================================ */
+
+const portadaHtml = readFileSync(join(RAIZ, "index.html"), "utf8");
+const catsValidas = JSON.parse(readFileSync(join(RAIZ, "data/catalogo-publico.local.json"), "utf8"))
+  .categorias.map((c) => c.slug);
+
+// Se leen los href de los CTA de ruta y de las tarjetas de colección.
+const ctaPortada = (portadaHtml.match(/<a\s+href="([^"]+)"[^>]*class="[^"]*(?:path-panel__cta|collection\s)[^"]*"/g) || [])
+  .map((a) => /href="([^"]+)"/.exec(a)[1]);
+
+comprobar("la portada tiene los ocho enlaces de exploración",
+  ctaPortada.length === 8, "encontrados=" + ctaPortada.length);
+
+const noVanAlCatalogo = ctaPortada.filter((h) => h.indexOf("catalogo.html?categoria=") !== 0);
+comprobar("ningún «Explorar …» se queda en un ancla de la propia portada",
+  noVanAlCatalogo.length === 0, noVanAlCatalogo.join(" | "));
+
+// Una categoría inventada la descartaría `criterioValido` en silencio: el
+// enlace parecería bien y el catálogo saldría sin filtrar.
+const catsMalas = ctaPortada
+  .map((h) => (h.split("categoria=")[1] || "").split("&")[0])
+  .filter((c) => catsValidas.indexOf(c) === -1);
+comprobar("todas las categorías enlazadas existen en el catálogo",
+  catsMalas.length === 0, catsMalas.join(", "));
+
+/* ================================================================
    Resultado
    ================================================================ */
 
