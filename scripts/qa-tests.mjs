@@ -1380,8 +1380,17 @@ const realQa = spawnSync(process.execPath, [join(RAIZ, "scripts/qa-catalogo.mjs"
 const resumenReal = JSON.parse(realQa.stdout).resumen;
 comprobar("catálogo real: 22 modelos", resumenReal.modelos === 22, String(resumenReal.modelos));
 comprobar("catálogo real: 0 publicados", resumenReal.publicados === 0);
-comprobar("catálogo real: 0 listos (no hay fotografías)", resumenReal.listosParaPublicar === 0,
-  String(resumenReal.listosParaPublicar));
+
+// Antes esto exigía «0 listos, porque no hay fotografías». Ya hay ocho, así
+// que la cifra fija caducó. Se ata a la causa en vez de al número: lo que
+// impide publicar es la falta de fotografía, luego los listos tienen que ser
+// exactamente los que la tienen. Así la prueba sigue viva según entren fotos,
+// y aun así atrapa lo que importa — que algo se declare listo sin foto.
+const conFoto = JSON.parse(readFileSync(join(RAIZ, "data/catalogo-publico.local.json"), "utf8"))
+  .modelos.filter((m) => m.imagen_principal).length;
+comprobar("catálogo real: los listos son exactamente los que tienen fotografía",
+  resumenReal.listosParaPublicar === conFoto,
+  "listos=" + resumenReal.listosParaPublicar + " conFoto=" + conFoto);
 comprobar("catálogo real: sigue saliendo con código 0", realQa.status === 0, "exit=" + realQa.status);
 
 /* ================================================================

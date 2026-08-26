@@ -177,7 +177,12 @@ p {
 
   /* --- Sistema de animación base --- */
   /* Duraciones */
-  --duration-fast:    120ms;
+  /* 180ms, no 120. A 120 el hover se lee como un salto: el ojo detecta
+     el cambio de estado pero no el recorrido, y la interfaz se siente
+     dura. Además incumplía la propia norma del proyecto, que fija las
+     microinteracciones entre 150 y 250ms (SECURITY_AND_AI_GUARDRAILS §6).
+     Hay una prueba que falla si vuelve a salirse de ese rango. */
+  --duration-fast:    180ms;
   --duration-base:    220ms;
   --duration-slow:    380ms;
   --duration-slower:  600ms;
