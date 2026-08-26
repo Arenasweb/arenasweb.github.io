@@ -815,9 +815,33 @@ FUENTES_V2.forEach(({ nombre, texto }) => {
 grupo("10. CATÁLOGO REAL");
 
 const rReal = B.limpiarParaCliente_(ejecutar(matrizDesdeCatalogoReal(), CATEGORIAS_TODAS_ACTIVAS, null));
-comprobar("los 22 modelos reales están en BORRADOR → 0 publicados", rReal.modelos.length === 0,
-  String(rReal.modelos.length));
-comprobar("sin modelos publicados no se publica ninguna categoría", rReal.categorias.length === 0);
+// Estas dos exigían «0 publicados» y «0 categorías», ciertas mientras el
+// catálogo no estaba publicado. Ya lo está: la cifra fija caducó. Se atan a
+// la regla que no depende del día — que el backend publique exactamente lo
+// que pasa la puerta de publicación, ni una fila de más.
+const filasReales = matrizDesdeCatalogoReal();
+const cabeceraReal = filasReales[0].map(function (c) { return String(c).trim().toLowerCase(); });
+const iActivoReal = cabeceraReal.indexOf("activo");
+const iEstadoReal = cabeceraReal.indexOf("estado_contenido");
+const iImagenReal = cabeceraReal.indexOf("imagen_principal");
+const debenPublicarse = filasReales.slice(1).filter(function (f) {
+  return String(f[iActivoReal]).toUpperCase() === "TRUE" &&
+    String(f[iEstadoReal]).toUpperCase() === "APROBADO" &&
+    String(f[iImagenReal] || "").trim() !== "";
+}).length;
+
+comprobar("el backend publica exactamente las filas que pasan la puerta",
+  rReal.modelos.length === debenPublicarse,
+  "publica=" + rReal.modelos.length + " deben=" + debenPublicarse);
+
+// Una categoría sin modelos publicados sería un filtro que no filtra nada:
+// el cliente la pulsa y se encuentra cero resultados.
+const catsConModelos = {};
+rReal.modelos.forEach(function (m) { catsConModelos[m.categoria] = true; });
+const catsVacias = rReal.categorias.filter(function (c) { return !catsConModelos[c.slug]; })
+  .map(function (c) { return c.slug; });
+comprobar("no se publica ninguna categoría sin modelos dentro",
+  catsVacias.length === 0, catsVacias.join(", "));
 comprobar("la respuesta sigue siendo ok, no un error", rReal.ok === true);
 comprobar("el envelope se mantiene completo con catálogo vacío",
   "modelos" in rReal && "colores" in rReal && "config" in rReal);

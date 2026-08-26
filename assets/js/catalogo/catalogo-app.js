@@ -623,6 +623,22 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
         return;
       }
 
+      // Sin modelos Y en degradado no es «catálogo en preparación»: es una
+      // caída del origen remoto. Decirle a un cliente que el catálogo
+      // todavía no existe, cuando existe y está publicado, es mentirle: se
+      // marcha convencido de que aquí no se venden motos. El estado de
+      // error dice la verdad y además le ofrece una salida —escribirnos—,
+      // que es lo único útil mientras el origen no responde.
+      if (!estado.modelos.length && estado.degradado) {
+        if (dom.aviso) dom.aviso.hidden = true; // el estado de error ya lo explica
+        contenedor.appendChild(NS.ui.estadoError());
+        if (dom.filtros) dom.filtros.hidden = true;
+        if (dom.contador) dom.contador.textContent = "";
+        if (dom.toolbar) dom.toolbar.hidden = true;
+        if (NS.finderUi) NS.finderUi.retirar();
+        return;
+      }
+
       if (!estado.modelos.length) {
         contenedor.appendChild(NS.ui.estadoVacio(estado.config.mensajeCatalogoVacio));
         if (dom.filtros) dom.filtros.hidden = true;

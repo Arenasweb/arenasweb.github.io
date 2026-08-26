@@ -177,3 +177,45 @@ el resultado no sería representativo.
 - [control-publicacion-datos.md](control-publicacion-datos.md) — el **otro** sistema de estados, el de la portada. No se mezcla con el del catálogo.
 - [arquitectura-tecnica.md](arquitectura-tecnica.md) — visión general del sitio
 - [fuente-unica-datos.md](fuente-unica-datos.md) — por qué Google Sheets es la fuente
+
+---
+
+## Después de publicar en Sheets: sincroniza el respaldo
+
+Publicar ocurre en Sheets. El repositorio no se entera. Y
+`data/catalogo-publico.local.json` es lo único que la web sirve cuando Apps
+Script no responde.
+
+Si nadie lo sincroniza, ese archivo se queda con el estado de *antes* de
+publicar — todo en BORRADOR — y entonces una caída del endpoint **vacía el
+catálogo entero delante del cliente**. Medido en navegador: 8 motos con el
+endpoint vivo, 0 con el endpoint caído.
+
+Por eso, cada vez que apruebes o retires modelos:
+
+```bash
+node scripts/sincronizar-respaldo.mjs            # en seco, solo informa
+node scripts/sincronizar-respaldo.mjs --escribir # fija el volcado
+git add data/catalogo-publico.local.json
+git commit -m "datos: sincronizar respaldo con lo publicado"
+git push
+```
+
+Fusiona, no reemplaza: fija lo publicado y **conserva los borradores**, que la
+previsualización local necesita y el endpoint público nunca devuelve.
+
+Nunca escribe si el endpoint responde vacío o mal. Quedarse sin red justo antes
+de necesitarla sería peor que no tener la herramienta.
+
+## Comprobar que producción está sana
+
+```bash
+node scripts/qa-produccion.mjs
+```
+
+Mira el sitio publicado, no el repositorio: que las páginas respondan y
+conserven su política de contenido, que el endpoint conteste, que ningún modelo
+publicado esté sin fotografía y que las rutas de imagen existan de verdad.
+
+Se ejecuta solo una vez al día desde `.github/workflows/vigilar-produccion.yml`.
+Si algo que un cliente notaría se rompe, GitHub avisa por correo.

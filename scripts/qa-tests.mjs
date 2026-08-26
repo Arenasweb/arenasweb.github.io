@@ -1087,8 +1087,18 @@ const modsReal = regsReal.map((r) => S.normalizarModelo(r, cfgReal, [])).filter(
 comprobar("los 22 modelos reales se normalizan", modsReal.length === 22, String(modsReal.length));
 comprobar("previsualización: siguen siendo 22",
   modsReal.filter((m) => S.esPublicable(m, true)).length === 22);
-comprobar("producción: siguen siendo 0",
-  modsReal.filter((m) => S.esPublicable(m, false)).length === 0);
+// Antes exigía «0 publicables en producción», porque el catálogo aún no se
+// había publicado. Ya lo está: la cifra fija caducó. Se ata a la puerta de
+// publicación en sí — publicable equivale a activo Y aprobado Y con los
+// campos mínimos — que es la regla que de verdad importa y que sigue
+// atrapando lo que preocupa: algo publicable sin cumplirla.
+const publicablesProd = modsReal.filter((m) => S.esPublicable(m, false));
+const debenSerlo = regsReal.filter((r) =>
+  r.activo === true && String(r.estado_contenido || "").toUpperCase() === "APROBADO" &&
+  r.imagen_principal && r.alt_text && r.descripcion_corta);
+comprobar("producción publica exactamente lo que pasa la puerta de publicación",
+  publicablesProd.length === debenSerlo.length,
+  "publicables=" + publicablesProd.length + " cumplen=" + debenSerlo.length);
 comprobar("los 22 tienen slug explícito en el archivo local",
   modsReal.every((m) => !!m.slug), modsReal.filter((m) => !m.slug).map((m) => m.modelo).join(","));
 
@@ -1379,7 +1389,11 @@ comprobar("los opcionales ausentes no impiden publicar", listoActivo.codigo === 
 const realQa = spawnSync(process.execPath, [join(RAIZ, "scripts/qa-catalogo.mjs"), "--json"], { encoding: "utf8" });
 const resumenReal = JSON.parse(realQa.stdout).resumen;
 comprobar("catálogo real: 22 modelos", resumenReal.modelos === 22, String(resumenReal.modelos));
-comprobar("catálogo real: 0 publicados", resumenReal.publicados === 0);
+// También caducó el «0 publicados». Lo que no puede pasar es publicar algo
+// que no esté listo, así que se exige que publicados nunca supere a listos.
+comprobar("catálogo real: no se publica nada que no esté listo",
+  resumenReal.publicados <= resumenReal.listosParaPublicar,
+  "publicados=" + resumenReal.publicados + " listos=" + resumenReal.listosParaPublicar);
 
 // Antes esto exigía «0 listos, porque no hay fotografías». Ya hay ocho, así
 // que la cifra fija caducó. Se ata a la causa en vez de al número: lo que
@@ -2260,6 +2274,68 @@ PAGINAS.forEach((pagina) => {
   comprobar(pagina + ": declara política de referente",
     /name="referrer"\s+content="strict-origin-when-cross-origin"/.test(html));
 });
+
+/* ================================================================
+   20. LA RED DE SEGURIDAD SUJETA ALGO
+
+   `data/catalogo-publico.local.json` es lo que la web sirve cuando Apps
+   Script no responde. Publicar ocurre en Sheets, no aquí, así que este
+   archivo se queda congelado en el estado anterior a publicar si nadie
+   lo sincroniza — y entonces una caída del endpoint vacía el catálogo
+   entero delante del cliente. Medido en navegador: 8 motos con el
+   endpoint vivo, 0 con el endpoint caído.
+
+   `scripts/sincronizar-respaldo.mjs` lo pone al día. Estas pruebas
+   vigilan que lo que hay dentro sea servible.
+   ================================================================ */
+
+const respaldo = JSON.parse(readFileSync(join(RAIZ, "data/catalogo-publico.local.json"), "utf8"));
+const activosRespaldo = respaldo.modelos.filter((m) => m.activo === true);
+
+// Un activo sin fotografía se pinta como tarjeta con marco vacío. Si el
+// respaldo llega a servirse, el cliente ve exactamente eso.
+const activosSinFoto = activosRespaldo.filter((m) => !m.imagen_principal).map((m) => m.slug);
+comprobar("ningún modelo activo del respaldo se queda sin fotografía",
+  activosSinFoto.length === 0, activosSinFoto.join(", "));
+
+// La misma puerta que aplica la web: sin estos tres campos no se publica.
+const activosIncompletos = activosRespaldo
+  .filter((m) => !m.alt_text || !m.descripcion_corta).map((m) => m.slug);
+comprobar("todo activo del respaldo trae alt_text y descripción corta",
+  activosIncompletos.length === 0, activosIncompletos.join(", "));
+
+// Los borradores deben seguir aquí: la previsualización editorial los lee
+// de este archivo, y el endpoint público nunca los devuelve.
+comprobar("el respaldo conserva los borradores para previsualizar",
+  respaldo.modelos.length > activosRespaldo.length,
+  respaldo.modelos.length + " filas, " + activosRespaldo.length + " activas");
+
+/* ================================================================
+   21. LA CSP Y LA LISTA DE DOMINIOS NO PUEDEN DIVERGIR
+
+   `DOMINIOS_AUTORIZADOS` decide qué hosts externos acepta el saneador de
+   imágenes. La CSP decide de qué hosts el navegador acepta cargarlas.
+   Hoy ambas están cerradas y coinciden. El día que alguien añada un host
+   a la lista sin tocar la CSP, esas imágenes no cargarán y no habrá
+   error visible: simplemente no aparecerán.
+   ================================================================ */
+
+const utils = readFileSync(join(RAIZ, "assets/js/catalogo/catalogo-utils.js"), "utf8");
+const bloqueDominios = /DOMINIOS_AUTORIZADOS\s*=\s*\[([^\]]*)\]/.exec(utils);
+const dominios = bloqueDominios
+  ? (bloqueDominios[1].match(/"([^"]+)"/g) || []).map((s) => s.replace(/"/g, ""))
+  : null;
+
+comprobar("se encuentra la lista de dominios autorizados", dominios !== null);
+
+if (dominios) {
+  const cspIndex = /http-equiv="Content-Security-Policy"[\s\S]{0,80}?content="([^"]+)"/.exec(portadaHtml);
+  const imgSrc = cspIndex ? (/img-src ([^;]+)/.exec(cspIndex[1]) || [])[1] || "" : "";
+  const fuera = dominios.filter((d) => imgSrc.indexOf(d) === -1);
+  comprobar("todo dominio autorizado está también permitido en img-src de la CSP",
+    fuera.length === 0,
+    fuera.length ? "faltan en la CSP: " + fuera.join(", ") : "lista vacía, CSP cerrada");
+}
 
 /* ================================================================
    Resultado

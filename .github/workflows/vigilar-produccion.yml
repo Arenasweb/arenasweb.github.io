@@ -1,0 +1,62 @@
+# ================================================================
+# Vigilancia del catálogo publicado.
+#
+# POR QUÉ EXISTE
+# Los datos del catálogo no viven en este repositorio: viven en Sheets y
+# los sirve Apps Script, un servicio ajeno con sus propias cuotas. El
+# repositorio puede estar impecable mientras el catálogo lleva dos días
+# vacío delante de los clientes.
+#
+# Sin esto, la forma de enterarse sería que un cliente lo diga. O que no
+# lo diga y se vaya a otra tienda.
+#
+# QUÉ HACE
+# Una vez al día pregunta al sitio publicado si está sano. Si algo que un
+# cliente notaría está roto, el trabajo falla y GitHub avisa por correo.
+#
+# No toca nada: solo lee.
+# ================================================================
+
+name: Vigilar producción
+
+on:
+  schedule:
+    # 12:00 UTC = 07:00 en Cusco. Antes de abrir, para que dé tiempo a
+    # reaccionar durante la jornada y no a las tres de la mañana.
+    - cron: "0 12 * * *"
+  # Para poder lanzarlo a mano cuando se sospecha algo.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  salud:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # Sin dependencias que instalar: el proyecto no tiene ninguna.
+      - name: Comprobar la salud del sitio publicado
+        run: node scripts/qa-produccion.mjs
+
+      # Si lo anterior falló, esto explica qué mirar sin abrir el registro.
+      - name: Qué hacer si ha fallado
+        if: failure()
+        run: |
+          echo "El catálogo publicado tiene un problema que un cliente notaría."
+          echo ""
+          echo "Primero mira si es el origen de datos:"
+          echo "  · ¿Responde el endpoint de Apps Script?"
+          echo "  · ¿Sigue habiendo filas con activo=TRUE y APROBADO en Sheets?"
+          echo ""
+          echo "Si el endpoint está caído pero la hoja está bien, la web debería"
+          echo "seguir mostrando el catálogo desde data/catalogo-publico.local.json."
+          echo "Si no lo hace, ese respaldo está desfasado: ponlo al día con"
+          echo "  node scripts/sincronizar-respaldo.mjs --escribir"
+          echo "y commitéalo."
