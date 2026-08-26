@@ -379,6 +379,24 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       .replace(/[\u0300-\u036f]/g, "");
   }
 
+  /**
+   * Parte «Motor FI: 249.1 cc · 24.2 HP» en rótulo y valor.
+   *
+   * Las características llegan de la hoja como una sola cadena. En crudo
+   * se leen como lista de la compra; partidas, se pueden maquetar como
+   * dato. Vive aquí porque la usan la ficha y la tarjeta: dos copias se
+   * separan a la primera.
+   *
+   * Sin dos puntos NO se inventa un rótulo. Poner «Dato:» delante sería
+   * relleno, y un hueco declarado se lee mejor que un relleno.
+   */
+  function partirDato(valor) {
+    var t = texto(valor, 200);
+    var i = t.indexOf(":");
+    if (i === -1) return { etiqueta: "", valor: t };
+    return { etiqueta: t.slice(0, i).trim(), valor: t.slice(i + 1).trim() };
+  }
+
   NS.utils = {
     DOMINIOS_AUTORIZADOS: DOMINIOS_AUTORIZADOS,
     texto: texto,
@@ -401,5 +419,6 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     vaciar: vaciar,
     debounce: debounce,
     normalizarBusqueda: normalizarBusqueda,
+    partirDato: partirDato,
   };
 })(window.ARENAS_CATALOGO);

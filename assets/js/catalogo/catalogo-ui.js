@@ -396,6 +396,16 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       cuerpo.appendChild(U.el("p", { class: "moto-card__desc" }, modelo.descripcionCorta));
     }
 
+    // Un solo dato, el que decide la compra: cilindrada y potencia. La
+    // tarjeta no es la ficha — meter aqui las tres caracteristicas la
+    // convertiria otra vez en una lista, que es de lo que se venia.
+    if (modelo.caracteristicas && modelo.caracteristicas.length) {
+      var clave = U.partirDato(modelo.caracteristicas[0]);
+      if (clave.valor) {
+        cuerpo.appendChild(U.el("p", { class: "moto-card__specs" }, clave.valor));
+      }
+    }
+
     var colores = indicadorColores(modelo);
     if (colores) cuerpo.appendChild(colores);
 

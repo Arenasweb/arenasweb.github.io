@@ -1408,3 +1408,113 @@
     transition: none;
   }
 }
+
+/* ================================================================
+   TARJETAS — presencia
+
+   Vive en esta hoja, no en style.css, y eso no es casualidad:
+   catalogo.css solo la cargan catalogo.html y modelo.html. La portada
+   no la ve, así que estos ajustes no pueden alcanzarla ni por error.
+
+   Sin colores nuevos. Lo que cambia es el reparto: más aire alrededor
+   de la moto, el nombre pesando más que todo lo demás, y el azul en el
+   filo en vez de en el centro.
+   ================================================================ */
+
+/* La moto necesita un plano detrás. Los PNG llegan con fondo
+   transparente sobre un fondo casi negro: sin este degradado la moto
+   flota y la tarjeta se lee como un hueco. */
+.moto-card__media {
+  background:
+    radial-gradient(115% 80% at 50% 82%, rgba(31, 107, 255, 0.10), transparent 60%),
+    linear-gradient(160deg, #0a1424, #050914);
+}
+
+/* Filo de luz que aparece al pasar por encima. Un píxel, y solo en el
+   borde superior: es lo que separa «se ilumina» de «parpadea». */
+.moto-card::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(91, 147, 255, 0.65) 30%,
+    rgba(91, 147, 255, 0.65) 70%,
+    transparent
+  );
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-out);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.moto-card:hover::after,
+.moto-card:focus-within::after {
+  opacity: 1;
+}
+
+/* Más aire. La tarjeta apretaba seis elementos contra los bordes y por
+   eso se leía como una ficha de inventario. */
+.moto-card__body {
+  padding: clamp(var(--space-5), 2vw, var(--space-6));
+  gap: var(--space-2);
+}
+
+/* La categoría, en el mismo azul que el resto de rótulos del catálogo.
+   Antes era gris y competía con la descripción. */
+.moto-card__meta {
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brand-blue-bright);
+}
+
+/* El nombre manda. Es lo único que alguien recuerda de una tarjeta. */
+.moto-card__title {
+  font-size: clamp(1.35rem, 2.1vw, 1.85rem);
+  letter-spacing: -0.01em;
+  margin-top: 2px;
+}
+
+/* El dato que decide la compra, en su propia línea y con filo azul.
+   Uno solo: la tarjeta no es la ficha. */
+.moto-card__specs {
+  margin-top: var(--space-1);
+  padding-left: var(--space-3);
+  border-left: 2px solid rgba(31, 107, 255, 0.5);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  color: var(--color-silver);
+}
+
+/* La descripción acompaña; no debe pesar como el nombre. */
+.moto-card__desc {
+  color: var(--color-muted);
+  line-height: 1.55;
+}
+
+/* El pie, algo más separado del cuerpo. */
+.moto-card__footer {
+  padding: var(--space-4) clamp(var(--space-5), 2vw, var(--space-6));
+}
+
+/* La flecha se adelanta un poco al pasar por encima: movimiento mínimo,
+   suficiente para que la tarjeta se sienta viva. */
+.moto-card__cta::after {
+  display: inline-block;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.moto-card:hover .moto-card__cta::after,
+.moto-card:focus-within .moto-card__cta::after {
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .moto-card::after,
+  .moto-card__cta::after {
+    transition: none;
+  }
+}

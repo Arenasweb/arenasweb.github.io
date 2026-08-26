@@ -359,24 +359,6 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
   /* ---------------- Datos rápidos ---------------- */
 
   /**
-   * Convierte «Motor FI: 249.1 cc · 24.2 HP» en etiqueta y valor.
-   *
-   * Las características llegan de la hoja como una sola cadena. Mostrarlas
-   * en crudo, una debajo de otra, es lo que hacía que la ficha se leyera
-   * como una lista de la compra. Partidas en dos, se pueden maquetar como
-   * dato: rótulo pequeño arriba, cifra grande abajo.
-   *
-   * Sin dos puntos NO se inventa un rótulo: se muestra el texto entero
-   * como valor suelto. Poner «Dato:» delante sería relleno.
-   */
-  function partirDato(texto) {
-    var t = String(texto == null ? "" : texto).trim();
-    var i = t.indexOf(":");
-    if (i === -1) return { etiqueta: "", valor: t };
-    return { etiqueta: t.slice(0, i).trim(), valor: t.slice(i + 1).trim() };
-  }
-
-  /**
    * Rejilla de datos, junto al título y no al final de la página.
    * Quien mira una moto quiere cilindrada y potencia antes que prosa.
    */
@@ -390,7 +372,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
 
     var rejilla = U.el("ul", { class: "modelo-datos__rejilla" });
     lista.forEach(function (c) {
-      var d = partirDato(c);
+      var d = U.partirDato(c);
       if (!d.valor) return;
       var li = U.el("li", { class: "modelo-dato" + (d.etiqueta ? "" : " modelo-dato--suelto") });
       if (d.etiqueta) li.appendChild(U.el("span", { class: "modelo-dato__etiqueta" }, d.etiqueta));
