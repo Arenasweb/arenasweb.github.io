@@ -36,7 +36,13 @@
 | Testimonios reales sin consentimiento | nombres, citas, fotos de clientes |
 | Modelos legacy | `NS400`, `pulsar-ns400` |
 | Rutas activas a assets inexistentes | `<img src>`, `og:image`, `favicon` apuntando a archivos que no existen |
-| Secretos técnicos | claves, tokens, endpoints productivos de Apps Script |
+| Secretos técnicos | claves, tokens, el **identificador del Google Sheet**, Script Properties |
+
+> **Matiz sobre la URL `/exec`.** Desde el 11/08/2026 la URL del despliegue del
+> catálogo **sí** está en el repositorio, en un único sitio
+> (`catalogo-data.js`), y es correcto: el navegador de cualquier visitante tiene
+> que pedirla, así que no es un secreto. Lo que **nunca** entra es el
+> identificador del libro. Ver §5.2.
 
 > **Criterio endurecido (2026-07):** incluso los datos "oficiales confirmados por el cliente" (catálogo, garantía, entidades, identidad institucional) NO van al repo público — van a Google Sheets. Si un dato viene del cliente, no se escribe aquí.
 
@@ -97,13 +103,44 @@ Un placeholder **nunca** debe poder confundirse con un dato real.
 
 ## 5. Estado de la integración Google Sheets
 
-- `data/slots/control.json` es el contrato local de publicación. Valores obligatorios mientras no haya aprobación:
+> **Hay DOS subsistemas y están en estados distintos.** Confundirlos lleva a
+> desconectar algo que sí está autorizado. Léelo entero antes de tocar nada.
+
+### 5.1 Portada y slots — SIN CONECTAR
+
+- `data/slots/control.json` es el contrato local de publicación de la **portada**
+  (hero, sedes, promociones, financiamiento, beneficios…). Valores obligatorios
+  mientras no haya aprobación:
   - `googleSheetsConectado: false`
   - `appsScriptEndpoint: ""`
   - `fallbackLocal: true`
   - `permitirDatosPendientes: false` y todas las banderas `mostrar*` en `false`
-- **Prohibido** crear `fetch()` remoto productivo, conectar el endpoint o cambiar estas banderas sin autorización explícita.
-- `apps-script/` es un **borrador no productivo**, ignorado por git (`.gitignore`). No se despliega ni se conecta.
+- **Prohibido** conectar estos slots o cambiar estas banderas sin autorización
+  explícita del propietario.
+
+### 5.2 Catálogo — CONECTADO Y AUTORIZADO (11/08/2026)
+
+El catálogo **sí** está conectado, y es correcto que lo esté:
+
+- `assets/js/catalogo/catalogo-data.js` tiene `modoDatos: "remoto"` y una URL
+  `/exec` real. Es el **único** sitio donde se escribe esa URL.
+- El backend `apps-script/v2/` está **desplegado** como Web App de solo lectura
+  y **versionado en Git** (los tres `.gs` y su README). El paquete anterior
+  —`Code.gs`, `Schema.gs`, `Seguridad.gs`, `Endpoint.gs` de la raíz— sigue
+  ignorado y no se despliega.
+- El identificador del libro **no** está en el repositorio: vive en una Script
+  Property. Eso no cambia.
+
+Autorización y procedimiento: `docs/runbook-deploy-apps-script-v2.md` y
+`docs/decision-versionado-apps-script-v2.md`.
+
+**Sigue prohibido sin autorización:** cambiar la URL del endpoint, volver a
+`modoDatos: "local"`, redesplegar Apps Script, tocar Script Properties o retirar
+el respaldo local (`fallbackLocal`), que es lo que sostiene la web si el
+endpoint cae.
+
+### 5.3 Otros
+
 - `_template/` pertenece a otro repositorio (`pixdeah-coder/business-static-web-framework`) y está ignorado.
 
 ---

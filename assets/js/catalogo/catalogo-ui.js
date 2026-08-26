@@ -334,7 +334,23 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
    * Con cadena vacía, el ayudante `el()` no escribe el atributo `href`.
    */
   function urlModelo(modelo) {
-    return modelo.slug ? "modelo.html?slug=" + encodeURIComponent(modelo.slug) : "";
+    if (!modelo.slug) return "";
+    var url = "modelo.html?slug=" + encodeURIComponent(modelo.slug);
+
+    // La previsualización es un estado de la SESIÓN editorial, no de una
+    // página suelta. Sin propagarla, quien revisa ve la tarjeta de un
+    // borrador en el catálogo, la abre, y se encuentra un «Modelo no
+    // encontrado»: el recorrido de revisión se corta justo donde hace
+    // falta, que es mirar la ficha antes de aprobarla.
+    //
+    // Es seguro en producción: `previewActivo()` exige host local además
+    // del parámetro, así que fuera de localhost esto no añade nada y las
+    // URL públicas siguen limpias. No se propaga `debug`, cuyo panel solo
+    // existe en el catálogo.
+    if (NS.data && typeof NS.data.previewActivo === "function" && NS.data.previewActivo()) {
+      url += "&preview=1";
+    }
+    return url;
   }
 
   /**

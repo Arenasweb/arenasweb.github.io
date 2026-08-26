@@ -20,7 +20,7 @@
    exit 1 → alguna falla.
    ================================================================ */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join, resolve } from "node:path";
 import { createContext, runInContext } from "node:vm";
@@ -871,11 +871,33 @@ comprobar("el paquete no contiene una URL /exec", !/\/exec/.test(todoElCodigo));
 comprobar("el paquete no contiene un identificador de libro literal",
   !/['"][A-Za-z0-9_-]{40,}['"]/.test(todoElCodigo));
 
-// Y los archivos legacy siguen existiendo, sin tocar, fuera del paquete.
-["Code.gs", "Endpoint.gs", "Schema.gs", "Seguridad.gs"].forEach((n) => {
-  comprobar(`el legacy ${n} sigue presente y sin modificar`,
-    readFileSync(join(RAIZ, "apps-script", n), "utf8").length > 0);
-});
+// Y los archivos legacy, SI ESTÁN, siguen fuera del paquete y sin tocar.
+//
+// El paquete anterior está ignorado por Git (`.gitignore`: `apps-script/*`
+// con excepción solo para `v2/`), así que en un clon limpio —el de Codex,
+// el de una integración continua, el de cualquier otra máquina— no existe.
+// Leerlo sin comprobarlo hacía reventar la suite entera con un ENOENT sin
+// informar de nada: la comprobación pasaba o no según en qué ordenador se
+// ejecutara, que es justo lo contrario de una prueba.
+//
+// Donde el legacy exista se sigue verificando; donde no, se declara omitido
+// en voz alta en vez de fingir que se comprobó.
+const LEGACY = ["Code.gs", "Endpoint.gs", "Schema.gs", "Seguridad.gs"];
+const legacyPresente = LEGACY.filter((n) => existsSync(join(RAIZ, "apps-script", n)));
+
+if (legacyPresente.length) {
+  legacyPresente.forEach((n) => {
+    comprobar(`el legacy ${n} sigue presente y sin modificar`,
+      readFileSync(join(RAIZ, "apps-script", n), "utf8").length > 0);
+  });
+  const ausentes = LEGACY.filter((n) => legacyPresente.indexOf(n) === -1);
+  if (ausentes.length && !SOLO_JSON) {
+    console.log(`       (no están, y en esta máquina sí debería: ${ausentes.join(", ")})`);
+  }
+} else if (!SOLO_JSON) {
+  console.log("       omitido: el paquete anterior no está en este clon " +
+    "(está ignorado por Git). No es un fallo.");
+}
 
 /* ================================================================
    11. POST-AUDITORÍA — cabeceras y claves ambiguas

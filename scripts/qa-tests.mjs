@@ -2028,6 +2028,134 @@ comprobar("cualquier otro parámetro de terceros también se conserva",
   /utm_source=demo/.test(w7));
 
 /* ================================================================
+   21. COHERENCIA ENTRE LAS REGLAS Y EL CÓDIGO VIGENTE
+   Una regla de seguridad que describe un estado que ya no existe es
+   peor que no tenerla: el siguiente agente la obedece y deshace algo
+   autorizado. Estas pruebas comparan el documento con el código real.
+   ================================================================ */
+
+grupo("21. COHERENCIA REGLAS ↔ CÓDIGO");
+
+const GUARDRAILS = readFileSync(join(RAIZ, "SECURITY_AND_AI_GUARDRAILS.md"), "utf8");
+const DATA_JS = readFileSync(join(RAIZ, "assets/js/catalogo/catalogo-data.js"), "utf8");
+
+const catalogoEsRemoto = /modoDatos:\s*"remoto"/.test(DATA_JS);
+const hayEndpoint = /appsScriptEndpoint:\s*"https:\/\/script\.google\.com/.test(DATA_JS);
+
+comprobar("el catálogo está en modo remoto con un endpoint real",
+  catalogoEsRemoto && hayEndpoint,
+  "modoDatos remoto=" + catalogoEsRemoto + " endpoint=" + hayEndpoint);
+
+// Si el catálogo está conectado, el documento de reglas NO puede seguir
+// afirmando que conectar el endpoint está prohibido sin matizarlo: eso
+// llevaría a desconectar producción creyendo que se cumple una norma.
+if (catalogoEsRemoto && hayEndpoint) {
+  comprobar("las reglas reconocen que el catálogo está conectado",
+    /CONECTADO Y AUTORIZADO|cat[áa]logo \*\*s[íi]\*\* est[áa] conectado/i.test(GUARDRAILS));
+  comprobar("las reglas ya no dicen que apps-script no se despliega ni se conecta",
+    !/apps-script\/`? es un \*\*borrador no productivo\*\*[\s\S]{0,80}No se despliega ni se conecta/i.test(GUARDRAILS));
+  comprobar("las reglas distinguen la portada (sin conectar) del catálogo (conectado)",
+    /SIN CONECTAR/i.test(GUARDRAILS) && /control\.json/.test(GUARDRAILS));
+}
+
+// El identificador del libro sigue siendo secreto, pase lo que pase.
+comprobar("las reglas siguen prohibiendo el identificador del libro en el repo",
+  /identificador del (Google Sheet|libro)/i.test(GUARDRAILS));
+
+// Se busca por FORMA, no por valor: escribir aquí el identificador real
+// —aunque fuera para prohibirlo— lo metería en el repositorio, que es
+// justo lo que esta comprobación defiende. Un identificador de Sheets son
+// ~44 caracteres de [A-Za-z0-9_-] con mayúsculas, minúsculas y dígitos.
+// La URL del despliegue lleva un token con esa misma forma y sí puede
+// estar, así que se descarta esa línea antes de mirar.
+const DATA_SIN_ENDPOINT = DATA_JS.replace(/https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec/g, "");
+const pareceId = (DATA_SIN_ENDPOINT.match(/[A-Za-z0-9_-]{40,60}/g) || [])
+  .filter((s) => /[a-z]/.test(s) && /[A-Z]/.test(s) && /[0-9]/.test(s));
+comprobar("no hay nada con forma de identificador de libro en catalogo-data.js",
+  pareceId.length === 0, pareceId.map((s) => s.slice(0, 10) + "…").join(", "));
+comprobar("ni una referencia directa a una hoja de cálculo",
+  !/docs\.google\.com\/spreadsheets/.test(DATA_JS));
+
+// El respaldo local es lo que sostiene la web si el endpoint cae.
+comprobar("el respaldo local sigue activo en el código",
+  /fallbackLocal:\s*true/.test(DATA_JS));
+comprobar("las reglas advierten de no retirar el respaldo local",
+  /respaldo local|fallbackLocal/i.test(GUARDRAILS));
+
+// La portada sigue desconectada, y el documento y el archivo coinciden.
+const CONTROL = JSON.parse(readFileSync(join(RAIZ, "data/slots/control.json"), "utf8"));
+comprobar("la portada sigue sin conectar en control.json",
+  CONTROL.googleSheetsConectado === false && CONTROL.appsScriptEndpoint === "");
+comprobar("las reglas siguen exigiendo esos valores para la portada",
+  /googleSheetsConectado:\s*false/.test(GUARDRAILS));
+
+/* ================================================================
+   22. LA PREVISUALIZACIÓN VIAJA DEL CATÁLOGO A LA FICHA
+   Sin esto, quien revisa ve la tarjeta de un borrador, la abre y se
+   encuentra «Modelo no encontrado»: el recorrido editorial se corta
+   justo donde hace falta. Y tiene que seguir SIN filtrarse en
+   producción, donde la previsualización no existe.
+   ================================================================ */
+
+grupo("22. PREVISUALIZACIÓN CATÁLOGO → FICHA");
+
+/** Carga utils+schema+data+ui con un host y una URL concretos. */
+function cargarUi(hostname, search) {
+  const ventana = {
+    location: { hostname, search, pathname: "/catalogo.html" },
+    matchMedia: () => ({ matches: false, addEventListener() {}, addListener() {} }),
+    setTimeout, clearTimeout, Image: function () {},
+    history: { replaceState() {} },
+  };
+  ventana.window = ventana;
+  const contexto = createContext({
+    window: ventana, URLSearchParams,
+    console: { log() {}, warn() {}, error() {}, info() {} },
+    document: {
+      readyState: "loading", addEventListener() {},
+      querySelector: () => null, getElementById: () => null,
+      createElement: () => ({ setAttribute() {}, getAttribute() { return null; }, appendChild() {}, style: {}, classList: { add() {}, remove() {}, toggle() {}, contains: () => false } }),
+    },
+  });
+  for (const archivo of [
+    "assets/js/catalogo/catalogo-utils.js",
+    "assets/js/catalogo/catalogo-schema.js",
+    "assets/js/catalogo/catalogo-completitud.js",
+    "assets/js/catalogo/catalogo-data.js",
+    "assets/js/catalogo/catalogo-ui.js",
+  ]) {
+    runInContext(readFileSync(join(RAIZ, archivo), "utf8"), contexto, { filename: archivo });
+  }
+  return contexto.window.ARENAS_CATALOGO;
+}
+
+const urlDe = (host, search) => cargarUi(host, search).ui.urlModelo({ slug: "dominar-250" });
+
+comprobar("en localhost con ?preview=1 el enlace lleva la previsualización",
+  /[?&]preview=1/.test(urlDe("localhost", "?preview=1")), urlDe("localhost", "?preview=1"));
+comprobar("y también en 127.0.0.1",
+  /[?&]preview=1/.test(urlDe("127.0.0.1", "?preview=1")), urlDe("127.0.0.1", "?preview=1"));
+
+comprobar("en PRODUCCIÓN nunca se añade, aunque la URL traiga ?preview=1",
+  !/preview/.test(urlDe("arenasweb.github.io", "?preview=1")),
+  urlDe("arenasweb.github.io", "?preview=1"));
+comprobar("en producción sin el parámetro tampoco",
+  !/preview/.test(urlDe("arenasweb.github.io", "")), urlDe("arenasweb.github.io", ""));
+comprobar("en localhost SIN el parámetro no se inventa",
+  !/preview/.test(urlDe("localhost", "")), urlDe("localhost", ""));
+
+comprobar("el slug sigue siendo el primer parámetro y va codificado",
+  /^modelo\.html\?slug=dominar-250/.test(urlDe("localhost", "?preview=1")));
+comprobar("un modelo sin slug sigue sin generar enlace",
+  cargarUi("localhost", "?preview=1").ui.urlModelo({ slug: "" }) === "");
+
+// `debug` NO se propaga: su panel solo existe en el catálogo, y arrastrarlo
+// a la ficha prometería una herramienta que allí no hay.
+comprobar("debug no se propaga a la ficha",
+  !/debug/.test(cargarUi("localhost", "?preview=1&debug=1").ui.urlModelo({ slug: "x" })),
+  cargarUi("localhost", "?preview=1&debug=1").ui.urlModelo({ slug: "x" }));
+
+/* ================================================================
    Resultado
    ================================================================ */
 
