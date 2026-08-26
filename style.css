@@ -3254,6 +3254,11 @@ main > section { scroll-margin-top: 84px; }
   background: rgba(245, 158, 11, 0.12);
   border: 1px dashed rgba(245, 158, 11, 0.5);
 }
+.moto-tag--referencial {
+  color: #d8e7ff;
+  background: rgba(31, 107, 255, 0.12);
+  border: 1px dashed rgba(91, 147, 255, 0.65);
+}
 
 .moto-card__footer {
   display: flex;

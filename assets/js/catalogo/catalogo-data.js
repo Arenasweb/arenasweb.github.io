@@ -39,6 +39,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
      * de la hoja real. Ver docs/colores-modelo-web.md.
      */
     rutaColoresDemo: "data/catalogo-colores-demo.local.json",
+    rutaImagenesDemo: "data/catalogo-imagenes-demo.local.json",
   };
 
   /** Estado resuelto una sola vez por carga de página (caché en memoria). */
@@ -111,8 +112,30 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     });
   }
 
+  /**
+   * Añade imágenes conceptuales por categoría únicamente a borradores de la
+   * previsualización local. No sustituye fotografías reales y marca cada
+   * modelo para que la interfaz declare de forma visible que no es producto.
+   */
+  function unirImagenesDemo(modelos, imagenesPorCategoria, preview) {
+    if (preview !== true || !imagenesPorCategoria) return;
+    modelos.forEach(function (modelo) {
+      if (modelo.imagenPrincipal || modelo.imagenMobile) return;
+      var demo = imagenesPorCategoria[modelo.categoria];
+      if (!demo) return;
+      var principal = U.rutaImagen(demo.imagen_principal);
+      var mobile = U.rutaImagen(demo.imagen_mobile);
+      if (!principal) return;
+      modelo.imagenPrincipal = principal;
+      modelo.imagenMobile = mobile;
+      modelo.altText = U.texto(demo.alt_text, 160) || "Imagen conceptual referencial";
+      modelo.foco = U.foco(demo.foco_imagen);
+      modelo.imagenReferencial = true;
+    });
+  }
+
   /** Convierte una respuesta cruda en el estado interno del catálogo. */
-  function construirEstado(datos, origen, preview, coloresExtra) {
+  function construirEstado(datos, origen, preview, coloresExtra, imagenesDemo) {
     var registros = S.extraerRegistros(datos);
     if (registros === null) return null;
 
@@ -171,6 +194,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     // color de un modelo inactivo también sea visible en preview.
     var brutosColor = S.extraerColores(datos).concat(coloresExtra || []);
     unirColores(todos, brutosColor, preview, avisos);
+    unirImagenesDemo(todos, imagenesDemo, preview);
 
     // Filtro de publicación: en producción solo activo=true.
     var visibles = todos.filter(function (m) {
@@ -236,9 +260,27 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       });
   }
 
-  function cargarLocal(preview, coloresExtra) {
+  /** Imágenes conceptuales: mismo doble cerrojo local que los colores DEMO. */
+  function cargarImagenesDemo(preview) {
+    if (preview !== true) return Promise.resolve({});
+    return pedirJson(CONFIG.rutaImagenesDemo, CONFIG.timeoutMs)
+      .then(function (datos) {
+        var mapa = datos && datos.imagenes_por_categoria;
+        if (!mapa || typeof mapa !== "object" || Array.isArray(mapa)) return {};
+        console.warn(
+          "[ARENAS] Previsualización local: imágenes conceptuales de DEMOSTRACIÓN activas. " +
+            "No representan modelos reales y nunca se cargan en producción."
+        );
+        return mapa;
+      })
+      .catch(function () {
+        return {};
+      });
+  }
+
+  function cargarLocal(preview, coloresExtra, imagenesDemo) {
     return pedirJson(CONFIG.rutaLocal, CONFIG.timeoutMs).then(function (datos) {
-      var estado = construirEstado(datos, "local", preview, coloresExtra);
+      var estado = construirEstado(datos, "local", preview, coloresExtra, imagenesDemo);
       if (!estado) throw new Error("El JSON local no respeta el contrato.");
       return estado;
     });
@@ -248,7 +290,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     var base = CONFIG.appsScriptEndpoint.trim();
     var url = base + (base.indexOf("?") !== -1 ? "&" : "?") + "action=catalogo";
     return pedirJson(url, CONFIG.timeoutMs).then(function (datos) {
-      var estado = construirEstado(datos, "remoto", preview, coloresExtra);
+      var estado = construirEstado(datos, "remoto", preview, coloresExtra, null);
       if (!estado) throw new Error("La respuesta remota no respeta el contrato.");
       return estado;
     });
@@ -266,12 +308,14 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     var preview = previewActivo();
     var degradado = false;
 
-    promesaEnCurso = cargarColoresDemo(preview)
-      .then(function (coloresExtra) {
+    promesaEnCurso = Promise.all([cargarColoresDemo(preview), cargarImagenesDemo(preview)])
+      .then(function (recursosDemo) {
+        var coloresExtra = recursosDemo[0];
+        var imagenesDemo = recursosDemo[1];
         // La previsualizacion editorial necesita los borradores locales.
         // El endpoint publico nunca los devuelve, por diseno.
         if (preview) {
-          return cargarLocal(true, coloresExtra).catch(function (err) {
+          return cargarLocal(true, coloresExtra, imagenesDemo).catch(function (err) {
             console.warn("[ARENAS] Origen local no disponible:", err && err.message);
             return estadoVacio("local", true, "error");
           });
@@ -293,7 +337,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
         return cadena.then(function (estado) {
           if (estado) return estado;
           if (!CONFIG.fallbackLocal) return estadoVacio("", preview, "error");
-          return cargarLocal(preview, coloresExtra).catch(function (err) {
+          return cargarLocal(preview, coloresExtra, null).catch(function (err) {
             console.warn("[ARENAS] Origen local no disponible:", err && err.message);
             return estadoVacio("", preview, "error");
           });

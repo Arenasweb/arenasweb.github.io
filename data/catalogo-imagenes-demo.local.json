@@ -1,0 +1,36 @@
+{
+  "_ADVERTENCIA": "IMÁGENES CONCEPTUALES GENERADAS POR IA PARA PREVISUALIZACIÓN LOCAL. No representan modelos, colores ni configuraciones reales de ARENAS. Nunca deben publicarse como fotografías comerciales.",
+  "_CARGA": "catalogo-data.js solo consume este archivo cuando coinciden un host local y ?preview=1. En GitHub Pages se ignora por completo.",
+  "imagenes_por_categoria": {
+    "ciudad": {
+      "imagen_principal": "assets/catalogo-demo/categorias/ciudad-referencial.webp",
+      "imagen_mobile": "assets/catalogo-demo/categorias/ciudad-referencial-mobile.webp",
+      "alt_text": "Imagen conceptual referencial de una motocicleta urbana genérica",
+      "foco_imagen": "center center"
+    },
+    "trabajo": {
+      "imagen_principal": "assets/catalogo-demo/categorias/trabajo-referencial.webp",
+      "imagen_mobile": "assets/catalogo-demo/categorias/trabajo-referencial-mobile.webp",
+      "alt_text": "Imagen conceptual referencial de una motocicleta utilitaria genérica",
+      "foco_imagen": "center center"
+    },
+    "deportiva": {
+      "imagen_principal": "assets/catalogo-demo/categorias/deportiva-referencial.webp",
+      "imagen_mobile": "assets/catalogo-demo/categorias/deportiva-referencial-mobile.webp",
+      "alt_text": "Imagen conceptual referencial de una motocicleta deportiva genérica",
+      "foco_imagen": "center center"
+    },
+    "aventura": {
+      "imagen_principal": "assets/catalogo-demo/categorias/aventura-referencial.webp",
+      "imagen_mobile": "assets/catalogo-demo/categorias/aventura-referencial-mobile.webp",
+      "alt_text": "Imagen conceptual referencial de una motocicleta de ruta genérica",
+      "foco_imagen": "center center"
+    },
+    "carga": {
+      "imagen_principal": "assets/catalogo-demo/categorias/carga-referencial.webp",
+      "imagen_mobile": "assets/catalogo-demo/categorias/carga-referencial-mobile.webp",
+      "alt_text": "Imagen conceptual referencial de un vehículo de transporte genérico",
+      "foco_imagen": "center center"
+    }
+  }
+}

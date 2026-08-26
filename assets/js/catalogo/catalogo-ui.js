@@ -151,7 +151,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
   /* ---------------- Etiquetas ---------------- */
 
   function etiquetas(modelo, preview) {
-    if (!modelo.destacado && !modelo.nuevo && !(preview && !modelo.activo)) return null;
+    if (!modelo.destacado && !modelo.nuevo && !(preview && !modelo.activo) && !(preview && modelo.imagenReferencial)) return null;
     var caja = U.el("div", { class: "moto-card__tags" });
     if (modelo.nuevo) caja.appendChild(U.el("span", { class: "moto-tag moto-tag--nuevo" }, "Nuevo"));
     if (modelo.destacado) caja.appendChild(U.el("span", { class: "moto-tag moto-tag--destacado" }, "Destacado"));
@@ -161,6 +161,15 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
           "span",
           { class: "moto-tag moto-tag--borrador", title: "Solo visible en previsualización local" },
           "Sin publicar"
+        )
+      );
+    }
+    if (preview && modelo.imagenReferencial) {
+      caja.appendChild(
+        U.el(
+          "span",
+          { class: "moto-tag moto-tag--referencial", title: "Imagen conceptual generada para evaluar el diseño" },
+          "Imagen referencial"
         )
       );
     }
