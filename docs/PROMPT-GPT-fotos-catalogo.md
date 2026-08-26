@@ -1,42 +1,47 @@
-# Prompt para GPT — cargar las fotografías en Sheets
+# Prompt para GPT — cargar, aprobar y publicar las 8 fotografías
 
-Las 8 fotografías ya están convertidas y colocadas en el repositorio. Lo que
-falta es que la hoja las **apunte**: mientras `imagen_principal` esté vacío, el
-sitio no las muestra aunque los archivos existan.
+Las 8 fotografías **ya están publicadas** en producción (commit `5961fc1`,
+desplegado). Las rutas de abajo responden 200 ahora mismo, así que este prompt
+se puede ejecutar sin riesgo de imágenes rotas.
 
-Yo tengo acceso de **solo lectura** a la hoja. No puedo escribir en ella: esta
-parte la ejecutas tú o GPT.
+Yo tengo acceso de **solo lectura** a la hoja. Esta parte la ejecuta GPT.
+
+## Qué hace este prompt
+
+1. Rellena `imagen_principal`, `imagen_mobile` y `alt_text` en 8 filas.
+2. Pone `estado_contenido = APROBADO` en esas mismas 8.
+3. Pone `activo = TRUE` en esas mismas 8.
+
+Las otras 14 no se tocan: sin fotografía, publicarlas solo enseñaría al cliente
+un marco vacío.
+
+## Antes de lanzarlo, dos cosas
+
+- **La caché del endpoint es de 300 segundos.** Tras guardar en Sheets, el
+  catálogo tarda hasta 5 minutos en reflejarlo. No está roto.
+- **La reconciliación de agosto sigue abierta.** Si alguno de estos 8 iba a
+  retirarse, quedará publicado. Ver `PROMPT-GPT-motos-agosto.md`.
 
 ---
 
-## ORDEN OBLIGATORIO — no lo cambies
-
-**1.º** Se publican las fotos en producción (rama `feat/animaciones-suaves`
-integrada y subida).
-**2.º** Recién entonces se rellenan estas celdas en la hoja.
-
-Si se hace al revés y alguien pone `activo = TRUE`, la web pedirá imágenes que
-todavía no existen y saldrán rotas ante el cliente. El orden no es una
-preferencia: es lo que separa un catálogo con fotos de uno con huecos.
-
----
-
-## PROMPT — cópialo tal cual a GPT
+## PROMPT — cópialo tal cual
 
 ```
 Eres el encargado de contenido de ARENAS MOTOCICLETAS. Trabajas sobre la hoja
-MODELOS del catálogo. Vas a rellenar TRES columnas en OCHO filas. Nada más.
+MODELOS del catálogo. Vas a tocar OCHO filas y CINCO columnas. Nada más.
 
-REGLA QUE MANDA SOBRE TODAS: no rellenes ninguna celda que no esté en la tabla
-de abajo. Si una columna no aparece aquí, se queda como está — vacía si estaba
-vacía. Un hueco significa "sin verificar", y es una respuesta honesta. Un dato
-inventado no lo es.
+REGLA QUE MANDA SOBRE TODAS: no escribas en ninguna celda que no esté descrita
+aquí. Si una columna no aparece, se queda como está — vacía si estaba vacía. Un
+hueco significa "sin verificar", y es una respuesta honesta. Un dato inventado
+no lo es.
 
-Para cada fila, localiza el modelo por su `slug` (NO por el nombre: hay slugs
-parecidos). Si un slug de la tabla no existe en la hoja, PARA y avísalo; no
-busques el "más parecido".
+Localiza cada modelo por su `slug`, NUNCA por el nombre: hay slugs parecidos
+(por ejemplo `pulsar-n250` y `pulsar-n250-ug` son modelos DISTINTOS). Si un slug
+de esta lista no existe en la hoja, PARA y avísalo. No busques "el más
+parecido".
 
-Escribe exactamente estos valores, copiados carácter por carácter:
+PASO 1 — RUTAS Y TEXTO ALTERNATIVO
+Copia estos valores carácter por carácter:
 
 slug: ct-125
   imagen_principal: assets/catalogo/ct-125/portada.webp
@@ -78,46 +83,50 @@ slug: dominar-400
   imagen_mobile:    assets/catalogo/dominar-400/portada-mobile.webp
   alt_text: Motocicleta Dominar 400 verde y negra, vista lateral derecha completa, con cúpula, parrilla trasera y horquilla invertida
 
-LO QUE NO DEBES TOCAR, EN NINGUNA FILA:
-  · estado_contenido — sigue en BORRADOR. Aprobar es decisión del dueño.
-  · activo           — sigue en FALSE. Publicar es decisión del dueño.
-  · precio_publico, precio_promocional, mostrar_precios — el catálogo no
-    lleva precios; se cotiza por WhatsApp.
-  · colores, y cualquier columna de ficha técnica (cilindrada, potencia,
-    marchas, peso, tanque…). Están vacías y así se quedan.
-  · Las otras 14 filas del catálogo. No tienen fotografía todavía. Dejarlas
-    con `imagen_principal` vacío es correcto: así el sitio les pone su marco
-    de "fotografía pendiente" en vez de una imagen rota.
+PASO 2 — APROBAR
+En esas MISMAS ocho filas, y solo en ellas:
+  estado_contenido: APROBADO
 
-COMPROBACIONES ANTES DE DAR POR HECHO EL TRABAJO:
-  1. ¿Has modificado exactamente 8 filas y 3 columnas — 24 celdas?
-  2. ¿Todas las rutas empiezan por `assets/catalogo/` y terminan en `.webp`?
-     Sin barra inicial, sin dominio, sin `https://`. Son rutas relativas.
+Antes de escribir APROBADO en una fila, comprueba que esa fila tiene relleno:
+`imagen_principal`, `alt_text` y `descripcion_corta`. Si a alguna le falta una
+de las tres, NO la apruebes: déjala en BORRADOR y dilo en el informe final. La
+web exige las tres para publicar, y aprobar sin ellas crea una fila que dice
+estar lista y no lo está.
+
+PASO 3 — PUBLICAR
+En esas MISMAS ocho filas, y solo en ellas:
+  activo: TRUE
+
+LO QUE NO DEBES TOCAR, EN NINGÚN CASO:
+  · Las otras 14 filas. Se quedan en BORRADOR y activo = FALSE. No tienen
+    fotografía, y publicarlas solo enseñaría un marco vacío al cliente.
+  · precio_publico, precio_promocional, mostrar_precios. Este catálogo no
+    lleva precios: se cotiza por WhatsApp.
+  · colores, y toda la ficha técnica (cilindrada, potencia, torque, marchas,
+    frenos, peso, tanque). Ya está rellenada o vacía a propósito.
+  · id, slug, modelo, linea, categoria, orden. Son la identidad de la fila.
+  · No borres ninguna fila. Nunca. Retirar un modelo se hace con
+    activo = FALSE, conservando id, slug y textos.
+
+COMPROBACIONES ANTES DE DAR EL TRABAJO POR HECHO:
+  1. ¿Tocaste exactamente 8 filas? Ni 7 ni 9.
+  2. ¿Las rutas empiezan por `assets/catalogo/` y acaban en `.webp`, sin barra
+     inicial, sin dominio y sin `https://`? Son rutas relativas.
   3. ¿La carpeta de cada ruta coincide letra por letra con el slug de su fila?
-  4. ¿`estado_contenido` y `activo` siguen igual que antes en las 22 filas?
+  4. ¿Las 14 filas restantes siguen en BORRADOR y activo = FALSE?
+  5. ¿Sigue habiendo 22 filas en total?
 
-Termina con un recuento: cuántas celdas escribiste y cuáles fueron.
+INFORME FINAL, obligatorio:
+  · Cuántas celdas escribiste y en qué columnas.
+  · La lista de los 8 slugs que quedaron APROBADO + activo = TRUE.
+  · Cualquier fila que decidieras NO aprobar, y por qué.
+  · Confirmación de que las 14 restantes siguen intactas.
 ```
 
 ---
 
-## Después: los dos pasos que son tuyos, no de GPT
+## Después de lanzarlo
 
-**Aprobar.** Mira las 8 fichas en la web y, si te convencen, cambia
-`estado_contenido` a `APROBADO` en esas 8 filas.
-
-**Publicar.** Pon `activo = TRUE` solo en las que quieras que vea el cliente
-hoy. Son dos decisiones distintas a propósito: una dice "el contenido está
-bien", la otra dice "quiero venderla ahora".
-
----
-
-## Lo que sigue faltando (para que no se te pase)
-
-- **14 modelos sin fotografía.** Sin foto no hay ficha que valga. Si tienes las
-  imágenes de origen, se convierten igual que estas ocho.
-- **La reconciliación de agosto** (`PROMPT-GPT-motos-agosto.md`) sigue abierta,
-  y dos de sus decisiones son tuyas: si «Pulsar N250» es `pulsar-n250` o
-  `pulsar-n250-ug`, y si de verdad se retiran los 5 modelos de carga — porque
-  si se retiran los cinco, la categoría «carga y transporte» desaparece entera
-  del filtro.
+Espera **5 minutos** (la caché del endpoint) y abre
+<https://arenasweb.github.io/catalogo.html>. Deberían aparecer 8 motos con
+fotografía. Si sigue vacío pasados 10 minutos, avísame y lo miro.
