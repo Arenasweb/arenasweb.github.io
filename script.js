@@ -111,8 +111,15 @@ function crearMensajeWhatsApp(modelo = "una moto", extra = "") {
  * @param {string} numero  - número con código de país, sin espacios ni guiones
  * @returns {string} URL de wa.me, o "" si el canal no está aprobado
  */
-function buildWhatsAppURL(mensaje, numero = CONFIG.whatsapp) {
+function buildWhatsAppURL(mensaje, numero) {
   if (!whatsappConfirmado()) return "";
+  // Sin número explícito, la consulta va a un asesor de ventas elegido al
+  // azar. Así rota TODO punto de entrada del sitio sin tener que tocar cada
+  // llamada — y sin que quede ninguno apuntando a un número suelto.
+  if (numero === undefined || numero === null || numero === "") {
+    const asesor = elegirAsesor();
+    numero = asesor ? asesor.telefono : CONFIG.whatsapp;
+  }
   const clean = typeof numero === "string" ? numero.replace(/\D/g, "") : "";
   if (clean.length < 9) return ""; // placeholder, vacío o número incompleto
   return `https://wa.me/${clean}?text=${encodeURIComponent(mensaje)}`;
@@ -126,6 +133,43 @@ function buildWhatsAppURL(mensaje, numero = CONFIG.whatsapp) {
  */
 function whatsappConfirmado() {
   return Boolean(STATE.config && STATE.config.whatsappConfirmado === true);
+}
+
+/**
+ * Asesores de ventas que pueden recibir una consulta ahora mismo.
+ *
+ * Se filtra aquí y no al leer el JSON porque el estado puede cambiar entre
+ * carga y clic. Un número corto o con letras se descarta en silencio: es
+ * preferible repartir entre dos que abrir un chat que no existe.
+ *
+ * @returns {Array<{id:string,nombre:string,telefono:string}>}
+ */
+function asesoresActivos() {
+  const lista = (STATE.config && STATE.config.asesoresVentas) || [];
+  return lista.filter(
+    (a) =>
+      a &&
+      a.activo === true &&
+      typeof a.telefono === "string" &&
+      a.telefono.replace(/\D/g, "").length >= 9
+  );
+}
+
+/**
+ * Elige a quién le llega esta consulta.
+ *
+ * AL AZAR, y con peso igual. No es un turno real y conviene no llamarlo
+ * así: GitHub Pages sirve archivos estáticos, no hay servidor que lleve la
+ * cuenta, y un contador en el navegador solo contaría los clics de ESE
+ * navegador. Con volumen, el azar reparte parejo; con tres consultas al
+ * día, no. Un turno de verdad exigiría backend.
+ *
+ * @returns {{id:string,nombre:string,telefono:string}|null}
+ */
+function elegirAsesor() {
+  const activos = asesoresActivos();
+  if (!activos.length) return null;
+  return activos[Math.floor(Math.random() * activos.length)];
 }
 
 /**
@@ -1181,10 +1225,63 @@ function inicializarConsulta() {
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    // Mensaje honesto: no se envía ni se almacena nada en esta fase.
-    // Los campos se conservan tal cual para no simular un envío.
-    aviso.textContent =
-      "Este canal será habilitado en la siguiente fase. Ningún dato fue enviado.";
+
+    // El canal puede caerse en cualquier momento desde la hoja. Si eso
+    // pasa, se vuelve al mensaje honesto en vez de abrir un chat muerto.
+    if (!whatsappConfirmado()) {
+      aviso.textContent =
+        "Este canal será habilitado en la siguiente fase. Ningún dato fue enviado.";
+      return;
+    }
+
+    const nombre = (form.querySelector("#consulta-nombre")?.value || "").trim();
+    const interes = (form.querySelector("#consulta-interes")?.value || "").trim();
+    const extra = (form.querySelector("#consulta-mensaje")?.value || "").trim();
+    const acepta = form.querySelector("#consulta-privacidad")?.checked === true;
+
+    // El nombre y el consentimiento se piden ANTES de abrir nada. Enviar
+    // el mensaje de alguien sin su permiso explícito no es una consulta,
+    // es un dato que se escapa.
+    if (!nombre) {
+      aviso.textContent = "Escribe tu nombre para que sepamos con quién hablamos.";
+      form.querySelector("#consulta-nombre")?.focus();
+      return;
+    }
+    if (!acepta) {
+      aviso.textContent = "Marca la casilla de privacidad para poder continuar.";
+      form.querySelector("#consulta-privacidad")?.focus();
+      return;
+    }
+
+    const asesor = elegirAsesor();
+    if (!asesor) {
+      aviso.textContent =
+        "Ahora mismo no hay asesores disponibles. Escríbenos por los datos de contacto de más abajo.";
+      return;
+    }
+
+    const lineas = ["Hola ARENAS MOTOCICLETAS. Soy " + nombre + "."];
+    if (interes) lineas.push("Me interesa: " + interes + ".");
+    if (extra) lineas.push("", extra);
+    const url = buildWhatsAppURL(lineas.join("\n"), asesor.telefono);
+
+    if (!url) {
+      aviso.textContent =
+        "No pudimos abrir WhatsApp. Escríbenos por los datos de contacto de más abajo.";
+      return;
+    }
+
+    // Se dice a quién va: quien escribe merece saber con quién habla, y
+    // así el nombre que aparezca en WhatsApp no le sorprende.
+    aviso.textContent = "Abriendo WhatsApp con " + asesor.nombre + ", de nuestro equipo de ventas.";
+
+    // `noopener` corta el acceso de la pestaña abierta a la nuestra. Si el
+    // navegador bloquea la ventana, se navega en la misma en vez de dejar
+    // al cliente pulsando un botón que no hace nada.
+    const ventana = window.open(url, "_blank", "noopener");
+    if (!ventana) window.location.href = url;
+
+    trackEvent("consulta_whatsapp", { asesor: asesor.id, interes: interes || "(sin indicar)" });
   });
 }
 

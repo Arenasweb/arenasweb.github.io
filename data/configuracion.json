@@ -1,6 +1,5 @@
 {
   "_nota": "Archivo de configuración global — ARENAS MOTOCICLETAS. Campos marcados como PENDIENTE deben validarse antes del lanzamiento.",
-
   "nombreComercial": "ARENAS MOTOCICLETAS",
   "ciudad": "Cusco",
   "pais": "Perú",
@@ -11,11 +10,10 @@
   "modeloDestacadoId": "PENDIENTE",
   "_notaModeloDestacadoValor": "El id del modelo destacado real es dato de catálogo administrado desde Google Sheets. Mientras sea PENDIENTE, script.js no encuentra coincidencia en el catálogo y la sección mantiene su estado neutro por defecto.",
   "_notaModeloDestacado": "Fuente única para el modelo destacado de la sección #modelo-destacado. script.js → cargarConfiguracion() sincroniza este valor a CONFIG.modeloDestacadoId al arrancar; ya no debe editarse directamente en script.js.",
-
-  "whatsapp": "PENDIENTE",
-  "whatsappConfirmado": false,
-  "whatsappEstadoAprobacion": "pendiente",
-  "_notaWhatsapp": "El número real existe (reportado por el cliente) pero NO se publica en este JSON público (GitHub Pages expone /data sin restricción) mientras no esté aprobado para publicación. Mientras whatsappConfirmado sea false, script.js deshabilita los botones/enlaces de WhatsApp en todo el sitio. Activación pendiente de aprobación explícita de gerencia. Ver docs/fuente-unica-datos.md.",
+  "whatsapp": "51994790490",
+  "whatsappConfirmado": true,
+  "whatsappEstadoAprobacion": "aprobado",
+  "_notaWhatsapp": "APROBADO. Los tres asesores de ventas figuran en CONTACTOS_INTERNOS con es_whatsapp, whatsapp_confirmado y asignar_a_web marcados, y estado_aprobacion APROBADO. Esa es la puerta que este proyecto exige para publicar un contacto. El campo `whatsapp` es solo el reserva: los enlaces reales salen de asesoresVentas y se reparten al azar entre los tres. Ver docs/fuente-unica-datos.md.",
   "telefonoFijo": "PENDIENTE",
   "correo": "Sin correo comercial publicado",
   "correoConfirmado": false,
@@ -23,14 +21,12 @@
   "correoSoporte": "PENDIENTE",
   "urlTemporal": "https://arenasweb.github.io",
   "urlOficial": "PENDIENTE",
-
   "redesSociales": {
     "facebook": "PENDIENTE",
     "instagram": "PENDIENTE",
     "tiktok": "PENDIENTE",
     "youtube": "PENDIENTE"
   },
-
   "_notaSedes": "DEPRECADO: este array ya no es la fuente activa de sedes. script.js → renderizarTiendas() ahora lee de data/slots/sedes.json, que incluye estadoAprobacion por sede. Se mantiene aquí solo como referencia histórica/fallback. Ver docs/fuente-unica-datos.md.",
   "sedes": [
     {
@@ -47,7 +43,6 @@
       "esPrincipal": true
     }
   ],
-
   "horarios": {
     "lunesSabado": "Dato administrado desde Google Sheets",
     "domingo": "Dato administrado desde Google Sheets",
@@ -56,7 +51,6 @@
     "horarioConfirmado": false,
     "_notaHorario": "El horario real de atención es un dato comercial administrado desde Google Sheets — no se conserva en este repositorio público. Existe confirmación del cliente registrada fuera del repo; se publicará cuando la integración esté activa y aprobada."
   },
-
   "mensajesWhatsApp": {
     "cotizacionGeneral": "Hola ARENAS MOTOCICLETAS, me contacto desde el sitio web. Quisiera recibir una cotización.",
     "consultaModelo": "Hola, estoy interesado/a en *{modelo}*. ¿Podría darme más información y cotización?",
@@ -64,7 +58,6 @@
     "consultaServicio": "Hola, necesito agendar una revisión técnica para mi moto. ¿Cuál es la disponibilidad?",
     "libroReclamaciones": "Hola, deseo presentar una reclamación formal según el libro de reclamaciones."
   },
-
   "etiquetasSEO": {
     "tituloBase": "Arenas Motocicletas | Tienda de motocicletas en Cusco",
     "descripcion": "Arenas Motocicletas: tienda de motocicletas en Cusco. Catálogo y servicios administrados desde canales oficiales. Sujeto a condiciones comerciales vigentes.",
@@ -76,11 +69,12 @@
     "_notaOgImagePath": "El archivo no existe todavía. No crear un asset falso — mantener PENDIENTE hasta que exista el archivo real.",
     "twitterCard": "summary"
   },
-
   "financiamiento": {
     "financiamientoActivo": false,
     "estado": "pendiente",
-    "entidadesVinculadas": ["Entidad administrada desde Google Sheets"],
+    "entidadesVinculadas": [
+      "Entidad administrada desde Google Sheets"
+    ],
     "planesDisponibles": [],
     "cuotaInicialMinima": "PENDIENTE",
     "bancos": "PENDIENTE",
@@ -89,12 +83,14 @@
     "estadoAprobacion": "pendiente",
     "_nota": "Las entidades financieras reales, el estado del financiamiento y sus condiciones son datos comerciales administrados desde Google Sheets — no se conservan en este repositorio público. No publicar entidades, planes, plazos ni tasas."
   },
-
   "_notaLineaProductos": "Las líneas/familias reales del catálogo son datos comerciales administrados desde Google Sheets — no se conservan en este repositorio público. Este array queda como estructura de ejemplo no comercial.",
   "lineaProductos": [
-    { "id": "linea-ejemplo", "nombre": "Línea administrada desde Google Sheets", "categoria": "Categoría administrada desde Google Sheets" }
+    {
+      "id": "linea-ejemplo",
+      "nombre": "Línea administrada desde Google Sheets",
+      "categoria": "Categoría administrada desde Google Sheets"
+    }
   ],
-
   "legal": {
     "razonSocial": "PENDIENTE_REVISION_LEGAL",
     "_notaRazonSocial": "La razón social real existe (reportada por el cliente) pero no se publica en este repositorio hasta su validación legal para publicación. Dato administrado desde Google Sheets.",
@@ -102,12 +98,35 @@
     "domicilioLegal": "PENDIENTE",
     "textoAviso": "Los precios, condiciones y disponibilidad de stock están sujetos a cambios sin previo aviso. Consultar disponibilidad en tienda."
   },
-
   "metaDesarrollo": {
     "version": "0.2.0",
     "fase": "base-tecnica",
     "fechaUltimaActualizacion": "2026-06-17",
     "proximaFase": "diseno-premium",
     "estadoGeneral": "en-preparacion"
-  }
+  },
+  "asesoresVentas": [
+    {
+      "id": "con-01",
+      "nombre": "Iris",
+      "rol": "Asesora de ventas",
+      "telefono": "51994790490",
+      "activo": true
+    },
+    {
+      "id": "con-02",
+      "nombre": "Néstor",
+      "rol": "Asesor de ventas",
+      "telefono": "51982303279",
+      "activo": true
+    },
+    {
+      "id": "con-03",
+      "nombre": "Taty",
+      "rol": "Asesora de ventas",
+      "telefono": "51925901256",
+      "activo": true
+    }
+  ],
+  "_notaAsesores": "Reparto AL AZAR entre los activos, uno por consulta. No es un turno real: GitHub Pages sirve archivos estáticos y no hay servidor que lleve la cuenta, así que un turno global exigiría backend. Al azar y con peso igual se reparte parejo con volumen. Para retirar a alguien de la rotación, poner su `activo` en false — no borrar la fila."
 }

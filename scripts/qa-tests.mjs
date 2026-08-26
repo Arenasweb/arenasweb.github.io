@@ -2350,6 +2350,45 @@ if (dominios) {
 }
 
 /* ================================================================
+   22. LA CONSULTA LLEGA A VENTAS
+
+   El formulario estuvo inerte a propósito hasta que hubo canal aprobado.
+   Ahora reparte entre los tres asesores, así que lo que antes protegía un
+   cerrojo tiene que protegerlo una prueba: que los números publicados
+   sean los aprobados y estén bien formados, y que nadie los deje a medias.
+   ================================================================ */
+
+const cfg = JSON.parse(readFileSync(join(RAIZ, "data/configuracion.json"), "utf8"));
+const asesores = cfg.asesoresVentas || [];
+
+comprobar("el canal de WhatsApp está marcado como confirmado",
+  cfg.whatsappConfirmado === true, String(cfg.whatsappConfirmado));
+
+comprobar("hay asesores de ventas declarados", asesores.length > 0, String(asesores.length));
+
+// Un número corto o con letras abre un chat que no existe: el cliente cree
+// que ha escrito y no ha escrito a nadie.
+const malFormados = asesores
+  .filter((a) => !/^51\d{9}$/.test(String(a.telefono || "")))
+  .map((a) => (a.nombre || "?") + ": " + a.telefono);
+comprobar("todo teléfono de asesor es un móvil peruano de 11 dígitos con prefijo 51",
+  malFormados.length === 0, malFormados.join(", "));
+
+const sinNombre = asesores.filter((a) => !a.nombre).map((a) => a.id || "?");
+comprobar("todo asesor tiene nombre, para poder decir a quién va la consulta",
+  sinNombre.length === 0, sinNombre.join(", "));
+
+const repetidos = asesores
+  .map((a) => a.telefono)
+  .filter((t, i, arr) => arr.indexOf(t) !== i);
+comprobar("ningún teléfono está repetido entre asesores",
+  repetidos.length === 0, repetidos.join(", "));
+
+comprobar("queda al menos un asesor activo para recibir consultas",
+  asesores.filter((a) => a.activo === true).length > 0,
+  asesores.filter((a) => a.activo === true).length + " activos");
+
+/* ================================================================
    Resultado
    ================================================================ */
 
