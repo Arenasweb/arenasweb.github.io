@@ -634,7 +634,7 @@ body {
    script.js añade .video-failed y el poster ocupa el fondo. */
 .hero-media.video-failed .hero-video { display: none; }
 .hero-media.video-failed {
-  background: url("assets/hero/hero-arenas-poster-v2.jpg") 68% center / cover no-repeat;
+  background: url("assets/hero/hero-arenas-poster-v3.jpg") 68% center / cover no-repeat;
 }
 
 /* ---- Overlays cinematográficos (generales, no dirigidos a la marca) ---- */
@@ -1472,7 +1472,7 @@ body {
     display: none !important;
   }
   .hero-media {
-    background: url("assets/hero/hero-arenas-poster-v2.jpg") 68% center / cover no-repeat;
+    background: url("assets/hero/hero-arenas-poster-v3.jpg") 68% center / cover no-repeat;
   }
   .btn-hero::after {
     transition: none !important;
