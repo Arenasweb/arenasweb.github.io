@@ -43,6 +43,7 @@ forzar una demostración.
 | [especificacion-imagenes-catalogo.md](especificacion-imagenes-catalogo.md) | Medidas, peso, encuadre — y de dónde salen esos números |
 | [pipeline-fotografias.md](pipeline-fotografias.md) | Qué ocurre desde que llega una foto hasta que se publica |
 | [lotes-carga-22-modelos.md](lotes-carga-22-modelos.md) | En qué orden cargar los 22 modelos |
+| [recepcion-lote-fase4.md](recepcion-lote-fase4.md) | **Carga en lote**: ficha de recepción, validador, conversión de fotos y cómo deshacerlo |
 | `../assets/catalogo/LEEME.md` | Recordatorio breve, junto a las carpetas |
 
 ## Si vas a tocar los datos o el código
@@ -112,6 +113,11 @@ node scripts/qa-endpoint-catalogo.mjs
 
 # La migración del CMS, simulada sin tocar Google
 node scripts/qa-migracion-sheets.mjs
+
+# Validar el LOTE DE RECEPCIÓN antes de tocar Google Sheets
+node scripts/qa-lote-catalogo.mjs lote.csv
+node scripts/qa-lote-catalogo.mjs lote.csv --detalle
+node scripts/qa-lote-tests.mjs           # y el validador detecta de verdad
 
 # Auditar una exportación CSV del libro: 0 publicados, sin fórmula legacy
 node scripts/qa-verificar-migracion.mjs modelos.csv [categorias.csv]
