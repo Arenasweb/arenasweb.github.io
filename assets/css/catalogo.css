@@ -1478,17 +1478,6 @@
   margin-top: 2px;
 }
 
-/* El dato que decide la compra, en su propia línea y con filo azul.
-   Uno solo: la tarjeta no es la ficha. */
-.moto-card__specs {
-  margin-top: var(--space-1);
-  padding-left: var(--space-3);
-  border-left: 2px solid rgba(31, 107, 255, 0.5);
-  font-size: var(--text-sm);
-  line-height: 1.45;
-  color: var(--color-silver);
-}
-
 /* La descripción acompaña; no debe pesar como el nombre. */
 .moto-card__desc {
   color: var(--color-muted);
@@ -1517,4 +1506,53 @@
   .moto-card__cta::after {
     transition: none;
   }
+}
+
+/* ---- 65 / 35 : la fotografía manda ---- */
+/* Medido antes de tocar nada: la imagen ocupaba el 49% de la tarjeta y el
+   texto el 51%. Empatados, y en un catálogo de motos el empate lo pierde
+   la moto. Se sube el marco a 3:2 y se adelgaza el bloque de texto.
+
+   3:2 y no 4:3 a propósito: la fotografía es 16:10 y con `cover` un 4:3
+   recortaría un 8% por cada lado, justo donde están rueda y espejo. A 3:2
+   el recorte es del 3% y cae en el margen vacío que dejó el encaje. */
+.moto-card__media {
+  aspect-ratio: 3 / 2;
+}
+
+.moto-card__body {
+  padding: var(--space-4) clamp(var(--space-4), 1.6vw, var(--space-5));
+  gap: 6px;
+}
+
+/* Dos líneas y ni una más. La descripción corta acompaña al nombre; si se
+   estira, empuja la fotografía fuera de la tarjeta. */
+.moto-card__desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: var(--text-sm);
+}
+
+.moto-card__footer {
+  padding: var(--space-3) clamp(var(--space-4), 1.6vw, var(--space-5));
+}
+
+/* ---- Columnas más anchas ---- */
+/* Con tres columnas de 337 px la fotografía no puede pasar del 54% sin
+   recortar la moto: el texto necesita su alto y el marco no puede crecer
+   más sin cortar rueda o espejo.
+   La palanca no era el reparto dentro de la tarjeta, era el tamaño de la
+   tarjeta. Con columnas de 420 px caben dos por fila en pantalla ancha,
+   la fotografía crece con ellas y el texto se queda igual. Además es lo
+   que hace un concesionario: pocas motos, grandes, bien miradas. */
+.catalog-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+}
+
+/* En la ficha, los relacionados siguen siendo un apunte al margen: ahí
+   interesa ver tres de un vistazo, no dos enormes. */
+.catalog-grid--compacta {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
 }

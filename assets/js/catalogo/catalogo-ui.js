@@ -33,7 +33,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
    * miente hace que el navegador elija mal, y entonces la optimización
    * pesa más que no haberla hecho.
    */
-  var SIZES_TARJETA = "(max-width: 767px) 92vw, (max-width: 1200px) 44vw, 360px";
+  var SIZES_TARJETA = "(max-width: 767px) 92vw, (max-width: 1200px) 46vw, 520px";
 
   /* ---------------- Imagen ---------------- */
 
@@ -443,16 +443,11 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       cuerpo.appendChild(U.el("p", { class: "moto-card__desc" }, modelo.descripcionCorta));
     }
 
-    // Un solo dato, el que decide la compra: cilindrada y potencia. La
-    // tarjeta no es la ficha — meter aqui las tres caracteristicas la
-    // convertiria otra vez en una lista, que es de lo que se venia.
-    if (modelo.caracteristicas && modelo.caracteristicas.length) {
-      var clave = U.partirDato(modelo.caracteristicas[0]);
-      if (clave.valor) {
-        cuerpo.appendChild(U.el("p", { class: "moto-card__specs" }, clave.valor));
-      }
-    }
-
+    // Sin especificaciones. Se probó poner aquí el dato clave —cilindrada
+    // y potencia— y quedaba bien, pero la regla del catálogo es que la
+    // tarjeta invita y la ficha explica: en cuanto entra una cifra, entra
+    // la siguiente, y la rejilla vuelve a ser una tabla. Las
+    // características viven en la ficha, donde hay sitio para leerlas.
     var colores = indicadorColores(modelo);
     if (colores) cuerpo.appendChild(colores);
 
@@ -469,7 +464,9 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       pie.appendChild(U.el("p", { class: "moto-card__price" }, precio));
     }
     pie.appendChild(
-      U.el("span", { class: "moto-card__cta", "aria-hidden": "true" }, modelo.ctaLabel || "Ver modelo")
+      // La hoja manda: `cta_label` es un campo editorial y se respeta. Este
+      // es solo el texto por defecto cuando la celda está vacía.
+      U.el("span", { class: "moto-card__cta", "aria-hidden": "true" }, modelo.ctaLabel || "Explorar modelo")
     );
     cuerpo.appendChild(pie);
 
