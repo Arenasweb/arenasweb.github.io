@@ -2310,6 +2310,18 @@ comprobar("el respaldo conserva los borradores para previsualizar",
   respaldo.modelos.length > activosRespaldo.length,
   respaldo.modelos.length + " filas, " + activosRespaldo.length + " activas");
 
+// La rejilla declara `portada-card.webp` en el srcset. Si ese archivo no
+// existe, el navegador NO cae al siguiente candidato: rompe la imagen. Por
+// eso la variante tiene que estar garantizada, no supuesta.
+const { existsSync: hay } = await import("node:fs");
+const sinTarjeta = respaldo.modelos
+  .filter((m) => /\/portada\.webp$/.test(m.imagen_principal || ""))
+  .filter((m) => !hay(join(RAIZ, m.imagen_principal.replace(/\/portada\.webp$/, "/portada-card.webp"))))
+  .map((m) => m.slug);
+comprobar("toda portada.webp tiene su variante portada-card.webp",
+  sinTarjeta.length === 0,
+  sinTarjeta.length ? "faltan: " + sinTarjeta.join(", ") + " · genera con scripts/generar-tarjetas.mjs" : "");
+
 /* ================================================================
    21. LA CSP Y LA LISTA DE DOMINIOS NO PUEDEN DIVERGIR
 

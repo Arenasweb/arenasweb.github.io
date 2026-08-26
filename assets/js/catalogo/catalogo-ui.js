@@ -24,6 +24,17 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
   /** Punto de corte entre la fotografía de celular y la de escritorio. */
   var MEDIA_MOBILE = "(max-width: 767px)";
 
+  /**
+   * El hueco que ocupa la imagen de una tarjeta, para que el navegador
+   * elija la variante correcta del `srcset`.
+   *
+   * Tiene que describir la rejilla REAL —`repeat(auto-fit, minmax(320px,
+   * 1fr))` con la barra de filtros al lado—, no un deseo. Un `sizes` que
+   * miente hace que el navegador elija mal, y entonces la optimización
+   * pesa más que no haberla hecho.
+   */
+  var SIZES_TARJETA = "(max-width: 767px) 92vw, (max-width: 1200px) 44vw, 360px";
+
   /* ---------------- Imagen ---------------- */
 
   /**
@@ -107,6 +118,24 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
    * @param {Object} modelo
    * @param {Object} [opciones] { prioritaria, ancho, alto, clase }
    */
+  /**
+   * Ruta de la variante para la REJILLA, deducida de la principal.
+   *
+   * La rejilla mostraba portada.webp, que mide 1600x1000 porque esta
+   * pensada para la ficha. Una tarjeta ocupa unos 340 px: se descargaban
+   * cinco veces mas pixeles de los que se ven. Medido en produccion:
+   * 1,24 MB para ocho miniaturas, el 93% del peso de la pagina.
+   *
+   * Solo se deduce si la ruta sigue la convencion del proyecto. Con
+   * cualquier otra se devuelve "" y la tarjeta usa las variantes de
+   * siempre: en srcset un candidato que no existe NO cae al siguiente,
+   * rompe la imagen. Preferimos servir de mas a servir un hueco.
+   */
+  function rutaTarjeta(principal) {
+    if (!principal || !/\/portada\.webp$/.test(principal)) return "";
+    return principal.replace(/\/portada\.webp$/, "/portada-card.webp");
+  }
+
   function media(modelo, opciones) {
     var o = opciones || {};
     var contenedor = U.el("div", { class: o.clase || "moto-card__media" });
@@ -119,14 +148,32 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     var principal = modelo.imagenPrincipal || modelo.imagenMobile;
     var picture = U.el("picture");
 
-    // Con <source media> el navegador descarga UNA sola variante.
-    if (modelo.imagenMobile && modelo.imagenPrincipal) {
+    // En la REJILLA se declaran los anchos disponibles y el hueco que va a
+    // ocupar la imagen, y decide el navegador. Antes se bajaba siempre la
+    // de 1600 px para una tarjeta de 340: cinco veces más píxeles de los
+    // que se ven, y el 93% del peso de la página.
+    //
+    // `sizes` tiene que describir el hueco REAL de la rejilla. Si miente,
+    // el navegador elige mal y la optimización se vuelve en contra.
+    var rutaCard = o.tarjeta ? rutaTarjeta(modelo.imagenPrincipal) : "";
+    var candidatos = [];
+    if (rutaCard) candidatos.push(rutaCard + " 760w");
+    if (modelo.imagenMobile) candidatos.push(modelo.imagenMobile + " 1280w");
+    if (modelo.imagenPrincipal) candidatos.push(modelo.imagenPrincipal + " 1600w");
+
+    var usaSrcset = o.tarjeta && candidatos.length > 1;
+
+    // `<source media>` gana sobre el srcset del <img>, así que o una cosa
+    // o la otra. Mezclarlas dejaría el móvil bajando la variante grande.
+    if (!usaSrcset && modelo.imagenMobile && modelo.imagenPrincipal) {
       picture.appendChild(U.el("source", { media: MEDIA_MOBILE, srcset: modelo.imagenMobile }));
     }
 
     var img = U.el("img", {
       class: "moto-card__img",
-      src: principal,
+      src: usaSrcset && rutaCard ? rutaCard : principal,
+      srcset: usaSrcset ? candidatos.join(", ") : null,
+      sizes: usaSrcset ? SIZES_TARJETA : null,
       alt: altSeguro(modelo),
       width: o.ancho || 1600,
       height: o.alto || 1000,
@@ -369,7 +416,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       "data-slug": modelo.slug,
     });
 
-    card.appendChild(media(modelo, { prioritaria: o.indice < 3 }));
+    card.appendChild(media(modelo, { prioritaria: o.indice < 3, tarjeta: true }));
 
     var cuerpo = U.el("div", { class: "moto-card__body" });
 
