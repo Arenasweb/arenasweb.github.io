@@ -2201,6 +2201,15 @@ const catsMalas = ctaPortada
 comprobar("todas las categorías enlazadas existen en el catálogo",
   catsMalas.length === 0, catsMalas.join(", "));
 
+// El botón más visible del sitio. Decía «Explorar catálogo» y bajaba a una
+// sección de la propia portada. Las anclas de navegación —cabecera, pie,
+// «Descubrir estilos»— son legítimas y siguen siendo anclas: lo que no puede
+// serlo es el botón que promete el catálogo.
+const heroCta = /<a\s+href="([^"]+)"[^>]*class="btn btn-primary btn-hero"[^>]*>Explorar catálogo<\/a>/.exec(portadaHtml);
+comprobar("el botón «Explorar catálogo» del hero abre el catálogo",
+  !!heroCta && heroCta[1].indexOf("catalogo.html") === 0,
+  heroCta ? heroCta[1] : "(no se encuentra el botón)");
+
 /* ================================================================
    19. LA POLÍTICA DE CONTENIDO SIGUE VIVA
 
