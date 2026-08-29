@@ -240,7 +240,22 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
    * los repintados pendientes se encadenaban y la fotografía llegaba a
    * mostrar un color distinto del que marcaba la muestra activa (M-3).
    */
+  /** Trazado del logotipo de WhatsApp (24×24). Marca de Meta Platforms,
+   *  usada solo para señalar a dónde lleva el botón. */
+  var ICONO_WHATSAPP_PATH =
+    "M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884a9.82 9.82 0 0 1 6.988 2.896 9.83 9.83 0 0 1 2.893 6.994c-.003 5.45-4.437 9.886-9.885 9.886m8.413-18.297A11.8 11.8 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.9 11.9 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.8 11.8 0 0 0 20.464 3.488";
+
   var cambioPendiente = null;
+
+  /**
+   * Color que el cliente tiene delante AHORA MISMO.
+   *
+   * El botón «Lo quiero» lo lee en el momento del clic, no cuando se
+   * pintó la ficha: si alguien cambia de color después de que la página
+   * cargue, el mensaje debe nombrar el color que está viendo. Guardarlo
+   * al pintar era exactamente la forma de mandar el color equivocado.
+   */
+  var colorActual = null;
 
   function cancelarCambioPendiente() {
     if (cambioPendiente !== null) {
@@ -256,6 +271,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
    * reducir el movimiento.
    */
   function aplicarColor(modelo, color, colores, indice) {
+    colorActual = color || null;
     var galeria = $("#modelo-galeria");
     var vista = NS.ui.vistaColor(modelo, color);
 
@@ -315,6 +331,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
   }
 
   function pintarColores(estado, modelo) {
+    colorActual = null;
     var contenedor = $("#modelo-colores");
     if (!contenedor) return null;
     U.vaciar(contenedor);
@@ -328,6 +345,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     // Color inicial: el pedido por la URL si es válido; si no, el primero.
     var pedido = NS.data.colorPorSlug(modelo, U.paramUrl("color", 60).toLowerCase());
     var inicial = pedido || NS.data.colorPorDefecto(modelo);
+    colorActual = inicial || null;
 
     var selector = NS.ui.selectorColores(modelo, {
       activo: inicial,
@@ -355,6 +373,110 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
   }
 
   /* ---------------- Ficha ---------------- */
+
+  /* ---------------- «Lo quiero» ---------------- */
+
+  /**
+   * Icono de WhatsApp, en línea y sin dependencias.
+   *
+   * Va como SVG inline y no como <img>: una petición menos, hereda el
+   * color del botón y no parpadea en blanco mientras carga. `aria-hidden`
+   * porque el botón ya dice en palabras a dónde lleva.
+   */
+  function iconoWhatsApp() {
+    var ns = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("class", "btn-quiero__icono");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("width", "20");
+    svg.setAttribute("height", "20");
+    svg.setAttribute("fill", "currentColor");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+    var path = document.createElementNS(ns, "path");
+    path.setAttribute("d", ICONO_WHATSAPP_PATH);
+    svg.appendChild(path);
+    return svg;
+  }
+
+  /**
+   * Botón «Lo quiero»: abre WhatsApp con el modelo y el color a la vista.
+   *
+   * Decisiones que no se ven en el código:
+   *
+   * · El color se lee de `colorActual` DENTRO del manejador. Leerlo aquí
+   *   fuera congelaría el color del primer render y mandaría al asesor un
+   *   color que el cliente ya había cambiado.
+   *
+   * · `abriendo` bloquea el segundo clic durante un instante. Sin esto,
+   *   un doble clic —o un dedo nervioso en móvil— abre dos pestañas de
+   *   WhatsApp y genera dos consultas del mismo cliente.
+   *
+   * · Si el canal no está aprobado, el botón queda deshabilitado con su
+   *   motivo escrito. No se oculta: un botón que desaparece parece un
+   *   fallo de la página.
+   *
+   * @param {Object} modelo
+   * @returns {HTMLElement}
+   */
+  function construirBotonQuiero(modelo) {
+    var boton = U.el("button", {
+      type: "button",
+      class: "btn btn-primary btn-hero btn-quiero",
+      "data-accion": "whatsapp",
+    });
+    boton.appendChild(iconoWhatsApp());
+    boton.appendChild(U.el("span", { class: "btn-quiero__texto" }, "Lo quiero"));
+    boton.appendChild(
+      U.el("span", { class: "btn-quiero__sub" }, "Hablar con ventas por WhatsApp")
+    );
+
+    var aviso = U.el("p", {
+      class: "modelo-cta__aviso",
+      role: "status",
+      "aria-live": "polite",
+    });
+    aviso.hidden = true;
+
+    var abriendo = false;
+
+    boton.addEventListener("click", function () {
+      if (abriendo) return;
+
+      if (!NS.whatsapp.disponible()) {
+        aviso.textContent =
+          "Estamos validando nuestro canal de WhatsApp. Escríbenos desde la página de contacto.";
+        aviso.hidden = false;
+        return;
+      }
+
+      var nombreColor = colorActual ? colorActual.nombre : "";
+      var url = NS.whatsapp.enlace(modelo.titulo || modelo.modelo, nombreColor);
+
+      if (!NS.whatsapp.abrir(url)) {
+        aviso.textContent =
+          "No pudimos abrir WhatsApp. Escríbenos desde la página de contacto.";
+        aviso.hidden = false;
+        return;
+      }
+
+      // Si el navegador bloquea la ventana emergente, abrir() ya navega en
+      // esta misma pestaña; este texto solo se llega a leer cuando la
+      // pestaña nueva se abrió de verdad.
+      aviso.textContent = "Abriendo WhatsApp… revisa el mensaje antes de enviarlo.";
+      aviso.hidden = false;
+
+      abriendo = true;
+      window.setTimeout(function () { abriendo = false; }, 1200);
+    });
+
+    var envoltorio = U.el("div", { class: "modelo-cta__principal" });
+    envoltorio.appendChild(boton);
+    envoltorio.appendChild(aviso);
+    return envoltorio;
+  }
+
+  /* ---------------- Ficha: llamada a la acción ---------------- */
 
   /* ---------------- Datos rápidos ---------------- */
 
@@ -474,15 +596,14 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     var cta = $("#modelo-cta");
     if (cta) {
       U.vaciar(cta);
-      var enlace = U.el(
-        "a",
-        { class: "btn btn-primary btn-hero", href: "index.html#contacto" },
-        // NO se usa `cta_label`: esa etiqueta es la de la tarjeta del
-        // catálogo, y su trabajo es traer aquí («Ver detalles»). Repetirla
-        // en esta página invita a hacer lo que ya se ha hecho.
-        "Consultar por este modelo"
-      );
-      cta.appendChild(enlace);
+      // NO se usa `cta_label`: esa etiqueta es la de la tarjeta del
+      // catálogo, y su trabajo es traer aquí («Ver detalles»). Repetirla
+      // en esta página invita a hacer lo que ya se ha hecho.
+      //
+      // Es un <button>, no un <a href="wa.me/…">: así el número no
+      // aparece en el HTML servido, y el color se lee en el instante del
+      // clic y no cuando se pintó la ficha.
+      cta.appendChild(construirBotonQuiero(modelo));
 
       // Acción secundaria, discreta: quien duda entre modelos quiere
       // comparar, no volver al catálogo entero y filtrar otra vez. El
@@ -500,7 +621,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
         U.el(
           "p",
           { class: "modelo-cta__nota" },
-          "Te responderemos desde la página de contacto. Ningún dato se envía desde esta ficha."
+          "Se abrirá WhatsApp con tu consulta ya escrita. Tú decides si la envías: nada sale de esta página hasta que pulses «Enviar»."
         )
       );
     }
@@ -577,6 +698,11 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       );
       return;
     }
+
+    // El canal de ventas se pide en paralelo con el catálogo, no después:
+    // encadenarlos retrasaría la ficha entera por un JSON de configuración.
+    // Si tarda o falla, el botón «Lo quiero» avisa en vez de abrir nada.
+    NS.whatsapp.cargar();
 
     NS.data.cargar().then(function (estado) {
       var cargando = $("#modelo-cargando");

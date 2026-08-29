@@ -2350,43 +2350,116 @@ if (dominios) {
 }
 
 /* ================================================================
-   22. LA CONSULTA LLEGA A VENTAS
+   22. LA CONSULTA LLEGA A VENTAS, POR UN SOLO NÚMERO
 
-   El formulario estuvo inerte a propósito hasta que hubo canal aprobado.
-   Ahora reparte entre los tres asesores, así que lo que antes protegía un
-   cerrojo tiene que protegerlo una prueba: que los números publicados
-   sean los aprobados y estén bien formados, y que nadie los deje a medias.
+   El sitio tuvo un reparto al azar entre tres líneas personales. Cada
+   consulta caía en un chat privado y los otros dos asesores no veían
+   nada: el cliente que volvía a escribir encontraba a alguien que no
+   sabía de qué le hablaba. Ahora hay UNA cuenta de WhatsApp Business
+   que los tres atienden como dispositivos vinculados.
+
+   Estas pruebas defienden esa decisión. Un segundo número en el
+   repositorio no es un detalle de configuración: es volver al reparto.
    ================================================================ */
 
 const cfg = JSON.parse(readFileSync(join(RAIZ, "data/configuracion.json"), "utf8"));
-const asesores = cfg.asesoresVentas || [];
 
 comprobar("el canal de WhatsApp está marcado como confirmado",
   cfg.whatsappConfirmado === true, String(cfg.whatsappConfirmado));
 
-comprobar("hay asesores de ventas declarados", asesores.length > 0, String(asesores.length));
-
 // Un número corto o con letras abre un chat que no existe: el cliente cree
 // que ha escrito y no ha escrito a nadie.
-const malFormados = asesores
-  .filter((a) => !/^51\d{9}$/.test(String(a.telefono || "")))
-  .map((a) => (a.nombre || "?") + ": " + a.telefono);
-comprobar("todo teléfono de asesor es un móvil peruano de 11 dígitos con prefijo 51",
-  malFormados.length === 0, malFormados.join(", "));
+comprobar("el número de ventas es un móvil peruano de 11 dígitos con prefijo 51",
+  /^51\d{9}$/.test(String(cfg.whatsapp || "")),
+  String(cfg.whatsapp || "(vacío)").replace(/\d{6}$/, "******"));
 
-const sinNombre = asesores.filter((a) => !a.nombre).map((a) => a.id || "?");
-comprobar("todo asesor tiene nombre, para poder decir a quién va la consulta",
-  sinNombre.length === 0, sinNombre.join(", "));
+comprobar("wa.me lo aceptaría tal cual: sin +, espacios, guiones ni paréntesis",
+  String(cfg.whatsapp || "") === String(cfg.whatsapp || "").replace(/[^0-9]/g, ""));
 
-const repetidos = asesores
-  .map((a) => a.telefono)
-  .filter((t, i, arr) => arr.indexOf(t) !== i);
-comprobar("ningún teléfono está repetido entre asesores",
-  repetidos.length === 0, repetidos.join(", "));
+// El reparto se retiró a conciencia. Si el array vuelve, vuelve el
+// problema que se acaba de quitar, así que la prueba lo dice por su
+// nombre en vez de limitarse a fallar.
+comprobar("no ha vuelto el reparto entre varios asesores",
+  cfg.asesoresVentas === undefined,
+  cfg.asesoresVentas ? "asesoresVentas sigue en configuracion.json" : "retirado");
 
-comprobar("queda al menos un asesor activo para recibir consultas",
-  asesores.filter((a) => a.activo === true).length > 0,
-  asesores.filter((a) => a.activo === true).length + " activos");
+// La cuenta que importa: cuántos números distintos hay publicados. Uno.
+const fuentesRevisadas = [
+  "data/configuracion.json",
+  "script.js",
+  "assets/js/catalogo/catalogo-whatsapp.js",
+  "assets/js/catalogo/modelo-app.js",
+  "index.html",
+  "catalogo.html",
+  "modelo.html",
+];
+const numerosPublicados = new Set();
+for (const rel of fuentesRevisadas) {
+  const texto = readFileSync(join(RAIZ, rel), "utf8");
+  for (const hallazgo of texto.match(/\b51\d{9}\b/g) || []) numerosPublicados.add(hallazgo);
+}
+comprobar("hay UN solo número de WhatsApp en todo el código publicado",
+  numerosPublicados.size === 1,
+  numerosPublicados.size + " distinto(s)");
+
+comprobar("ese número es exactamente el de configuracion.json",
+  numerosPublicados.size === 1 && numerosPublicados.has(String(cfg.whatsapp)));
+
+// El código ya no debe saber elegir destinatario.
+const nucleoJs = readFileSync(join(RAIZ, "script.js"), "utf8");
+comprobar("script.js ya no contiene lógica de reparto (elegirAsesor / asesoresActivos)",
+  !/elegirAsesor|asesoresActivos/.test(nucleoJs));
+
+// Nada de lo que este proyecto prohíbe expresamente. Se mira el CÓDIGO,
+// no los comentarios: la cabecera del módulo nombra a OpenWA justamente
+// para decir que no se usa, y una prueba que no distingue las dos cosas
+// obliga a dejar de documentar la decisión para que pase.
+const canalJs = readFileSync(join(RAIZ, "assets/js/catalogo/catalogo-whatsapp.js"), "utf8");
+const canalCodigo = canalJs
+  .replace(/\/\*[\s\S]*?\*\//g, "")
+  .replace(/^\s*\/\/.*$/gm, "");
+comprobar("el canal de ventas no usa OpenWA, API de Meta ni tokens",
+  !/openwa|graph\.facebook|access_token|api_key|Bearer /i.test(canalCodigo));
+
+comprobar("el mensaje se codifica con encodeURIComponent",
+  /encodeURIComponent/.test(canalJs));
+
+// El mensaje de entrada no puede comprometer a ventas con lo que aún no
+// está confirmado. Se comprueba sobre el texto real que se genera.
+const textoMensaje = (canalJs.match(/"Hola, equipo de ARENAS[\s\S]*?Código de consulta: "/) || [""])[0];
+comprobar("el mensaje no promete precio, stock, financiamiento ni fechas",
+  textoMensaje.length > 0 &&
+    !/S\/|cuota|descuento|stock disponible|entrega el/i.test(textoMensaje),
+  textoMensaje ? "texto localizado" : "no se encontró el mensaje");
+
+/* ================================================================
+   22b. «LO QUIERO» LLEVA MODELO Y COLOR
+
+   Un mensaje que dice «me interesa una moto» obliga al asesor a
+   preguntar cuál, y el cliente ya lo había dicho al pulsar. Aquí se
+   comprueba que ese dato viaja.
+   ================================================================ */
+
+const fichaJs = readFileSync(join(RAIZ, "assets/js/catalogo/modelo-app.js"), "utf8");
+
+comprobar("la ficha construye el botón «Lo quiero»",
+  /construirBotonQuiero/.test(fichaJs) && /"Lo quiero"/.test(fichaJs));
+
+comprobar("el color se lee en el clic, no al pintar la ficha",
+  /colorActual \? colorActual\.nombre/.test(fichaJs));
+
+comprobar("un doble clic no abre dos conversaciones",
+  /if \(abriendo\) return;/.test(fichaJs));
+
+comprobar("la pestaña nueva se abre con noopener y noreferrer",
+  /"noopener,noreferrer"/.test(canalJs));
+
+comprobar("sin color elegido el mensaje dice «color por definir»",
+  /colorSinElegir: "color por definir"/.test(canalJs));
+
+comprobar("modelo.html carga el módulo del canal de ventas",
+  /catalogo-whatsapp\.js/.test(readFileSync(join(RAIZ, "modelo.html"), "utf8")));
+
 
 /* ================================================================
    Resultado

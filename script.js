@@ -29,7 +29,13 @@
    ================================================================ */
 
 const CONFIG = {
+  // Canal de ventas. FUENTE ÚNICA: no hay un segundo número en ninguna
+  // parte del sitio, y no debe haberlo. Los tres asesores atienden esta
+  // misma cuenta desde WhatsApp Business (multiagente), fuera del código
+  // — ver CONFIGURACION_WHATSAPP_3_VENDEDORES.md.
   whatsapp:       "PENDIENTE",      // valor de arranque — cargarConfiguracion() lo sobrescribe con data/configuracion.json → whatsapp. whatsappConfirmado() bloquea cualquier enlace mientras no haya aprobación, independientemente de este valor.
+  whatsappNombre: "ARENAS Motocicletas",
+  colorSinElegir: "color por definir",
   // El catálogo ya no se carga desde aquí: su origen y su fallback los
   // gestiona assets/js/catalogo/catalogo-data.js (CONFIG.rutaLocal),
   // compartido por index.html, catalogo.html y modelo.html.
@@ -102,6 +108,42 @@ function crearMensajeWhatsApp(modelo = "una moto", extra = "") {
 }
 
 /**
+ * Identificador corto de consulta. No identifica a nadie: es una marca
+ * legible por teléfono para que el asesor y el cliente puedan referirse a
+ * la misma consulta ("la ARN-K3F9") sin buscar por nombre. Base 36 en
+ * mayúsculas para que se dicte sin confusión.
+ * @returns {string} p. ej. "ARN-K3F9"
+ */
+function generarIdConsulta() {
+  const azar = Math.floor(Math.random() * 36 ** 4).toString(36).toUpperCase();
+  return "ARN-" + azar.padStart(4, "0");
+}
+
+/**
+ * Mensaje de la consulta de compra: el que se abre al pulsar «Lo quiero».
+ *
+ * El texto lo escribe el cliente en su propio WhatsApp, así que se redacta
+ * en primera persona y sin comprometer nada: no menciona precio, stock,
+ * financiamiento ni fechas, porque nada de eso está confirmado aquí y
+ * prometerlo en el mensaje de entrada es prometerlo en nombre de ventas.
+ *
+ * @param {string} modelo - nombre exacto del modelo
+ * @param {string} color  - color elegido; vacío ⇒ "color por definir"
+ * @param {string} leadId - código de consulta (generarIdConsulta)
+ * @returns {string} texto plano, sin codificar
+ */
+function crearMensajeConsultaModelo(modelo, color, leadId) {
+  const nombreModelo = (modelo || "").trim() || "una de sus motocicletas";
+  const nombreColor  = (color || "").trim() || CONFIG.colorSinElegir;
+  return (
+    "Hola, equipo de ARENAS. Estoy interesado(a) en la " + nombreModelo +
+    ", color " + nombreColor + ". La vi en su catálogo web y quisiera " +
+    "recibir información sobre precio, disponibilidad y opciones de compra. " +
+    "Código de consulta: " + leadId + "."
+  );
+}
+
+/**
  * Construye la URL completa de WhatsApp con mensaje codificado.
  * Autodefensa: devuelve "" si el canal no está confirmado por gerencia o si
  * el número es un placeholder (PENDIENTE/vacío/sin dígitos suficientes) —
@@ -113,12 +155,11 @@ function crearMensajeWhatsApp(modelo = "una moto", extra = "") {
  */
 function buildWhatsAppURL(mensaje, numero) {
   if (!whatsappConfirmado()) return "";
-  // Sin número explícito, la consulta va a un asesor de ventas elegido al
-  // azar. Así rota TODO punto de entrada del sitio sin tener que tocar cada
-  // llamada — y sin que quede ninguno apuntando a un número suelto.
+  // Sin número explícito se usa el de la empresa, que es el único que hay.
+  // El parámetro existe solo para las pruebas: en producción ningún
+  // llamador pasa un número propio, y no debe empezar a hacerlo.
   if (numero === undefined || numero === null || numero === "") {
-    const asesor = elegirAsesor();
-    numero = asesor ? asesor.telefono : CONFIG.whatsapp;
+    numero = CONFIG.whatsapp;
   }
   const clean = typeof numero === "string" ? numero.replace(/\D/g, "") : "";
   if (clean.length < 9) return ""; // placeholder, vacío o número incompleto
@@ -133,43 +174,6 @@ function buildWhatsAppURL(mensaje, numero) {
  */
 function whatsappConfirmado() {
   return Boolean(STATE.config && STATE.config.whatsappConfirmado === true);
-}
-
-/**
- * Asesores de ventas que pueden recibir una consulta ahora mismo.
- *
- * Se filtra aquí y no al leer el JSON porque el estado puede cambiar entre
- * carga y clic. Un número corto o con letras se descarta en silencio: es
- * preferible repartir entre dos que abrir un chat que no existe.
- *
- * @returns {Array<{id:string,nombre:string,telefono:string}>}
- */
-function asesoresActivos() {
-  const lista = (STATE.config && STATE.config.asesoresVentas) || [];
-  return lista.filter(
-    (a) =>
-      a &&
-      a.activo === true &&
-      typeof a.telefono === "string" &&
-      a.telefono.replace(/\D/g, "").length >= 9
-  );
-}
-
-/**
- * Elige a quién le llega esta consulta.
- *
- * AL AZAR, y con peso igual. No es un turno real y conviene no llamarlo
- * así: GitHub Pages sirve archivos estáticos, no hay servidor que lleve la
- * cuenta, y un contador en el navegador solo contaría los clics de ESE
- * navegador. Con volumen, el azar reparte parejo; con tres consultas al
- * día, no. Un turno de verdad exigiría backend.
- *
- * @returns {{id:string,nombre:string,telefono:string}|null}
- */
-function elegirAsesor() {
-  const activos = asesoresActivos();
-  if (!activos.length) return null;
-  return activos[Math.floor(Math.random() * activos.length)];
 }
 
 /**
@@ -221,16 +225,17 @@ function aplicarEstadoWhatsApp() {
 }
 
 /**
- * Abre WhatsApp en nueva pestaña con mensaje predefinido para un modelo.
+ * Abre WhatsApp en nueva pestaña con el mensaje de consulta de un modelo.
  * No abre nada si el número aún no está confirmado por gerencia.
  * @param {string} modelo
+ * @param {string} [color] - color elegido; vacío ⇒ "color por definir"
  */
-function consultarPorWhatsApp(modelo) {
+function consultarPorWhatsApp(modelo, color) {
   if (!whatsappConfirmado()) {
     mostrarAvisoWhatsAppPendiente();
     return;
   }
-  const mensaje = crearMensajeWhatsApp(modelo);
+  const mensaje = crearMensajeConsultaModelo(modelo, color, generarIdConsulta());
   const url     = buildWhatsAppURL(mensaje);
   if (!url) { mostrarAvisoWhatsAppPendiente(); return; } // número placeholder/no aprobado
   window.open(url, "_blank", "noopener,noreferrer");
@@ -1253,17 +1258,11 @@ function inicializarConsulta() {
       return;
     }
 
-    const asesor = elegirAsesor();
-    if (!asesor) {
-      aviso.textContent =
-        "Ahora mismo no hay asesores disponibles. Escríbenos por los datos de contacto de más abajo.";
-      return;
-    }
-
     const lineas = ["Hola ARENAS MOTOCICLETAS. Soy " + nombre + "."];
     if (interes) lineas.push("Me interesa: " + interes + ".");
     if (extra) lineas.push("", extra);
-    const url = buildWhatsAppURL(lineas.join("\n"), asesor.telefono);
+    lineas.push("", "Código de consulta: " + generarIdConsulta() + ".");
+    const url = buildWhatsAppURL(lineas.join("\n"));
 
     if (!url) {
       aviso.textContent =
@@ -1271,9 +1270,7 @@ function inicializarConsulta() {
       return;
     }
 
-    // Se dice a quién va: quien escribe merece saber con quién habla, y
-    // así el nombre que aparezca en WhatsApp no le sorprende.
-    aviso.textContent = "Abriendo WhatsApp con " + asesor.nombre + ", de nuestro equipo de ventas.";
+    aviso.textContent = "Abriendo WhatsApp con nuestro equipo de ventas.";
 
     // `noopener` corta el acceso de la pestaña abierta a la nuestra. Si el
     // navegador bloquea la ventana, se navega en la misma en vez de dejar
@@ -1281,7 +1278,7 @@ function inicializarConsulta() {
     const ventana = window.open(url, "_blank", "noopener");
     if (!ventana) window.location.href = url;
 
-    trackEvent("consulta_whatsapp", { asesor: asesor.id, interes: interes || "(sin indicar)" });
+    trackEvent("consulta_whatsapp", { interes: interes || "(sin indicar)" });
   });
 }
 

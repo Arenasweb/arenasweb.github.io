@@ -13,7 +13,10 @@
   "whatsapp": "51994790490",
   "whatsappConfirmado": true,
   "whatsappEstadoAprobacion": "aprobado",
-  "_notaWhatsapp": "APROBADO. Los tres asesores de ventas figuran en CONTACTOS_INTERNOS con es_whatsapp, whatsapp_confirmado y asignar_a_web marcados, y estado_aprobacion APROBADO. Esa es la puerta que este proyecto exige para publicar un contacto. El campo `whatsapp` es solo el reserva: los enlaces reales salen de asesoresVentas y se reparten al azar entre los tres. Ver docs/fuente-unica-datos.md.",
+  "whatsappNombreComercial": "ARENAS Motocicletas",
+  "whatsappCodigoPais": "51",
+  "whatsappMultiagente": true,
+  "_notaWhatsapp": "APROBADO. Fuente ÚNICA del canal de ventas: este campo es el número que consume TODO enlace wa.me del sitio. Es una cuenta de WhatsApp Business con multiagente: los tres asesores la atienden desde sus propios dispositivos vinculados, ven el mismo historial y se asignan las conversaciones DENTRO de WhatsApp Business. Esa parte no se configura aquí ni en el código — ver CONFIGURACION_WHATSAPP_3_VENDEDORES.md. No añadir un segundo número ni repartir consultas entre líneas: una consulta repartida es una consulta que solo ve uno.",
   "telefonoFijo": "PENDIENTE",
   "correo": "Sin correo comercial publicado",
   "correoConfirmado": false,
@@ -105,28 +108,5 @@
     "proximaFase": "diseno-premium",
     "estadoGeneral": "en-preparacion"
   },
-  "asesoresVentas": [
-    {
-      "id": "con-01",
-      "nombre": "Iris",
-      "rol": "Asesora de ventas",
-      "telefono": "51994790490",
-      "activo": true
-    },
-    {
-      "id": "con-02",
-      "nombre": "Néstor",
-      "rol": "Asesor de ventas",
-      "telefono": "51982303279",
-      "activo": true
-    },
-    {
-      "id": "con-03",
-      "nombre": "Taty",
-      "rol": "Asesora de ventas",
-      "telefono": "51925901256",
-      "activo": true
-    }
-  ],
-  "_notaAsesores": "Reparto AL AZAR entre los activos, uno por consulta. No es un turno real: GitHub Pages sirve archivos estáticos y no hay servidor que lleve la cuenta, así que un turno global exigiría backend. Al azar y con peso igual se reparte parejo con volumen. Para retirar a alguien de la rotación, poner su `activo` en false — no borrar la fila."
+  "_notaAsesoresRetirado": "El array `asesoresVentas` con tres teléfonos se retiró a propósito. Publicaba tres líneas personales y repartía cada consulta al azar entre ellas: el cliente caía en un chat privado y los otros dos asesores no veían nada de esa conversación. Con una sola cuenta Business multiagente llega al mismo sitio y los tres conservan el historial. Los nombres y la asignación del equipo viven en WhatsApp Business, no en un repositorio público."
 }
