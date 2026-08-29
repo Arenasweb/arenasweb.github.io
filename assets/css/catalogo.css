@@ -476,6 +476,169 @@
 }
 
 /* ================================================================
+   4b. VÍDEO DECORATIVO
+   Dos clips y ninguno más. El material de vídeo disponible es
+   atmósfera de marca: ninguno muestra un modelo del catálogo, así que
+   no acompaña a ninguna ficha. Aquí solo ambienta.
+
+   REGLA QUE NO SE ROMPE: el vídeo nunca decide la altura del bloque.
+   Se estira sobre el hueco que el contenido ya ocupaba. Por eso todo
+   es `position:absolute` + `inset:0` y nunca un `aspect-ratio` que
+   empuje al resto de la página hacia abajo.
+   ================================================================ */
+
+.catalog-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 0;
+  /* Aparición suave, no aparición teatral. El poster ya está debajo,
+     así que lo único que se percibe es que la imagen empieza a
+     moverse. */
+  opacity: 0;
+  animation: catalog-video-entra var(--duration-slow) var(--ease-out) 120ms forwards;
+}
+
+/* Cada clip tiene su propio encuadre. Compartir un object-position
+   entre dos vídeos distintos deja a una de las dos motos fuera del
+   área que importa. */
+.catalog-video--hero {
+  /* La moto vive en la franja media-baja del cuadro: el cielo estrellado
+     puede recortarse, la rueda delantera no. */
+  object-position: 50% 55%;
+}
+
+.catalog-video--story {
+  /* La rueda está algo por encima del centro del cuadro recortado. */
+  object-position: 50% 45%;
+}
+
+@keyframes catalog-video-entra {
+  to { opacity: 1; }
+}
+
+/* Si el archivo falla, el elemento vuelve a su poster sin la
+   animación de entrada: no hay nada nuevo que anunciar. */
+.catalog-video.is-fallback {
+  animation: none;
+  opacity: 1;
+}
+
+/* ---- Cabecera del catálogo con fondo cinematográfico ---- */
+
+.catalog-intro--cine {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.catalog-intro__media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+/* Velo de legibilidad. El texto de la cabecera se alinea a la
+   izquierda, así que el degradado es horizontal y ahí es donde carga
+   la tinta; hacia la derecha se abre para que la fotografía se vea.
+   El corte inferior cose el bloque con la rejilla, que empieza justo
+   debajo sobre el mismo fondo. */
+.catalog-intro__velo {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(4, 6, 13, 0.92) 0%,
+      rgba(4, 6, 13, 0.78) 34%,
+      rgba(4, 6, 13, 0.42) 68%,
+      rgba(4, 6, 13, 0.30) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(4, 6, 13, 0.35) 0%,
+      rgba(4, 6, 13, 0.10) 38%,
+      var(--color-deep) 100%
+    );
+}
+
+/* ---- Banda de transición ---- */
+
+.catalog-story {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  /* 16:9 en pantallas anchas sería una zanja de 800 px en medio de la
+     página. Se recorta a formato cinemascope, que es lo que pide una
+     transición: ancha, baja, y se pasa por ella. */
+  aspect-ratio: 32 / 9;
+  /* Suelo y techo: ni una franja anémica en pantallas enormes ni un
+     muro en las estrechas. */
+  min-height: 220px;
+  max-height: 420px;
+  display: grid;
+  place-items: center;
+  background: var(--color-night);
+  border-block: 1px solid var(--color-border-faint);
+}
+
+.catalog-story__media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+/* Aquí el texto va centrado, así que el velo es vertical y más suave:
+   son dos líneas grandes, no un párrafo. Oscurecer de más apagaría la
+   única toma con movimiento real de la página. */
+.catalog-story__velo {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(4, 6, 13, 0.72) 0%,
+      rgba(4, 6, 13, 0.40) 45%,
+      rgba(4, 6, 13, 0.74) 100%
+    );
+}
+
+.catalog-story__claim {
+  position: relative;
+  margin: 0;
+  padding-inline: var(--space-6);
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1.12;
+  font-size: clamp(1.3rem, 3.2vw, 2.6rem);
+  color: var(--color-white);
+  text-shadow: 0 2px 24px rgba(4, 6, 13, 0.7);
+}
+
+.catalog-story__linea {
+  display: block;
+}
+
+.catalog-story__linea--acento {
+  color: var(--brand-blue-ice);
+}
+
+/* Movimiento reducido: el vídeo no llega a descargarse (lo decide
+   catalogo-video.js) y el poster se queda quieto. Se retira también la
+   aparición por opacidad — es movimiento, aunque sea poco. */
+@media (prefers-reduced-motion: reduce) {
+  .catalog-video {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* ================================================================
    5. CIERRE DE PÁGINA
    ================================================================ */
 
@@ -524,6 +687,36 @@
 @media (max-width: 900px) {
   .catalog-intro__title {
     max-width: 100%;
+  }
+
+  /* El texto ya no deja hueco a la derecha: un degradado horizontal
+     dejaría el titular sobre la parte clara del vídeo. Pasa a vertical,
+     que es donde ahora hay sitio. */
+  .catalog-intro__velo {
+    background:
+      linear-gradient(
+        to bottom,
+        rgba(4, 6, 13, 0.62) 0%,
+        rgba(4, 6, 13, 0.80) 42%,
+        var(--color-deep) 100%
+      );
+  }
+
+  /* Cinemascope en una pantalla estrecha da una rendija. Se abre el
+     formato para que la rueda siga leyéndose. */
+  .catalog-story {
+    aspect-ratio: 16 / 9;
+    max-height: 300px;
+  }
+}
+
+/* Por debajo de 700 px la banda no descarga el vídeo (lo decide
+   catalogo-video.js) y se queda en su poster. */
+@media (max-width: 699px) {
+  .catalog-story {
+    aspect-ratio: 3 / 2;
+    min-height: 180px;
+    max-height: 240px;
   }
 }
 

@@ -137,7 +137,25 @@
             </div>
           </div>
 
+          <!-- ====================================================
+               BLOQUES EDITORIALES
+               Los rellena assets/js/catalogo/modelo-editorial.js a
+               partir de data/fichas-editorial.json (el texto) y de
+               assets/catalogo/photo-manifest.json (las fotografías).
+               Nacen ocultos y solo se muestran si hay contenido real
+               para ellos: un modelo sin banco fotográfico conserva la
+               ficha tal y como era antes.
+          ==================================================== -->
+          <section id="modelo-historia" class="modelo-seccion modelo-seccion--historia" hidden></section>
+
+          <section id="modelo-razones" class="modelo-seccion modelo-seccion--razones"
+                   aria-labelledby="modelo-razones-heading" hidden></section>
+
+          <section id="modelo-detalles" class="modelo-seccion modelo-seccion--detalles" hidden></section>
+
           <div id="modelo-cuerpo" class="modelo-cuerpo" hidden></div>
+
+          <section id="modelo-cierre" class="modelo-seccion modelo-seccion--cierre" hidden></section>
 
           <p class="modelo-volver">
             <a href="catalogo.html">&larr; Volver al catálogo completo</a>
@@ -200,6 +218,7 @@
     <script src="assets/js/catalogo/catalogo-data.js" defer></script>
     <script src="assets/js/catalogo/catalogo-ui.js" defer></script>
     <script src="assets/js/catalogo/catalogo-whatsapp.js" defer></script>
+    <script src="assets/js/catalogo/modelo-editorial.js" defer></script>
     <script src="assets/js/catalogo/modelo-app.js" defer></script>
   </body>
 </html>

@@ -1,0 +1,419 @@
+{
+  "_nota": "Capa EDITORIAL de la ficha de modelo: historia y razones de compra. Vive aparte del catálogo porque el catálogo lo administra gerencia desde Google Sheets y esto es redacción. La ficha se renderiza con lo que haya: un modelo con tres razones muestra tres.",
+
+  "_reglaDeOro": "Cada razón se apoya en (a) un dato que ya está en data/catalogo-publico.local.json → caracteristica_1..3, que a su vez cita la ficha oficial peruana del modelo, o (b) algo que la propia fotografía deja ver. Nada más. Si una razón no puede señalar una de esas dos fuentes, no se publica. No se afirma ABS, inyección, CBS, LED ni potencia por parecido con otra variante.",
+
+  "_camposRazon": "kicker (1-3 palabras) · titulo (3-8 palabras) · texto (25-50 palabras) · asset (clave del photo-manifest; si no está 'ready', la razón se omite sola) · dato/datoEtiqueta (opcionales) · fuente (de dónde sale el dato)",
+
+  "modelos": {
+    "boxer-bm150x-disc": {
+      "historiaKicker": "Historia",
+      "historiaTitulo": "La que trabaja todos los días",
+      "historia": "La Boxer no nació para lucirse en una foto: nació para amortizarse. Es la moto que arranca temprano, carga lo que haga falta y vuelve por caminos que no siempre están asfaltados. En Cusco eso no es un argumento de venta, es la descripción de una jornada normal.",
+      "historiaAsset": "lateral",
+      "razonesKicker": "Por qué elegirla",
+      "razonesTitulo": "Hecha para trabajar, no para presumir",
+      "razones": [
+        {
+          "id": "carga",
+          "kicker": "Carga",
+          "titulo": "Parrilla puesta de fábrica",
+          "texto": "No hay que mandar a soldar nada. La parrilla trasera viene montada y el asiento corrido deja sitio real detrás, así que el primer día ya se puede salir a trabajar con la moto tal y como se compró.",
+          "asset": "detalle-a",
+          "fuente": "visible en la fotografía"
+        },
+        {
+          "id": "frenada",
+          "kicker": "Frenada",
+          "titulo": "Disco donde más importa",
+          "texto": "La versión con disco delantero se nota bajando cargado y con el piso mojado, que es cuando un tambor empieza a pedir más distancia. Es la diferencia entre llegar y llegar tranquilo.",
+          "asset": "freno",
+          "dato": "240 mm",
+          "datoEtiqueta": "Disco delantero",
+          "fuente": "caracteristica_3 · ficha oficial peruana"
+        },
+        {
+          "id": "camino",
+          "kicker": "Camino",
+          "titulo": "Suspensión que perdona el bache",
+          "texto": "Doble amortiguador atrás, a la vista y accesible. Está pensado para rutas que no siempre están en buen estado y para volver con peso encima sin que la moto se venga abajo.",
+          "asset": "suspension-trasera",
+          "fuente": "visible en la fotografía"
+        },
+        {
+          "id": "mecanica",
+          "kicker": "Mecánica",
+          "titulo": "Refrigeración por aire, sin vueltas",
+          "texto": "Un motor refrigerado por aire tiene menos piezas que puedan dar problemas y se atiende en cualquier taller. Para una moto de trabajo, eso vale más que una cifra de potencia.",
+          "asset": "motor",
+          "dato": "144.8 cc",
+          "datoEtiqueta": "Cilindrada",
+          "fuente": "caracteristica_1 y caracteristica_2 · ficha oficial peruana"
+        }
+      ]
+    },
+
+    "ct-125": {
+      "historiaKicker": "Historia",
+      "historiaTitulo": "Muévete más, complícate menos",
+      "historia": "La CT es la respuesta a una pregunta muy concreta: cuánto cuesta moverse cada día. Sin electrónica de por medio, sin piezas caras y con una mecánica que cualquier taller conoce. Es la moto que se compra para usarla, no para guardarla.",
+      "historiaAsset": "lateral",
+      "razonesKicker": "Por qué elegirla",
+      "razonesTitulo": "Práctica por naturaleza",
+      "razones": [
+        {
+          "id": "ligera",
+          "kicker": "Manejo",
+          "titulo": "Ligera de mover",
+          "texto": "Ciento quince kilos se notan al sacarla del estacionamiento, al girar en una calle estrecha y al sostenerla parada en cuesta. En una ciudad como Cusco, el peso es una cifra que se siente todos los días.",
+          "asset": "motor",
+          "dato": "115 kg",
+          "datoEtiqueta": "Peso",
+          "fuente": "caracteristica_3 · ficha oficial peruana"
+        },
+        {
+          "id": "control",
+          "kicker": "Control",
+          "titulo": "Frenado combinado de serie",
+          "texto": "El sistema CBS reparte la frenada entre las dos ruedas al accionar el pedal. Ayuda especialmente a quien lleva poco tiempo conduciendo, que es justo quien más suele elegir esta moto.",
+          "asset": "freno",
+          "dato": "CBS",
+          "datoEtiqueta": "Frenado combinado",
+          "fuente": "caracteristica_3 · ficha oficial peruana"
+        },
+        {
+          "id": "autonomia",
+          "kicker": "Autonomía",
+          "titulo": "Menos paradas a cargar",
+          "texto": "Diez litros y medio de depósito en una moto de 124.5 cc dan para muchos días de recorridos urbanos. Menos visitas al grifo es menos tiempo perdido y menos gasto repartido.",
+          "asset": "tanque",
+          "dato": "10.5 L",
+          "datoEtiqueta": "Depósito",
+          "fuente": "caracteristica_3 · ficha oficial peruana"
+        },
+        {
+          "id": "comodidad",
+          "kicker": "Comodidad",
+          "titulo": "Asiento corrido para dos",
+          "texto": "Una sola pieza, plana y larga. Permite llevar a alguien atrás sin que nadie vaya incómodo y deja acomodar una mochila o un bulto cuando se viaja solo.",
+          "asset": "asiento",
+          "fuente": "visible en la fotografía"
+        }
+      ]
+    },
+
+    "discover-125-st": {
+      "historiaKicker": "Historia",
+      "historiaTitulo": "El punto medio bien resuelto",
+      "historia": "La Discover se mueve en un terreno difícil: gastar poco sin parecer una moto de mínimos. Tiene careta, gráficos cuidados y una postura de conducción pensada para estar cómodo una hora seguida, no solo para cruzar la ciudad.",
+      "historiaAsset": "lateral",
+      "razonesKicker": "Por qué elegirla",
+      "razonesTitulo": "Hecha para todos los días",
+      "razones": [
+        {
+          "id": "equilibrio",
+          "kicker": "Equilibrio",
+          "titulo": "Rendimiento sin castigo al bolsillo",
+          "texto": "124.6 cc y 12.8 HP con alimentación por carburador: suficiente para moverse con soltura en ciudad y en cuestas, con una mecánica sencilla de mantener y de reparar.",
+          "asset": "tanque",
+          "dato": "12.8 HP",
+          "datoEtiqueta": "Potencia",
+          "fuente": "caracteristica_1 y caracteristica_3 · ficha oficial peruana"
+        },
+        {
+          "id": "confort",
+          "kicker": "Confort",
+          "titulo": "Asiento escalonado, postura relajada",
+          "texto": "El escalón separa las dos plazas y sujeta al conductor en las frenadas. Se nota en trayectos largos, cuando la diferencia entre una moto cómoda y una incómoda deja de ser un detalle.",
+          "asset": "asiento",
+          "fuente": "visible en la fotografía"
+        },
+        {
+          "id": "control",
+          "kicker": "Control",
+          "titulo": "Frenado combinado de serie",
+          "texto": "El CBS reparte la fuerza entre ambas ruedas y hace más previsible la detención en piso mojado o con gravilla, dos cosas que abundan en las calles de Cusco.",
+          "asset": "freno",
+          "dato": "CBS",
+          "datoEtiqueta": "Frenado combinado",
+          "fuente": "caracteristica_3 · ficha oficial peruana"
+        },
+        {
+          "id": "recorrido",
+          "kicker": "Recorrido",
+          "titulo": "Amortiguación a la vista",
+          "texto": "Los muelles traseros trabajan al aire, se revisan de un vistazo y se cambian sin desmontar media moto. En una ciudad con pavimento desigual eso deja de ser estética y pasa a ser mantenimiento.",
+          "asset": "suspension-trasera",
+          "fuente": "visible en la fotografía"
+        }
+      ]
+    },
+
+    "pulsar-n125-fi": {
+      "historiaKicker": "Historia",
+      "historiaTitulo": "Una Pulsar hecha para moverse",
+      "historia": "La N125 lleva el apellido Pulsar a la cilindrada más práctica del catálogo. Es una naked de verdad —sin carenados que estorben, con el faro al aire— pensada para quien quiere una moto con carácter sin pasar a una 200.",
+      "historiaAsset": "lateral",
+      "razonesKicker": "Por qué elegirla",
+      "razonesTitulo": "Agilidad urbana con apellido",
+      "razones": [
+        {
+          "id": "inyeccion",
+          "kicker": "Motor",
+          "titulo": "Inyección electrónica en 125",
+          "texto": "La inyección dosifica el combustible según cómo se conduce. Arranca mejor en frío, responde más limpio al abrir gas y evita el ritual del ahogador, algo poco habitual en esta cilindrada.",
+          "asset": "motor",
+          "dato": "124.59 cc",
+          "datoEtiqueta": "Motor FI",
+          "fuente": "caracteristica_1 · ficha oficial peruana"
+        },
+        {
+          "id": "frenada",
+          "kicker": "Frenada",
+          "titulo": "Disco de 240 milímetros",
+          "texto": "Un disco de ese diámetro delante, con CBS repartiendo la frenada, da margen de sobra para el peso de esta moto. Se agradece en bajadas largas y en el tráfico que frena de golpe.",
+          "asset": "freno",
+          "dato": "240 mm",
+          "datoEtiqueta": "Disco delantero",
+          "fuente": "caracteristica_3 · ficha oficial peruana"
+        },
+        {
+          "id": "marchas",
+          "kicker": "Transmisión",
+          "titulo": "Cinco velocidades bien repartidas",
+          "texto": "La quinta marcha permite rodar más relajado cuando la ciudad se abre, en vez de ir siempre con el motor alto. Se nota en consumo y se nota en el ruido.",
+          "asset": "transmision",
+          "dato": "5",
+          "datoEtiqueta": "Velocidades",
+          "fuente": "caracteristica_2 · ficha oficial peruana"
+        },
+        {
+          "id": "visibilidad",
+          "kicker": "Visibilidad",
+          "titulo": "Ve mejor con luz LED",
+          "texto": "El LED da una luz más blanca y consume menos que una bombilla convencional. De noche se ve mejor, y de día se ve mejor a la moto, que es la mitad del asunto.",
+          "asset": "faro",
+          "dato": "LED",
+          "datoEtiqueta": "Iluminación",
+          "fuente": "caracteristica_3 · ficha oficial peruana"
+        },
+        {
+          "id": "diseno",
+          "kicker": "Diseño",
+          "titulo": "Se reconoce de lejos",
+          "texto": "Los paneles con la gráfica lima y el degradado de puntos no son un adhesivo pegado encima: forman parte del diseño de la pieza. Es la moto que se distingue en una fila de motos iguales.",
+          "asset": "detalle-a",
+          "fuente": "visible en la fotografía"
+        }
+      ]
+    },
+
+    "pulsar-200-ns-ug2": {
+      "historiaKicker": "Historia",
+      "historiaTitulo": "Carácter streetfighter",
+      "historia": "La NS200 es la que convenció a mucha gente de que una moto de 200 podía sentirse como algo más. Chasis perimetral, refrigeración líquida y una postura agresiva sin llegar a incómoda. Sigue siendo el escalón donde la gama Pulsar se pone seria.",
+      "historiaAsset": "lateral",
+      "razonesKicker": "Por qué elegirla",
+      "razonesTitulo": "Potencia que se siente",
+      "razones": [
+        {
+          "id": "motor",
+          "kicker": "Rendimiento",
+          "titulo": "23,2 HP con refrigeración líquida",
+          "texto": "El circuito de refrigeración líquida mantiene estable la temperatura cuando se exige el motor: subidas largas, tráfico detenido o un tramo de carretera a ritmo. La potencia no se cae a la mitad del camino.",
+          "asset": "motor",
+          "dato": "23.2 HP",
+          "datoEtiqueta": "Potencia",
+          "fuente": "caracteristica_1 y caracteristica_3 · ficha oficial peruana"
+        },
+        {
+          "id": "frenada",
+          "kicker": "Frenada",
+          "titulo": "Discos en las dos ruedas",
+          "texto": "300 milímetros delante y 230 detrás. Con esa superficie el frenado deja de ser el límite de la moto y pasa a ser una herramienta más para entrar rápido a una curva.",
+          "asset": "freno",
+          "dato": "300 / 230 mm",
+          "datoEtiqueta": "Discos",
+          "fuente": "caracteristica_3 · ficha oficial peruana"
+        },
+        {
+          "id": "chasis",
+          "kicker": "Chasis",
+          "titulo": "Perimetral, y se ve",
+          "texto": "El entramado del chasis queda a la vista en el costado. No es adorno: esa arquitectura es la que sostiene el comportamiento de la moto cuando se la tumba de verdad.",
+          "asset": "detalle-b",
+          "fuente": "visible en la fotografía"
+        },
+        {
+          "id": "marchas",
+          "kicker": "Transmisión",
+          "titulo": "Seis marchas, menos vueltas",
+          "texto": "La sexta marcha cambia la moto en carretera: baja las vueltas, baja el consumo y baja el cansancio. Es la diferencia entre una naked urbana y una que también sale de la ciudad.",
+          "asset": "transmision",
+          "dato": "6",
+          "datoEtiqueta": "Velocidades",
+          "fuente": "caracteristica_2 · ficha oficial peruana"
+        },
+        {
+          "id": "presencia",
+          "kicker": "Diseño",
+          "titulo": "Depósito con músculo",
+          "texto": "Las extensiones laterales del depósito no solo marcan la silueta: dan dónde apoyar las rodillas al conducir deprisa. Es de los pocos rasgos de diseño que además se usan.",
+          "asset": "tanque",
+          "fuente": "visible en la fotografía"
+        }
+      ]
+    },
+
+    "pulsar-n250": {
+      "historiaKicker": "Historia",
+      "historiaTitulo": "Más tecnología, más control",
+      "historia": "La N250 es el salto de cilindrada sin salir del terreno conocido. Un cuarto de litro con inyección, frenos con ABS de doble canal y horquilla invertida: componentes que hasta hace poco vivían dos escalones más arriba en la gama.",
+      "historiaAsset": "lateral",
+      "razonesKicker": "Por qué elegirla",
+      "razonesTitulo": "El siguiente escalón, bien equipado",
+      "razones": [
+        {
+          "id": "abs",
+          "kicker": "Seguridad",
+          "titulo": "ABS de doble canal",
+          "texto": "Doble canal significa que el antibloqueo actúa en las dos ruedas, no solo en la delantera. En una frenada de emergencia sobre piso mojado, eso es lo que mantiene la moto en línea.",
+          "asset": "freno",
+          "dato": "2 canales",
+          "datoEtiqueta": "ABS",
+          "fuente": "caracteristica_3 · ficha oficial peruana"
+        },
+        {
+          "id": "horquilla",
+          "kicker": "Suspensión",
+          "titulo": "Horquilla invertida al frente",
+          "texto": "Montada al revés que una convencional, la barra gruesa queda arriba y el conjunto flexa menos al frenar fuerte. El tren delantero se siente más firme justo cuando hace falta.",
+          "asset": "suspension-delantera",
+          "fuente": "visible en la fotografía"
+        },
+        {
+          "id": "motor",
+          "kicker": "Motor",
+          "titulo": "Cuarto de litro con inyección",
+          "texto": "249.1 cc, 24.2 HP y 21.5 Nm con refrigeración por aceite. Un empuje que sirve igual para adelantar en carretera que para no ir forzando el motor en ciudad.",
+          "asset": "motor",
+          "dato": "249.1 cc",
+          "datoEtiqueta": "Motor FI",
+          "fuente": "caracteristica_1 y caracteristica_2 · ficha oficial peruana"
+        },
+        {
+          "id": "ruta",
+          "kicker": "Ruta",
+          "titulo": "Catorce litros de depósito",
+          "texto": "Es el depósito más grande de la gama de ARENAS. Da margen para salir de Cusco sin planificar la parada de combustible como parte del viaje.",
+          "asset": "tanque",
+          "dato": "14 L",
+          "datoEtiqueta": "Depósito",
+          "fuente": "caracteristica_3 · ficha oficial peruana"
+        }
+      ]
+    },
+
+    "pulsar-400-ns": {
+      "historiaKicker": "Historia",
+      "historiaTitulo": "Cuando quieres dar el siguiente paso",
+      "historia": "La 400 NS es el techo de la gama naked. Comparte cifra de potencia con la Dominar pero la reparte de otra manera: sin cúpula, sin equipaje, con la horquilla invertida dorada a la vista. Es la versión que no disimula para qué está hecha.",
+      "historiaAsset": "lateral",
+      "razonesKicker": "Por qué elegirla",
+      "razonesTitulo": "Rendimiento sin disimulo",
+      "razones": [
+        {
+          "id": "rendimiento",
+          "kicker": "Rendimiento",
+          "titulo": "39,5 HP y 35 Nm",
+          "texto": "Es la cifra más alta del catálogo de ARENAS, con refrigeración líquida e inyección electrónica. Suficiente para que un adelantamiento deje de ser una maniobra que hay que pensar dos veces.",
+          "asset": "motor",
+          "dato": "39.5 HP",
+          "datoEtiqueta": "Potencia",
+          "fuente": "caracteristica_1 y caracteristica_2 · ficha oficial peruana"
+        },
+        {
+          "id": "horquilla",
+          "kicker": "Suspensión",
+          "titulo": "Horquilla invertida dorada",
+          "texto": "Junto a la N250, la única de la gama que la lleva. Aguanta mejor el esfuerzo de una frenada fuerte y se nota en la precisión al entrar a una curva con la moto cargada.",
+          "asset": "suspension-delantera",
+          "fuente": "visible en la fotografía"
+        },
+        {
+          "id": "abs",
+          "kicker": "Seguridad",
+          "titulo": "ABS de doble canal",
+          "texto": "Con esta potencia el antibloqueo en las dos ruedas deja de ser un extra y pasa a ser lo razonable. Actúa antes de que la rueda se bloquee, no después.",
+          "asset": "freno",
+          "dato": "2 canales",
+          "datoEtiqueta": "ABS",
+          "fuente": "caracteristica_3 · ficha oficial peruana"
+        },
+        {
+          "id": "refrigeracion",
+          "kicker": "Ingeniería",
+          "titulo": "Radiador a la vista",
+          "texto": "La refrigeración líquida pide un radiador, y aquí queda expuesto en el costado. Es lo que permite sostener el rendimiento en una subida larga sin que el motor se ahogue de calor.",
+          "asset": "detalle-a",
+          "fuente": "visible en la fotografía · caracteristica_2"
+        }
+      ]
+    },
+
+    "dominar-400": {
+      "historiaKicker": "Historia",
+      "historiaTitulo": "Donde la ciudad termina",
+      "historia": "La Dominar es la única del catálogo pensada de origen para hacer kilómetros seguidos. Cúpula, asiento ancho, parrilla con anclajes y un motor de 373.3 cc que va sobrado a ritmo de carretera. Es la moto para quien mira el mapa antes de salir.",
+      "historiaAsset": "lateral",
+      "razonesKicker": "Por qué elegirla",
+      "razonesTitulo": "Hecha para seguir",
+      "razones": [
+        {
+          "id": "carretera",
+          "kicker": "Carretera",
+          "titulo": "Cúpula que corta el aire",
+          "texto": "A ritmo sostenido, el viento en el pecho es lo que más cansa. La cúpula desvía esa presión por encima del casco y convierte dos horas de ruta en algo que se puede repetir al día siguiente.",
+          "asset": "detalle-a",
+          "fuente": "visible en la fotografía"
+        },
+        {
+          "id": "motor",
+          "kicker": "Motor",
+          "titulo": "373,3 cc con inyección",
+          "texto": "39.5 HP y 35 Nm con caja de seis velocidades. En carretera eso se traduce en ir en sexta, con el motor tranquilo, y tener empuje disponible sin tener que reducir.",
+          "asset": "motor",
+          "dato": "35 Nm",
+          "datoEtiqueta": "Torque",
+          "fuente": "caracteristica_1 y caracteristica_2 · ficha oficial peruana"
+        },
+        {
+          "id": "abs",
+          "kicker": "Seguridad",
+          "titulo": "ABS de doble canal",
+          "texto": "Recorrer distancia implica encontrarse de todo: grava en una curva, un animal cruzando, un frenazo delante. El antibloqueo en ambas ruedas es lo que mantiene la trayectoria en esos momentos.",
+          "asset": "freno",
+          "dato": "2 canales",
+          "datoEtiqueta": "ABS",
+          "fuente": "caracteristica_3 · ficha oficial peruana"
+        },
+        {
+          "id": "equipaje",
+          "kicker": "Equipaje",
+          "titulo": "Anclajes puestos de fábrica",
+          "texto": "La parrilla y los soportes traseros vienen montados. No hay que improvisar un sistema de sujeción ni pagar un accesorio aparte para salir de viaje con equipaje.",
+          "asset": "detalle-b",
+          "fuente": "visible en la fotografía"
+        },
+        {
+          "id": "comodidad",
+          "kicker": "Comodidad",
+          "titulo": "Asiento ancho de verdad",
+          "texto": "Ancho, plano y con espacio para moverse. En un trayecto corto da igual; a partir de la primera hora es lo que decide si el viaje se disfruta o se aguanta.",
+          "asset": "asiento",
+          "fuente": "visible en la fotografía"
+        }
+      ]
+    }
+  }
+}

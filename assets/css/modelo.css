@@ -767,3 +767,378 @@
   margin-top: clamp(var(--space-8), 4vw, var(--space-12));
   padding-top: clamp(var(--space-6), 3vw, var(--space-10));
 }
+
+/* ================================================================
+   8. BLOQUES EDITORIALES DE LA FICHA
+   Historia, razones de compra y explorador de detalles. Los pinta
+   assets/js/catalogo/modelo-editorial.js.
+
+   PRINCIPIO: la fotografía manda y el texto acompaña. El banco de
+   fotos es material oficial de fabricante a resolución alta; meterlo
+   en tarjetas de 400 px sería tirarlo. Aquí las imágenes ocupan más
+   de la mitad del bloque y el texto se queda en una columna estrecha
+   y legible.
+
+   NO ES UNA GALERÍA. Cada foto aparece una sola vez y siempre al
+   lado del argumento que sostiene.
+   ================================================================ */
+
+.modelo-seccion {
+  margin-block: clamp(var(--space-12), 9vw, 128px);
+}
+
+.modelo-seccion[hidden] { display: none; }
+
+/* ---- Cabeceras ---- */
+
+.ed-cabecera {
+  margin-bottom: var(--space-6);
+}
+
+.ed-cabecera--seccion {
+  margin-bottom: clamp(var(--space-8), 5vw, var(--space-12));
+  max-width: 34ch;
+}
+
+.ed-kicker {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--brand-blue-bright);
+  margin: 0 0 var(--space-3);
+}
+
+.ed-titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  line-height: 1.02;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  color: var(--color-white);
+  margin: 0;
+}
+
+/* La medida de lectura se acota en caracteres, no en píxeles: es lo
+   que de verdad cansa la vista en una línea larga. */
+.ed-prosa {
+  font-size: clamp(0.98rem, 1.15vw, 1.08rem);
+  line-height: 1.75;
+  color: var(--color-silver);
+  max-width: 62ch;
+  margin: 0;
+}
+
+.ed-prosa--intro {
+  margin-top: calc(var(--space-6) * -1);
+  margin-bottom: clamp(var(--space-8), 5vw, var(--space-10));
+}
+
+/* ---- Figura común ---- */
+
+.ed-figura {
+  margin: 0;
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  /* Casi negro, con un apunte de azul apenas perceptible. Los recortes
+     conservan el alfa del master, así que el hueco entre el motor y el
+     chasis es transparente de verdad: con un azul marcado detrás esos
+     huecos se leían como manchas de color en mitad de la pieza. Sobre
+     un fondo casi negro se leen como sombra, que es lo que son. */
+  background:
+    radial-gradient(120% 100% at 50% 0%, rgba(31, 107, 255, 0.045), transparent 62%),
+    var(--color-black-rich);
+  border: 1px solid var(--color-border-faint);
+}
+
+.ed-figura img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Los recortes NO tienen todos la misma forma: el motor es apaisado y
+   la horquilla es un rectángulo alto y estrecho. Estirar los dos al
+   ancho de la columna ampliaba el vertical muy por encima de su
+   resolución real y se veía blando.
+   La figura fija una caja y la imagen se encaja dentro sin recortarse
+   ni pasarse de su tamaño nativo. */
+.ed-figura--razon,
+.ed-figura--detalle,
+.ed-figura--historia {
+  display: grid;
+  place-items: center;
+}
+
+/* Ni ancho fijo ni proporción fija: la caja se ajusta a la foto.
+   Con una proporción impuesta, un recorte apaisado quedaba con dos
+   franjas negras y uno vertical con dos columnas negras. Aquí el
+   límite es doble —el ancho de la columna y una altura máxima— y la
+   figura mide lo que mida la imagen dentro de esos dos topes. */
+.ed-figura--razon img,
+.ed-figura--historia img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: clamp(300px, 46vh, 520px);
+}
+
+.ed-figura--detalle img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: clamp(320px, 52vh, 580px);
+}
+
+/* ---- 1. Historia ---- */
+
+.ed-historia {
+  display: grid;
+  gap: clamp(var(--space-6), 4vw, var(--space-10));
+  align-items: center;
+}
+
+/* El texto ocupa menos que la fotografía a propósito: la historia se
+   lee en veinte segundos, la moto se mira más rato. */
+.ed-historia--con-foto {
+  grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
+}
+
+/* ---- 2. Razones de compra ---- */
+
+.ed-razones {
+  display: grid;
+  gap: clamp(var(--space-10), 7vw, 104px);
+}
+
+.ed-razon {
+  display: grid;
+  gap: clamp(var(--space-5), 3.5vw, var(--space-10));
+  align-items: center;
+  grid-template-columns: minmax(0, 43fr) minmax(0, 57fr);
+}
+
+/* Se alterna el lado. Cuatro bloques con la foto siempre a la derecha
+   se leen como una lista; alternando, se leen como una revista. */
+.ed-razon--invertida .ed-razon__texto { order: 2; }
+.ed-razon--invertida .ed-figura { order: 1; }
+
+.ed-razon__indice {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1;
+  color: rgba(91, 147, 255, 0.22);
+  margin: 0 0 var(--space-2);
+}
+
+.ed-razon__titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.06;
+  font-size: clamp(1.35rem, 2.6vw, 2rem);
+  color: var(--color-white);
+  margin: 0 0 var(--space-4);
+  max-width: 20ch;
+}
+
+/* El dato va DEBAJO del argumento y en pequeño. Es apoyo: si mandara
+   él, esto volvería a ser una ficha técnica con fotos. */
+.ed-dato {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin: var(--space-5) 0 0;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border-faint);
+}
+
+.ed-dato__valor {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  font-weight: 700;
+  color: var(--brand-blue-ice);
+  line-height: 1;
+}
+
+.ed-dato__etiqueta {
+  font-size: var(--text-xs);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* ---- 3. Explorador de detalles ---- */
+
+.ed-detalles {
+  display: grid;
+  grid-template-columns: minmax(190px, 240px) minmax(0, 1fr);
+  gap: clamp(var(--space-6), 4vw, var(--space-10));
+  align-items: start;
+}
+
+.ed-detalles__lista {
+  display: grid;
+  gap: 2px;
+}
+
+/* Los botones son <button> reales con role=tab: se recorren con las
+   flechas del teclado. Un div con un click encima deja fuera a quien
+   no usa ratón. */
+.ed-pieza {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  width: 100%;
+  /* 44 px de alto mínimo: es el objetivo táctil que no falla. */
+  min-height: 44px;
+  padding: var(--space-3) var(--space-4);
+  background: transparent;
+  border: 0;
+  border-left: 2px solid transparent;
+  border-radius: 0;
+  text-align: left;
+  cursor: pointer;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: color var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out),
+              background-color var(--duration-fast) var(--ease-out);
+}
+
+.ed-pieza:hover { color: var(--color-silver); }
+
+.ed-pieza.is-activo {
+  color: var(--color-white);
+  border-left-color: var(--brand-blue);
+  background: rgba(31, 107, 255, 0.07);
+}
+
+.ed-pieza__num {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  color: var(--brand-blue-bright);
+  opacity: 0.75;
+}
+
+.ed-pieza__nombre { font-weight: 600; }
+
+.ed-detalles__escenario { display: grid; gap: var(--space-3); }
+
+/* Atenuar y volver, sin desmontar la imagen: reemplazar el nodo
+   provocaría un parpadeo en blanco mientras descarga la siguiente. */
+.ed-figura--detalle {
+  transition: opacity var(--duration-slow) var(--ease-out);
+}
+
+.ed-figura--detalle.is-cambiando { opacity: 0.25; }
+
+.ed-detalles__pie {
+  font-size: var(--text-xs);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* ---- 4. Cierre ---- */
+
+.modelo-seccion--cierre {
+  text-align: center;
+  padding-block: clamp(var(--space-10), 6vw, var(--space-12));
+  border-top: 1px solid var(--color-border-faint);
+}
+
+.ed-cierre__titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(1.5rem, 3.4vw, 2.4rem);
+  line-height: 1.05;
+  color: var(--color-white);
+  margin: 0 0 var(--space-4);
+}
+
+.ed-cierre__texto {
+  margin: 0 auto var(--space-8);
+  max-width: 52ch;
+}
+
+.ed-cierre__accion {
+  display: flex;
+  justify-content: center;
+}
+
+.ed-cierre__accion .modelo-cta__principal { justify-items: center; width: auto; }
+.ed-cierre__accion .modelo-cta__aviso { text-align: center; }
+
+/* ---- Aparición ---- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .modelo-seccion { animation: ed-entra var(--duration-reveal) var(--ease-out) both; }
+}
+
+@keyframes ed-entra {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ================================================================
+   9. RESPONSIVE DE LOS BLOQUES EDITORIALES
+   ================================================================ */
+
+@media (max-width: 900px) {
+  /* Una sola columna, y la fotografía SIEMPRE primero: en vertical el
+     argumento se entiende mejor después de ver la pieza. El orden
+     alternado de escritorio aquí solo desordenaría. */
+  .ed-historia--con-foto,
+  .ed-razon {
+    grid-template-columns: 1fr;
+  }
+
+  .ed-razon .ed-razon__texto { order: 2; }
+  .ed-razon .ed-figura { order: 1; }
+  .ed-razon--invertida .ed-razon__texto { order: 2; }
+  .ed-razon--invertida .ed-figura { order: 1; }
+
+  .ed-historia--con-foto .ed-historia__texto { order: 2; }
+  .ed-historia--con-foto .ed-figura { order: 1; }
+
+  .ed-razon__indice { font-size: 2rem; }
+
+  /* La lista de piezas pasa a una tira horizontal desplazable: en
+     móvil una columna de once botones ocuparía una pantalla entera
+     antes de enseñar la primera fotografía. */
+  .ed-detalles { grid-template-columns: 1fr; }
+
+  .ed-detalles__lista {
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    overflow-x: auto;
+    gap: var(--space-2);
+    padding-bottom: var(--space-2);
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ed-pieza {
+    border-left: 0;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+  }
+
+  .ed-pieza.is-activo {
+    border-left-color: transparent;
+    border-bottom-color: var(--brand-blue);
+  }
+}
+
+@media (max-width: 560px) {
+  .modelo-seccion { margin-block: clamp(48px, 12vw, 80px); }
+  .ed-prosa--intro { margin-top: 0; }
+}

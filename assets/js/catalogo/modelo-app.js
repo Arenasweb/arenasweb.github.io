@@ -257,6 +257,9 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
    */
   var colorActual = null;
 
+  /** Modelo que se está mostrando. Lo necesita el CTA del cierre. */
+  var modeloActual = null;
+
   function cancelarCambioPendiente() {
     if (cambioPendiente !== null) {
       window.clearTimeout(cambioPendiente);
@@ -373,6 +376,22 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
   }
 
   /* ---------------- Ficha ---------------- */
+
+  /**
+   * Repite el botón «Lo quiero» al final de la ficha.
+   *
+   * Se vuelve a construir en vez de clonar el nodo: un clon arrastraría
+   * el manejador del original y los dos botones compartirían el cerrojo
+   * antidoble-clic, de modo que pulsar uno dejaría muerto al otro
+   * durante un segundo. Construirlo de nuevo cuesta lo mismo y cada
+   * botón queda con su propio estado.
+   */
+  function clonarCtaEnCierre() {
+    var destino = document.getElementById("modelo-cta-cierre");
+    if (!destino || destino.childNodes.length) return;
+    if (!modeloActual) return;
+    destino.appendChild(construirBotonQuiero(modeloActual));
+  }
 
   /* ---------------- «Lo quiero» ---------------- */
 
@@ -561,8 +580,14 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
         // y el párrafo debajo, la mitad derecha de la página se quedaba en
         // blanco y la ficha se leía a medio terminar.
         var enc = U.el("div", { class: "modelo-bloque__encabezado" });
-        enc.appendChild(U.el("p", { class: "modelo-bloque__kicker" }, "En detalle"));
-        enc.appendChild(U.el("h2", { class: "modelo-bloque__titulo" }, "Sobre este modelo"));
+        // Este bloque es la descripción TÉCNICA que llega de la hoja, con
+        // sus cifras. Se llamaba «En detalle · Sobre este modelo», pero
+        // desde que la ficha tiene bloques editoriales eso chocaba dos
+        // veces: «En detalle» es ahora el explorador de piezas, y la
+        // historia del modelo la cuenta modelo-editorial.js. Aquí quedan
+        // los números, y así se rotula.
+        enc.appendChild(U.el("p", { class: "modelo-bloque__kicker" }, "Ficha técnica"));
+        enc.appendChild(U.el("h2", { class: "modelo-bloque__titulo" }, "Los números"));
         bloqueTexto.appendChild(enc);
 
         var cont = U.el("div", { class: "modelo-bloque__contenido" });
@@ -591,6 +616,8 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
 
       cuerpo.hidden = !cuerpo.childNodes.length;
     }
+
+    modeloActual = modelo;
 
     // --- Llamada a la acción ---
     var cta = $("#modelo-cta");
@@ -624,6 +651,13 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
           "Se abrirá WhatsApp con tu consulta ya escrita. Tú decides si la envías: nada sale de esta página hasta que pulses «Enviar»."
         )
       );
+    }
+
+    // Bloques editoriales: historia, razones de compra y explorador de
+    // detalles. Van después de la ficha y no la bloquean — si su capa de
+    // datos falla, la ficha se queda exactamente como estaba.
+    if (NS.editorial) {
+      NS.editorial.pintar(modelo).then(function () { clonarCtaEnCierre(); });
     }
 
     pintarBreadcrumb(estado, modelo);

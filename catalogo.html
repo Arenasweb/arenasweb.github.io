@@ -92,7 +92,28 @@
            los buscadores y quien navegue sin JavaScript. La rejilla se
            construye después en el cliente.
       ============================================================ -->
-      <section class="catalog-intro" aria-labelledby="catalogo-heading">
+      <section class="catalog-intro catalog-intro--cine" aria-labelledby="catalogo-heading">
+        <!-- Fondo cinematográfico CONTENIDO: la sección no crece. La
+             cabecera sigue midiendo lo que medía y la primera fila de
+             motos no baja ni un píxel — el vídeo ocupa el hueco que ya
+             existía, no uno nuevo. Esta página es para ver motos, y esa
+             decisión no se toca por meter una imagen bonita.
+             Sin `src`: lo asigna assets/js/catalogo/catalogo-video.js
+             cuando el bloque entra en pantalla. Hasta entonces —y si el
+             vídeo nunca llega— manda el poster. -->
+        <div class="catalog-intro__media" aria-hidden="true">
+          <video
+            class="catalog-video catalog-video--hero"
+            data-video-catalogo="hero"
+            data-src="assets/videos/web/catalogo-hero-montana-noche.mp4"
+            poster="assets/videos/posters/catalogo-hero-montana-noche.webp"
+            muted
+            playsinline
+            preload="none"
+            tabindex="-1"
+          ></video>
+          <span class="catalog-intro__velo"></span>
+        </div>
         <div class="wrap">
           <nav class="breadcrumb" aria-label="Ruta de navegación">
             <ol class="breadcrumb__lista">
@@ -271,6 +292,35 @@
       </section>
 
       <!-- ============================================================
+           BANDA DE TRANSICIÓN
+           Una pausa entre la rejilla y el cierre. El texto es el lema
+           que la marca ya usa en la portada y en el pie: no se inventa
+           una frase nueva para acompañar a un vídeo.
+           El clip solo se descarga en pantallas anchas y cuando el
+           bloque se acerca. Vive al final de la página, después de toda
+           la rejilla: casi nadie baja hasta aquí y todos lo pagarían.
+      ============================================================ -->
+      <section class="catalog-story" aria-label="Rutas que te definen, libertad que te mueve">
+        <div class="catalog-story__media" aria-hidden="true">
+          <video
+            class="catalog-video catalog-video--story"
+            data-video-catalogo="transicion"
+            data-src="assets/videos/web/catalogo-transicion-rueda.mp4"
+            poster="assets/videos/posters/catalogo-transicion-rueda.webp"
+            muted
+            playsinline
+            preload="none"
+            tabindex="-1"
+          ></video>
+          <span class="catalog-story__velo"></span>
+        </div>
+        <p class="catalog-story__claim">
+          <span class="catalog-story__linea">Rutas que te definen.</span>
+          <span class="catalog-story__linea catalog-story__linea--acento">Libertad que te mueve.</span>
+        </p>
+      </section>
+
+      <!-- ============================================================
            CIERRE — derivación al contacto, sin prometer canal activo
       ============================================================ -->
       <section class="catalog-outro" aria-labelledby="catalogo-outro-heading">
@@ -339,5 +389,6 @@
     <script src="assets/js/catalogo/catalogo-debug.js" defer></script>
     <script src="assets/js/catalogo/catalogo-ui.js" defer></script>
     <script src="assets/js/catalogo/catalogo-app.js" defer></script>
+    <script src="assets/js/catalogo/catalogo-video.js" defer></script>
   </body>
 </html>

@@ -40,3 +40,21 @@ docs/auditoria-tecnica-estricta-resumen-codex.md
 # Basura de sistema operativo
 .DS_Store
 Thumbs.db
+
+# Recortes maestros del banco fotográfico (assets/catalogo/*/photos/*.png).
+#
+# Pesan 297 MB y NO se sirven nunca: la web consume los derivados WebP de
+# `details/`, que es a donde apunta assets/catalogo/photo-manifest.json.
+# Son un paso intermedio reproducible: `node scripts/recortar-catalogo.mjs
+# --todos` los vuelve a generar byte a byte desde la fotografía oficial de
+# Bajaj, y las coordenadas de cada recorte están versionadas dentro del
+# propio script. Los originales de fábrica no están aquí ni se han tocado.
+#
+# Meterlos en Git dejaría el repositorio en ~300 MB para siempre por unos
+# archivos que ningún visitante descarga. Se quedan en local.
+assets/catalogo/*/photos/
+
+# Andamiaje de medición: las rejillas de coordenadas que se superponen a los
+# masters para situar cada recorte. Se regeneran con
+# `node scripts/recortar-catalogo.mjs --rejilla <modelo>`.
+work/

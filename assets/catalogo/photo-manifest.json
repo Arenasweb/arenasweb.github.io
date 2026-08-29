@@ -1,0 +1,1915 @@
+{
+  "_nota": "Disponibilidad del banco fotográfico. Generado por scripts/recortar-catalogo.mjs — no editar a mano.",
+  "generado": "2026-08-29",
+  "modelos": [
+    {
+      "modelo": "boxer-bm150x-disc",
+      "titulo": "Boxer BM150X Disc",
+      "master": "BOXER2024_3 negro_2.png",
+      "masterResolucion": "3760x2507",
+      "assets": {
+        "lateral": {
+          "status": "ready",
+          "file": "assets/catalogo/boxer-bm150x-disc/photos/02-lateral.png",
+          "resolucion": "3240x2180",
+          "pesoKB": 6229,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 230,
+            "y": 110,
+            "w": 3240,
+            "h": 2180
+          },
+          "nota": "Moto entera con aire alrededor: no toca ningún borde.",
+          "web": "assets/catalogo/boxer-bm150x-disc/details/lateral.webp",
+          "mini": "assets/catalogo/boxer-bm150x-disc/details/mini/lateral.webp",
+          "webResolucion": "1800x1212",
+          "webPesoKB": 293
+        },
+        "tanque": {
+          "status": "ready",
+          "file": "assets/catalogo/boxer-bm150x-disc/photos/06-tanque.png",
+          "resolucion": "1060x600",
+          "pesoKB": 796,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 1740,
+            "y": 600,
+            "w": 1060,
+            "h": 600
+          },
+          "nota": "Depósito completo con el decal BOXER y la gráfica roja.",
+          "web": "assets/catalogo/boxer-bm150x-disc/details/tanque.webp",
+          "mini": "assets/catalogo/boxer-bm150x-disc/details/mini/tanque.webp",
+          "webResolucion": "1060x600",
+          "webPesoKB": 69
+        },
+        "motor": {
+          "status": "ready",
+          "file": "assets/catalogo/boxer-bm150x-disc/photos/07-motor.png",
+          "resolucion": "900x780",
+          "pesoKB": 976,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 1700,
+            "y": 1160,
+            "w": 900,
+            "h": 780
+          },
+          "nota": "Bloque motor centrado: cilindro, culata y tapa de embrague con el logo Bajaj.",
+          "web": "assets/catalogo/boxer-bm150x-disc/details/motor.webp",
+          "mini": "assets/catalogo/boxer-bm150x-disc/details/mini/motor.webp",
+          "webResolucion": "900x780",
+          "webPesoKB": 90
+        },
+        "freno": {
+          "status": "ready",
+          "file": "assets/catalogo/boxer-bm150x-disc/photos/08-freno.png",
+          "resolucion": "640x640",
+          "pesoKB": 611,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 2620,
+            "y": 1420,
+            "w": 640,
+            "h": 640
+          },
+          "nota": "Disco perforado y caliper: la variante Disc del modelo.",
+          "web": "assets/catalogo/boxer-bm150x-disc/details/freno.webp",
+          "mini": "assets/catalogo/boxer-bm150x-disc/details/mini/freno.webp",
+          "webResolucion": "640x640",
+          "webPesoKB": 58
+        },
+        "suspension-delantera": {
+          "status": "ready",
+          "file": "assets/catalogo/boxer-bm150x-disc/photos/09-suspension-delantera.png",
+          "resolucion": "760x1200",
+          "pesoKB": 1143,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 2420,
+            "y": 660,
+            "w": 760,
+            "h": 1200
+          },
+          "nota": "Horquilla telescópica convencional, con fuelle y guardabarros.",
+          "web": "assets/catalogo/boxer-bm150x-disc/details/suspension-delantera.webp",
+          "mini": "assets/catalogo/boxer-bm150x-disc/details/mini/suspension-delantera.webp",
+          "webResolucion": "760x1200",
+          "webPesoKB": 99
+        },
+        "suspension-trasera": {
+          "status": "ready",
+          "file": "assets/catalogo/boxer-bm150x-disc/photos/10-suspension-trasera.png",
+          "resolucion": "660x660",
+          "pesoKB": 658,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 900,
+            "y": 1000,
+            "w": 660,
+            "h": 660
+          },
+          "nota": "Doble amortiguador con muelle naranja a la vista.",
+          "web": "assets/catalogo/boxer-bm150x-disc/details/suspension-trasera.webp",
+          "mini": "assets/catalogo/boxer-bm150x-disc/details/mini/suspension-trasera.webp",
+          "webResolucion": "660x660",
+          "webPesoKB": 48
+        },
+        "escape": {
+          "status": "ready",
+          "file": "assets/catalogo/boxer-bm150x-disc/photos/11-escape.png",
+          "resolucion": "1420x700",
+          "pesoKB": 1350,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 520,
+            "y": 1380,
+            "w": 1420,
+            "h": 700
+          },
+          "nota": "Silenciador entero con su protector calado. Se subió el alto: a 500 px salía como una tira.",
+          "web": "assets/catalogo/boxer-bm150x-disc/details/escape.webp",
+          "mini": "assets/catalogo/boxer-bm150x-disc/details/mini/escape.webp",
+          "webResolucion": "1200x592",
+          "webPesoKB": 83
+        },
+        "asiento": {
+          "status": "ready",
+          "file": "assets/catalogo/boxer-bm150x-disc/photos/12-asiento.png",
+          "resolucion": "1560x680",
+          "pesoKB": 933,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 380,
+            "y": 520,
+            "w": 1560,
+            "h": 680
+          },
+          "nota": "Asiento corrido con la parrilla al fondo. El largo es la seña del Boxer y necesita aire arriba.",
+          "web": "assets/catalogo/boxer-bm150x-disc/details/asiento.webp",
+          "mini": "assets/catalogo/boxer-bm150x-disc/details/mini/asiento.webp",
+          "webResolucion": "1200x524",
+          "webPesoKB": 44
+        },
+        "detalle-a": {
+          "status": "ready",
+          "file": "assets/catalogo/boxer-bm150x-disc/photos/14-detalle-a.png",
+          "resolucion": "900x620",
+          "pesoKB": 445,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 140,
+            "y": 520,
+            "w": 900,
+            "h": 620
+          },
+          "nota": "Parrilla portaequipajes y piloto trasero: lo que define a esta moto de trabajo.",
+          "web": "assets/catalogo/boxer-bm150x-disc/details/detalle-a.webp",
+          "mini": "assets/catalogo/boxer-bm150x-disc/details/mini/detalle-a.webp",
+          "webResolucion": "900x620",
+          "webPesoKB": 33
+        },
+        "detalle-b": {
+          "status": "ready",
+          "file": "assets/catalogo/boxer-bm150x-disc/photos/15-detalle-b.png",
+          "resolucion": "900x620",
+          "pesoKB": 844,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 1100,
+            "y": 880,
+            "w": 900,
+            "h": 620
+          },
+          "nota": "Panel lateral con la gráfica X150.",
+          "web": "assets/catalogo/boxer-bm150x-disc/details/detalle-b.webp",
+          "mini": "assets/catalogo/boxer-bm150x-disc/details/mini/detalle-b.webp",
+          "webResolucion": "900x620",
+          "webPesoKB": 59
+        },
+        "transmision": {
+          "status": "not_visible",
+          "motivo": "El master es el perfil derecho. La cadena y la corona del Boxer van por el izquierdo: aquí solo se ve el escape y la cara exterior de la llanta."
+        },
+        "faro": {
+          "status": "not_visible",
+          "motivo": "La careta tapa el faro por completo en vista de perfil. Se ve el intermitente ámbar y el canto del casquillo, no la óptica. Un recorte de esa zona sería una foto de la careta rotulada «faro»."
+        },
+        "hero": {
+          "status": "missing_reference",
+          "motivo": "El master es un perfil lateral. No existe la vista 3/4 frontal."
+        },
+        "trasera": {
+          "status": "missing_reference",
+          "motivo": "El master es un perfil lateral. No existe la vista 3/4 posterior."
+        },
+        "tablero": {
+          "status": "missing_reference",
+          "motivo": "La instrumentación no es legible de perfil: se ve el canto, no la esfera."
+        }
+      }
+    },
+    {
+      "modelo": "ct-125",
+      "titulo": "CT 125",
+      "master": "CT 3_AZUL.png",
+      "masterResolucion": "6580x4387",
+      "assets": {
+        "lateral": {
+          "status": "ready",
+          "file": "assets/catalogo/ct-125/photos/02-lateral.png",
+          "resolucion": "5750x3900",
+          "pesoKB": 15979,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 340,
+            "y": 230,
+            "w": 5750,
+            "h": 3900
+          },
+          "nota": "Moto entera con aire alrededor.",
+          "web": "assets/catalogo/ct-125/details/lateral.webp",
+          "mini": "assets/catalogo/ct-125/details/mini/lateral.webp",
+          "webResolucion": "1800x1220",
+          "webPesoKB": 273
+        },
+        "faro": {
+          "status": "ready",
+          "file": "assets/catalogo/ct-125/photos/04-faro.png",
+          "resolucion": "758x933",
+          "pesoKB": 624,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 4375,
+            "y": 758,
+            "w": 758,
+            "h": 933
+          },
+          "nota": "Careta con la óptica y la gráfica azul.",
+          "web": "assets/catalogo/ct-125/details/faro.webp",
+          "mini": "assets/catalogo/ct-125/details/mini/faro.webp",
+          "webResolucion": "758x933",
+          "webPesoKB": 28
+        },
+        "tanque": {
+          "status": "ready",
+          "file": "assets/catalogo/ct-125/photos/06-tanque.png",
+          "resolucion": "1167x758",
+          "pesoKB": 839,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 2917,
+            "y": 1283,
+            "w": 1167,
+            "h": 758
+          },
+          "nota": "Depósito negro con la gráfica azul.",
+          "web": "assets/catalogo/ct-125/details/tanque.webp",
+          "mini": "assets/catalogo/ct-125/details/mini/tanque.webp",
+          "webResolucion": "1167x758",
+          "webPesoKB": 36
+        },
+        "motor": {
+          "status": "ready",
+          "file": "assets/catalogo/ct-125/photos/07-motor.png",
+          "resolucion": "1050x933",
+          "pesoKB": 1391,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 2800,
+            "y": 2217,
+            "w": 1050,
+            "h": 933
+          },
+          "nota": "Monocilíndrico con la tapa Bajaj y el protector inferior.",
+          "web": "assets/catalogo/ct-125/details/motor.webp",
+          "mini": "assets/catalogo/ct-125/details/mini/motor.webp",
+          "webResolucion": "1050x933",
+          "webPesoKB": 99
+        },
+        "freno": {
+          "status": "ready",
+          "file": "assets/catalogo/ct-125/photos/08-freno.png",
+          "resolucion": "700x700",
+          "pesoKB": 653,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 4842,
+            "y": 2683,
+            "w": 700,
+            "h": 700
+          },
+          "nota": "Disco delantero con su caliper.",
+          "web": "assets/catalogo/ct-125/details/freno.webp",
+          "mini": "assets/catalogo/ct-125/details/mini/freno.webp",
+          "webResolucion": "700x700",
+          "webPesoKB": 48
+        },
+        "suspension-delantera": {
+          "status": "ready",
+          "file": "assets/catalogo/ct-125/photos/09-suspension-delantera.png",
+          "resolucion": "758x1458",
+          "pesoKB": 1259,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 4317,
+            "y": 1458,
+            "w": 758,
+            "h": 1458
+          },
+          "nota": "Horquilla telescópica con fuelle.",
+          "web": "assets/catalogo/ct-125/details/suspension-delantera.webp",
+          "mini": "assets/catalogo/ct-125/details/mini/suspension-delantera.webp",
+          "webResolucion": "624x1200",
+          "webPesoKB": 67
+        },
+        "suspension-trasera": {
+          "status": "ready",
+          "file": "assets/catalogo/ct-125/photos/10-suspension-trasera.png",
+          "resolucion": "613x1050",
+          "pesoKB": 913,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 1663,
+            "y": 1896,
+            "w": 613,
+            "h": 1050
+          },
+          "nota": "Doble amortiguador, a la vista y sin carenar.",
+          "web": "assets/catalogo/ct-125/details/suspension-trasera.webp",
+          "mini": "assets/catalogo/ct-125/details/mini/suspension-trasera.webp",
+          "webResolucion": "613x1050",
+          "webPesoKB": 54
+        },
+        "escape": {
+          "status": "ready",
+          "file": "assets/catalogo/ct-125/photos/11-escape.png",
+          "resolucion": "1167x758",
+          "pesoKB": 1111,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 1108,
+            "y": 2625,
+            "w": 1167,
+            "h": 758
+          },
+          "nota": "Silenciador plateado con su protector: pieza a la vista en esta moto.",
+          "web": "assets/catalogo/ct-125/details/escape.webp",
+          "mini": "assets/catalogo/ct-125/details/mini/escape.webp",
+          "webResolucion": "1167x758",
+          "webPesoKB": 57
+        },
+        "asiento": {
+          "status": "ready",
+          "file": "assets/catalogo/ct-125/photos/12-asiento.png",
+          "resolucion": "1808x700",
+          "pesoKB": 1005,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 1225,
+            "y": 1283,
+            "w": 1808,
+            "h": 700
+          },
+          "nota": "Asiento corrido de una pieza, largo, para dos y carga.",
+          "web": "assets/catalogo/ct-125/details/asiento.webp",
+          "mini": "assets/catalogo/ct-125/details/mini/asiento.webp",
+          "webResolucion": "1200x464",
+          "webPesoKB": 27
+        },
+        "detalle-a": {
+          "status": "ready",
+          "file": "assets/catalogo/ct-125/photos/14-detalle-a.png",
+          "resolucion": "1050x700",
+          "pesoKB": 936,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 583,
+            "y": 1458,
+            "w": 1050,
+            "h": 700
+          },
+          "nota": "Colín con el rótulo 125 y el piloto trasero.",
+          "web": "assets/catalogo/ct-125/details/detalle-a.webp",
+          "mini": "assets/catalogo/ct-125/details/mini/detalle-a.webp",
+          "webResolucion": "1050x700",
+          "webPesoKB": 49
+        },
+        "detalle-b": {
+          "status": "ready",
+          "file": "assets/catalogo/ct-125/photos/15-detalle-b.png",
+          "resolucion": "933x758",
+          "pesoKB": 781,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 2217,
+            "y": 1692,
+            "w": 933,
+            "h": 758
+          },
+          "nota": "Panel lateral con la gráfica azul.",
+          "web": "assets/catalogo/ct-125/details/detalle-b.webp",
+          "mini": "assets/catalogo/ct-125/details/mini/detalle-b.webp",
+          "webResolucion": "933x758",
+          "webPesoKB": 32
+        },
+        "transmision": {
+          "status": "not_visible",
+          "motivo": "Como en el Boxer, la cadena y la corona van por el costado izquierdo. En el derecho solo hay rueda y silenciador."
+        },
+        "hero": {
+          "status": "missing_reference",
+          "motivo": "El master es un perfil lateral. No existe la vista 3/4 frontal."
+        },
+        "trasera": {
+          "status": "missing_reference",
+          "motivo": "El master es un perfil lateral. No existe la vista 3/4 posterior."
+        },
+        "tablero": {
+          "status": "missing_reference",
+          "motivo": "La instrumentación no es legible de perfil: se ve el canto, no la esfera."
+        }
+      }
+    },
+    {
+      "modelo": "discover-125-st",
+      "titulo": "Discover 125 ST",
+      "master": "3_NEGRO-AZUL.png",
+      "masterResolucion": "6240x4160",
+      "assets": {
+        "lateral": {
+          "status": "ready",
+          "file": "assets/catalogo/discover-125-st/photos/02-lateral.png",
+          "resolucion": "4980x3400",
+          "pesoKB": 12659,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 560,
+            "y": 440,
+            "w": 4980,
+            "h": 3400
+          },
+          "nota": "Moto entera con aire alrededor.",
+          "web": "assets/catalogo/discover-125-st/details/lateral.webp",
+          "mini": "assets/catalogo/discover-125-st/details/mini/lateral.webp",
+          "webResolucion": "1800x1228",
+          "webPesoKB": 250
+        },
+        "faro": {
+          "status": "ready",
+          "file": "assets/catalogo/discover-125-st/photos/04-faro.png",
+          "resolucion": "691x857",
+          "pesoKB": 508,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 4177,
+            "y": 968,
+            "w": 691,
+            "h": 857
+          },
+          "nota": "Careta con la óptica y la gráfica azul.",
+          "web": "assets/catalogo/discover-125-st/details/faro.webp",
+          "mini": "assets/catalogo/discover-125-st/details/mini/faro.webp",
+          "webResolucion": "691x857",
+          "webPesoKB": 29
+        },
+        "tanque": {
+          "status": "ready",
+          "file": "assets/catalogo/discover-125-st/photos/06-tanque.png",
+          "resolucion": "968x719",
+          "pesoKB": 867,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 3015,
+            "y": 1383,
+            "w": 968,
+            "h": 719
+          },
+          "nota": "Depósito con la gráfica azul sobre negro.",
+          "web": "assets/catalogo/discover-125-st/details/tanque.webp",
+          "mini": "assets/catalogo/discover-125-st/details/mini/tanque.webp",
+          "webResolucion": "968x719",
+          "webPesoKB": 77
+        },
+        "motor": {
+          "status": "ready",
+          "file": "assets/catalogo/discover-125-st/photos/07-motor.png",
+          "resolucion": "996x774",
+          "pesoKB": 668,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 2711,
+            "y": 2323,
+            "w": 996,
+            "h": 774
+          },
+          "nota": "Monocilíndrico con la tapa Bajaj y las barras protectoras.",
+          "web": "assets/catalogo/discover-125-st/details/motor.webp",
+          "mini": "assets/catalogo/discover-125-st/details/mini/motor.webp",
+          "webResolucion": "996x774",
+          "webPesoKB": 81
+        },
+        "freno": {
+          "status": "ready",
+          "file": "assets/catalogo/discover-125-st/photos/08-freno.png",
+          "resolucion": "608x664",
+          "pesoKB": 383,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 4370,
+            "y": 2655,
+            "w": 608,
+            "h": 664
+          },
+          "nota": "Disco delantero con su caliper.",
+          "web": "assets/catalogo/discover-125-st/details/freno.webp",
+          "mini": "assets/catalogo/discover-125-st/details/mini/freno.webp",
+          "webResolucion": "608x664",
+          "webPesoKB": 44
+        },
+        "suspension-delantera": {
+          "status": "ready",
+          "file": "assets/catalogo/discover-125-st/photos/09-suspension-delantera.png",
+          "resolucion": "719x1328",
+          "pesoKB": 855,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 4038,
+            "y": 1660,
+            "w": 719,
+            "h": 1328
+          },
+          "nota": "Horquilla telescópica con guardabarros.",
+          "web": "assets/catalogo/discover-125-st/details/suspension-delantera.webp",
+          "mini": "assets/catalogo/discover-125-st/details/mini/suspension-delantera.webp",
+          "webResolucion": "650x1200",
+          "webPesoKB": 85
+        },
+        "suspension-trasera": {
+          "status": "ready",
+          "file": "assets/catalogo/discover-125-st/photos/10-suspension-trasera.png",
+          "resolucion": "608x719",
+          "pesoKB": 404,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 2102,
+            "y": 2102,
+            "w": 608,
+            "h": 719
+          },
+          "nota": "Amortiguadores con muelle rojo a la vista: el guiño de color de esta moto.",
+          "web": "assets/catalogo/discover-125-st/details/suspension-trasera.webp",
+          "mini": "assets/catalogo/discover-125-st/details/mini/suspension-trasera.webp",
+          "webResolucion": "608x719",
+          "webPesoKB": 31
+        },
+        "escape": {
+          "status": "ready",
+          "file": "assets/catalogo/discover-125-st/photos/11-escape.png",
+          "resolucion": "1189x719",
+          "pesoKB": 745,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 858,
+            "y": 2434,
+            "w": 1189,
+            "h": 719
+          },
+          "nota": "Silenciador plateado alargado con su protector.",
+          "web": "assets/catalogo/discover-125-st/details/escape.webp",
+          "mini": "assets/catalogo/discover-125-st/details/mini/escape.webp",
+          "webResolucion": "1189x719",
+          "webPesoKB": 80
+        },
+        "asiento": {
+          "status": "ready",
+          "file": "assets/catalogo/discover-125-st/photos/12-asiento.png",
+          "resolucion": "1494x636",
+          "pesoKB": 906,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 1660,
+            "y": 1466,
+            "w": 1494,
+            "h": 636
+          },
+          "nota": "Asiento corrido con el colín escalonado.",
+          "web": "assets/catalogo/discover-125-st/details/asiento.webp",
+          "mini": "assets/catalogo/discover-125-st/details/mini/asiento.webp",
+          "webResolucion": "1200x510",
+          "webPesoKB": 57
+        },
+        "transmision": {
+          "status": "ready",
+          "file": "assets/catalogo/discover-125-st/photos/13-transmision.png",
+          "resolucion": "1383x1217",
+          "pesoKB": 1555,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 830,
+            "y": 2379,
+            "w": 1383,
+            "h": 1217
+          },
+          "nota": "Rueda trasera, basculante y cubrecadena.",
+          "web": "assets/catalogo/discover-125-st/details/transmision.webp",
+          "mini": "assets/catalogo/discover-125-st/details/mini/transmision.webp",
+          "webResolucion": "1200x1056",
+          "webPesoKB": 137
+        },
+        "detalle-a": {
+          "status": "ready",
+          "file": "assets/catalogo/discover-125-st/photos/14-detalle-a.png",
+          "resolucion": "1051x719",
+          "pesoKB": 808,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 774,
+            "y": 1383,
+            "w": 1051,
+            "h": 719
+          },
+          "nota": "Colín con la gráfica azul y el piloto trasero.",
+          "web": "assets/catalogo/discover-125-st/details/detalle-a.webp",
+          "mini": "assets/catalogo/discover-125-st/details/mini/detalle-a.webp",
+          "webResolucion": "1051x719",
+          "webPesoKB": 70
+        },
+        "detalle-b": {
+          "status": "ready",
+          "file": "assets/catalogo/discover-125-st/photos/15-detalle-b.png",
+          "resolucion": "1217x691",
+          "pesoKB": 719,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 2213,
+            "y": 1853,
+            "w": 1217,
+            "h": 691
+          },
+          "nota": "Panel lateral blanco con el rótulo del modelo.",
+          "web": "assets/catalogo/discover-125-st/details/detalle-b.webp",
+          "mini": "assets/catalogo/discover-125-st/details/mini/detalle-b.webp",
+          "webResolucion": "1200x682",
+          "webPesoKB": 63
+        },
+        "hero": {
+          "status": "missing_reference",
+          "motivo": "El master es un perfil lateral. No existe la vista 3/4 frontal."
+        },
+        "trasera": {
+          "status": "missing_reference",
+          "motivo": "El master es un perfil lateral. No existe la vista 3/4 posterior."
+        },
+        "tablero": {
+          "status": "missing_reference",
+          "motivo": "La instrumentación no es legible de perfil: se ve el canto, no la esfera."
+        }
+      }
+    },
+    {
+      "modelo": "dominar-400",
+      "titulo": "Dominar 400",
+      "master": "D400_16_13 copy_PNG With Shadow.png",
+      "masterResolucion": "9304x6202",
+      "assets": {
+        "lateral": {
+          "status": "ready",
+          "file": "assets/catalogo/dominar-400/photos/02-lateral.png",
+          "resolucion": "7000x4700",
+          "pesoKB": 25366,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 1150,
+            "y": 850,
+            "w": 7000,
+            "h": 4700
+          },
+          "nota": "Moto entera con aire alrededor.",
+          "web": "assets/catalogo/dominar-400/details/lateral.webp",
+          "mini": "assets/catalogo/dominar-400/details/mini/lateral.webp",
+          "webResolucion": "1800x1208",
+          "webPesoKB": 204
+        },
+        "tanque": {
+          "status": "ready",
+          "file": "assets/catalogo/dominar-400/photos/06-tanque.png",
+          "resolucion": "1485x1031",
+          "pesoKB": 1789,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 4454,
+            "y": 1855,
+            "w": 1485,
+            "h": 1031
+          },
+          "nota": "Depósito de recorrido largo con el rótulo Dominar.",
+          "web": "assets/catalogo/dominar-400/details/tanque.webp",
+          "mini": "assets/catalogo/dominar-400/details/mini/tanque.webp",
+          "webResolucion": "1200x834",
+          "webPesoKB": 47
+        },
+        "motor": {
+          "status": "ready",
+          "file": "assets/catalogo/dominar-400/photos/07-motor.png",
+          "resolucion": "1402x1155",
+          "pesoKB": 1969,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 4372,
+            "y": 3299,
+            "w": 1402,
+            "h": 1155
+          },
+          "nota": "Monocilíndrico refrigerado por líquido con la tapa Bajaj.",
+          "web": "assets/catalogo/dominar-400/details/motor.webp",
+          "mini": "assets/catalogo/dominar-400/details/mini/motor.webp",
+          "webResolucion": "1200x988",
+          "webPesoKB": 84
+        },
+        "freno": {
+          "status": "ready",
+          "file": "assets/catalogo/dominar-400/photos/08-freno.png",
+          "resolucion": "990x1155",
+          "pesoKB": 1275,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 6434,
+            "y": 3629,
+            "w": 990,
+            "h": 1155
+          },
+          "nota": "Disco delantero con caliper radial.",
+          "web": "assets/catalogo/dominar-400/details/freno.webp",
+          "mini": "assets/catalogo/dominar-400/details/mini/freno.webp",
+          "webResolucion": "990x1155",
+          "webPesoKB": 95
+        },
+        "suspension-delantera": {
+          "status": "ready",
+          "file": "assets/catalogo/dominar-400/photos/09-suspension-delantera.png",
+          "resolucion": "907x2062",
+          "pesoKB": 2081,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 6021,
+            "y": 2062,
+            "w": 907,
+            "h": 2062
+          },
+          "nota": "Horquilla invertida.",
+          "web": "assets/catalogo/dominar-400/details/suspension-delantera.webp",
+          "mini": "assets/catalogo/dominar-400/details/mini/suspension-delantera.webp",
+          "webResolucion": "528x1200",
+          "webPesoKB": 50
+        },
+        "suspension-trasera": {
+          "status": "ready",
+          "file": "assets/catalogo/dominar-400/photos/10-suspension-trasera.png",
+          "resolucion": "907x990",
+          "pesoKB": 1099,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 3134,
+            "y": 2969,
+            "w": 907,
+            "h": 990
+          },
+          "nota": "Monoshock lateral.",
+          "web": "assets/catalogo/dominar-400/details/suspension-trasera.webp",
+          "mini": "assets/catalogo/dominar-400/details/mini/suspension-trasera.webp",
+          "webResolucion": "907x990",
+          "webPesoKB": 36
+        },
+        "escape": {
+          "status": "ready",
+          "file": "assets/catalogo/dominar-400/photos/11-escape.png",
+          "resolucion": "1650x907",
+          "pesoKB": 1941,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 3464,
+            "y": 3712,
+            "w": 1650,
+            "h": 907
+          },
+          "nota": "Escape con su salida lateral. Desplazado a la derecha: el primer encuadre sacaba la quilla y el disco trasero.",
+          "web": "assets/catalogo/dominar-400/details/escape.webp",
+          "mini": "assets/catalogo/dominar-400/details/mini/escape.webp",
+          "webResolucion": "1200x660",
+          "webPesoKB": 43
+        },
+        "asiento": {
+          "status": "ready",
+          "file": "assets/catalogo/dominar-400/photos/12-asiento.png",
+          "resolucion": "1897x907",
+          "pesoKB": 1615,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 2722,
+            "y": 2062,
+            "w": 1897,
+            "h": 907
+          },
+          "nota": "Asiento partido, ancho, pensado para hacer kilómetros.",
+          "web": "assets/catalogo/dominar-400/details/asiento.webp",
+          "mini": "assets/catalogo/dominar-400/details/mini/asiento.webp",
+          "webResolucion": "1200x574",
+          "webPesoKB": 28
+        },
+        "transmision": {
+          "status": "ready",
+          "file": "assets/catalogo/dominar-400/photos/13-transmision.png",
+          "resolucion": "1815x1650",
+          "pesoKB": 3432,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 1650,
+            "y": 3464,
+            "w": 1815,
+            "h": 1650
+          },
+          "nota": "Rueda trasera, basculante y disco posterior.",
+          "web": "assets/catalogo/dominar-400/details/transmision.webp",
+          "mini": "assets/catalogo/dominar-400/details/mini/transmision.webp",
+          "webResolucion": "1200x1090",
+          "webPesoKB": 111
+        },
+        "detalle-a": {
+          "status": "ready",
+          "file": "assets/catalogo/dominar-400/photos/14-detalle-a.png",
+          "resolucion": "907x907",
+          "pesoKB": 1067,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 5691,
+            "y": 1072,
+            "w": 907,
+            "h": 907
+          },
+          "nota": "Cúpula alta: la pieza que declara que esta moto es de carretera y no de ciudad.",
+          "web": "assets/catalogo/dominar-400/details/detalle-a.webp",
+          "mini": "assets/catalogo/dominar-400/details/mini/detalle-a.webp",
+          "webResolucion": "907x907",
+          "webPesoKB": 37
+        },
+        "detalle-b": {
+          "status": "ready",
+          "file": "assets/catalogo/dominar-400/photos/15-detalle-b.png",
+          "resolucion": "990x990",
+          "pesoKB": 659,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 1320,
+            "y": 1898,
+            "w": 990,
+            "h": 990
+          },
+          "nota": "Parrilla trasera y anclajes de maleta: equipaje de serie.",
+          "web": "assets/catalogo/dominar-400/details/detalle-b.webp",
+          "mini": "assets/catalogo/dominar-400/details/mini/detalle-b.webp",
+          "webResolucion": "990x990",
+          "webPesoKB": 24
+        },
+        "faro": {
+          "status": "not_visible",
+          "motivo": "El faro full-LED va empotrado en el morro, detrás de la cúpula. De perfil se ve el canto del carenado y el parabrisas, no la óptica. Se prefiere declararlo ausente antes que publicar una foto del carenado rotulada «faro»."
+        },
+        "hero": {
+          "status": "missing_reference",
+          "motivo": "El master es un perfil lateral. No existe la vista 3/4 frontal."
+        },
+        "trasera": {
+          "status": "missing_reference",
+          "motivo": "El master es un perfil lateral. No existe la vista 3/4 posterior."
+        },
+        "tablero": {
+          "status": "missing_reference",
+          "motivo": "La instrumentación no es legible de perfil: se ve el canto, no la esfera."
+        }
+      }
+    },
+    {
+      "modelo": "pulsar-200-ns-ug2",
+      "titulo": "Pulsar 200 NS UG2",
+      "master": "NS200 2024 negro_3.png",
+      "masterResolucion": "9568x6376",
+      "assets": {
+        "lateral": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-200-ns-ug2/photos/02-lateral.png",
+          "resolucion": "7125x4707",
+          "pesoKB": 29390,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 1357,
+            "y": 679,
+            "w": 7125,
+            "h": 4707
+          },
+          "nota": "Moto entera con aire alrededor.",
+          "web": "assets/catalogo/pulsar-200-ns-ug2/details/lateral.webp",
+          "mini": "assets/catalogo/pulsar-200-ns-ug2/details/mini/lateral.webp",
+          "webResolucion": "1800x1190",
+          "webPesoKB": 258
+        },
+        "faro": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-200-ns-ug2/photos/04-faro.png",
+          "resolucion": "1100x1400",
+          "pesoKB": 1627,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 6404,
+            "y": 1400,
+            "w": 1100,
+            "h": 1400
+          },
+          "nota": "Faro angular al aire: en esta naked la óptica se ve entera de perfil, al revés que en el Boxer.",
+          "web": "assets/catalogo/pulsar-200-ns-ug2/details/faro.webp",
+          "mini": "assets/catalogo/pulsar-200-ns-ug2/details/mini/faro.webp",
+          "webResolucion": "942x1200",
+          "webPesoKB": 73
+        },
+        "tanque": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-200-ns-ug2/photos/06-tanque.png",
+          "resolucion": "2375x1315",
+          "pesoKB": 5023,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 4496,
+            "y": 1654,
+            "w": 2375,
+            "h": 1315
+          },
+          "nota": "Depósito con el 200 y las extensiones laterales.",
+          "web": "assets/catalogo/pulsar-200-ns-ug2/details/tanque.webp",
+          "mini": "assets/catalogo/pulsar-200-ns-ug2/details/mini/tanque.webp",
+          "webResolucion": "1200x664",
+          "webPesoKB": 103
+        },
+        "motor": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-200-ns-ug2/photos/07-motor.png",
+          "resolucion": "1951x1442",
+          "pesoKB": 4377,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 4071,
+            "y": 2884,
+            "w": 1951,
+            "h": 1442
+          },
+          "nota": "Bloque refrigerado por aceite con su tapa y el radiador.",
+          "web": "assets/catalogo/pulsar-200-ns-ug2/details/motor.webp",
+          "mini": "assets/catalogo/pulsar-200-ns-ug2/details/mini/motor.webp",
+          "webResolucion": "1200x886",
+          "webPesoKB": 134
+        },
+        "freno": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-200-ns-ug2/photos/08-freno.png",
+          "resolucion": "1060x1272",
+          "pesoKB": 2326,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 6743,
+            "y": 3350,
+            "w": 1060,
+            "h": 1272
+          },
+          "nota": "Disco perforado, caliper y el testigo ABS de la horquilla.",
+          "web": "assets/catalogo/pulsar-200-ns-ug2/details/freno.webp",
+          "mini": "assets/catalogo/pulsar-200-ns-ug2/details/mini/freno.webp",
+          "webResolucion": "1000x1200",
+          "webPesoKB": 171
+        },
+        "suspension-delantera": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-200-ns-ug2/photos/09-suspension-delantera.png",
+          "resolucion": "1018x2205",
+          "pesoKB": 3415,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 6362,
+            "y": 2290,
+            "w": 1018,
+            "h": 2205
+          },
+          "nota": "Horquilla telescópica convencional: la NS200 no lleva invertida.",
+          "web": "assets/catalogo/pulsar-200-ns-ug2/details/suspension-delantera.webp",
+          "mini": "assets/catalogo/pulsar-200-ns-ug2/details/mini/suspension-delantera.webp",
+          "webResolucion": "554x1200",
+          "webPesoKB": 100
+        },
+        "suspension-trasera": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-200-ns-ug2/photos/10-suspension-trasera.png",
+          "resolucion": "848x1188",
+          "pesoKB": 1497,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 3308,
+            "y": 2884,
+            "w": 848,
+            "h": 1188
+          },
+          "nota": "Monoshock Nitrox, montado en el centro.",
+          "web": "assets/catalogo/pulsar-200-ns-ug2/details/suspension-trasera.webp",
+          "mini": "assets/catalogo/pulsar-200-ns-ug2/details/mini/suspension-trasera.webp",
+          "webResolucion": "848x1188",
+          "webPesoKB": 105
+        },
+        "escape": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-200-ns-ug2/photos/11-escape.png",
+          "resolucion": "2300x1100",
+          "pesoKB": 2867,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 3700,
+            "y": 3700,
+            "w": 2300,
+            "h": 1100
+          },
+          "nota": "Escape DE BAJOS: no hay silenciador lateral que recortar. El colector baja por delante y el cuerpo corre bajo el motor, tras el quilla. Dos encuadres anteriores buscaban una lata en el costado que esta moto no tiene.",
+          "web": "assets/catalogo/pulsar-200-ns-ug2/details/escape.webp",
+          "mini": "assets/catalogo/pulsar-200-ns-ug2/details/mini/escape.webp",
+          "webResolucion": "1200x574",
+          "webPesoKB": 69
+        },
+        "asiento": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-200-ns-ug2/photos/12-asiento.png",
+          "resolucion": "2100x900",
+          "pesoKB": 1604,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 2799,
+            "y": 1610,
+            "w": 2100,
+            "h": 900
+          },
+          "nota": "Asiento partido entero. El primer encuadre empezaba demasiado a la derecha y cortaba la plaza del piloto.",
+          "web": "assets/catalogo/pulsar-200-ns-ug2/details/asiento.webp",
+          "mini": "assets/catalogo/pulsar-200-ns-ug2/details/mini/asiento.webp",
+          "webResolucion": "1200x514",
+          "webPesoKB": 35
+        },
+        "transmision": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-200-ns-ug2/photos/13-transmision.png",
+          "resolucion": "1696x1696",
+          "pesoKB": 4295,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 1951,
+            "y": 3308,
+            "w": 1696,
+            "h": 1696
+          },
+          "nota": "Rueda trasera, basculante y disco posterior; la cadena asoma bajo el basculante.",
+          "web": "assets/catalogo/pulsar-200-ns-ug2/details/transmision.webp",
+          "mini": "assets/catalogo/pulsar-200-ns-ug2/details/mini/transmision.webp",
+          "webResolucion": "1200x1200",
+          "webPesoKB": 176
+        },
+        "detalle-a": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-200-ns-ug2/photos/14-detalle-a.png",
+          "resolucion": "1484x1018",
+          "pesoKB": 2446,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 4623,
+            "y": 1696,
+            "w": 1484,
+            "h": 1018
+          },
+          "nota": "Depósito musculado con sus extensiones: la seña de la NS.",
+          "web": "assets/catalogo/pulsar-200-ns-ug2/details/detalle-a.webp",
+          "mini": "assets/catalogo/pulsar-200-ns-ug2/details/mini/detalle-a.webp",
+          "webResolucion": "1200x824",
+          "webPesoKB": 108
+        },
+        "detalle-b": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-200-ns-ug2/photos/15-detalle-b.png",
+          "resolucion": "1272x1150",
+          "pesoKB": 2458,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 3647,
+            "y": 2460,
+            "w": 1272,
+            "h": 1150
+          },
+          "nota": "Chasis perimetral a la vista, el rasgo que separa a la NS del resto de la gama.",
+          "web": "assets/catalogo/pulsar-200-ns-ug2/details/detalle-b.webp",
+          "mini": "assets/catalogo/pulsar-200-ns-ug2/details/mini/detalle-b.webp",
+          "webResolucion": "1200x1084",
+          "webPesoKB": 144
+        },
+        "hero": {
+          "status": "missing_reference",
+          "motivo": "El master es un perfil lateral. No existe la vista 3/4 frontal."
+        },
+        "trasera": {
+          "status": "missing_reference",
+          "motivo": "El master es un perfil lateral. No existe la vista 3/4 posterior."
+        },
+        "tablero": {
+          "status": "missing_reference",
+          "motivo": "La instrumentación no es legible de perfil: se ve el canto, no la esfera."
+        }
+      }
+    },
+    {
+      "modelo": "pulsar-400-ns",
+      "titulo": "Pulsar 400 NS",
+      "master": "roja NS400_5.png",
+      "masterResolucion": "5906x4134",
+      "assets": {
+        "lateral": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-400-ns/photos/02-lateral.png",
+          "resolucion": "5131x3456",
+          "pesoKB": 9959,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 314,
+            "y": 262,
+            "w": 5131,
+            "h": 3456
+          },
+          "nota": "Moto entera con aire alrededor.",
+          "web": "assets/catalogo/pulsar-400-ns/details/lateral.webp",
+          "mini": "assets/catalogo/pulsar-400-ns/details/mini/lateral.webp",
+          "webResolucion": "1800x1212",
+          "webPesoKB": 252
+        },
+        "faro": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-400-ns/photos/04-faro.png",
+          "resolucion": "760x850",
+          "pesoKB": 538,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 4150,
+            "y": 950,
+            "w": 760,
+            "h": 850
+          },
+          "nota": "Conjunto óptico delantero. El proyector va empotrado en el morro, así que de perfil se ve de canto: es lo que hay, y se recorta centrado en el morro en vez de fingir una vista frontal.",
+          "web": "assets/catalogo/pulsar-400-ns/details/faro.webp",
+          "mini": "assets/catalogo/pulsar-400-ns/details/mini/faro.webp",
+          "webResolucion": "760x850",
+          "webPesoKB": 35
+        },
+        "tanque": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-400-ns/photos/06-tanque.png",
+          "resolucion": "1492x785",
+          "pesoKB": 1498,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 2670,
+            "y": 1126,
+            "w": 1492,
+            "h": 785
+          },
+          "nota": "Depósito rojo con el rótulo Pulsar y las extensiones.",
+          "web": "assets/catalogo/pulsar-400-ns/details/tanque.webp",
+          "mini": "assets/catalogo/pulsar-400-ns/details/mini/tanque.webp",
+          "webResolucion": "1200x632",
+          "webPesoKB": 62
+        },
+        "motor": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-400-ns/photos/07-motor.png",
+          "resolucion": "1230x838",
+          "pesoKB": 874,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 2461,
+            "y": 2251,
+            "w": 1230,
+            "h": 838
+          },
+          "nota": "Monocilíndrico refrigerado por líquido con la tapa Bajaj.",
+          "web": "assets/catalogo/pulsar-400-ns/details/motor.webp",
+          "mini": "assets/catalogo/pulsar-400-ns/details/mini/motor.webp",
+          "webResolucion": "1200x818",
+          "webPesoKB": 98
+        },
+        "freno": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-400-ns/photos/08-freno.png",
+          "resolucion": "864x969",
+          "pesoKB": 731,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 4189,
+            "y": 2513,
+            "w": 864,
+            "h": 969
+          },
+          "nota": "Disco delantero de gran diámetro con caliper radial.",
+          "web": "assets/catalogo/pulsar-400-ns/details/freno.webp",
+          "mini": "assets/catalogo/pulsar-400-ns/details/mini/freno.webp",
+          "webResolucion": "864x969",
+          "webPesoKB": 130
+        },
+        "suspension-delantera": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-400-ns/photos/09-suspension-delantera.png",
+          "resolucion": "759x1833",
+          "pesoKB": 1432,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 3979,
+            "y": 1126,
+            "w": 759,
+            "h": 1833
+          },
+          "nota": "Horquilla INVERTIDA dorada: es la seña mecánica de la 400 y no se parece a ninguna otra de la gama.",
+          "web": "assets/catalogo/pulsar-400-ns/details/suspension-delantera.webp",
+          "mini": "assets/catalogo/pulsar-400-ns/details/mini/suspension-delantera.webp",
+          "webResolucion": "496x1200",
+          "webPesoKB": 70
+        },
+        "suspension-trasera": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-400-ns/photos/10-suspension-trasera.png",
+          "resolucion": "681x733",
+          "pesoKB": 453,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 1963,
+            "y": 2068,
+            "w": 681,
+            "h": 733
+          },
+          "nota": "Monoshock con depósito, tras el chasis.",
+          "web": "assets/catalogo/pulsar-400-ns/details/suspension-trasera.webp",
+          "mini": "assets/catalogo/pulsar-400-ns/details/mini/suspension-trasera.webp",
+          "webResolucion": "681x733",
+          "webPesoKB": 53
+        },
+        "escape": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-400-ns/photos/11-escape.png",
+          "resolucion": "1466x733",
+          "pesoKB": 532,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 1990,
+            "y": 2827,
+            "w": 1466,
+            "h": 733
+          },
+          "nota": "Escape de bajos, bajado para que no repita el mismo encuadre que la quilla del detalle A.",
+          "web": "assets/catalogo/pulsar-400-ns/details/escape.webp",
+          "mini": "assets/catalogo/pulsar-400-ns/details/mini/escape.webp",
+          "webResolucion": "1200x600",
+          "webPesoKB": 47
+        },
+        "asiento": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-400-ns/photos/12-asiento.png",
+          "resolucion": "1309x655",
+          "pesoKB": 555,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 1675,
+            "y": 1126,
+            "w": 1309,
+            "h": 655
+          },
+          "nota": "Asiento partido con el colín en punta.",
+          "web": "assets/catalogo/pulsar-400-ns/details/asiento.webp",
+          "mini": "assets/catalogo/pulsar-400-ns/details/mini/asiento.webp",
+          "webResolucion": "1200x600",
+          "webPesoKB": 48
+        },
+        "transmision": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-400-ns/photos/13-transmision.png",
+          "resolucion": "1466x1099",
+          "pesoKB": 1185,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 759,
+            "y": 2461,
+            "w": 1466,
+            "h": 1099
+          },
+          "nota": "Rueda trasera, basculante, cadena y disco posterior.",
+          "web": "assets/catalogo/pulsar-400-ns/details/transmision.webp",
+          "mini": "assets/catalogo/pulsar-400-ns/details/mini/transmision.webp",
+          "webResolucion": "1200x900",
+          "webPesoKB": 110
+        },
+        "detalle-a": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-400-ns/photos/14-detalle-a.png",
+          "resolucion": "628x838",
+          "pesoKB": 443,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 3560,
+            "y": 1885,
+            "w": 628,
+            "h": 838
+          },
+          "nota": "El radiador: la 400 es la única refrigerada por líquido de la gama de ARENAS, y se ve.",
+          "web": "assets/catalogo/pulsar-400-ns/details/detalle-a.webp",
+          "mini": "assets/catalogo/pulsar-400-ns/details/mini/detalle-a.webp",
+          "webResolucion": "628x838",
+          "webPesoKB": 45
+        },
+        "detalle-b": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-400-ns/photos/15-detalle-b.png",
+          "resolucion": "1309x733",
+          "pesoKB": 740,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 445,
+            "y": 1309,
+            "w": 1309,
+            "h": 733
+          },
+          "nota": "Colín en punta con el piloto trasero.",
+          "web": "assets/catalogo/pulsar-400-ns/details/detalle-b.webp",
+          "mini": "assets/catalogo/pulsar-400-ns/details/mini/detalle-b.webp",
+          "webResolucion": "1200x672",
+          "webPesoKB": 52
+        },
+        "hero": {
+          "status": "missing_reference",
+          "motivo": "El master es un perfil lateral. No existe la vista 3/4 frontal."
+        },
+        "trasera": {
+          "status": "missing_reference",
+          "motivo": "El master es un perfil lateral. No existe la vista 3/4 posterior."
+        },
+        "tablero": {
+          "status": "missing_reference",
+          "motivo": "La instrumentación no es legible de perfil: se ve el canto, no la esfera."
+        }
+      }
+    },
+    {
+      "modelo": "pulsar-n125-fi",
+      "titulo": "Pulsar N125 FI",
+      "master": "N125_green_03 copy.png",
+      "masterResolucion": "7471x5281",
+      "assets": {
+        "lateral": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n125-fi/photos/02-lateral.png",
+          "resolucion": "6300x4300",
+          "pesoKB": 21022,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 400,
+            "y": 330,
+            "w": 6300,
+            "h": 4300
+          },
+          "nota": "Moto entera con aire alrededor.",
+          "web": "assets/catalogo/pulsar-n125-fi/details/lateral.webp",
+          "mini": "assets/catalogo/pulsar-n125-fi/details/mini/lateral.webp",
+          "webResolucion": "1800x1228",
+          "webPesoKB": 240
+        },
+        "faro": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n125-fi/photos/04-faro.png",
+          "resolucion": "780x1080",
+          "pesoKB": 915,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 4880,
+            "y": 1140,
+            "w": 780,
+            "h": 1080
+          },
+          "nota": "Máscara del faro entera, con la óptica y el destello lima. Colocada midiendo sobre una ampliación del frontal: a ojo sobre la rejilla general se falla, porque el panel del depósito y la careta se confunden a ese tamaño.",
+          "web": "assets/catalogo/pulsar-n125-fi/details/faro.webp",
+          "mini": "assets/catalogo/pulsar-n125-fi/details/mini/faro.webp",
+          "webResolucion": "780x1080",
+          "webPesoKB": 74
+        },
+        "tanque": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n125-fi/photos/06-tanque.png",
+          "resolucion": "1557x795",
+          "pesoKB": 2450,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 3610,
+            "y": 1523,
+            "w": 1557,
+            "h": 795
+          },
+          "nota": "Depósito con el rótulo y las extensiones lima.",
+          "web": "assets/catalogo/pulsar-n125-fi/details/tanque.webp",
+          "mini": "assets/catalogo/pulsar-n125-fi/details/mini/tanque.webp",
+          "webResolucion": "1200x612",
+          "webPesoKB": 150
+        },
+        "motor": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n125-fi/photos/07-motor.png",
+          "resolucion": "1457x1060",
+          "pesoKB": 2264,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 2914,
+            "y": 2649,
+            "w": 1457,
+            "h": 1060
+          },
+          "nota": "Monocilíndrico con la tapa Bajaj.",
+          "web": "assets/catalogo/pulsar-n125-fi/details/motor.webp",
+          "mini": "assets/catalogo/pulsar-n125-fi/details/mini/motor.webp",
+          "webResolucion": "1200x874",
+          "webPesoKB": 136
+        },
+        "freno": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n125-fi/photos/08-freno.png",
+          "resolucion": "729x993",
+          "pesoKB": 952,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 5232,
+            "y": 3113,
+            "w": 729,
+            "h": 993
+          },
+          "nota": "Disco delantero con su caliper.",
+          "web": "assets/catalogo/pulsar-n125-fi/details/freno.webp",
+          "mini": "assets/catalogo/pulsar-n125-fi/details/mini/freno.webp",
+          "webResolucion": "729x993",
+          "webPesoKB": 85
+        },
+        "suspension-delantera": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n125-fi/photos/09-suspension-delantera.png",
+          "resolucion": "662x1722",
+          "pesoKB": 1600,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 4967,
+            "y": 1987,
+            "w": 662,
+            "h": 1722
+          },
+          "nota": "Horquilla telescópica convencional con guardabarros.",
+          "web": "assets/catalogo/pulsar-n125-fi/details/suspension-delantera.webp",
+          "mini": "assets/catalogo/pulsar-n125-fi/details/mini/suspension-delantera.webp",
+          "webResolucion": "462x1200",
+          "webPesoKB": 73
+        },
+        "suspension-trasera": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n125-fi/photos/10-suspension-trasera.png",
+          "resolucion": "729x861",
+          "pesoKB": 909,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 2318,
+            "y": 2517,
+            "w": 729,
+            "h": 861
+          },
+          "nota": "Monoshock lateral.",
+          "web": "assets/catalogo/pulsar-n125-fi/details/suspension-trasera.webp",
+          "mini": "assets/catalogo/pulsar-n125-fi/details/mini/suspension-trasera.webp",
+          "webResolucion": "729x861",
+          "webPesoKB": 75
+        },
+        "escape": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n125-fi/photos/11-escape.png",
+          "resolucion": "1325x728",
+          "pesoKB": 1380,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 2649,
+            "y": 3113,
+            "w": 1325,
+            "h": 728
+          },
+          "nota": "Salida del escape bajo el motor. Desplazado a la derecha: el primer encuadre sacaba basculante y cubrecadena.",
+          "web": "assets/catalogo/pulsar-n125-fi/details/escape.webp",
+          "mini": "assets/catalogo/pulsar-n125-fi/details/mini/escape.webp",
+          "webResolucion": "1200x660",
+          "webPesoKB": 87
+        },
+        "asiento": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n125-fi/photos/12-asiento.png",
+          "resolucion": "1325x795",
+          "pesoKB": 1316,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 2517,
+            "y": 1590,
+            "w": 1325,
+            "h": 795
+          },
+          "nota": "Asiento partido con el colín.",
+          "web": "assets/catalogo/pulsar-n125-fi/details/asiento.webp",
+          "mini": "assets/catalogo/pulsar-n125-fi/details/mini/asiento.webp",
+          "webResolucion": "1200x720",
+          "webPesoKB": 99
+        },
+        "transmision": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n125-fi/photos/13-transmision.png",
+          "resolucion": "1788x1391",
+          "pesoKB": 3338,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 861,
+            "y": 2914,
+            "w": 1788,
+            "h": 1391
+          },
+          "nota": "Rueda trasera, basculante y cadena.",
+          "web": "assets/catalogo/pulsar-n125-fi/details/transmision.webp",
+          "mini": "assets/catalogo/pulsar-n125-fi/details/mini/transmision.webp",
+          "webResolucion": "1200x934",
+          "webPesoKB": 152
+        },
+        "detalle-a": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n125-fi/photos/14-detalle-a.png",
+          "resolucion": "1060x861",
+          "pesoKB": 1800,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 4106,
+            "y": 1656,
+            "w": 1060,
+            "h": 861
+          },
+          "nota": "Paneles y gráficos lima: el rasgo de diseño que separa a la N125 de sus hermanas.",
+          "web": "assets/catalogo/pulsar-n125-fi/details/detalle-a.webp",
+          "mini": "assets/catalogo/pulsar-n125-fi/details/mini/detalle-a.webp",
+          "webResolucion": "1060x861",
+          "webPesoKB": 180
+        },
+        "detalle-b": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n125-fi/photos/15-detalle-b.png",
+          "resolucion": "1325x861",
+          "pesoKB": 1618,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 1325,
+            "y": 1656,
+            "w": 1325,
+            "h": 861
+          },
+          "nota": "Panel trasero con el emblema N125. Se subió el alto: a 596 px se quedaba por debajo del umbral de resolución.",
+          "web": "assets/catalogo/pulsar-n125-fi/details/detalle-b.webp",
+          "mini": "assets/catalogo/pulsar-n125-fi/details/mini/detalle-b.webp",
+          "webResolucion": "1200x780",
+          "webPesoKB": 111
+        },
+        "hero": {
+          "status": "missing_reference",
+          "motivo": "El master es un perfil lateral. No existe la vista 3/4 frontal."
+        },
+        "trasera": {
+          "status": "missing_reference",
+          "motivo": "El master es un perfil lateral. No existe la vista 3/4 posterior."
+        },
+        "tablero": {
+          "status": "missing_reference",
+          "motivo": "La instrumentación no es legible de perfil: se ve el canto, no la esfera."
+        }
+      }
+    },
+    {
+      "modelo": "pulsar-n250",
+      "titulo": "Pulsar N250",
+      "master": "N250_ROJO_3.png",
+      "masterResolucion": "8740x6068",
+      "assets": {
+        "lateral": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n250/photos/02-lateral.png",
+          "resolucion": "8400x5800",
+          "pesoKB": 51351,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 40,
+            "y": 40,
+            "w": 8400,
+            "h": 5800
+          },
+          "nota": "Moto entera con aire alrededor.",
+          "web": "assets/catalogo/pulsar-n250/details/lateral.webp",
+          "mini": "assets/catalogo/pulsar-n250/details/mini/lateral.webp",
+          "webResolucion": "1800x1242",
+          "webPesoKB": 260
+        },
+        "faro": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n250/photos/04-faro.png",
+          "resolucion": "930x1030",
+          "pesoKB": 1653,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 6350,
+            "y": 1450,
+            "w": 930,
+            "h": 1030
+          },
+          "nota": "Doble LED angular con su careta.",
+          "web": "assets/catalogo/pulsar-n250/details/faro.webp",
+          "mini": "assets/catalogo/pulsar-n250/details/mini/faro.webp",
+          "webResolucion": "930x1030",
+          "webPesoKB": 100
+        },
+        "tanque": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n250/photos/06-tanque.png",
+          "resolucion": "2247x1162",
+          "pesoKB": 5163,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 4184,
+            "y": 1627,
+            "w": 2247,
+            "h": 1162
+          },
+          "nota": "Depósito con el 250 y las gráficas rojas y blancas.",
+          "web": "assets/catalogo/pulsar-n250/details/tanque.webp",
+          "mini": "assets/catalogo/pulsar-n250/details/mini/tanque.webp",
+          "webResolucion": "1200x620",
+          "webPesoKB": 107
+        },
+        "motor": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n250/photos/07-motor.png",
+          "resolucion": "1550x1240",
+          "pesoKB": 3752,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 3719,
+            "y": 3409,
+            "w": 1550,
+            "h": 1240
+          },
+          "nota": "Monocilíndrico con la tapa Bajaj.",
+          "web": "assets/catalogo/pulsar-n250/details/motor.webp",
+          "mini": "assets/catalogo/pulsar-n250/details/mini/motor.webp",
+          "webResolucion": "1200x960",
+          "webPesoKB": 142
+        },
+        "freno": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n250/photos/08-freno.png",
+          "resolucion": "1162x1395",
+          "pesoKB": 2762,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 6586,
+            "y": 3719,
+            "w": 1162,
+            "h": 1395
+          },
+          "nota": "Disco delantero con caliper y el testigo ABS.",
+          "web": "assets/catalogo/pulsar-n250/details/freno.webp",
+          "mini": "assets/catalogo/pulsar-n250/details/mini/freno.webp",
+          "webResolucion": "1000x1200",
+          "webPesoKB": 159
+        },
+        "suspension-delantera": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n250/photos/09-suspension-delantera.png",
+          "resolucion": "900x1800",
+          "pesoKB": 2436,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 6100,
+            "y": 1900,
+            "w": 900,
+            "h": 1800
+          },
+          "nota": "Horquilla INVERTIDA dorada: junto a la 400, la única de la gama de ARENAS que la lleva. Se recorta el tramo medio, no la barra entera: la horquilla va inclinada y un encuadre alto y estrecho deja dos esquinas vacías.",
+          "web": "assets/catalogo/pulsar-n250/details/suspension-delantera.webp",
+          "mini": "assets/catalogo/pulsar-n250/details/mini/suspension-delantera.webp",
+          "webResolucion": "600x1200",
+          "webPesoKB": 72
+        },
+        "escape": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n250/photos/11-escape.png",
+          "resolucion": "1085x930",
+          "pesoKB": 2009,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 1937,
+            "y": 3719,
+            "w": 1085,
+            "h": 930
+          },
+          "nota": "Silenciador plateado, a la vista en el costado derecho: aquí sí hay lata que fotografiar.",
+          "web": "assets/catalogo/pulsar-n250/details/escape.webp",
+          "mini": "assets/catalogo/pulsar-n250/details/mini/escape.webp",
+          "webResolucion": "1085x930",
+          "webPesoKB": 162
+        },
+        "asiento": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n250/photos/12-asiento.png",
+          "resolucion": "1859x930",
+          "pesoKB": 2438,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 2712,
+            "y": 1782,
+            "w": 1859,
+            "h": 930
+          },
+          "nota": "Asiento partido con el colín.",
+          "web": "assets/catalogo/pulsar-n250/details/asiento.webp",
+          "mini": "assets/catalogo/pulsar-n250/details/mini/asiento.webp",
+          "webResolucion": "1200x600",
+          "webPesoKB": 62
+        },
+        "transmision": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n250/photos/13-transmision.png",
+          "resolucion": "2169x1705",
+          "pesoKB": 6233,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 930,
+            "y": 3564,
+            "w": 2169,
+            "h": 1705
+          },
+          "nota": "Rueda trasera, basculante y disco posterior.",
+          "web": "assets/catalogo/pulsar-n250/details/transmision.webp",
+          "mini": "assets/catalogo/pulsar-n250/details/mini/transmision.webp",
+          "webResolucion": "1200x944",
+          "webPesoKB": 158
+        },
+        "detalle-a": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n250/photos/14-detalle-a.png",
+          "resolucion": "1162x852",
+          "pesoKB": 1642,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 1395,
+            "y": 1782,
+            "w": 1162,
+            "h": 852
+          },
+          "nota": "Colín con el emblema N250.",
+          "web": "assets/catalogo/pulsar-n250/details/detalle-a.webp",
+          "mini": "assets/catalogo/pulsar-n250/details/mini/detalle-a.webp",
+          "webResolucion": "1162x852",
+          "webPesoKB": 89
+        },
+        "detalle-b": {
+          "status": "ready",
+          "file": "assets/catalogo/pulsar-n250/photos/15-detalle-b.png",
+          "resolucion": "1162x852",
+          "pesoKB": 1245,
+          "alfa": true,
+          "fondoTransparente": true,
+          "recorte": {
+            "x": 6818,
+            "y": 2789,
+            "w": 1162,
+            "h": 852
+          },
+          "nota": "Guardabarros delantero rojo y la base de la horquilla dorada.",
+          "web": "assets/catalogo/pulsar-n250/details/detalle-b.webp",
+          "mini": "assets/catalogo/pulsar-n250/details/mini/detalle-b.webp",
+          "webResolucion": "1162x852",
+          "webPesoKB": 74
+        },
+        "suspension-trasera": {
+          "status": "not_visible",
+          "motivo": "El monoshock queda tapado por el chasis y el airbox en vista de perfil. Lo que asoma en esa zona es el depósito de líquido de frenos y el protector del escape: publicarlo como «suspensión trasera» sería rotular mal una foto auténtica."
+        },
+        "hero": {
+          "status": "missing_reference",
+          "motivo": "El master es un perfil lateral. No existe la vista 3/4 frontal."
+        },
+        "trasera": {
+          "status": "missing_reference",
+          "motivo": "El master es un perfil lateral. No existe la vista 3/4 posterior."
+        },
+        "tablero": {
+          "status": "missing_reference",
+          "motivo": "La instrumentación no es legible de perfil: se ve el canto, no la esfera."
+        }
+      }
+    }
+  ]
+}
