@@ -3338,3 +3338,69 @@ main > section { scroll-margin-top: 84px; }
 /* ================================================================
    FIN DEL SISTEMA CSS — ARENAS MOTOCICLETAS
    ================================================================ */
+
+/* ================================================================
+   LOGOTIPO OFICIAL
+   Sustituye al wordmark provisional en cabecera y pie de las tres
+   páginas. El archivo es el oficial de la marca, recortado a su caja
+   útil y con canal alfa derivado de la luminancia: llegó sobre un
+   rectángulo negro y, sin ese paso, se habría visto como un parche
+   más oscuro encima del navy del header.
+
+   Ni caja, ni borde, ni fondo: se apoya directamente sobre el fondo
+   del sitio, que es para lo que está hecho.
+   ================================================================ */
+
+.brand-logo {
+  display: block;
+  /* La proporción es 6.25:1, así que el ancho manda y el alto sale
+     solo. 224 px en pantalla grande deja el logotipo legible sin
+     comerse la altura del header. */
+  width: clamp(160px, 15vw, 224px);
+  height: auto;
+  /* El original es blanco y azul puros sobre negro. Sobre el navy del
+     header eso pesa bastante; un punto de brillo por debajo del 100 %
+     lo asienta sin apagarlo. */
+  opacity: 0.96;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.brand--link:hover .brand-logo,
+.brand--link:focus-visible .brand-logo {
+  opacity: 1;
+}
+
+/* En el pie la marca acompaña, no encabeza. */
+.brand-logo--footer {
+  width: clamp(150px, 14vw, 196px);
+  opacity: 0.9;
+}
+
+/* El lockup de texto tenía dos líneas y ocupaba poco ancho. El
+   logotipo es apaisado, así que el enlace deja de necesitar el hueco
+   del icono que nunca llegó. */
+.brand--link {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .brand-logo { width: clamp(150px, 22vw, 190px); }
+  .brand-logo--footer { width: 170px; }
+}
+
+@media (max-width: 560px) {
+  /* Con la navegación al lado, por debajo de este ancho el logotipo
+     tiene que ceder o se lleva por delante los enlaces. 140 px sigue
+     dentro del rango legible y deja «MOTOCICLETAS» leyéndose. */
+  .brand-logo { width: 140px; }
+  .brand-logo--footer { width: 156px; }
+}
+
+@media (max-width: 380px) {
+  .brand-logo { width: 124px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-logo { transition: none; }
+}
