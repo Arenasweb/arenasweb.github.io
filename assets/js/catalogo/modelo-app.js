@@ -516,8 +516,17 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       var d = U.partirDato(c);
       if (!d.valor) return;
       var li = U.el("li", { class: "modelo-dato" + (d.etiqueta ? "" : " modelo-dato--suelto") });
-      if (d.etiqueta) li.appendChild(U.el("span", { class: "modelo-dato__etiqueta" }, d.etiqueta));
-      li.appendChild(U.el("span", { class: "modelo-dato__valor" }, d.valor));
+
+      // El icono va SIEMPRE, también cuando la característica no trae
+      // rótulo: una fila sin icono entre filas con icono se lee como un
+      // fallo de carga, no como una fila distinta.
+      li.appendChild(NS.ui.iconoDato(d.etiqueta || d.valor));
+
+      var texto = U.el("div", { class: "modelo-dato__texto" });
+      if (d.etiqueta) texto.appendChild(U.el("span", { class: "modelo-dato__etiqueta" }, d.etiqueta));
+      texto.appendChild(U.el("span", { class: "modelo-dato__valor" }, d.valor));
+      li.appendChild(texto);
+
       rejilla.appendChild(li);
     });
 

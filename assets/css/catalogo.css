@@ -2204,3 +2204,113 @@
     border-color: var(--brand-blue);
   }
 }
+
+/* ================================================================
+   FUERA LOS MARCOS
+
+   Cada tarjeta iba dentro de un recuadro con borde. Ocho recuadros en
+   pantalla y la vista se convierte en una tabla: el ojo cuenta cajas
+   antes de mirar motos. Ahora no hay borde. Lo que separa una tarjeta
+   de la siguiente es el espacio, y al pasar por encima aparece una capa
+   translúcida difuminada — un cambio de aire, no una línea.
+   ================================================================ */
+
+.moto-card {
+  border-color: transparent;
+  background: transparent;
+}
+
+/* La capa que se enciende al pasar por encima. Va detrás del contenido
+   y difuminada en los bordes con una máscara, para que no vuelva a ser
+   un rectángulo con esquinas — que es de lo que veníamos. */
+.moto-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(31, 107, 255, 0.16), transparent 68%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-out);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.moto-card:hover::before,
+.moto-card:focus-within::before {
+  opacity: 1;
+}
+
+.moto-card:hover,
+.moto-card:focus-within {
+  border-color: transparent;
+}
+
+/* El contenido, por encima de la capa. */
+.moto-card__media,
+.moto-card__body,
+.moto-card__footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* Sin borde de tarjeta, el filo del pie sobra: separaba dos zonas que
+   ya no están encerradas juntas. */
+.moto-card__footer {
+  border-top: 0;
+  padding-top: 0;
+}
+
+/* El destacado tampoco lleva marco: se distingue por su filo superior,
+   que ya existía. */
+.moto-card--destacado {
+  border-color: transparent;
+}
+
+/* La foto conserva su esquina redondeada: es la pieza, no el marco. */
+.moto-card__media {
+  border-radius: var(--radius-md);
+}
+
+/* ================================================================
+   UN FONDO QUE NO ESTÉ MUERTO
+
+   El fondo era un plano liso. Con las tarjetas sin marco se notaba aún
+   más: las motos flotaban sobre nada.
+
+   Se construye con degradados, sin un solo archivo: nada que descargar,
+   nada que se vea a medias mientras carga, y ningún problema con la
+   política de contenido. Una rejilla técnica muy tenue —la retícula de
+   un plano— y dos focos de azul muy abiertos que dan profundidad.
+
+   Los valores son deliberadamente bajos. Un fondo que se ve es un fondo
+   que estorba: este solo tiene que impedir que la página parezca papel.
+   ================================================================ */
+
+.page-interior {
+  background-image:
+    /* Focos: profundidad, no color. */
+    radial-gradient(80% 55% at 12% 0%, rgba(31, 107, 255, 0.10), transparent 60%),
+    radial-gradient(70% 50% at 92% 22%, rgba(6, 176, 209, 0.055), transparent 62%),
+    /* Retícula de plano técnico. */
+    linear-gradient(rgba(120, 170, 255, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 170, 255, 0.028) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 72px 72px, 72px 72px;
+  background-attachment: fixed, fixed, scroll, scroll;
+  background-repeat: no-repeat, no-repeat, repeat, repeat;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .moto-card::before { transition: none; }
+}
+
+/* El plano de la foto tampoco dibuja rectángulo. La moto necesita suelo
+   —llega transparente sobre casi negro—, pero ese suelo puede ser un
+   degradado que se apaga hacia los bordes en vez de una placa con
+   esquinas. Es la diferencia entre una sombra de producto y un marco. */
+.moto-card__media {
+  background:
+    radial-gradient(70% 58% at 50% 44%, rgba(31, 107, 255, 0.15), transparent 72%),
+    radial-gradient(52% 34% at 50% 86%, rgba(3, 6, 14, 0.8), transparent 74%);
+}
