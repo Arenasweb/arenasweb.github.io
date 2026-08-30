@@ -212,6 +212,38 @@
              Reveal por scroll con el observer existente (sin JS nuevo):
              la sección recibe .is-visible y las cifras/gráfico animan por CSS.
         ============================================================ -->
+        <!-- ============================================================
+             BANDA DE EXPERIENCIA
+             Un plano en primera persona, justo después del hero. No
+             explica nada del catálogo: pone al visitante encima de una
+             moto durante dos segundos, que es lo que un hero estático
+             no puede hacer.
+             La moto del plano NO se corresponde con ningún modelo del
+             catálogo, así que vive aquí —atmósfera de marca— y no en
+             ninguna ficha.
+             assets/js/catalogo/catalogo-video.js la carga solo cuando se
+             acerca al viewport, y no la descarga en móvil.
+        ============================================================ -->
+        <section class="home-experiencia" aria-label="Experiencia de conducción ARENAS">
+          <div class="home-experiencia__media" aria-hidden="true">
+            <video
+              class="home-experiencia__video"
+              data-video-catalogo="experiencia"
+              data-src="assets/videos/web/home-experiencia-pov.mp4"
+              poster="assets/videos/posters/home-experiencia-pov.webp"
+              muted
+              playsinline
+              preload="none"
+              tabindex="-1"
+            ></video>
+            <span class="home-experiencia__velo"></span>
+          </div>
+          <p class="home-experiencia__claim">
+            <span class="home-experiencia__kicker">La experiencia</span>
+            <span class="home-experiencia__linea">Rutas que te definen.</span>
+          </p>
+        </section>
+
         <section id="metricas" class="stats-section reveal-section" aria-label="Nuestra trayectoria en cifras">
           <!-- Línea de gráfico de crecimiento — puramente decorativa -->
           <svg class="stats-graph" viewBox="0 0 1200 260" preserveAspectRatio="none" aria-hidden="true" focusable="false">
@@ -1033,6 +1065,7 @@
     <script src="assets/js/catalogo/catalogo-finder.js" defer></script>
     <script src="assets/js/catalogo/catalogo-ui.js" defer></script>
     <script src="assets/js/catalogo/catalogo-app.js" defer></script>
+    <script src="assets/js/catalogo/catalogo-video.js" defer></script>
 
     <script src="script.js" defer></script>
   </body>

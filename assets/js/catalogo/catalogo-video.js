@@ -151,6 +151,13 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     // La rueda SÍ: primer y último fotograma coinciden en encuadre y el
     // desenfoque de movimiento tapa el salto de fase de la llanta.
     if (transicion) conectar(transicion, { bucle: true, soloDesktop: true });
+
+    // La banda de experiencia de la portada. Mismo trato que la
+    // transición: hace bucle —el manillar y el depósito ocupan la mitad
+    // del cuadro y no se mueven, así que la vuelta no se nota— y no se
+    // descarga en móvil, donde el poster cuenta lo mismo por 40 KB.
+    var experiencia = document.querySelector('[data-video-catalogo="experiencia"]');
+    if (experiencia) conectar(experiencia, { bucle: true, soloDesktop: true });
   }
 
   NS.video = { conectar: conectar, arrancar: arrancar, CONFIG: CONFIG };
