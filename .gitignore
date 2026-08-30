@@ -58,3 +58,14 @@ assets/catalogo/*/photos/
 # masters para situar cada recorte. Se regeneran con
 # `node scripts/recortar-catalogo.mjs --rejilla <modelo>`.
 work/
+
+# Buzón de entrada de material sin procesar: referencias, másters de vídeo,
+# fotografías por color, secuencias 360 y todo lo relativo a «cómo llegar».
+#
+# El repositorio es PÚBLICO y GitHub Pages sirve cuanto hay dentro. Un máster
+# de vídeo de 200 MB o una captura con datos internos quedarían descargables
+# por cualquiera que acierte la URL. El flujo es: original aquí (local) →
+# derivado optimizado en assets/ → solo el derivado se commitea.
+#
+# Ver material-origen/LEEME.md
+material-origen/
