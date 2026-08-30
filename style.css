@@ -3430,6 +3430,13 @@ main > section { scroll-margin-top: 84px; }
      las estrechas. */
   min-height: 240px;
   max-height: 460px;
+  /* Sin esto la banda se queda corta en pantallas anchas. Al toparse la
+     altura con `max-height`, el navegador vuelve a aplicar la proporción
+     y calcula el ancho DESDE la altura: 460 × 32/9 = 1636 px, y a partir
+     de ahí la banda deja de crecer aunque sobre pantalla. Fijar el ancho
+     corta esa realimentación: manda el ancho, la proporción propone la
+     altura y `max-height` la recorta. */
+  width: 100%;
   display: grid;
   place-items: center;
   background: var(--color-black-rich);

@@ -578,6 +578,12 @@
      muro en las estrechas. */
   min-height: 220px;
   max-height: 420px;
+  /* Mismo motivo que en `.home-experiencia`: al toparse la altura con
+     `max-height`, el navegador vuelve a aplicar la proporción y calcula
+     el ancho DESDE la altura —420 × 32/9 = 1493 px—, y la banda deja de
+     crecer aunque sobre pantalla. Fijar el ancho corta esa
+     realimentación. */
+  width: 100%;
   display: grid;
   place-items: center;
   background: var(--color-night);
