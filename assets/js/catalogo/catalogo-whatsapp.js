@@ -10,12 +10,19 @@
    sitio, y el primer paso hacia ocho— este módulo lee el MISMO
    data/configuracion.json. La fuente de verdad sigue siendo una.
 
-   UN SOLO NÚMERO, TRES VENDEDORES. No hay reparto, ni rotación, ni
-   un número por modelo. Todas las consultas entran por la cuenta de
-   WhatsApp Business de la empresa y los tres asesores la atienden
-   desde sus dispositivos vinculados, viendo el mismo historial. Esa
-   parte se configura dentro de WhatsApp Business, no aquí — ver
-   CONFIGURACION_WHATSAPP_3_VENDEDORES.md.
+   REPARTO POR TURNOS ENTRE CINCO ASESORES. La consulta va a quien le
+   toca: cada visitante arranca en uno al azar y a partir de ahí avanza
+   en orden. El turno se guarda en el navegador, así que no es un turno
+   global —no hay servidor que lleve la cuenta—, pero reparte parejo
+   entre visitantes y evita que quien pulsa varias veces caiga siempre
+   en la misma persona.
+
+   CONTRAPARTIDA CONOCIDA: al ser líneas personales, quien vuelva a
+   escribir a los dos días puede dar con otro asesor que no vea la
+   conversación anterior. Decisión del cliente, tomada sabiéndolo.
+
+   La lista sale de `asesoresVentas` en data/configuracion.json, la
+   misma que lee la portada.
 
    Sin backend, sin API de Meta, sin tokens, sin OpenWA: el enlace
    wa.me es público y el cliente pulsa «Enviar» desde su propia
@@ -43,7 +50,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
    * mientras no haya un número aprobado: ese es el estado seguro, y
    * enlace() devuelve "" en cuanto lo ve.
    */
-  var canal = { numero: "", confirmado: false, cargado: false };
+  var canal = { numero: "", confirmado: false, cargado: false, asesores: [] };
 
   /* ---------------- Carga del canal ---------------- */
 
@@ -75,6 +82,15 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
         if (!datos) return canal;
         canal.confirmado = datos.whatsappConfirmado === true;
         canal.numero = soloDigitos(datos.whatsapp);
+
+        // Misma fuente que usa la portada. Sin esto, todas las consultas
+        // del catálogo caerían sobre el número de reserva —una sola
+        // persona— mientras la portada sí reparte. Dos puertas al mismo
+        // equipo no pueden repartir distinto.
+        canal.asesores = (datos.asesoresVentas || []).filter(function (a) {
+          return a && a.activo === true &&
+            soloDigitos(a.telefono).length >= CONFIG.minDigitos;
+        });
         return canal;
       });
   }
@@ -125,6 +141,59 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     );
   }
 
+  /** Donde se guarda el turno, en el navegador de cada visitante. */
+  var TURNO_CLAVE = "arenas.turnoAsesor";
+
+  /**
+   * A quien le toca esta consulta. Misma regla que la portada: arranque
+   * al azar y despues en orden.
+   *
+   * La funcion se repite en script.js y no es un descuido: la portada y
+   * el catalogo no comparten bundle —no hay empaquetador en este
+   * proyecto—, asi que o se repiten estas lineas o se carga script.js
+   * entero para usar seis. Lo que NO se duplica es el dato: los dos leen
+   * `asesoresVentas` del mismo configuracion.json, y la clave del turno
+   * es la misma, asi que el orden continua al pasar de una pagina a otra.
+   */
+  function elegirAsesor() {
+    if (!canal.asesores.length) return null;
+    var i;
+    try {
+      var guardado = window.localStorage.getItem(TURNO_CLAVE);
+      i = guardado === null
+        ? Math.floor(Math.random() * canal.asesores.length)
+        : (parseInt(guardado, 10) + 1) % canal.asesores.length;
+      if (!isFinite(i) || i < 0) i = 0;
+      window.localStorage.setItem(TURNO_CLAVE, String(i));
+    } catch (e) {
+      i = Math.floor(Math.random() * canal.asesores.length);
+    }
+    return canal.asesores[i];
+  }
+
+  /**
+   * Como enlace(), pero devuelve ademas a QUIEN va y con que codigo.
+   * La ficha lo necesita para nombrar al asesor antes de abrir el chat:
+   * quien escribe merece saber con quien habla.
+   *
+   * @returns {{url:string, asesor:object|null, leadId:string}}
+   */
+  function consulta(modelo, color, leadId) {
+    var id = leadId || generarId();
+    var vacio = { url: "", asesor: null, leadId: id };
+    if (!canal.confirmado) return vacio;
+
+    var asesor = elegirAsesor();
+    var numero = asesor ? soloDigitos(asesor.telefono) : canal.numero;
+    if (numero.length < CONFIG.minDigitos) return vacio;
+
+    return {
+      url: "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje(modelo, color, id)),
+      asesor: asesor,
+      leadId: id,
+    };
+  }
+
   /**
    * URL de wa.me lista para abrir.
    *
@@ -138,10 +207,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
    * @returns {string} URL completa, o "" si el canal no está listo
    */
   function enlace(modelo, color, leadId) {
-    if (!canal.confirmado) return "";
-    if (canal.numero.length < CONFIG.minDigitos) return "";
-    var texto = mensaje(modelo, color, leadId || generarId());
-    return "https://wa.me/" + canal.numero + "?text=" + encodeURIComponent(texto);
+    return consulta(modelo, color, leadId).url;
   }
 
   /**
@@ -164,21 +230,24 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
 
   /** @returns {boolean} true si hay un número aprobado y utilizable. */
   function disponible() {
-    return canal.confirmado && canal.numero.length >= CONFIG.minDigitos;
+    if (!canal.confirmado) return false;
+    return canal.asesores.length > 0 || canal.numero.length >= CONFIG.minDigitos;
   }
 
   NS.whatsapp = {
     CONFIG: CONFIG,
     cargar: cargar,
     enlace: enlace,
+    consulta: consulta,
+    elegirAsesor: elegirAsesor,
     abrir: abrir,
     mensaje: mensaje,
     generarId: generarId,
     disponible: disponible,
     soloDigitos: soloDigitos,
     /** Solo para pruebas: inyecta el canal sin pasar por la red. */
-    _fijarCanal: function (numero, confirmado) {
-      canal = { numero: soloDigitos(numero), confirmado: confirmado === true, cargado: true };
+    _fijarCanal: function (numero, confirmado, asesores) {
+      canal = { numero: soloDigitos(numero), confirmado: confirmado === true, cargado: true, asesores: asesores || [] };
     },
   };
 })(window.ARENAS_CATALOGO);

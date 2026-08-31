@@ -88,7 +88,7 @@
 
     <!-- LCP: el poster del hero es el primer elemento visual grande;
          precargarlo evita el parpadeo antes de que el video decodifique. -->
-    <link rel="preload" as="image" href="assets/hero/hero-arenas-poster-v3.jpg" fetchpriority="high" />
+    <link rel="preload" as="image" href="assets/videos/posters/home-hero-rs200.webp" fetchpriority="high" />
 
     <!-- Marca temprana de JS activo: los estados iniciales de las
          animaciones de reveal solo se aplican bajo html.js, de modo que
@@ -173,10 +173,10 @@
               muted
               playsinline
               preload="metadata"
-              poster="assets/videos/posters/home-hero-llegada.webp"
+              poster="assets/videos/posters/home-hero-rs200.webp"
               tabindex="-1"
             >
-              <source src="assets/videos/web/home-hero-llegada.mp4" type="video/mp4" />
+              <source src="assets/videos/web/home-hero-rs200.mp4" type="video/mp4" />
             </video>
             <span class="hero-overlay hero-overlay--left"></span>
             <span class="hero-overlay hero-overlay--vertical"></span>
@@ -777,7 +777,7 @@
             </div>
             <figure class="feature-media">
               <img
-                src="assets/hero/hero-arenas-poster-v2.jpg"
+                src="assets/hero/experiencia-rs200.webp"
                 alt="Motocicleta sobre una carretera andina de montaña"
                 width="1280"
                 height="720"
@@ -930,6 +930,32 @@
              SECCIÓN 10: CIERRE DE CONVERSIÓN — consulta honesta
              No envía ni almacena datos. script.js → inicializarConsulta()
         ============================================================ -->
+        <!-- ============================================================
+             NUESTRO EQUIPO
+             La rejilla la rellena script.js desde data/configuracion.json
+             (asesoresVentas). Sin asesores activos la seccion se retira
+             entera: mejor no tenerla que tenerla vacia.
+
+             Los telefonos NO se imprimen. Viajan en el enlace que abre
+             WhatsApp, pero no quedan en la pagina como texto plano que
+             cualquier recolector de spam pueda cosechar.
+        ============================================================ -->
+        <section id="equipo" class="equipo-section reveal-section" aria-labelledby="equipo-heading" hidden>
+          <div class="wrap">
+            <p class="equipo__kicker">Nuestro equipo</p>
+            <h2 id="equipo-heading" class="block-title">Conoce a nuestro equipo</h2>
+            <p class="block-lead equipo__lead">
+              Nuestro equipo de asesores esta listo para ayudarte a encontrar la moto ideal para ti.
+            </p>
+
+            <ul id="equipo-lista" class="equipo-grid"></ul>
+
+            <p class="equipo__nota">
+              Pulsa sobre un asesor para escribirle directamente por WhatsApp.
+            </p>
+          </div>
+        </section>
+
         <section id="contacto" class="contact-section reveal-section" aria-labelledby="contacto-heading">
           <svg class="contact-road" viewBox="0 0 800 600" preserveAspectRatio="none" aria-hidden="true" focusable="false">
             <path d="M-40 620 C 200 420 260 300 210 40" stroke="rgba(47,140,255,0.4)" stroke-width="3" fill="none"/>

@@ -2314,3 +2314,23 @@
     radial-gradient(70% 58% at 50% 44%, rgba(31, 107, 255, 0.15), transparent 72%),
     radial-gradient(52% 34% at 50% 86%, rgba(3, 6, 14, 0.8), transparent 74%);
 }
+
+/* ---- El fondo del cliente ---- */
+/* Sustituye a la retícula que hice con degradados. Es la trama de la
+   marca —silueta de moto sobre azul profundo— y pesa 5 KB: comprime así
+   de bien porque es casi todo plano.
+
+   Va fija y muy tenue. Un fondo con dibujo compite con la fotografía del
+   producto en cuanto se le sube el volumen, y aquí el producto son las
+   motos. Los degradados de profundidad se quedan encima. */
+.page-interior {
+  background-image:
+    radial-gradient(80% 55% at 12% 0%, rgba(31, 107, 255, 0.10), transparent 60%),
+    radial-gradient(70% 50% at 92% 22%, rgba(6, 176, 209, 0.055), transparent 62%),
+    linear-gradient(rgba(4, 6, 13, 0.86), rgba(4, 6, 13, 0.86)),
+    url("../fondos/trama-arenas.webp");
+  background-size: 100% 100%, 100% 100%, 100% 100%, cover;
+  background-position: center, center, center, center;
+  background-attachment: fixed, fixed, fixed, fixed;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+}

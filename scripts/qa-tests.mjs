@@ -441,7 +441,7 @@ RUTAS_RECHAZADAS.forEach(([nombre, valor]) => {
 const RUTAS_ACEPTADAS = [
   "assets/catalogo/pulsar-180-neon/portada.webp",
   "assets/catalogo/pulsar-180-neon/azul/portada-mobile.webp",
-  "assets/hero/hero-arenas-poster.jpg",
+  "assets/hero/experiencia-rs200.webp",
   "data/algo.png",
   "legales/algo.png",
 ];
@@ -2376,40 +2376,68 @@ comprobar("el número de ventas es un móvil peruano de 11 dígitos con prefijo 
 comprobar("wa.me lo aceptaría tal cual: sin +, espacios, guiones ni paréntesis",
   String(cfg.whatsapp || "") === String(cfg.whatsapp || "").replace(/[^0-9]/g, ""));
 
-// El reparto se retiró a conciencia. Si el array vuelve, vuelve el
-// problema que se acaba de quitar, así que la prueba lo dice por su
-// nombre en vez de limitarse a fallar.
-comprobar("no ha vuelto el reparto entre varios asesores",
-  cfg.asesoresVentas === undefined,
-  cfg.asesoresVentas ? "asesoresVentas sigue en configuracion.json" : "retirado");
+// EL REPARTO VUELVE, POR DECISIÓN DEL CLIENTE.
+//
+// Estuvo retirado y estas pruebas lo prohibían: con líneas personales
+// separadas, quien vuelve a escribir a los dos días puede dar con otro
+// asesor que no ve la conversación anterior. El cliente conoce esa
+// contrapartida y prefiere repartir entre su equipo. Las pruebas pasan a
+// proteger que el reparto esté BIEN hecho, no a impedirlo.
 
-// La cuenta que importa: cuántos números distintos hay publicados. Uno.
-const fuentesRevisadas = [
-  "data/configuracion.json",
-  "script.js",
-  "assets/js/catalogo/catalogo-whatsapp.js",
-  "assets/js/catalogo/modelo-app.js",
-  "index.html",
-  "catalogo.html",
-  "modelo.html",
-];
-const numerosPublicados = new Set();
-for (const rel of fuentesRevisadas) {
-  const texto = readFileSync(join(RAIZ, rel), "utf8");
-  for (const hallazgo of texto.match(/\b51\d{9}\b/g) || []) numerosPublicados.add(hallazgo);
-}
-comprobar("hay UN solo número de WhatsApp en todo el código publicado",
-  numerosPublicados.size === 1,
-  numerosPublicados.size + " distinto(s)");
+const asesores = cfg.asesoresVentas || [];
 
-comprobar("ese número es exactamente el de configuracion.json",
-  numerosPublicados.size === 1 && numerosPublicados.has(String(cfg.whatsapp)));
+comprobar("hay asesores de ventas declarados", asesores.length > 0, String(asesores.length));
 
-// El código ya no debe saber elegir destinatario.
+// Un número corto o con letras abre un chat que no existe: el cliente cree
+// que ha escrito y no ha escrito a nadie.
+const malFormados = asesores
+  .filter((a) => !/^51\d{9}$/.test(String(a.telefono || "")))
+  .map((a) => (a.nombre || "?") + ": " + a.telefono);
+comprobar("todo teléfono de asesor es un móvil peruano de 11 dígitos con prefijo 51",
+  malFormados.length === 0, malFormados.join(", "));
+
+const repetidos = asesores.map((a) => a.telefono).filter((t, i, arr) => arr.indexOf(t) !== i);
+comprobar("ningún teléfono está repetido entre asesores", repetidos.length === 0, repetidos.join(", "));
+
+const sinNombre = asesores.filter((a) => !a.nombre).map((a) => a.id || "?");
+comprobar("todo asesor tiene nombre, para poder decir a quién va la consulta",
+  sinNombre.length === 0, sinNombre.join(", "));
+
+// Una tarjeta sin foto entre tarjetas con foto se lee como un fallo de
+// carga. Si el archivo no está, la sección se ve rota.
+const asesoresSinFoto = asesores
+  .filter((a) => !a.foto || !hay(join(RAIZ, a.foto)))
+  .map((a) => (a.nombre || "?") + " → " + (a.foto || "(sin foto)"));
+comprobar("todo asesor activo tiene su fotografía en disco",
+  asesoresSinFoto.length === 0, asesoresSinFoto.join(", "));
+
+comprobar("queda al menos un asesor activo para recibir consultas",
+  asesores.filter((a) => a.activo === true).length > 0,
+  asesores.filter((a) => a.activo === true).length + " activos");
+
+// LO QUE SÍ SIGUE PROHIBIDO: imprimir los teléfonos en el HTML. Van dentro
+// del enlace que abre WhatsApp, nunca como texto que un recolector de spam
+// pueda cosechar de una página indexable.
+const htmlPublicado = ["index.html", "catalogo.html", "modelo.html"]
+  .map((f) => readFileSync(join(RAIZ, f), "utf8"))
+  .join(String.fromCharCode(10));
+const telefonosEnHtml = [...new Set(htmlPublicado.match(new RegExp("\b51\d{9}\b", "g")) || [])];
+comprobar("ningún teléfono de asesor está escrito en el HTML",
+  telefonosEnHtml.length === 0, telefonosEnHtml.join(", "));
+
+// El turno se guarda en el navegador y puede fallar (navegación privada,
+// almacenamiento bloqueado). Si falla, tiene que quedar alguien elegido.
 const nucleoJs = readFileSync(join(RAIZ, "script.js"), "utf8");
-comprobar("script.js ya no contiene lógica de reparto (elegirAsesor / asesoresActivos)",
-  !/elegirAsesor|asesoresActivos/.test(nucleoJs));
+// Sin expresion regular a proposito: el escapado de una regex escrita a
+// traves de varias capas se rompe sin avisar, y una prueba que no puede
+// fallar bien no protege nada.
+const iCatch = nucleoJs.indexOf("} catch (e) {", nucleoJs.indexOf("function elegirAsesor"));
+const iAzar = nucleoJs.indexOf("Math.random() * activos.length", iCatch);
+comprobar("el reparto sobrevive a un localStorage que lanza excepcion",
+  iCatch !== -1 && iAzar !== -1 && iAzar - iCatch < 400,
+  "catch=" + iCatch + " azar=" + iAzar);
 
+comprobar("script.js contiene la lógica de turnos", /elegirAsesor/.test(nucleoJs));
 // Nada de lo que este proyecto prohíbe expresamente. Se mira el CÓDIGO,
 // no los comentarios: la cabecera del módulo nombra a OpenWA justamente
 // para decir que no se usa, y una prueba que no distingue las dos cosas

@@ -470,9 +470,9 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       }
 
       var nombreColor = colorActual ? colorActual.nombre : "";
-      var url = NS.whatsapp.enlace(modelo.titulo || modelo.modelo, nombreColor);
+      var c = NS.whatsapp.consulta(modelo.titulo || modelo.modelo, nombreColor);
 
-      if (!NS.whatsapp.abrir(url)) {
+      if (!NS.whatsapp.abrir(c.url)) {
         aviso.textContent =
           "No pudimos abrir WhatsApp. Escríbenos desde la página de contacto.";
         aviso.hidden = false;
@@ -482,7 +482,11 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       // Si el navegador bloquea la ventana emergente, abrir() ya navega en
       // esta misma pestaña; este texto solo se llega a leer cuando la
       // pestaña nueva se abrió de verdad.
-      aviso.textContent = "Abriendo WhatsApp… revisa el mensaje antes de enviarlo.";
+      // Se nombra al asesor: quien escribe merece saber con quién habla,
+      // y así el nombre que le aparezca en WhatsApp no le sorprende.
+      aviso.textContent = c.asesor
+        ? "Abriendo WhatsApp con " + c.asesor.nombre + ", de ventas. Revisa el mensaje antes de enviarlo."
+        : "Abriendo WhatsApp… revisa el mensaje antes de enviarlo.";
       aviso.hidden = false;
 
       abriendo = true;

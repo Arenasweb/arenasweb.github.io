@@ -522,84 +522,71 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
   /* ---------------- Iconos de especificación ---------------- */
 
   /**
-   * Trazos de cada icono, en una rejilla de 24×24.
+   * Iconos del cliente. Son piezas de marca, no dibujos de relleno: se
+   * dejaron en material-origen y aquí solo viven las versiones de 96 px.
    *
-   * Van en línea y no como archivo: son ocho siluetas de pocos bytes, y
-   * una petición por icono costaría más que el icono. Además así heredan
-   * `currentColor` y cambian con el tema sin tener que repintarlos.
-   *
-   * Todos con el mismo grosor de trazo y las mismas esquinas: lo que
-   * hace que un juego de iconos parezca un juego —y no un recorte de
-   * varios sitios— es que compartan mano, no que compartan tema.
+   * Antes esto era un juego de SVG dibujado a mano. Servía, pero era mío,
+   * no de ARENAS. Estos son suyos y tienen el neón de la marca.
    */
-  var ICONOS = {
-    motor: ["M4 9h3V7h4V5h6v4h3v6h-3v4h-6v-2H7v-2H4z", "M9 11h4v4H9z"],
-    potencia: ["M12 20a8 8 0 1 1 8-8", "M12 12l5-3"],
-    torque: ["M12 4a8 8 0 1 0 8 8", "M20 4v5h-5", "M12 9v3l2 2"],
-    marchas: ["M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z", "M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"],
-    frenos: ["M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z", "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z", "M12 3v3M12 18v3M3 12h3M18 12h3"],
-    peso: ["M5 8h14l2 12H3z", "M9 8a3 3 0 1 1 6 0"],
-    tanque: ["M12 3s6 6 6 10a6 6 0 0 1-12 0c0-4 6-10 6-10z"],
-    suspension: ["M12 3v3", "M12 18v3", "M8 7l8 2-8 2 8 2-8 2 8 2"],
-    dato: ["M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z", "M12 8v5", "M12 16h.01"],
-  };
+  var ICONOS = ["motor", "potencia", "transmision", "frenos", "refrigeracion",
+    "tablero", "iluminacion", "encendido", "suspension", "garantia"];
+
+  var RUTA_ICONOS = "assets/iconos/";
 
   /**
    * Qué icono le toca a una especificación, por lo que dice su rótulo.
    *
-   * Se mira el texto y no un campo de la hoja a propósito: pedirle a
-   * quien rellena el catálogo que además elija icono es pedirle que
-   * mantenga una lista que no le importa. Si nada encaja, sale el icono
-   * neutro — nunca ninguno, porque una fila sin icono entre filas con
-   * icono se lee como un fallo.
+   * Se mira el texto y no un campo de la hoja a propósito: pedirle a quien
+   * rellena el catálogo que además elija icono es pedirle que mantenga una
+   * lista que no le importa.
+   *
+   * No hay icono de peso ni de tanque en el juego, así que esos caen en el
+   * tablero — un instrumento que da una lectura, que es lo que son. Antes
+   * que inventar un icono suelto de otro estilo, se repite uno del juego:
+   * lo que hace que un conjunto parezca un conjunto es la mano, no la
+   * variedad.
    *
    * @param {string} etiqueta
-   * @returns {string} clave de ICONOS
+   * @returns {string} nombre de archivo, sin extensión
    */
   function claveIcono(etiqueta) {
     var t = U.normalizarBusqueda(etiqueta || "");
-    if (/motor|cilindrada|cc|combusti|inyecc|carburador|refriger/.test(t)) return "motor";
+    if (/refriger|liquida|aceite|aire acond/.test(t)) return "refrigeracion";
+    if (/freno|abs|cbs|disco|tambor/.test(t)) return "frenos";
+    if (/marcha|transmis|velocidad|caja|embrague|torque|nm|par motor/.test(t)) return "transmision";
     if (/potencia|hp|ps|caballo|rpm/.test(t)) return "potencia";
-    if (/torque|nm|par/.test(t)) return "torque";
-    if (/marcha|transmis|velocidad|caja|embrague/.test(t)) return "marchas";
-    if (/freno|abs|cbs|disco|tambor/.test(t)) return "frenos";
-    if (/peso|kg|carga/.test(t)) return "peso";
-    if (/tanque|litro|l|combustible|autonom/.test(t)) return "tanque";
-    if (/suspensi|horquilla|amortigua|nitrox/.test(t)) return "suspension";
-    return "dato";
+    if (/motor|cilindrada|cc|inyecc|carburador|tiempos/.test(t)) return "motor";
+    if (/suspensi|horquilla|amortigua|nitrox|monoshock/.test(t)) return "suspension";
+    if (/arranque|electrico|encendido|bateria/.test(t)) return "encendido";
+    if (/luz|luces|led|iluminac|faro|farol/.test(t)) return "iluminacion";
+    if (/tablero|digital|pantalla|display|instrument/.test(t)) return "tablero";
+    if (/garantia|meses|servicio/.test(t)) return "garantia";
+    return "tablero";
   }
 
   /**
-   * Icono de una especificación, como SVG en línea.
+   * Icono de una especificación.
    *
-   * `aria-hidden`: el icono repite lo que ya dice el rótulo al lado. A
-   * un lector de pantalla le sobra, y anunciarlo sería leer dos veces lo
-   * mismo.
+   * `alt=""` y `aria-hidden`: el icono repite lo que ya dice el rótulo que
+   * tiene al lado. Anunciarlo sería leer dos veces lo mismo.
+   *
+   * `loading="lazy"` no: son diez archivos de 4 KB que se ven de golpe
+   * junto al título, y diferirlos los haría aparecer a destiempo.
    *
    * @param {string} etiqueta - rótulo de la especificación
-   * @returns {SVGElement}
+   * @returns {HTMLImageElement}
    */
   function iconoDato(etiqueta) {
-    var NSSVG = "http://www.w3.org/2000/svg";
-    var svg = document.createElementNS(NSSVG, "svg");
-    svg.setAttribute("class", "dato-icono");
-    svg.setAttribute("viewBox", "0 0 24 24");
-    svg.setAttribute("aria-hidden", "true");
-    svg.setAttribute("focusable", "false");
-    svg.setAttribute("fill", "none");
-    svg.setAttribute("stroke", "currentColor");
-    svg.setAttribute("stroke-width", "1.5");
-    svg.setAttribute("stroke-linecap", "round");
-    svg.setAttribute("stroke-linejoin", "round");
-
-    (ICONOS[claveIcono(etiqueta)] || ICONOS.dato).forEach(function (d) {
-      var path = document.createElementNS(NSSVG, "path");
-      path.setAttribute("d", d);
-      svg.appendChild(path);
+    return U.el("img", {
+      class: "dato-icono",
+      src: RUTA_ICONOS + claveIcono(etiqueta) + ".webp",
+      alt: "",
+      width: 96,
+      height: 96,
+      decoding: "async",
+      "aria-hidden": "true",
     });
-    return svg;
   }
-
   NS.ui = {
     iconoDato: iconoDato,
     claveIcono: claveIcono,

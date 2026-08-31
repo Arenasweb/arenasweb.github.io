@@ -1256,3 +1256,19 @@
 .modelo-galeria__marco::after {
   display: none;
 }
+
+/* ---- Iconos de marca ---- */
+/* Ya no son SVG que heredan color: son las piezas del cliente, con su
+   propio neón. Se les da tamaño y se les quita el filtro de opacidad que
+   tenía el juego anterior — estos ya vienen calibrados. */
+.dato-icono {
+  width: 34px;
+  height: 34px;
+  opacity: 1;
+  flex: none;
+  object-fit: contain;
+}
+
+@media (max-width: 700px) {
+  .dato-icono { width: 30px; height: 30px; }
+}

@@ -16,7 +16,7 @@
   "whatsappNombreComercial": "ARENAS Motocicletas",
   "whatsappCodigoPais": "51",
   "whatsappMultiagente": true,
-  "_notaWhatsapp": "APROBADO. Fuente ÚNICA del canal de ventas: este campo es el número que consume TODO enlace wa.me del sitio. Es una cuenta de WhatsApp Business con multiagente: los tres asesores la atienden desde sus propios dispositivos vinculados, ven el mismo historial y se asignan las conversaciones DENTRO de WhatsApp Business. Esa parte no se configura aquí ni en el código — ver CONFIGURACION_WHATSAPP_3_VENDEDORES.md. No añadir un segundo número ni repartir consultas entre líneas: una consulta repartida es una consulta que solo ve uno.",
+  "_notaWhatsapp": "APROBADO. `whatsapp` es solo el número de reserva: los enlaces reales salen de `asesoresVentas` y se reparten POR TURNOS entre los cinco. El equipo figura en CONTACTOS_INTERNOS con es_whatsapp, whatsapp_confirmado y asignar_a_web marcados, y estado_aprobacion APROBADO.",
   "telefonoFijo": "PENDIENTE",
   "correo": "Sin correo comercial publicado",
   "correoConfirmado": false,
@@ -108,5 +108,48 @@
     "proximaFase": "diseno-premium",
     "estadoGeneral": "en-preparacion"
   },
-  "_notaAsesoresRetirado": "El array `asesoresVentas` con tres teléfonos se retiró a propósito. Publicaba tres líneas personales y repartía cada consulta al azar entre ellas: el cliente caía en un chat privado y los otros dos asesores no veían nada de esa conversación. Con una sola cuenta Business multiagente llega al mismo sitio y los tres conservan el historial. Los nombres y la asignación del equipo viven en WhatsApp Business, no en un repositorio público."
+  "_notaAsesoresRetirado": "El array `asesoresVentas` con tres teléfonos se retiró a propósito. Publicaba tres líneas personales y repartía cada consulta al azar entre ellas: el cliente caía en un chat privado y los otros dos asesores no veían nada de esa conversación. Con una sola cuenta Business multiagente llega al mismo sitio y los tres conservan el historial. Los nombres y la asignación del equipo viven en WhatsApp Business, no en un repositorio público.",
+  "asesoresVentas": [
+    {
+      "id": "con-01",
+      "nombre": "Nestor Pillco",
+      "rol": "Asesor de ventas",
+      "telefono": "51982303279",
+      "foto": "assets/equipo/nestor.webp",
+      "activo": true
+    },
+    {
+      "id": "con-02",
+      "nombre": "Taty Arenas Sumalave",
+      "rol": "Asesora de ventas",
+      "telefono": "51925901256",
+      "foto": "assets/equipo/taty.webp",
+      "activo": true
+    },
+    {
+      "id": "con-03",
+      "nombre": "Iris Muy Llamadas",
+      "rol": "Asesora de ventas",
+      "telefono": "51994790490",
+      "foto": "assets/equipo/iris.webp",
+      "activo": true
+    },
+    {
+      "id": "con-04",
+      "nombre": "Daniel Arenas",
+      "rol": "Asesor de ventas",
+      "telefono": "51931258847",
+      "foto": "assets/equipo/daniel.webp",
+      "activo": true
+    },
+    {
+      "id": "con-05",
+      "nombre": "Raúl Amao AS",
+      "rol": "Asesor de ventas",
+      "telefono": "51938322102",
+      "foto": "assets/equipo/raul.webp",
+      "activo": true
+    }
+  ],
+  "_notaAsesores": "REPARTO POR TURNOS. Cada visitante arranca en un asesor al azar y a partir de ahi avanza en orden: 3, 4, 5, 1, 2, 3… El turno se guarda en el navegador, asi que no es un turno global —GitHub Pages sirve archivos estaticos y no hay servidor que lleve la cuenta—, pero el arranque aleatorio reparte parejo entre visitantes y el orden evita que quien pulsa varias veces caiga siempre en la misma persona. CONTRAPARTIDA CONOCIDA: al ser lineas personales distintas, quien vuelva a escribir a los dos dias puede dar con otro asesor que no vea la conversacion anterior. Se decidio asi a peticion del cliente. Para retirar a alguien: `activo: false`. No borrar la fila."
 }

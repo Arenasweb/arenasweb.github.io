@@ -37,9 +37,18 @@ import { runInNewContext } from "node:vm";
 const RAIZ = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const JSON_MODE = process.argv.includes("--json");
 
-const NUMERO_ESPERADO = JSON.parse(
-  readFileSync(join(RAIZ, "data/configuracion.json"), "utf8")
-).whatsapp;
+const CONFIG_SITIO = JSON.parse(readFileSync(join(RAIZ, "data/configuracion.json"), "utf8"));
+const NUMERO_ESPERADO = CONFIG_SITIO.whatsapp;
+
+// La consulta se reparte por turnos entre los asesores, asi que ya no hay
+// UN numero esperado sino un conjunto de numeros AUTORIZADOS. Lo que la
+// prueba defiende cambia de forma, no de fondo: ningun enlace puede salir
+// hacia un numero que no este en la hoja.
+const NUMEROS_AUTORIZADOS = new Set(
+  (CONFIG_SITIO.asesoresVentas || [])
+    .filter((x) => x && x.activo === true)
+    .map((x) => String(x.telefono).replace(/[^0-9]/g, ""))
+);
 
 /* ================================================================
    Arranque del módulo en un entorno mínimo
@@ -166,7 +175,8 @@ for (const modelo of MODELOS) {
   if (codigo) codigosVistos.add(codigo);
 
   comprobar(modelo + ": va a wa.me", p.host === "wa.me");
-  comprobar(modelo + ": el número es el de la empresa", p.numero === NUMERO_ESPERADO);
+  comprobar(modelo + ": el número es de un asesor autorizado",
+    NUMEROS_AUTORIZADOS.has(p.numero), p.numero);
   comprobar(modelo + ": el mensaje nombra el modelo exacto", p.texto.includes(modelo));
   comprobar(modelo + ": el mensaje nombra el color elegido", p.texto.includes(color),
     p.texto.slice(0, 90));
@@ -175,8 +185,12 @@ for (const modelo of MODELOS) {
     !url.includes(" ") && !/[?&]text=[^&]*[ ñáéíóú]/.test(url));
 }
 
-comprobar("los ocho modelos usan UN SOLO número",
-  numerosVistos.size === 1, [...numerosVistos].length + " distinto(s)");
+// Lo que importa no es cuantos numeros distintos salgan —el reparto hace
+// que salgan varios a proposito— sino que NINGUNO este fuera de la lista
+// aprobada. Un numero de mas aqui es un cliente enviado a un desconocido.
+const fuera = [...numerosVistos].filter((x) => !NUMEROS_AUTORIZADOS.has(x));
+comprobar("ningun modelo enlaza a un numero fuera de la lista aprobada",
+  fuera.length === 0, fuera.join(", "));
 
 comprobar("cada consulta lleva su propio código",
   codigosVistos.size >= MODELOS.length - 1,
@@ -219,7 +233,7 @@ comprobar("el mensaje lo escribe el cliente, en primera persona",
 
 /* --- El cerrojo: sin aprobación no hay enlace --- */
 
-NS.whatsapp._fijarCanal(NUMERO_ESPERADO, false);
+NS.whatsapp._fijarCanal(NUMERO_ESPERADO, false, CONFIG_SITIO.asesoresVentas || []);
 comprobar("un canal sin confirmar no produce enlace",
   NS.whatsapp.enlace("CT 125", "Negro") === "");
 comprobar("un canal sin confirmar no se declara disponible",

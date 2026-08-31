@@ -42,7 +42,7 @@ const BANCO = join(tmpdir(), "arenas-lote-" + process.pid);
 mkdirSync(BANCO, { recursive: true });
 
 /** Una fotografía real del repositorio: existe, pero es 1280×720. */
-const FOTO_PEQUENA = "assets/hero/hero-arenas-poster-v2.jpg";
+const FOTO_PEQUENA = "assets/hero/experiencia-rs200.webp";
 
 /**
  * Identidades vacías, para que la reconciliación no interfiera en las

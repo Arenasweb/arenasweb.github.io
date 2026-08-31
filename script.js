@@ -77,12 +77,29 @@ const $$ = (selector, context = document) => context.querySelectorAll(selector);
  * vuelta): todo el contenido textual debe asignarse con .textContent
  * en el código llamante, nunca con innerHTML de datos editables.
  */
-function createElement(tag, attrs = {}) {
+/**
+ * Crea un elemento con atributos y, si se le pasa, texto.
+ *
+ * El texto va por `textContent` y NUNCA por innerHTML: en este proyecto el
+ * contenido puede venir de una hoja de cálculo que edita otra persona, y
+ * ahí la diferencia entre las dos cosas es la diferencia entre un nombre y
+ * un script.
+ *
+ * Un atributo con valor null o undefined no se escribe, en vez de acabar
+ * en el DOM como la cadena "null".
+ *
+ * @param {string} tag
+ * @param {Object} [attrs]
+ * @param {string} [texto]
+ */
+function createElement(tag, attrs = {}, texto) {
   const el = document.createElement(tag);
   Object.entries(attrs).forEach(([k, v]) => {
+    if (v === null || v === undefined) return;
     if (k === "class") el.className = v;
     else el.setAttribute(k, v);
   });
+  if (texto !== undefined && texto !== null) el.textContent = String(texto);
   return el;
 }
 
@@ -153,15 +170,80 @@ function crearMensajeConsultaModelo(modelo, color, leadId) {
  * @param {string} numero  - número con código de país, sin espacios ni guiones
  * @returns {string} URL de wa.me, o "" si el canal no está aprobado
  */
+/**
+ * Asesores que pueden recibir una consulta ahora mismo.
+ * Se filtra en el momento del clic y no al cargar: el estado puede
+ * cambiar entre una cosa y otra, y un número corto o con letras abre un
+ * chat que no existe.
+ */
+function asesoresActivos() {
+  const lista = (STATE.config && STATE.config.asesoresVentas) || [];
+  return lista.filter(
+    (a) => a && a.activo === true && typeof a.telefono === "string" &&
+      a.telefono.replace(/D/g, "").length >= 9
+  );
+}
+
+/** Dónde se guarda el turno, en el navegador de cada visitante. */
+const TURNO_CLAVE = "arenas.turnoAsesor";
+
+/**
+ * A quién le toca esta consulta.
+ *
+ * POR TURNOS, no al azar puro. Cada visitante arranca en un asesor
+ * aleatorio y a partir de ahí avanza en orden: 3, 4, 5, 1, 2, 3…
+ *
+ * Los dos mecanismos hacen falta y hacen cosas distintas. El arranque
+ * aleatorio reparte ENTRE visitantes: sin él, todos los que entran por
+ * primera vez —que son la mayoría— caerían siempre en el primero de la
+ * lista. El orden reparte DENTRO de un visitante: sin él, quien pulsa
+ * tres veces podría dar tres veces con la misma persona.
+ *
+ * NO es un turno global. GitHub Pages sirve archivos estáticos: no hay
+ * servidor que lleve la cuenta, y este contador solo cuenta los clics de
+ * ESTE navegador. Un turno de verdad exigiría backend.
+ *
+ * @returns {{id:string,nombre:string,telefono:string}|null}
+ */
+function elegirAsesor() {
+  const activos = asesoresActivos();
+  if (!activos.length) return null;
+
+  let i;
+  try {
+    const guardado = window.localStorage.getItem(TURNO_CLAVE);
+    i = guardado === null
+      ? Math.floor(Math.random() * activos.length)
+      : (parseInt(guardado, 10) + 1) % activos.length;
+    if (!isFinite(i) || i < 0) i = 0;
+    window.localStorage.setItem(TURNO_CLAVE, String(i));
+  } catch (e) {
+    // Navegación privada o almacenamiento bloqueado: se cae al azar, que
+    // reparte igual de bien y nunca deja al cliente sin a quién escribir.
+    i = Math.floor(Math.random() * activos.length);
+  }
+  return activos[i];
+}
+
+/**
+ * Construye la URL completa de WhatsApp con mensaje codificado.
+ * Autodefensa: devuelve "" si el canal no está confirmado o si el número
+ * no parece un móvil — ningún llamador puede abrir un chat falso aunque
+ * olvide su propio gate.
+ * @param {string} mensaje
+ * @param {string} [numero] - si se omite, le toca al asesor de turno
+ * @returns {string} URL de wa.me, o "" si el canal no está aprobado
+ */
 function buildWhatsAppURL(mensaje, numero) {
   if (!whatsappConfirmado()) return "";
-  // Sin número explícito se usa el de la empresa, que es el único que hay.
-  // El parámetro existe solo para las pruebas: en producción ningún
-  // llamador pasa un número propio, y no debe empezar a hacerlo.
+  // Sin número explícito, la consulta va al asesor al que le toca. Ponerlo
+  // aquí y no en cada llamada hace que roten TODOS los puntos de entrada
+  // del sitio, incluidos los que se añadan mañana.
   if (numero === undefined || numero === null || numero === "") {
-    numero = CONFIG.whatsapp;
+    const asesor = elegirAsesor();
+    numero = asesor ? asesor.telefono : CONFIG.whatsapp;
   }
-  const clean = typeof numero === "string" ? numero.replace(/\D/g, "") : "";
+  const clean = typeof numero === "string" ? numero.replace(/D/g, "") : "";
   if (clean.length < 9) return ""; // placeholder, vacío o número incompleto
   return `https://wa.me/${clean}?text=${encodeURIComponent(mensaje)}`;
 }
@@ -1288,6 +1370,77 @@ function inicializarConsulta() {
    Validación del formulario de cotización y envío por WhatsApp.
    ================================================================ */
 
+/* ================================================================
+   NUESTRO EQUIPO
+   ================================================================ */
+
+/**
+ * Pinta la rejilla de asesores desde data/configuracion.json.
+ *
+ * QUÉ NO SE IMPRIME: el teléfono. Viaja dentro del enlace que abre
+ * WhatsApp, pero no queda en la página como texto plano. Publicar cinco
+ * móviles en una web indexable es regalárselos a los recolectores de
+ * spam, y quien quiere escribir no necesita leer el número: pulsa.
+ *
+ * Sin asesores activos la sección entera se retira. Una sección de
+ * equipo vacía es peor que no tener sección de equipo.
+ */
+function inicializarEquipo() {
+  const seccion = $("#equipo");
+  const lista = $("#equipo-lista");
+  if (!seccion || !lista) return;
+
+  const asesores = asesoresActivos();
+  if (!asesores.length || !whatsappConfirmado()) {
+    seccion.hidden = true;
+    return;
+  }
+
+  lista.textContent = "";
+
+  asesores.forEach((asesor) => {
+    const li = createElement("li", { class: "equipo-card" });
+
+    // Es un <a> y no un <button>: abre una conversación en otro sitio, y
+    // eso es navegar. Así funciona el clic central, «abrir en pestaña
+    // nueva» y el teclado, sin escribir una línea para cada cosa.
+    const enlace = createElement("a", {
+      class: "equipo-card__enlace",
+      href: buildWhatsAppURL(crearMensajeWhatsApp("una de sus motocicletas"), asesor.telefono),
+      target: "_blank",
+      rel: "noopener noreferrer",
+      "aria-label": "Escribir por WhatsApp a " + asesor.nombre + ", " + (asesor.rol || "asesor de ventas"),
+    });
+
+    const marco = createElement("span", { class: "equipo-card__marco" });
+    const foto = createElement("img", {
+      class: "equipo-card__foto",
+      src: asesor.foto,
+      alt: "",
+      width: 440,
+      height: 440,
+      loading: "lazy",
+      decoding: "async",
+    });
+    marco.appendChild(foto);
+
+    // Distintivo de WhatsApp: dice qué va a pasar al pulsar, sin tener
+    // que leer nada. Decorativo para lectores de pantalla porque el
+    // aria-label del enlace ya lo cuenta con palabras.
+    const sello = createElement("span", { class: "equipo-card__sello", "aria-hidden": "true" });
+    marco.appendChild(sello);
+    enlace.appendChild(marco);
+
+    enlace.appendChild(createElement("span", { class: "equipo-card__rol" }, asesor.rol || "Asesor de ventas"));
+    enlace.appendChild(createElement("span", { class: "equipo-card__nombre" }, asesor.nombre));
+
+    li.appendChild(enlace);
+    lista.appendChild(li);
+  });
+
+  seccion.hidden = false;
+}
+
 function inicializarFormulario() {
   const form      = $("#form-cotizacion");
   const btnEnviar = $("#btn-cotizar");
@@ -1588,6 +1741,9 @@ async function inicializarApp() {
     inicializarCaminos();
     inicializarGuia();
     inicializarConsulta();
+
+    // 7e. Rejilla de asesores (se retira sola si no hay ninguno activo)
+    inicializarEquipo();
 
     // 8. Inicializar formulario de cotización
     inicializarFormulario();
