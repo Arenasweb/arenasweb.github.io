@@ -1409,7 +1409,7 @@ function inicializarEquipo() {
       href: buildWhatsAppURL(crearMensajeWhatsApp("una de sus motocicletas"), asesor.telefono),
       target: "_blank",
       rel: "noopener noreferrer",
-      "aria-label": "Escribir por WhatsApp a " + asesor.nombre + ", " + (asesor.rol || "asesor de ventas"),
+      "aria-label": "Escribir por WhatsApp a " + asesor.nombre + ", del equipo de ventas",
     });
 
     const marco = createElement("span", { class: "equipo-card__marco" });
@@ -1431,7 +1431,9 @@ function inicializarEquipo() {
     marco.appendChild(sello);
     enlace.appendChild(marco);
 
-    enlace.appendChild(createElement("span", { class: "equipo-card__rol" }, asesor.rol || "Asesor de ventas"));
+    // Sin rol: el cliente pidió nombre y foto, nada más. Cinco veces
+    // «ASESOR DE VENTAS» bajo cinco caras no informa de nada — ya lo dice
+    // el titular de la sección.
     enlace.appendChild(createElement("span", { class: "equipo-card__nombre" }, asesor.nombre));
 
     li.appendChild(enlace);
@@ -1439,6 +1441,41 @@ function inicializarEquipo() {
   });
 
   seccion.hidden = false;
+}
+
+/**
+ * El distintivo de reproducción del vídeo de ruta.
+ *
+ * El vídeo llega con `preload="none"` y sin `controls`: son 5,7 MB y una
+ * narración hablada, así que ni se descarga ni se reproduce hasta que
+ * alguien lo pide. Al pulsar aparecen los controles nativos — los del
+ * navegador, que ya saben de teclado, subtítulos y velocidad— y el
+ * distintivo se retira.
+ *
+ * Si el navegador rechaza la reproducción, el distintivo se queda y los
+ * controles aparecen igual: nunca queda un botón que no hace nada.
+ */
+function inicializarVideoRuta() {
+  const video = $("#ruta-video");
+  const boton = $("#ruta-play");
+  if (!video || !boton) return;
+
+  boton.addEventListener("click", () => {
+    video.controls = true;
+    const intento = video.play();
+    if (intento && typeof intento.then === "function") {
+      intento.then(() => { boton.hidden = true; }).catch(() => { /* queda el botón */ });
+    } else {
+      boton.hidden = true;
+    }
+  });
+
+  // Si termina, se vuelve al estado de partida: póster y distintivo.
+  video.addEventListener("ended", () => {
+    video.controls = false;
+    video.load();
+    boton.hidden = false;
+  });
 }
 
 function inicializarFormulario() {
@@ -1741,6 +1778,9 @@ async function inicializarApp() {
     inicializarCaminos();
     inicializarGuia();
     inicializarConsulta();
+
+    // 7d bis. Vídeo de «cómo llegar»: no se descarga hasta que se pide
+    inicializarVideoRuta();
 
     // 7e. Rejilla de asesores (se retira sola si no hay ninguno activo)
     inicializarEquipo();

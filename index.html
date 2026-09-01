@@ -940,12 +940,103 @@
              WhatsApp, pero no quedan en la pagina como texto plano que
              cualquier recolector de spam pueda cosechar.
         ============================================================ -->
+        <!-- ============================================================
+             CÓMO LLEGAR
+
+             El vídeo lo grabó el propio equipo y explica la ruta hablando,
+             así que NO va en silencio ni en bucle: lleva controles y espera
+             a que alguien lo pida. `preload="none"` significa que no cuesta
+             un solo byte hasta ese momento — son 5,7 MB, y nadie debe
+             pagarlos por pasar por delante.
+
+             Las referencias de abajo salen del propio vídeo: la avenida, el
+             colegio y la vía que conecta se leen en pantalla. No hay
+             dirección exacta ni mapa porque no los tengo, y un mapa que
+             apunta a un sitio inventado es peor que no tener mapa.
+        ============================================================ -->
+        <section id="como-llegar" class="ruta-section reveal-section" aria-labelledby="ruta-heading">
+          <div class="wrap">
+            <p class="ruta__kicker">Cómo llegar</p>
+            <h2 id="ruta-heading" class="block-title">Conoce la ruta a ARENAS</h2>
+            <p class="block-lead ruta__lead">
+              Estamos en la Av. La Cultura, en Cusco. Te lo enseñamos en un minuto.
+            </p>
+
+            <div class="ruta-panel">
+              <figure class="ruta-video">
+                <video
+                  id="ruta-video"
+                  class="ruta-video__pieza"
+                  src="assets/videos/web/como-llegar.mp4"
+                  poster="assets/videos/posters/como-llegar.webp"
+                  playsinline
+                  preload="none"
+                  width="1280"
+                  height="720"
+                ></video>
+
+                <!-- El distintivo arranca el vídeo y se retira. Es un botón
+                     real, no un adorno con manejador encima: así funciona
+                     con teclado y lo anuncia un lector de pantalla. Los
+                     controles nativos aparecen al empezar, que es cuando
+                     hacen falta — antes solo ensucian el póster. -->
+                <button type="button" id="ruta-play" class="ruta-play" aria-controls="ruta-video">
+                  <span class="ruta-play__disco" aria-hidden="true"></span>
+                  <span class="ruta-play__texto">Ver cómo llegar</span>
+                </button>
+
+                <figcaption class="ruta-video__pie">
+                  Nuestro equipo te lleva desde la avenida hasta la puerta. Con sonido.
+                </figcaption>
+              </figure>
+
+              <aside class="ruta-datos">
+                <p class="ruta-datos__titulo">Puntos de referencia</p>
+
+                <ul class="ruta-lista">
+                  <li class="ruta-item">
+                    <span class="ruta-item__marca ruta-item__marca--via" aria-hidden="true"></span>
+                    <span class="ruta-item__texto">
+                      <span class="ruta-item__rotulo">Avenida</span>
+                      <span class="ruta-item__valor">Av. La Cultura</span>
+                    </span>
+                  </li>
+                  <li class="ruta-item">
+                    <span class="ruta-item__marca ruta-item__marca--hito" aria-hidden="true"></span>
+                    <span class="ruta-item__texto">
+                      <span class="ruta-item__rotulo">A la altura de</span>
+                      <span class="ruta-item__valor">Colegio Florinda Mato de Turner</span>
+                    </span>
+                  </li>
+                  <li class="ruta-item">
+                    <span class="ruta-item__marca ruta-item__marca--cruce" aria-hidden="true"></span>
+                    <span class="ruta-item__texto">
+                      <span class="ruta-item__rotulo">Conecta con</span>
+                      <span class="ruta-item__valor">Av. Huayna Cápac</span>
+                    </span>
+                  </li>
+                  <li class="ruta-item">
+                    <span class="ruta-item__marca ruta-item__marca--ciudad" aria-hidden="true"></span>
+                    <span class="ruta-item__texto">
+                      <span class="ruta-item__rotulo">Ciudad</span>
+                      <span class="ruta-item__valor">Cusco, Perú</span>
+                    </span>
+                  </li>
+                </ul>
+
+                <p class="ruta-datos__nota">
+                  ¿Vienes en camino y no la encuentras? Escríbenos y te guiamos.
+                </p>
+              </aside>
+            </div>          </div>
+        </section>
+
         <section id="equipo" class="equipo-section reveal-section" aria-labelledby="equipo-heading" hidden>
           <div class="wrap">
             <p class="equipo__kicker">Nuestro equipo</p>
             <h2 id="equipo-heading" class="block-title">Conoce a nuestro equipo</h2>
             <p class="block-lead equipo__lead">
-              Nuestro equipo de asesores esta listo para ayudarte a encontrar la moto ideal para ti.
+              Nuestro equipo de asesores está listo para ayudarte a encontrar la moto ideal para ti.
             </p>
 
             <ul id="equipo-lista" class="equipo-grid"></ul>
