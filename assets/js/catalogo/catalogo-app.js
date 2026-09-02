@@ -595,6 +595,10 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       aplicar: $("#catalogo-aplicar-filtros"),
     };
 
+    // Un solo oyente en la rejilla, puesto una vez. Sobrevive a los
+    // repintados por filtro porque el contenedor no se sustituye.
+    inicializarInclinacion();
+
     contenedor.appendChild(NS.ui.estadoCargando());
 
     NS.data.cargar().then(function (estado) {
@@ -763,6 +767,68 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
   /* ================================================================
      ARRANQUE
      ================================================================ */
+
+  /* ================================================================
+     INCLINACIÓN HACIA EL CURSOR
+
+     Cuatro grados. Ni uno más: pasado ese punto deja de leerse como un
+     objeto sólido y empieza a leerse como un efecto, que es justo lo
+     que abarata una página.
+
+     Un solo oyente en la rejilla, no uno por tarjeta. Con ocho tarjetas
+     la diferencia no se nota; con ochenta, sí — y este catálogo va a
+     crecer.
+
+     Solo con ratón. En una pantalla táctil no hay cursor al que
+     inclinarse, y el dedo ya tapa la tarjeta que tocaría mirar.
+     ================================================================ */
+
+  var GRADOS = 4;
+
+  function inicializarInclinacion() {
+    if (!dom.grid) return;
+    if (U.movimientoReducido()) return;
+    // `hover: hover` distingue un ratón de un dedo mejor que el ancho de
+     // pantalla: hay tabletas anchas sin cursor y portátiles táctiles.
+    if (!window.matchMedia || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+    var pendiente = false;
+    var ultimo = null;
+
+    function aplicar() {
+      pendiente = false;
+      if (!ultimo) return;
+      var card = ultimo.card, x = ultimo.x, y = ultimo.y;
+      // Se escriben las VARIABLES, no la transformación: así conviven la
+      // entrada por scroll, el hover y esto sin pisarse.
+      card.style.setProperty("--tj-rx", (-y * GRADOS).toFixed(2) + "deg");
+      card.style.setProperty("--tj-ry", (x * GRADOS).toFixed(2) + "deg");
+    }
+
+    dom.grid.addEventListener("pointermove", function (e) {
+      var card = e.target.closest ? e.target.closest(".moto-card") : null;
+      if (!card) return;
+      var b = card.getBoundingClientRect();
+      // −1 a 1 desde el centro. Se mide en cada movimiento y no se
+      // guarda: la rejilla se recompone al filtrar y una caja cacheada
+      // dejaría la tarjeta inclinándose hacia donde ya no está.
+      ultimo = {
+        card: card,
+        x: (e.clientX - b.left) / b.width * 2 - 1,
+        y: (e.clientY - b.top) / b.height * 2 - 1,
+      };
+      if (!pendiente) { pendiente = true; window.requestAnimationFrame(aplicar); }
+    }, { passive: true });
+
+    // Al salir vuelve sola. Sin esto, la tarjeta se queda torcida.
+    dom.grid.addEventListener("pointerout", function (e) {
+      var card = e.target.closest ? e.target.closest(".moto-card") : null;
+      if (!card || (e.relatedTarget && card.contains(e.relatedTarget))) return;
+      card.style.removeProperty("--tj-rx");
+      card.style.removeProperty("--tj-ry");
+      if (ultimo && ultimo.card === card) ultimo = null;
+    }, { passive: true });
+  }
 
   function arrancar() {
     var rejillaCatalogo = document.getElementById("catalogo-grid");

@@ -470,6 +470,20 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     );
     cuerpo.appendChild(pie);
 
+    // La foto que viaja a la ficha.
+    //
+     // El nombre se pone en el CLIC y no al pintar: `view-transition-name`
+    // tiene que ser único en toda la página, y con ocho tarjetas marcadas
+    // a la vez el navegador descarta la transición entera sin avisar.
+    //
+    // Se escribe por CSSOM (`.style`), no por atributo `style=`: la
+    // política de contenido de este sitio prohíbe estilos en línea, y esa
+    // prohibición es la que permite que la política sea estricta.
+    card.addEventListener("click", function () {
+      var foto = card.querySelector(".moto-card__img");
+      if (foto) foto.style.viewTransitionName = "moto-activa";
+    });
+
     card.appendChild(cuerpo);
     return card;
   }
@@ -483,9 +497,47 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     return caja;
   }
 
+  /** Cuántas siluetas se dibujan mientras llegan los datos. */
+  var SILUETAS = 4;
+
+  /**
+   * Estado de carga.
+   *
+   * Antes era un recuadro de borde discontinuo con «Cargando modelos…»
+   * dentro. Ese recuadro es el aspecto exacto de un marcador de posición
+   * de plantilla: una caja vacía esperando contenido.
+   *
+   * Ahora se dibujan siluetas con la FORMA de las tarjetas que van a
+   * llegar — foto arriba, rótulo, título, dos líneas —, así que la página
+   * no da un salto al aparecer los datos: lo que había ya ocupaba su
+   * sitio. Eso es lo que separa una espera de un hueco.
+   *
+   * `aria-hidden` en las siluetas y un aviso aparte para lectores de
+   * pantalla: dibujos que imitan contenido no deben anunciarse como si lo
+   * fueran.
+   */
   function estadoCargando() {
-    var caja = estado("catalog-state--loading", "Cargando modelos…", "");
-    caja.setAttribute("aria-hidden", "true");
+    var caja = U.el("div", { class: "catalog-skeleton" });
+
+    var rejilla = U.el("div", { class: "catalog-skeleton__grid", "aria-hidden": "true" });
+    for (var i = 0; i < SILUETAS; i++) {
+      var t = U.el("div", { class: "skel-card" });
+      t.appendChild(U.el("div", { class: "skel-card__media" }));
+      var cuerpo = U.el("div", { class: "skel-card__body" });
+      cuerpo.appendChild(U.el("span", { class: "skel-linea skel-linea--kicker" }));
+      cuerpo.appendChild(U.el("span", { class: "skel-linea skel-linea--titulo" }));
+      cuerpo.appendChild(U.el("span", { class: "skel-linea skel-linea--texto" }));
+      cuerpo.appendChild(U.el("span", { class: "skel-linea skel-linea--corta" }));
+      t.appendChild(cuerpo);
+      rejilla.appendChild(t);
+    }
+    caja.appendChild(rejilla);
+
+    // En inglés por decisión del cliente. Se marca `lang` para que un
+    // lector de pantalla no lo pronuncie con fonética española.
+    var pie = U.el("p", { class: "catalog-skeleton__pie", lang: "en", role: "status" }, "Loading models");
+    caja.appendChild(pie);
+
     return caja;
   }
 
