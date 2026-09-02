@@ -139,6 +139,12 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     );
     contenedor.appendChild(principal);
 
+    // El otro extremo del viaje. Mismo nombre que la tarjeta de origen:
+    // así el navegador entiende que es la MISMA moto y la desplaza en vez
+    // de fundir dos imágenes distintas.
+    var fotoFicha = principal.querySelector("img");
+    if (fotoFicha) fotoFicha.style.viewTransitionName = "moto-activa";
+
     // Solo hay galería si existe fotografía real además de la portada.
     if (!fuente.imagenPrincipal && !fuente.imagenMobile) return;
     if (!fuente.galeria.length) return;
@@ -499,6 +505,9 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     return envoltorio;
   }
 
+  /* Modelos con recorrido inmersivo publicado en explorar.html. */
+  var CON_RECORRIDO = ["pulsar-200-ns-ug2"];
+
   /* ---------------- Ficha: llamada a la acción ---------------- */
 
   /* ---------------- Datos rápidos ---------------- */
@@ -644,6 +653,22 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       // aparece en el HTML servido, y el color se lee en el instante del
       // clic y no cuando se pintó la ficha.
       cta.appendChild(construirBotonQuiero(modelo));
+
+      // Recorrido inmersivo. Solo para los modelos que tienen las
+      // fotografías de detalle generadas: enlazar una página que se abre
+      // con el escenario vacío es peor que no enlazarla. La lista está
+      // aquí y no en los datos porque depende de que existan archivos en
+      // assets/explorar/, no de lo que diga el Sheets.
+      if (CON_RECORRIDO.indexOf(modelo.slug) !== -1) {
+        cta.appendChild(
+          U.el(
+            "a",
+            { class: "modelo-cta__secundario modelo-cta__recorrido",
+              href: "explorar.html" },
+            "Recorrerla pieza por pieza"
+          )
+        );
+      }
 
       // Acción secundaria, discreta: quien duda entre modelos quiere
       // comparar, no volver al catálogo entero y filtrar otra vez. El

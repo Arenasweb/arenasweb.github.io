@@ -1,0 +1,353 @@
+/* ================================================================
+   ARENAS MOTOCICLETAS — explorar.css
+   Recorrido por la Pulsar 200 NS, pieza por pieza.
+
+   FONDO BLANCO, Y NO ES UN CAPRICHO
+   El resto del sitio es oscuro porque presenta motos sobre carretera.
+   Aquí no hay escena: hay producto. Sobre blanco, una pieza negra con
+   filo rojo se lee entera —cada tornillo, cada soldadura— y sobre negro
+   se pierde la mitad. Es la misma razón por la que un catálogo impreso
+   de recambios va sobre blanco y el anuncio va sobre paisaje.
+
+   La fotografía llega con transparencia, así que el blanco no se pintó
+   detrás: se ve porque no hay nada tapándolo.
+   ================================================================ */
+
+.explorar {
+  --ex-tinta: #0b0d12;
+  --ex-suave: #6b7280;
+  --ex-linea: #e6e8ec;
+  --ex-acento: #1f6bff;
+
+  background: #fff;
+  color: var(--ex-tinta);
+}
+
+/* ---------------- Cabecera ---------------- */
+
+.ex-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding: var(--space-4) clamp(var(--space-5), 4vw, var(--space-10));
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--ex-linea);
+}
+
+/* El logo es blanco sobre fondo oscuro en el resto del sitio. Aquí se
+   invierte en vez de pedir otra versión del archivo. */
+.ex-header__marca img {
+  display: block;
+  width: clamp(110px, 12vw, 150px);
+  height: auto;
+  filter: invert(1) brightness(0.25);
+}
+
+.ex-header__nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(var(--space-4), 2vw, var(--space-6));
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.ex-header__nav a { color: var(--ex-tinta); text-decoration: none; }
+.ex-header__nav a:hover { color: var(--ex-acento); }
+
+.ex-header__cta {
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: var(--ex-acento);
+  color: #fff !important;
+}
+
+/* ---------------- Apertura ---------------- */
+
+.ex-intro {
+  display: grid;
+  gap: clamp(var(--space-6), 4vw, var(--space-10));
+  align-items: center;
+  padding: clamp(var(--space-10), 7vw, var(--space-16, 64px)) clamp(var(--space-5), 5vw, var(--space-12));
+  max-width: 1500px;
+  margin-inline: auto;
+}
+
+@media (min-width: 900px) {
+  .ex-intro { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); }
+}
+
+.ex-kicker {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ex-acento);
+}
+
+.ex-titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 0.86;
+  letter-spacing: -0.01em;
+  font-size: clamp(3rem, 9vw, 7rem);
+  margin: var(--space-3) 0 var(--space-4);
+  color: var(--ex-tinta);
+}
+
+/* El número en otro peso: la línea se lee como una sola pieza y aun así
+   distingue familia de cilindrada, que es como se nombra una moto. */
+.ex-titulo span {
+  display: block;
+  color: var(--ex-acento);
+}
+
+.ex-lead {
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  line-height: 1.65;
+  color: var(--ex-suave);
+  max-width: 40ch;
+}
+
+.ex-pista {
+  margin-top: clamp(var(--space-6), 4vw, var(--space-10));
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ex-suave);
+}
+
+.ex-pista::after {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 46px;
+  margin-top: var(--space-3);
+  background: linear-gradient(var(--ex-acento), transparent);
+}
+
+.ex-intro__moto { margin: 0; }
+.ex-intro__moto img { display: block; width: 100%; height: auto; }
+
+/* ---------------- Recorrido ---------------- */
+
+.ex-recorrido {
+  display: grid;
+  gap: 0;
+  max-width: 1500px;
+  margin-inline: auto;
+  padding-inline: clamp(var(--space-5), 5vw, var(--space-12));
+}
+
+@media (min-width: 900px) {
+  .ex-recorrido { grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr); }
+}
+
+/* El escenario se queda quieto y los pasos pasan por debajo. Eso es lo
+   que produce la sensación de cámara: la moto no se va, cambia el plano. */
+.ex-escenario {
+  position: sticky;
+  top: clamp(90px, 12vh, 130px);
+  height: min(70vh, 620px);
+  display: grid;
+  align-content: center;
+  gap: var(--space-5);
+}
+
+.ex-escenario__caja {
+  position: relative;
+  width: 100%;
+  height: min(58vh, 520px);
+}
+
+/* Todas las vistas apiladas. Cambiar de pieza es cambiar cuál está
+   encendida, no montar y desmontar imágenes: montar provocaría un
+   parpadeo en blanco mientras la siguiente descarga. */
+.ex-vista {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transform: scale(1.04);
+  transition:
+    opacity var(--duration-slower) var(--ease-cinematic),
+    transform var(--duration-page) var(--ease-cinematic);
+  will-change: opacity, transform;
+}
+
+.ex-vista.is-activa {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------------- Puntos de recorrido ---------------- */
+
+.ex-puntos {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ex-punto {
+  width: 26px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--ex-linea);
+  transition: background var(--duration-base) var(--ease-out),
+              width var(--duration-base) var(--ease-out);
+}
+
+.ex-punto.is-activo {
+  width: 44px;
+  background: var(--ex-acento);
+}
+
+/* ---------------- Pasos ---------------- */
+
+.ex-pasos { display: grid; }
+
+.ex-paso {
+  min-height: 78vh;
+  display: grid;
+  align-content: center;
+  gap: var(--space-3);
+  padding-block: clamp(var(--space-8), 6vw, var(--space-12));
+  opacity: 0.32;
+  transition: opacity var(--duration-slower) var(--ease-out);
+}
+
+.ex-paso.is-activo { opacity: 1; }
+
+.ex-paso__num {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--ex-acento);
+}
+
+.ex-paso__titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.02;
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  color: var(--ex-tinta);
+}
+
+.ex-paso__texto {
+  font-size: clamp(0.98rem, 1.3vw, 1.08rem);
+  line-height: 1.72;
+  color: var(--ex-suave);
+  max-width: 38ch;
+}
+
+/* El dato va aparte y con filo: es lo único de este bloque que se puede
+   comprobar en una ficha técnica, y conviene que se distinga del texto
+   que solo describe. */
+.ex-paso__dato {
+  margin-top: var(--space-2);
+  padding-left: var(--space-4);
+  border-left: 2px solid var(--ex-acento);
+  font-size: var(--text-sm);
+  color: var(--ex-suave);
+}
+
+.ex-paso__dato span {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--ex-tinta);
+  margin-right: 6px;
+}
+
+/* ---------------- Cierre ---------------- */
+
+.ex-cierre {
+  text-align: center;
+  padding: clamp(var(--space-12), 9vw, var(--space-20, 80px)) clamp(var(--space-5), 5vw, var(--space-12));
+  border-top: 1px solid var(--ex-linea);
+}
+
+.ex-cierre__titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(1.7rem, 4vw, 2.8rem);
+  line-height: 1.05;
+  color: var(--ex-tinta);
+}
+
+.ex-cierre__texto {
+  margin: var(--space-4) auto 0;
+  max-width: 46ch;
+  color: var(--ex-suave);
+  line-height: 1.7;
+}
+
+.ex-cierre__acciones {
+  margin-top: clamp(var(--space-6), 4vw, var(--space-8));
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  align-items: center;
+  justify-content: center;
+}
+
+.ex-cierre__secundario {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ex-acento);
+  text-decoration: none;
+}
+
+.ex-cierre__secundario:hover { text-decoration: underline; }
+
+/* ---------------- Móvil ---------------- */
+
+@media (max-width: 899px) {
+  /* En vertical no hay sitio para escenario fijo y texto al lado: la
+     imagen se queda arriba, pegada, y el texto pasa por debajo. */
+  .ex-escenario {
+    position: sticky;
+    top: 64px;
+    height: auto;
+    padding-block: var(--space-4);
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(10px);
+  }
+  .ex-escenario__caja { height: 42vh; }
+  .ex-paso { min-height: 62vh; }
+}
+
+/* ---------------- Movimiento reducido ---------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .ex-vista {
+    transition: opacity var(--duration-fast) linear;
+    transform: none;
+  }
+  .ex-vista.is-activa { transform: none; }
+  .ex-paso { transition: none; opacity: 1; }
+  .ex-punto { transition: none; }
+}
+
+/* Sin JavaScript el escenario no puede cambiar de pieza, así que se
+   deshace el apilado y se muestran todas en columna: se pierde el
+   recorrido, no el contenido. */
+html:not(.js) .ex-escenario { position: static; height: auto; }
+html:not(.js) .ex-escenario__caja { height: auto; display: grid; gap: var(--space-6); }
+html:not(.js) .ex-vista { position: static; opacity: 1; transform: none; height: auto; }
+html:not(.js) .ex-puntos { display: none; }
+html:not(.js) .ex-paso { opacity: 1; min-height: 0; }

@@ -3091,6 +3091,40 @@ main > section { scroll-margin-top: 84px; }
   margin-top: clamp(var(--space-8), 4vw, var(--space-12));
 }
 
+/* El recorrido es una acción secundaria, no una alternativa al catálogo:
+   va al lado y sin fondo, para que el botón siga siendo lo primero que
+   se ve. En pantalla estrecha cae debajo por el flex-wrap. */
+.featured-actions {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(var(--space-4), 2vw, var(--space-6));
+}
+
+.featured-actions__recorrido {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--brand-blue-bright);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+}
+
+.featured-actions__recorrido::after {
+  content: "\2192";
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.featured-actions__recorrido:hover {
+  color: var(--brand-blue-ice);
+  border-bottom-color: rgba(188, 212, 255, 0.45);
+}
+
+.featured-actions__recorrido:hover::after { transform: translateX(3px); }
+
 @media (max-width: 680px) {
   .featured-actions .btn {
     width: 100%;

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Seguridad: misma política que index.html. Ver allí el porqué de
+         cada directiva y qué no cubre. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'sha256-WZRJfWvsnNCPcxzZwvyhovnZGqhZaC+8gPGPRbx6wTk='; style-src 'self'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; upgrade-insecure-requests"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <meta name="description" content="Explora la Bajaj Pulsar 200 NS UG2 pieza por pieza: motor, horquilla invertida, frenos con ABS y depósito. ARENAS MOTOCICLETAS, Cusco." />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="ARENAS MOTOCICLETAS" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_PE" />
+    <meta property="og:title" content="Explora la Pulsar 200 NS — ARENAS MOTOCICLETAS" />
+    <meta property="og:description" content="Pieza por pieza: motor, horquilla, frenos y depósito." />
+    <meta property="og:url" content="https://arenasweb.github.io/explorar.html" />
+    <meta property="og:site_name" content="ARENAS MOTOCICLETAS" />
+
+    <title>Explora la Pulsar 200 NS — ARENAS MOTOCICLETAS</title>
+
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="assets/css/explorar.css" />
+    <link rel="canonical" href="https://arenasweb.github.io/explorar.html" />
+
+    <!-- La pieza que se ve primero. Precargarla evita que el escenario
+         arranque en blanco mientras baja. -->
+    <link rel="preload" as="image" href="assets/explorar/pulsar-200-ns-ug2/completa.webp" fetchpriority="high" />
+
+    <script>document.documentElement.classList.add("js");</script>
+  </head>
+
+  <body class="explorar">
+    <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
+
+    <header class="ex-header" role="banner">
+      <a class="ex-header__marca" href="index.html" aria-label="ARENAS MOTOCICLETAS, ir al inicio">
+        <img src="assets/branding/arenas-logo-oficial.png" width="900" height="144" alt="" />
+      </a>
+      <nav class="ex-header__nav" aria-label="Navegación">
+        <a href="catalogo.html">Catálogo</a>
+        <a href="modelo.html?slug=pulsar-200-ns-ug2" class="ex-header__cta">Ver ficha</a>
+      </nav>
+    </header>
+
+    <main id="main-content" role="main" tabindex="-1">
+
+      <!-- ============================================================
+           APERTURA
+           Fondo blanco y la moto entera, sin nada más. Es el único
+           momento en que se ve completa: a partir de aquí el recorrido
+           entra en las piezas.
+      ============================================================ -->
+      <section class="ex-intro" aria-labelledby="ex-titulo">
+        <div class="ex-intro__texto">
+          <p class="ex-kicker">Deportiva · Pulsar</p>
+          <h1 id="ex-titulo" class="ex-titulo">PULSAR<span>200 NS</span></h1>
+          <p class="ex-lead">Desempeño deportivo y confianza para una conducción intensa.</p>
+          <p class="ex-pista" aria-hidden="true">Baja para recorrerla</p>
+        </div>
+
+        <figure class="ex-intro__moto">
+          <img
+            src="assets/explorar/pulsar-200-ns-ug2/completa.webp"
+            alt="Bajaj Pulsar 200 NS UG2 negra con detalles rojos, vista lateral derecha completa"
+            width="2200" height="1444" fetchpriority="high" decoding="async"
+          />
+        </figure>
+      </section>
+
+      <!-- ============================================================
+           RECORRIDO POR LAS PIEZAS
+
+           El escenario se queda fijo y los pasos pasan por debajo. Cada
+           paso enciende su fotografía: no hay corte entre una pieza y la
+           siguiente, hay un cambio de plano sobre la misma moto.
+
+           Los recortes salen de un máster de 9568 × 6376 px, así que un
+           acercamiento al freno sigue teniendo detalle real y no es una
+           foto pequeña estirada.
+      ============================================================ -->
+      <div class="ex-recorrido">
+        <div class="ex-escenario" aria-hidden="true">
+          <div class="ex-escenario__caja">
+            <img class="ex-vista is-activa" data-zona="faro"       src="assets/explorar/pulsar-200-ns-ug2/faro.webp" alt="" width="1400" height="1000" decoding="async" />
+            <img class="ex-vista"           data-zona="tanque"     src="assets/explorar/pulsar-200-ns-ug2/tanque.webp" alt="" width="1400" height="1000" loading="lazy" decoding="async" />
+            <img class="ex-vista"           data-zona="motor"      src="assets/explorar/pulsar-200-ns-ug2/motor.webp" alt="" width="1400" height="1000" loading="lazy" decoding="async" />
+            <img class="ex-vista"           data-zona="suspension" src="assets/explorar/pulsar-200-ns-ug2/suspension.webp" alt="" width="1400" height="1000" loading="lazy" decoding="async" />
+            <img class="ex-vista"           data-zona="freno"      src="assets/explorar/pulsar-200-ns-ug2/freno.webp" alt="" width="1400" height="1000" loading="lazy" decoding="async" />
+            <img class="ex-vista"           data-zona="escape"     src="assets/explorar/pulsar-200-ns-ug2/escape.webp" alt="" width="1400" height="1000" loading="lazy" decoding="async" />
+            <img class="ex-vista"           data-zona="cola"       src="assets/explorar/pulsar-200-ns-ug2/cola.webp" alt="" width="1400" height="1000" loading="lazy" decoding="async" />
+          </div>
+
+          <ol class="ex-puntos" id="ex-puntos"></ol>
+        </div>
+
+        <div class="ex-pasos">
+          <section class="ex-paso" data-zona="faro" aria-labelledby="p-faro">
+            <p class="ex-paso__num">01</p>
+            <h2 id="p-faro" class="ex-paso__titulo">Frontal</h2>
+            <p class="ex-paso__texto">
+              El frontal de la NS es lo primero que se reconoce en la calle: carenado
+              corto, faro integrado y el filo rojo que recorre el lateral.
+            </p>
+          </section>
+
+          <section class="ex-paso" data-zona="tanque" aria-labelledby="p-tanque">
+            <p class="ex-paso__num">02</p>
+            <h2 id="p-tanque" class="ex-paso__titulo">Depósito</h2>
+            <p class="ex-paso__texto">
+              Doce litros y las aletas laterales que dan a la moto su postura de
+              ataque. La gráfica «200» va sobre la tapa, no pegada encima.
+            </p>
+            <p class="ex-paso__dato"><span>12 L</span> de capacidad</p>
+          </section>
+
+          <section class="ex-paso" data-zona="motor" aria-labelledby="p-motor">
+            <p class="ex-paso__num">03</p>
+            <h2 id="p-motor" class="ex-paso__titulo">Motor</h2>
+            <p class="ex-paso__texto">
+              199.5 cc refrigerados por líquido. El radiador y sus conductos quedan a
+              la vista entre el chasis perimetral, que es parte del carácter de la NS.
+            </p>
+            <p class="ex-paso__dato"><span>23.2 HP</span> · 18.3 Nm · 6 velocidades</p>
+          </section>
+
+          <section class="ex-paso" data-zona="suspension" aria-labelledby="p-susp">
+            <p class="ex-paso__num">04</p>
+            <h2 id="p-susp" class="ex-paso__titulo">Horquilla invertida</h2>
+            <p class="ex-paso__texto">
+              Barras invertidas al frente. Es el componente que más se nota al frenar
+              fuerte y el que más separa a esta moto de una urbana.
+            </p>
+          </section>
+
+          <section class="ex-paso" data-zona="freno" aria-labelledby="p-freno">
+            <p class="ex-paso__num">05</p>
+            <h2 id="p-freno" class="ex-paso__titulo">Freno y ABS</h2>
+            <p class="ex-paso__texto">
+              Disco delantero perforado con pinza y el módulo ABS montado sobre la
+              barra. Detrás, un segundo disco.
+            </p>
+            <p class="ex-paso__dato"><span>300 / 230 mm</span> · ABS</p>
+          </section>
+
+          <section class="ex-paso" data-zona="escape" aria-labelledby="p-escape">
+            <p class="ex-paso__num">06</p>
+            <h2 id="p-escape" class="ex-paso__titulo">Bajos y escape</h2>
+            <p class="ex-paso__texto">
+              El colector sale del cilindro y recorre los bajos protegido por el
+              cubrecárter. Ahí es donde se ve el trabajo que no se suele fotografiar.
+            </p>
+          </section>
+
+          <section class="ex-paso" data-zona="cola" aria-labelledby="p-cola">
+            <p class="ex-paso__num">07</p>
+            <h2 id="p-cola" class="ex-paso__titulo">Cola</h2>
+            <p class="ex-paso__texto">
+              Asiento en dos alturas y colín levantado. La franja roja cierra el
+              recorrido que empieza en el frontal.
+            </p>
+          </section>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           CIERRE
+      ============================================================ -->
+      <section class="ex-cierre" aria-labelledby="ex-cierre-titulo">
+        <h2 id="ex-cierre-titulo" class="ex-cierre__titulo">¿Te la enseñamos en persona?</h2>
+        <p class="ex-cierre__texto">
+          Está en el salón, en la Av. La Cultura. Escríbenos y te contamos disponibilidad.
+        </p>
+        <div class="ex-cierre__acciones">
+          <a class="btn btn-primary btn-hero" href="modelo.html?slug=pulsar-200-ns-ug2">Ver ficha completa</a>
+          <a class="ex-cierre__secundario" href="catalogo.html">Ver todos los modelos &rarr;</a>
+        </div>
+      </section>
+    </main>
+
+    <script src="assets/js/explorar.js" defer></script>
+  </body>
+</html>
