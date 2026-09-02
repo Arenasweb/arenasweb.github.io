@@ -343,5 +343,41 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     });
   }
 
-  NS.editorial = { pintar: pintar, CONFIG: CONFIG, cargar: cargar };
+  /**
+   * La ficha editorial de un modelo, ya cargada.
+   * Se expone porque el recorrido de explorar.html cuenta las mismas
+   * razones que la ficha: escribirlas dos veces garantizaria que un dia
+   * digan cosas distintas.
+   * @param {string} slug
+   * @returns {Object|null}
+   */
+  function fichaDe(slug) {
+    return (cache.editorial && cache.editorial.modelos ? cache.editorial.modelos[slug] : null) || null;
+  }
+
+  /**
+   * Si un modelo da para un recorrido. No basta con tener ficha: hacen
+   * falta la lateral de apertura y al menos tres piezas con fotografia
+   * publicable. Con dos paradas no hay recorrido, hay un carrusel corto.
+   * Solo es fiable despues de cargar().
+   * @param {string} slug
+   * @returns {boolean}
+   */
+  function tieneRecorrido(slug) {
+    var ficha = fichaDe(slug);
+    if (!ficha || !ficha.razones || !ficha.razones.length) return false;
+    var fotos = fotosDe(slug);
+    if (!fotos.lateral) return false;
+    var conFoto = ficha.razones.filter(function (r) { return r && r.asset && fotos[r.asset]; });
+    return conFoto.length >= 3;
+  }
+
+  NS.editorial = {
+    pintar: pintar,
+    CONFIG: CONFIG,
+    cargar: cargar,
+    fotosDe: fotosDe,
+    fichaDe: fichaDe,
+    tieneRecorrido: tieneRecorrido,
+  };
 })(window.ARENAS_CATALOGO);

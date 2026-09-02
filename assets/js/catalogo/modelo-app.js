@@ -505,10 +505,39 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     return envoltorio;
   }
 
-  /* Modelos con recorrido inmersivo publicado en explorar.html. */
-  var CON_RECORRIDO = ["pulsar-200-ns-ug2"];
-
   /* ---------------- Ficha: llamada a la acción ---------------- */
+
+  /**
+   * Enlace al recorrido pieza por pieza, si esta moto tiene uno.
+   *
+   * Se anade DESPUES de cargar la capa editorial y no al pintar la
+   * ficha, porque quien sabe si hay recorrido es ella: hacen falta la
+   * fotografia lateral y al menos tres piezas fotografiadas. Enlazar una
+   * pagina que abriria con el escenario vacio es peor que no enlazarla,
+   * y una lista escrita a mano aqui se quedaria vieja el dia que se
+   * fotografie otra moto.
+   *
+   * @param {Object} modelo
+   */
+  function anadirEnlaceRecorrido(modelo) {
+    if (!NS.editorial || !NS.editorial.tieneRecorrido) return;
+    if (!NS.editorial.tieneRecorrido(modelo.slug)) return;
+
+    var cta = $("#modelo-cta");
+    if (!cta || cta.querySelector(".modelo-cta__recorrido")) return;
+
+    var enlace = U.el(
+      "a",
+      { class: "modelo-cta__secundario modelo-cta__recorrido",
+        href: "explorar.html?slug=" + encodeURIComponent(modelo.slug) },
+      "Recorrerla pieza por pieza"
+    );
+    // Antes de la nota legal y despues del boton: es una accion, no una
+    // aclaracion.
+    var nota = cta.querySelector(".modelo-cta__nota");
+    if (nota) cta.insertBefore(enlace, nota);
+    else cta.appendChild(enlace);
+  }
 
   /* ---------------- Datos rápidos ---------------- */
 
@@ -654,22 +683,6 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       // clic y no cuando se pintó la ficha.
       cta.appendChild(construirBotonQuiero(modelo));
 
-      // Recorrido inmersivo. Solo para los modelos que tienen las
-      // fotografías de detalle generadas: enlazar una página que se abre
-      // con el escenario vacío es peor que no enlazarla. La lista está
-      // aquí y no en los datos porque depende de que existan archivos en
-      // assets/explorar/, no de lo que diga el Sheets.
-      if (CON_RECORRIDO.indexOf(modelo.slug) !== -1) {
-        cta.appendChild(
-          U.el(
-            "a",
-            { class: "modelo-cta__secundario modelo-cta__recorrido",
-              href: "explorar.html" },
-            "Recorrerla pieza por pieza"
-          )
-        );
-      }
-
       // Acción secundaria, discreta: quien duda entre modelos quiere
       // comparar, no volver al catálogo entero y filtrar otra vez. El
       // catálogo ya sabe leer ?categoria=, así que se aprovecha.
@@ -695,7 +708,10 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     // detalles. Van después de la ficha y no la bloquean — si su capa de
     // datos falla, la ficha se queda exactamente como estaba.
     if (NS.editorial) {
-      NS.editorial.pintar(modelo).then(function () { clonarCtaEnCierre(); });
+      NS.editorial.pintar(modelo).then(function () {
+        clonarCtaEnCierre();
+        anadirEnlaceRecorrido(modelo);
+      });
     }
 
     pintarBreadcrumb(estado, modelo);

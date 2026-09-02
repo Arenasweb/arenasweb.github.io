@@ -343,11 +343,63 @@
   .ex-punto { transition: none; }
 }
 
-/* Sin JavaScript el escenario no puede cambiar de pieza, así que se
-   deshace el apilado y se muestran todas en columna: se pierde el
-   recorrido, no el contenido. */
-html:not(.js) .ex-escenario { position: static; height: auto; }
-html:not(.js) .ex-escenario__caja { height: auto; display: grid; gap: var(--space-6); }
-html:not(.js) .ex-vista { position: static; opacity: 1; transform: none; height: auto; }
-html:not(.js) .ex-puntos { display: none; }
+/* ---------------- Piezas que rellena explorar.js ---------------- */
+
+/* El kicker de cada parada viene de la ficha editorial («Frenada»,
+   «Mecánica»). Va sobre el título y en gris: nombra el tema, no lo
+   anuncia. */
+.ex-paso__kicker {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ex-suave);
+}
+
+/* La apertura llega vacía y se rellena. Sin una altura mínima el bloque
+   mediría cero y el resto de la página daría un salto al montarse. */
+.ex-titulo:empty { min-height: clamp(3rem, 9vw, 7rem); }
+.ex-intro__moto img[src="data:,"] { visibility: hidden; }
+
+/* Las fotografías de detalle no comparten proporción: la suspensión es
+   vertical y el escape apaisado. `contain` las respeta y el escenario
+   mantiene siempre el mismo alto, que es lo que hace que el cambio de
+   pieza se lea como un cambio de plano y no como un salto de página. */
+.ex-vista { object-position: center; }
+
+/* ---------------- Cuando no hay recorrido ---------------- */
+
+/* Página en blanco no: quien llegue con un enlace viejo o a una moto sin
+   fotografiar merece saber qué pasó y adónde ir. */
+.ex-vacio {
+  display: grid;
+  gap: var(--space-5);
+  justify-items: center;
+  text-align: center;
+  padding: clamp(var(--space-12), 12vh, 140px) clamp(var(--space-5), 5vw, var(--space-12));
+  max-width: 52ch;
+  margin-inline: auto;
+}
+
+.ex-vacio__titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.05;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  color: var(--ex-tinta);
+}
+
+.ex-vacio__texto {
+  color: var(--ex-suave);
+  line-height: 1.7;
+}
+
+.ex-vacio__acciones { margin-top: var(--space-2); }
+
+/* Sin JavaScript no hay recorrido que desapilar: el contenido lo
+   construye explorar.js entero, igual que en la ficha de modelo. Se ve
+   el <noscript>, y el escenario vacío no debe ocupar media pantalla. */
+html:not(.js) .ex-escenario,
+html:not(.js) .ex-intro__moto { display: none; }
 html:not(.js) .ex-paso { opacity: 1; min-height: 0; }

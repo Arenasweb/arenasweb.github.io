@@ -12,28 +12,27 @@
     />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
 
-    <meta name="description" content="Explora la Bajaj Pulsar 200 NS UG2 pieza por pieza: motor, horquilla invertida, frenos con ABS y depósito. ARENAS MOTOCICLETAS, Cusco." />
-    <meta name="robots" content="index, follow" />
+    <meta name="description" content="Recorre una Bajaj pieza por pieza: motor, suspensión, frenos y depósito, con las fotografías de detalle de cada modelo. ARENAS MOTOCICLETAS, Cusco." />
     <meta name="author" content="ARENAS MOTOCICLETAS" />
     <meta name="theme-color" content="#ffffff" />
 
+    <!-- `noindex` a propósito: esta página es una plantilla paramétrica.
+         Sin ?slug= no representa a ninguna moto, y dejar que un buscador
+         indexe la versión vacía sería publicar una página sin contenido.
+         Las fichas de modelo, esas sí se indexan. -->
+    <meta name="robots" content="noindex, follow" />
+
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_PE" />
-    <meta property="og:title" content="Explora la Pulsar 200 NS — ARENAS MOTOCICLETAS" />
-    <meta property="og:description" content="Pieza por pieza: motor, horquilla, frenos y depósito." />
-    <meta property="og:url" content="https://arenasweb.github.io/explorar.html" />
+    <meta property="og:title" content="Recorre la moto pieza por pieza — ARENAS MOTOCICLETAS" />
+    <meta property="og:description" content="Motor, suspensión, frenos y depósito, de cerca." />
     <meta property="og:site_name" content="ARENAS MOTOCICLETAS" />
 
-    <title>Explora la Pulsar 200 NS — ARENAS MOTOCICLETAS</title>
+    <title>Explorar — ARENAS MOTOCICLETAS</title>
 
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="assets/css/explorar.css" />
-    <link rel="canonical" href="https://arenasweb.github.io/explorar.html" />
-
-    <!-- La pieza que se ve primero. Precargarla evita que el escenario
-         arranque en blanco mientras baja. -->
-    <link rel="preload" as="image" href="assets/explorar/pulsar-200-ns-ug2/completa.webp" fetchpriority="high" />
 
     <script>document.documentElement.classList.add("js");</script>
   </head>
@@ -47,7 +46,7 @@
       </a>
       <nav class="ex-header__nav" aria-label="Navegación">
         <a href="catalogo.html">Catálogo</a>
-        <a href="modelo.html?slug=pulsar-200-ns-ug2" class="ex-header__cta">Ver ficha</a>
+        <a href="modelo.html" class="ex-header__cta" id="ex-ficha-cta">Ver ficha</a>
       </nav>
     </header>
 
@@ -58,21 +57,22 @@
            Fondo blanco y la moto entera, sin nada más. Es el único
            momento en que se ve completa: a partir de aquí el recorrido
            entra en las piezas.
+
+           Todo lo que hay debajo llega vacío y lo rellena explorar.js
+           con los datos del catálogo y de la ficha editorial. No se
+           escribe aquí ningún texto de una moto concreta: esta página
+           sirve a las ocho.
       ============================================================ -->
       <section class="ex-intro" aria-labelledby="ex-titulo">
         <div class="ex-intro__texto">
-          <p class="ex-kicker">Deportiva · Pulsar</p>
-          <h1 id="ex-titulo" class="ex-titulo">PULSAR<span>200 NS</span></h1>
-          <p class="ex-lead">Desempeño deportivo y confianza para una conducción intensa.</p>
+          <p class="ex-kicker" id="ex-kicker"></p>
+          <h1 id="ex-titulo" class="ex-titulo"></h1>
+          <p class="ex-lead" id="ex-lead"></p>
           <p class="ex-pista" aria-hidden="true">Baja para recorrerla</p>
         </div>
 
         <figure class="ex-intro__moto">
-          <img
-            src="assets/explorar/pulsar-200-ns-ug2/completa.webp"
-            alt="Bajaj Pulsar 200 NS UG2 negra con detalles rojos, vista lateral derecha completa"
-            width="2200" height="1444" fetchpriority="high" decoding="async"
-          />
+          <img id="ex-portada" src="data:," alt="" decoding="async" fetchpriority="high" />
         </figure>
       </section>
 
@@ -83,91 +83,23 @@
            paso enciende su fotografía: no hay corte entre una pieza y la
            siguiente, hay un cambio de plano sobre la misma moto.
 
-           Los recortes salen de un máster de 9568 × 6376 px, así que un
-           acercamiento al freno sigue teniendo detalle real y no es una
-           foto pequeña estirada.
+           Las fotografías son las mismas que ya usa la ficha del modelo,
+           tomadas pieza a pieza. Los textos también: son las razones de
+           compra que ya estaban escritas y revisadas.
       ============================================================ -->
       <div class="ex-recorrido">
         <div class="ex-escenario" aria-hidden="true">
-          <div class="ex-escenario__caja">
-            <img class="ex-vista is-activa" data-zona="faro"       src="assets/explorar/pulsar-200-ns-ug2/faro.webp" alt="" width="1400" height="1000" decoding="async" />
-            <img class="ex-vista"           data-zona="tanque"     src="assets/explorar/pulsar-200-ns-ug2/tanque.webp" alt="" width="1400" height="1000" loading="lazy" decoding="async" />
-            <img class="ex-vista"           data-zona="motor"      src="assets/explorar/pulsar-200-ns-ug2/motor.webp" alt="" width="1400" height="1000" loading="lazy" decoding="async" />
-            <img class="ex-vista"           data-zona="suspension" src="assets/explorar/pulsar-200-ns-ug2/suspension.webp" alt="" width="1400" height="1000" loading="lazy" decoding="async" />
-            <img class="ex-vista"           data-zona="freno"      src="assets/explorar/pulsar-200-ns-ug2/freno.webp" alt="" width="1400" height="1000" loading="lazy" decoding="async" />
-            <img class="ex-vista"           data-zona="escape"     src="assets/explorar/pulsar-200-ns-ug2/escape.webp" alt="" width="1400" height="1000" loading="lazy" decoding="async" />
-            <img class="ex-vista"           data-zona="cola"       src="assets/explorar/pulsar-200-ns-ug2/cola.webp" alt="" width="1400" height="1000" loading="lazy" decoding="async" />
-          </div>
-
+          <div class="ex-escenario__caja" id="ex-caja"></div>
           <ol class="ex-puntos" id="ex-puntos"></ol>
         </div>
 
-        <div class="ex-pasos">
-          <section class="ex-paso" data-zona="faro" aria-labelledby="p-faro">
-            <p class="ex-paso__num">01</p>
-            <h2 id="p-faro" class="ex-paso__titulo">Frontal</h2>
-            <p class="ex-paso__texto">
-              El frontal de la NS es lo primero que se reconoce en la calle: carenado
-              corto, faro integrado y el filo rojo que recorre el lateral.
+        <div class="ex-pasos" id="ex-pasos">
+          <noscript>
+            <p class="catalog-noscript">
+              Este recorrido necesita JavaScript para cargarse. La ficha completa de cada
+              moto está en el <a href="catalogo.html">catálogo</a>.
             </p>
-          </section>
-
-          <section class="ex-paso" data-zona="tanque" aria-labelledby="p-tanque">
-            <p class="ex-paso__num">02</p>
-            <h2 id="p-tanque" class="ex-paso__titulo">Depósito</h2>
-            <p class="ex-paso__texto">
-              Doce litros y las aletas laterales que dan a la moto su postura de
-              ataque. La gráfica «200» va sobre la tapa, no pegada encima.
-            </p>
-            <p class="ex-paso__dato"><span>12 L</span> de capacidad</p>
-          </section>
-
-          <section class="ex-paso" data-zona="motor" aria-labelledby="p-motor">
-            <p class="ex-paso__num">03</p>
-            <h2 id="p-motor" class="ex-paso__titulo">Motor</h2>
-            <p class="ex-paso__texto">
-              199.5 cc refrigerados por líquido. El radiador y sus conductos quedan a
-              la vista entre el chasis perimetral, que es parte del carácter de la NS.
-            </p>
-            <p class="ex-paso__dato"><span>23.2 HP</span> · 18.3 Nm · 6 velocidades</p>
-          </section>
-
-          <section class="ex-paso" data-zona="suspension" aria-labelledby="p-susp">
-            <p class="ex-paso__num">04</p>
-            <h2 id="p-susp" class="ex-paso__titulo">Horquilla invertida</h2>
-            <p class="ex-paso__texto">
-              Barras invertidas al frente. Es el componente que más se nota al frenar
-              fuerte y el que más separa a esta moto de una urbana.
-            </p>
-          </section>
-
-          <section class="ex-paso" data-zona="freno" aria-labelledby="p-freno">
-            <p class="ex-paso__num">05</p>
-            <h2 id="p-freno" class="ex-paso__titulo">Freno y ABS</h2>
-            <p class="ex-paso__texto">
-              Disco delantero perforado con pinza y el módulo ABS montado sobre la
-              barra. Detrás, un segundo disco.
-            </p>
-            <p class="ex-paso__dato"><span>300 / 230 mm</span> · ABS</p>
-          </section>
-
-          <section class="ex-paso" data-zona="escape" aria-labelledby="p-escape">
-            <p class="ex-paso__num">06</p>
-            <h2 id="p-escape" class="ex-paso__titulo">Bajos y escape</h2>
-            <p class="ex-paso__texto">
-              El colector sale del cilindro y recorre los bajos protegido por el
-              cubrecárter. Ahí es donde se ve el trabajo que no se suele fotografiar.
-            </p>
-          </section>
-
-          <section class="ex-paso" data-zona="cola" aria-labelledby="p-cola">
-            <p class="ex-paso__num">07</p>
-            <h2 id="p-cola" class="ex-paso__titulo">Cola</h2>
-            <p class="ex-paso__texto">
-              Asiento en dos alturas y colín levantado. La franja roja cierra el
-              recorrido que empieza en el frontal.
-            </p>
-          </section>
+          </noscript>
         </div>
       </div>
 
@@ -180,12 +112,19 @@
           Está en el salón, en la Av. La Cultura. Escríbenos y te contamos disponibilidad.
         </p>
         <div class="ex-cierre__acciones">
-          <a class="btn btn-primary btn-hero" href="modelo.html?slug=pulsar-200-ns-ug2">Ver ficha completa</a>
+          <a class="btn btn-primary btn-hero" href="catalogo.html" id="ex-cierre-cta">Ver ficha completa</a>
           <a class="ex-cierre__secundario" href="catalogo.html">Ver todos los modelos &rarr;</a>
         </div>
       </section>
     </main>
 
+    <!-- El mismo orden que modelo.html: utilidades, contrato de datos y
+         datos antes que nada que los use. La capa editorial aporta los
+         textos y la resolución de fotografías; explorar.js solo compone. -->
+    <script src="assets/js/catalogo/catalogo-utils.js" defer></script>
+    <script src="assets/js/catalogo/catalogo-schema.js" defer></script>
+    <script src="assets/js/catalogo/catalogo-data.js" defer></script>
+    <script src="assets/js/catalogo/modelo-editorial.js" defer></script>
     <script src="assets/js/explorar.js" defer></script>
   </body>
 </html>
