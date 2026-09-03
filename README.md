@@ -9,7 +9,7 @@ Alojado en GitHub Pages · Stack: HTML5 + CSS3 + JavaScript puro · Sin framewor
 
 **Fase:** Base técnica completada · Diseño visual premium PENDIENTE  
 **Versión:** 0.2.0 · Junio 2026  
-**URL de desarrollo:** https://arenasweb.github.io/
+**URL de desarrollo:** https://arenitasweb.github.io/
 
 ---
 
@@ -30,7 +30,7 @@ Sin frameworks JS, sin preprocesadores CSS, sin dependencias externas.
 ## Estructura del proyecto
 
 ```
-arenasweb.github.io/
+arenitasweb.github.io/
 ├── index.html               ← Página principal con todas las secciones
 ├── style.css                ← Sistema CSS base (15 bloques)
 ├── script.js                ← Núcleo JS modular (14 módulos)

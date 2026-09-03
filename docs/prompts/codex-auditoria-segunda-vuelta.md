@@ -3,7 +3,7 @@
 ```
 Actúa como auditor técnico de seguridad y calidad frontend.
 
-Repositorio: arenasweb.github.io (sitio estático HTML + CSS + JS puro,
+Repositorio: arenitasweb.github.io (sitio estático HTML + CSS + JS puro,
 sin frameworks, desplegado en GitHub Pages).
 
 MODO: solo lectura.

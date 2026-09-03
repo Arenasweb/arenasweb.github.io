@@ -663,7 +663,7 @@ const casosEntorno = [
   ["localhost + preview=1", { hostname: "localhost", search: "?preview=1" }, true],
   ["127.0.0.1 + preview=1", { hostname: "127.0.0.1", search: "?preview=1" }, true],
   ["localhost sin preview", { hostname: "localhost", search: "" }, false],
-  ["GitHub Pages + preview=1", { hostname: "arenasweb.github.io", search: "?preview=1" }, false],
+  ["GitHub Pages + preview=1", { hostname: "arenitasweb.github.io", search: "?preview=1" }, false],
   ["host trampa + preview=1", { hostname: "evil-localhost.com", search: "?preview=1" }, false],
   ["subdominio trampa", { hostname: "localhost.evil.com", search: "?preview=1" }, false],
   ["dominio propio", { hostname: "arenasmotocicletas.com", search: "?preview=1" }, false],
@@ -2160,10 +2160,10 @@ comprobar("y también en 127.0.0.1",
   /[?&]preview=1/.test(urlDe("127.0.0.1", "?preview=1")), urlDe("127.0.0.1", "?preview=1"));
 
 comprobar("en PRODUCCIÓN nunca se añade, aunque la URL traiga ?preview=1",
-  !/preview/.test(urlDe("arenasweb.github.io", "?preview=1")),
-  urlDe("arenasweb.github.io", "?preview=1"));
+  !/preview/.test(urlDe("arenitasweb.github.io", "?preview=1")),
+  urlDe("arenitasweb.github.io", "?preview=1"));
 comprobar("en producción sin el parámetro tampoco",
-  !/preview/.test(urlDe("arenasweb.github.io", "")), urlDe("arenasweb.github.io", ""));
+  !/preview/.test(urlDe("arenitasweb.github.io", "")), urlDe("arenitasweb.github.io", ""));
 comprobar("en localhost SIN el parámetro no se inventa",
   !/preview/.test(urlDe("localhost", "")), urlDe("localhost", ""));
 

@@ -115,7 +115,7 @@
 ## BLOQUE 10: GitHub Pages
 
 - [ ] GitHub Pages activado en Settings → Pages → Source: `main`
-- [ ] URL pública accesible: `https://arenasweb.github.io/`
+- [ ] URL pública accesible: `https://arenitasweb.github.io/`
 - [ ] HTTPS activo (automático con GitHub Pages)
 - [ ] Verificar que el deploy del último commit está publicado
 - [ ] Abrir en dispositivo móvil real y revisar visualmente

@@ -341,7 +341,7 @@ Además, `Code.gs`:
 - comprueba **solo `activo`**, sin `estado_contenido`: el mismo fallo que se
   corrigió en el frontend, que publicaría un borrador activado;
 - fija **cuatro** categorías y omite `carga`, que es la de 5 modelos;
-- admite `arenasweb.github.io` y `raw.githubusercontent.com` como dominios de
+- admite `arenitasweb.github.io` y `raw.githubusercontent.com` como dominios de
   imagen, mientras que el frontend no admite **ninguno**: cualquier URL
   absoluta que emitiera se rechazaría al llegar y la foto desaparecería sin
   ningún aviso.
