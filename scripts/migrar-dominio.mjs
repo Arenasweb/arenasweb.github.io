@@ -4,7 +4,7 @@
    Cambia el dominio del sitio en todos los archivos donde aparece.
 
        node scripts/migrar-dominio.mjs <dominio-nuevo> [--seco]
-       node scripts/migrar-dominio.mjs arenitasweb.github.io
+       node scripts/migrar-dominio.mjs arenasmotocicletas.com
 
    POR QUÉ NO SE HACE A MANO
    La URL vive en treinta y nueve sitios repartidos por veintidós
@@ -37,7 +37,7 @@ const SECO = process.argv.includes("--seco");
 
 if (!NUEVO || !/^[a-z0-9][a-z0-9.-]*\.[a-z]{2,}$/.test(NUEVO)) {
   console.error("Uso: node scripts/migrar-dominio.mjs <dominio-nuevo> [--seco]");
-  console.error("Ejemplo: node scripts/migrar-dominio.mjs arenitasweb.github.io");
+  console.error("Ejemplo: node scripts/migrar-dominio.mjs arenasmotocicletas.com");
   process.exit(1);
 }
 if (NUEVO === VIEJO) {
