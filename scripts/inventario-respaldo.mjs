@@ -48,7 +48,7 @@ function huella(ruta) {
 }
 
 const bloques = [
-  ["proyecto/arenitasweb.github.io", "El proyecto completo, con su historial de git dentro"],
+  ["proyecto/arenasweb.github.io", "El proyecto completo, con su historial de git dentro"],
   ["plantilla-limpia", "El mismo sitio sin un solo dato del negocio"],
   ["claude-code-config", "Memoria, ajustes y transcritos de Claude Code"],
 ];
@@ -92,8 +92,8 @@ L.push("Si esto se pierde, se pierde. No hay otra copia.", "");
 L.push("| Qué | Peso | Por qué no está en GitHub |");
 L.push("|---|---:|---|");
 
-const mat = archivos(join(USB, "proyecto/arenitasweb.github.io/material-origen"));
-const fotos = archivos(join(USB, "proyecto/arenitasweb.github.io/assets/catalogo"))
+const mat = archivos(join(USB, "proyecto/arenasweb.github.io/material-origen"));
+const fotos = archivos(join(USB, "proyecto/arenasweb.github.io/assets/catalogo"))
   .filter(f => f.ruta.includes("photos") && f.ruta.endsWith(".png"));
 L.push("| `material-origen/` | " + mb(mat.reduce((a, f) => a + f.bytes, 0)) +
   " MB | Buzón de material sin procesar. Fuera de Git a propósito: el repositorio es público y GitHub Pages sirve todo lo que hay dentro. |");
@@ -127,7 +127,7 @@ L.push("", "### Material de origen, archivo a archivo", "");
 L.push("Son los originales que solo existen aquí.", "");
 L.push("| Archivo | KB | SHA-256 (primeros 16) |");
 L.push("|---|---:|---|");
-const base = join(USB, "proyecto/arenitasweb.github.io/material-origen");
+const base = join(USB, "proyecto/arenasweb.github.io/material-origen");
 for (const f of mat.sort((a, b) => a.ruta.localeCompare(b.ruta))) {
   L.push("| `" + relative(base, f.ruta).replace(/\\/g, "/") + "` | " +
     Math.round(f.bytes / 1024) + " | `" + huella(f.ruta).slice(0, 16) + "` |");

@@ -128,5 +128,5 @@ INFORME FINAL, obligatorio:
 ## Después de lanzarlo
 
 Espera **5 minutos** (la caché del endpoint) y abre
-<https://arenitasweb.github.io/catalogo.html>. Deberían aparecer 8 motos con
+<https://arenasweb.github.io/catalogo.html>. Deberían aparecer 8 motos con
 fotografía. Si sigue vacío pasados 10 minutos, avísame y lo miro.

@@ -35,7 +35,7 @@ import { dirname, join, resolve } from "node:path";
 
 const RAIZ = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const JSON_MODE = process.argv.includes("--json");
-const BASE = "https://arenitasweb.github.io";
+const BASE = "https://arenasweb.github.io";
 
 const fallos = [];
 const avisos = [];

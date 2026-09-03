@@ -6,7 +6,7 @@
 
        ?debug=1   Y   host local   Y   previsualización activa
 
-   Las tres condiciones a la vez. En arenitasweb.github.io no se activa
+   Las tres condiciones a la vez. En arenasweb.github.io no se activa
    aunque alguien escriba ?debug=1, porque `entornoLocal()` compara el
    hostname contra una lista blanca cerrada. Este archivo puede publicarse
    sin riesgo: en producción no dibuja absolutamente nada.

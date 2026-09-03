@@ -52,7 +52,7 @@ const ARCHIVO = argv.find((a) => !a.startsWith("--")) || null;
 
 function cargarModulos() {
   const ventana = {
-    location: { hostname: "arenitasweb.github.io", search: "" },
+    location: { hostname: "arenasweb.github.io", search: "" },
     matchMedia: () => ({ matches: false }),
     setTimeout,
     clearTimeout,

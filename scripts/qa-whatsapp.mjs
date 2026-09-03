@@ -64,7 +64,7 @@ function cargarModulo() {
 
   const ventana = {
     ARENAS_CATALOGO: {},
-    location: { hostname: "arenitasweb.github.io", search: "", pathname: "/modelo.html" },
+    location: { hostname: "arenasweb.github.io", search: "", pathname: "/modelo.html" },
     setTimeout: () => 0,
     clearTimeout: () => {},
     open: () => ({}),

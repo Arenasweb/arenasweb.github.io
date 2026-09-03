@@ -51,7 +51,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       if (nodo) nodo.setAttribute(par[1], document.title);
     });
 
-    var url = "https://arenitasweb.github.io/modelo.html?slug=" + encodeURIComponent(modelo.slug);
+    var url = "https://arenasweb.github.io/modelo.html?slug=" + encodeURIComponent(modelo.slug);
     var canonical = $('link[rel="canonical"]');
     if (canonical) canonical.setAttribute("href", url);
     var ogUrl = $('meta[property="og:url"]');
@@ -68,7 +68,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     var nodo = document.getElementById("modelo-jsonld");
     if (!nodo) return;
 
-    var base = "https://arenitasweb.github.io/";
+    var base = "https://arenasweb.github.io/";
     var datos = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",

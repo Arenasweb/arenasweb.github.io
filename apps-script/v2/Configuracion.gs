@@ -267,7 +267,7 @@ var PREFIJOS_RUTA = ['assets/', 'data/', 'legales/'];
 /**
  * Dominios externos admitidos para imágenes. VACÍO a propósito.
  *
- * El legacy Code.gs admitía 'arenitasweb.github.io' y
+ * El legacy Code.gs admitía 'arenasweb.github.io' y
  * 'raw.githubusercontent.com', pero DOMINIOS_AUTORIZADOS del frontend
  * está vacío: cualquier URL absoluta que emitiera el backend sería
  * rechazada al llegar, y la imagen desaparecería sin explicación.
