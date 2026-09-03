@@ -1,3 +1,18 @@
+> **Estado: superado. Se conserva porque puede volver a hacer falta.**
+>
+> Este documento describe un modelo que la web ya no usa: **un solo numero
+> atendido por varias personas** desde WhatsApp Business.
+>
+> Lo que hace la web hoy son **cinco numeros con reparto por turnos**: cada
+> consulta va a un asesor distinto, en orden, arrancando en uno al azar para
+> que no le toque siempre el mismo al primero del dia. Los numeros y los
+> nombres estan en `data/configuracion.json`; el reparto, en `script.js`
+> (`elegirAsesor`) y en `assets/js/catalogo/catalogo-whatsapp.js`.
+>
+> Sigue siendo util si algun dia se centraliza la atencion en un solo
+> numero: el procedimiento de WhatsApp Business no ha cambiado.
+
+---
 # Tres vendedores, un solo número
 
 Guía de configuración de WhatsApp Business para ARENAS MOTOCICLETAS.

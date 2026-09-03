@@ -32,7 +32,7 @@ const CONFIG = {
   // Canal de ventas. FUENTE ÚNICA: no hay un segundo número en ninguna
   // parte del sitio, y no debe haberlo. Los tres asesores atienden esta
   // misma cuenta desde WhatsApp Business (multiagente), fuera del código
-  // — ver CONFIGURACION_WHATSAPP_3_VENDEDORES.md.
+  // — ver docs/whatsapp-un-numero-compartido.md.
   whatsapp:       "PENDIENTE",      // valor de arranque — cargarConfiguracion() lo sobrescribe con data/configuracion.json → whatsapp. whatsappConfirmado() bloquea cualquier enlace mientras no haya aprobación, independientemente de este valor.
   whatsappNombre: "ARENAS Motocicletas",
   colorSinElegir: "color por definir",
