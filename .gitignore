@@ -69,3 +69,9 @@ work/
 #
 # Ver material-origen/LEEME.md
 material-origen/
+
+# Buzón de material de referencia: 173 MB de másters, pósters descartados y
+# variantes en proceso. El repositorio es público y GitHub Pages sirve todo lo
+# que haya dentro, así que este material no viaja. Lo publicable se copia a
+# assets/catalogo/ de forma deliberada. Ver docs/verificacion-lote-referencias.md
+assets/referencias/

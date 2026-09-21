@@ -195,6 +195,31 @@ se escribe una lista de filtros activos a mano en ningún sitio.
 
 ## 8. Qué decisiones faltan
 
+> ### DECIDIDO el 20/09/2026 — la ficha técnica se aprueba como una fotografía
+>
+> El propietario lo fijó así: **una especificación se publica con el mismo
+> portón que una foto**, no con uno más laxo.
+>
+> ```
+> activo = TRUE   Y   estado_aprobacion = APROBADO
+> ```
+>
+> Las dos condiciones a la vez, y `estado_aprobacion` es **manual**: una
+> persona lo escribe, igual que en `MODELOS_WEB` desde la migración del
+> 10/08/2026. No hay fórmula que lo calcule ni aprobación automática por
+> «tener las celdas llenas».
+>
+> La consecuencia práctica: una fila de especificaciones puede existir a
+> medias, verse en previsualización local y no llegar a la web. Y una cifra
+> sin verificar se queda en `BORRADOR` indefinidamente sin bloquear nada.
+>
+> Esto cierra la duda de fondo de este documento —si las especificaciones
+> eran un dato «técnico» que podía publicarse solo— y la resuelve en la
+> dirección estricta: **una cifra técnica publicada es una afirmación
+> comercial, y tiene el mismo peso que una fotografía.**
+>
+> Lo que sigue abierto es dónde viven (opción A o B) y quién firma cada dato.
+
 | Decisión | Quién |
 |---|---|
 | Opción A o B (columnas o hoja aparte) | Propietario |
