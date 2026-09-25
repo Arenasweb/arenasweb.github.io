@@ -598,6 +598,16 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       etiquetas.hidden = !tags;
     }
 
+    // La línea que contiene a las dos se oculta cuando ninguna tiene
+    // contenido. Si no, dejaría un hueco en blanco sobre el título: la
+    // columna es una rejilla con separación fija entre filas, y una fila
+    // vacía se nota igual que una llena.
+    var filaMeta = $("#modelo-intro-meta");
+    if (filaMeta) {
+      filaMeta.hidden =
+        (!nodoMeta || nodoMeta.hidden) && (!etiquetas || etiquetas.hidden);
+    }
+
     var corta = $("#modelo-desc-corta");
     if (corta) {
       corta.textContent = modelo.descripcionCorta;

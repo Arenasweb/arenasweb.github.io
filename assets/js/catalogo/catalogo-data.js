@@ -40,6 +40,15 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
      */
     rutaColoresDemo: "data/catalogo-colores-demo.local.json",
     rutaImagenesDemo: "data/catalogo-imagenes-demo.local.json",
+
+    /**
+     * Memoria de la respuesta remota mientras dura la pestaña. La clave
+     * lleva versión: si algún día cambia la forma de lo guardado, basta
+     * subirla para que nadie lea un formato viejo.
+     */
+    claveSesion: "arenas:catalogo:v1",
+    /** Los mismos 300 s que cachea el endpoint. Ni un segundo más. */
+    ttlSesionMs: 300000,
   };
 
   /** Estado resuelto una sola vez por carga de página (caché en memoria). */
@@ -292,8 +301,70 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     return pedirJson(url, CONFIG.timeoutMs).then(function (datos) {
       var estado = construirEstado(datos, "remoto", preview, coloresExtra, null);
       if (!estado) throw new Error("La respuesta remota no respeta el contrato.");
+      guardarEnSesion(datos);
       return estado;
     });
+  }
+
+  /* ---------------- Memoria de la sesión ----------------
+     El endpoint de Apps Script tarda entre 1,5 y 20 segundos en
+     responder; el sitio se sirve en dos décimas. Sin esto, cada vez que
+     alguien pasa del catálogo a una ficha y vuelve, la página se queda
+     otra vez esperando a Google con la rejilla vacía.
+
+     Se guarda la respuesta CRUDA, no el estado ya normalizado: así el
+     contrato se vuelve a aplicar en cada carga y un cambio en las reglas
+     de validación no queda congelado en el navegador de nadie.
+
+     La caducidad son los mismos 300 segundos que ya cachea el propio
+     endpoint. No se añade ni un segundo de antigüedad: lo que se ve con
+     memoria es lo mismo que se vería sin ella.
+
+     Todo va envuelto en try/catch porque sessionStorage lanza excepción
+     en navegación privada y con las cookies bloqueadas. Si falla, la
+     página sigue como antes. */
+
+  function guardarEnSesion(datos) {
+    try {
+      if (!datos || typeof sessionStorage === "undefined") return;
+      sessionStorage.setItem(
+        CONFIG.claveSesion,
+        JSON.stringify({ t: Date.now(), d: datos })
+      );
+    } catch (e) {
+      /* sin memoria de sesión: se pide al endpoint como siempre */
+    }
+  }
+
+  /**
+   * Pregunta al endpoint sin que nadie espere. Lo que traiga actualiza
+   * la memoria de la sesión, así que la siguiente página de esta visita
+   * ya parte de lo último. Si falla, no pasa nada: la página ya está
+   * pintada con lo recordado.
+   */
+  function revalidarPorDetras(preview, coloresExtra) {
+    cargarRemoto(preview, coloresExtra)
+      .then(function (estado) {
+        estado.degradado = false;
+        cache = estado;
+      })
+      .catch(function () {
+        /* se sigue con lo recordado hasta la próxima carga */
+      });
+  }
+
+  function leerDeSesion() {
+    try {
+      if (typeof sessionStorage === "undefined") return null;
+      var crudo = sessionStorage.getItem(CONFIG.claveSesion);
+      if (!crudo) return null;
+      var sobre = JSON.parse(crudo);
+      if (!sobre || typeof sobre.t !== "number" || !sobre.d) return null;
+      if (Date.now() - sobre.t > CONFIG.ttlSesionMs) return null;
+      return sobre.d;
+    } catch (e) {
+      return null;
+    }
   }
 
   /**
@@ -322,6 +393,22 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
         }
 
         var cadena = Promise.resolve(null);
+
+        // ¿Ya se pidió el catálogo en esta misma visita? Entonces se
+        // responde con eso y se pregunta al endpoint por detrás. El
+        // visitante ve las motos al instante en lugar de mirar una
+        // rejilla vacía mientras Apps Script se despierta.
+        if (CONFIG.modoDatos === "remoto" && endpointValido(CONFIG.appsScriptEndpoint)) {
+          var recordado = leerDeSesion();
+          var estadoRecordado = recordado
+            ? construirEstado(recordado, "remoto", preview, coloresExtra, null)
+            : null;
+          if (estadoRecordado) {
+            estadoRecordado.desdeMemoria = true;
+            revalidarPorDetras(preview, coloresExtra);
+            return estadoRecordado;
+          }
+        }
 
         if (CONFIG.modoDatos === "remoto" && endpointValido(CONFIG.appsScriptEndpoint)) {
           cadena = cargarRemoto(preview, coloresExtra).catch(function (err) {

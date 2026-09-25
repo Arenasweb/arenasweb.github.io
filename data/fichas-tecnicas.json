@@ -1,0 +1,18 @@
+{
+  "_nota": "Qué modelos tienen lámina de ficha técnica publicada. El botón «Explorar ficha técnica» de modelo.html solo aparece para los slugs que figuren aquí: si no hay lámina, no hay botón, en vez de un enlace que lleva a un 404.",
+  "_comoSeAnade": "Se sube la lámina a assets/catalogo/<slug>/ficha-tecnica.webp por github.com y se añade su línea aquí. Nada más. La ruta se valida igual que cualquier imagen del catálogo: solo rutas relativas bajo assets/, sin dominios ni esquemas activos.",
+  "_verificacion": "Las nueve láminas se contrastaron dato por dato contra el catálogo oficial Bajaj de mayo el 23/09/2026. Ver docs/estado-fichas-tecnicas.md. Una lámina sin verificar no entra en esta lista.",
+  "_pendientes": "Boxer BM150X Disc y Discover 125 ST están aprobadas pero sus archivos no se han recibido. Pulsar N125 FI, N160 FI, 160 NS UG2 y 200 NS UG2 no tienen ficha posible: su página del catálogo trae el recuadro de especificaciones vacío.",
+
+  "fichas": {
+    "ct-125": "assets/catalogo/ct-125/ficha-tecnica.webp",
+    "dominar-250": "assets/catalogo/dominar-250/ficha-tecnica.webp",
+    "dominar-400": "assets/catalogo/dominar-400/ficha-tecnica.webp",
+    "pulsar-125-ls": "assets/catalogo/pulsar-125-ls/ficha-tecnica.webp",
+    "pulsar-150r": "assets/catalogo/pulsar-150r/ficha-tecnica.webp",
+    "pulsar-180-neon": "assets/catalogo/pulsar-180-neon/ficha-tecnica.webp",
+    "pulsar-200-rs": "assets/catalogo/pulsar-200-rs/ficha-tecnica.webp",
+    "pulsar-400-ns": "assets/catalogo/pulsar-400-ns/ficha-tecnica.webp",
+    "pulsar-n250-ug": "assets/catalogo/pulsar-n250-ug/ficha-tecnica.webp"
+  }
+}

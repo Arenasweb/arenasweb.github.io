@@ -36,6 +36,10 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
   var CONFIG = {
     rutaEditorial: "data/fichas-editorial.json",
     rutaManifiesto: "assets/catalogo/photo-manifest.json",
+    // Qué modelos tienen lámina de ficha técnica. Sin esta lista habría
+    // que adivinar si el archivo existe, y adivinar mal significa un
+    // botón que lleva a un 404.
+    rutaFichas: "data/fichas-tecnicas.json",
     timeoutMs: 8000,
     /** Nombres legibles de cada pieza, para el explorador y los alt. */
     etiquetas: {
@@ -57,7 +61,7 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       "transmision", "escape", "tanque", "asiento", "faro", "detalle-a", "detalle-b"],
   };
 
-  var cache = { editorial: null, manifiesto: null };
+  var cache = { editorial: null, manifiesto: null, fichas: null };
 
   /* ---------------- Carga ---------------- */
 
@@ -76,12 +80,27 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
    */
   function cargar() {
     if (cache.editorial !== null && cache.manifiesto !== null) return Promise.resolve(cache);
-    return Promise.all([pedirJson(CONFIG.rutaEditorial), pedirJson(CONFIG.rutaManifiesto)])
+    return Promise.all([
+      pedirJson(CONFIG.rutaEditorial),
+      pedirJson(CONFIG.rutaManifiesto),
+      pedirJson(CONFIG.rutaFichas),
+    ])
       .then(function (r) {
         cache.editorial = r[0] || { modelos: {} };
         cache.manifiesto = r[1] || { modelos: [] };
+        cache.fichas = (r[2] && r[2].fichas) || {};
         return cache;
       });
+  }
+
+  /**
+   * La lámina de ficha técnica de un modelo, si la tiene y si su ruta
+   * es utilizable. Se valida con la misma regla que cualquier imagen
+   * del catálogo: nada de dominios externos ni esquemas activos.
+   * @returns {string} ruta relativa, o cadena vacía
+   */
+  function fichaTecnicaDe(slug) {
+    return U.rutaImagen((cache.fichas || {})[slug]) || "";
   }
 
   /**
@@ -299,6 +318,39 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
     return true;
   }
 
+  /* ---------------- 3b. Botón de la ficha técnica ---------------- */
+
+  /**
+   * Enlace a la lámina de ficha técnica del modelo, al pie del
+   * recorrido de piezas.
+   *
+   * Va aquí y no arriba a propósito: quien ha llegado a mirar el motor
+   * y los frenos uno por uno es justo quien quiere después la tabla
+   * completa. Ponerlo junto al botón de WhatsApp lo haría competir con
+   * la acción comercial.
+   *
+   * Se abre en una pestaña nueva porque es un documento, no una página
+   * del sitio: volver atrás desde una imagen a pantalla completa no es
+   * evidente en un móvil.
+   */
+  function pintarBotonFicha(seccion, ruta, nombre) {
+    var caja = U.el("div", { class: "ed-ficha-accion" });
+    var enlace = U.el("a", {
+      class: "ed-ficha-boton",
+      href: ruta,
+      target: "_blank",
+      rel: "noopener noreferrer",
+    });
+    enlace.appendChild(U.el("span", { class: "ed-ficha-boton__texto" },
+      "Explorar ficha técnica"));
+    enlace.appendChild(U.el("span", { class: "ed-ficha-boton__modelo" }, nombre));
+    caja.appendChild(enlace);
+    caja.appendChild(U.el("p", { class: "ed-ficha-accion__pie" },
+      "Motor, potencia, frenos, tanque y llantas, en una sola lámina."));
+    seccion.appendChild(caja);
+    seccion.hidden = false;
+  }
+
   /* ---------------- 4. Cierre ---------------- */
 
   function pintarCierre(seccion, nombre) {
@@ -337,9 +389,26 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       if (!ficha || !Object.keys(fotos).length) return;
 
       if (secciones.historia) pintarHistoria(secciones.historia, ficha, fotos, nombre);
+      // Sin bloque de razones en la página, `usadas` va vacío y el
+      // recorrido se queda con todas las piezas fotografiadas.
       var usadas = secciones.razones ? pintarRazones(secciones.razones, ficha, fotos, nombre) : [];
-      if (secciones.detalles) pintarDetalles(secciones.detalles, fotos, usadas, nombre);
+      var hayDetalles = secciones.detalles
+        ? pintarDetalles(secciones.detalles, fotos, usadas, nombre)
+        : false;
+
       if (secciones.cierre) pintarCierre(secciones.cierre, nombre);
+
+      // El botón de la ficha técnica se cuelga del recorrido. Si ese
+      // bloque no llegó a pintarse —un modelo con menos de dos piezas
+      // fotografiadas— cae al cierre, para que no se pierda.
+      //
+      // Va DESPUÉS de pintarCierre a propósito: esa función vacía su
+      // sección antes de escribir, y colocarlo antes sería borrarlo.
+      var rutaFicha = fichaTecnicaDe(slug);
+      if (rutaFicha) {
+        var destino = hayDetalles ? secciones.detalles : secciones.cierre;
+        if (destino) pintarBotonFicha(destino, rutaFicha, nombre);
+      }
     });
   }
 

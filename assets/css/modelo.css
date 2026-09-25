@@ -541,15 +541,35 @@
    el centro.
    ================================================================ */
 
-/* ---- La categoría, como etiqueta y no como texto suelto ---- */
+/* ---- La línea de datos que va sobre el título ----
+   Categoría y etiquetas comparten fila. Antes la categoría iba encima del
+   título y «Destacado» debajo, las dos con forma de pastilla azul: el
+   nombre de la moto quedaba emparedado entre dos cajas gemelas y la
+   cabecera se leía como una plantilla sin rellenar.
+
+   Aquí solo una de las dos conserva la caja. La categoría pasa a ser
+   texto, que es lo que es —una clasificación, no un aviso—, y la pastilla
+   queda reservada para «Destacado», que sí es una distinción. Cuando dos
+   elementos compiten con la misma forma, ninguno destaca. */
+.modelo-intro__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
 .modelo-meta {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  padding: 6px 12px;
-  border: 1px solid rgba(91, 147, 255, 0.28);
-  border-radius: 999px;
-  background: rgba(31, 107, 255, 0.09);
+}
+
+/* El título sube hacia su línea de datos. La columna reparte la misma
+   separación entre todas sus filas, y con ella el nombre flotaba lejos de
+   lo que lo describe: un rótulo pertenece al título que tiene debajo, no
+   al espacio en blanco de arriba. */
+.modelo-intro__meta + .modelo-titulo {
+  margin-top: calc(var(--space-3) * -1);
 }
 
 /* El punto delante ancla la etiqueta y le da un foco de color mínimo. */
@@ -1271,4 +1291,78 @@
 
 @media (max-width: 700px) {
   .dato-icono { width: 30px; height: 30px; }
+}
+
+/* ================================================================
+   BOTÓN DE LA FICHA TÉCNICA
+   Cierra el recorrido de piezas. Quien ha ido mirando el motor, los
+   frenos y la transmisión una a una es exactamente quien quiere
+   después la tabla completa: el enlace aparece donde termina esa
+   lectura, no antes.
+
+   No compite con «Lo quiero». Ese botón es azul lleno y es la acción
+   comercial; este es de contorno. Dos botones llenos en la misma
+   página se anulan.
+   ================================================================ */
+
+.ed-ficha-accion {
+  margin-top: clamp(var(--space-6), 5vw, var(--space-10));
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+}
+
+.ed-ficha-boton {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 22px;
+  border: 1px solid rgba(91, 147, 255, 0.45);
+  border-radius: var(--radius-pill);
+  background: rgba(31, 107, 255, 0.10);
+  color: var(--color-white);
+  text-decoration: none;
+  /* 48px de alto mínimo: es la medida de un dedo. Un enlace más bajo
+     se falla al pulsar en un móvil. */
+  min-height: 48px;
+  justify-content: center;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.ed-ficha-boton__texto {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* El nombre del modelo, debajo y en pequeño: el botón dice qué hace y
+   sobre cuál, sin convertirse en una frase larga. */
+.ed-ficha-boton__modelo {
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand-blue-ice);
+}
+
+.ed-ficha-boton:hover,
+.ed-ficha-boton:focus-visible {
+  background: rgba(31, 107, 255, 0.2);
+  border-color: rgba(91, 147, 255, 0.75);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ed-ficha-boton:hover { transform: translateY(-1px); }
+}
+
+.ed-ficha-accion__pie {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  max-width: 46ch;
+}
+
+/* En pantalla estrecha el botón ocupa el ancho: es el objetivo más
+   fácil de acertar con el pulgar, y aquí no compite con nada. */
+@media (max-width: 560px) {
+  .ed-ficha-accion { justify-items: stretch; }
+  .ed-ficha-boton { align-items: center; text-align: center; }
 }

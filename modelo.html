@@ -37,6 +37,10 @@
 
     <link rel="icon" href="data:," />
 
+    <!-- El catálogo vive en Apps Script, en otro dominio. Abrir la conexión
+         mientras el navegador aún lee la cabecera ahorra el saludo TLS
+         cuando después se pide de verdad. -->
+    <link rel="preconnect" href="https://script.google.com" crossorigin />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="assets/css/catalogo.css" />
     <link rel="stylesheet" href="assets/css/modelo.css" />
@@ -123,9 +127,16 @@
             <div class="modelo-galeria" id="modelo-galeria"></div>
 
             <div class="modelo-intro">
-              <p id="modelo-meta" class="modelo-meta" hidden></p>
+              <!-- Categoría y etiquetas comparten UNA línea sobre el título.
+                   Antes iban una encima y otra debajo del nombre, y el
+                   título quedaba emparedado entre dos pastillas iguales:
+                   parecía una plantilla sin rellenar. -->
+              <div id="modelo-intro-meta" class="modelo-intro__meta" hidden>
+                <p id="modelo-meta" class="modelo-meta" hidden></p>
+                <div id="modelo-etiquetas" class="modelo-etiquetas" hidden></div>
+              </div>
+
               <h1 id="modelo-titulo" class="modelo-titulo">Ficha de modelo</h1>
-              <div id="modelo-etiquetas" class="modelo-etiquetas" hidden></div>
 
               <!-- Selector de color. Lo rellena modelo-app.js desde las
                    variantes aprobadas de COLORES_MODELO_WEB. Sin
@@ -156,8 +167,18 @@
           ==================================================== -->
           <section id="modelo-historia" class="modelo-seccion modelo-seccion--historia" hidden></section>
 
-          <section id="modelo-razones" class="modelo-seccion modelo-seccion--razones"
-                   aria-labelledby="modelo-razones-heading" hidden></section>
+          <!-- Aquí vivía «Por qué elegirla»: cuatro razones numeradas que
+               repetían la cilindrada, el disco, las marchas y el LED. Esos
+               mismos datos ya salen arriba en la rejilla de datos rápidos y
+               otra vez en la ficha técnica. Tres veces la misma cifra en una
+               sola página cansa y no informa de nada nuevo.
+
+               Los datos editoriales siguen en data/fichas-editorial.json:
+               explorar.html los usa para su recorrido. Lo que se retira es
+               este bloque de la ficha, no el contenido.
+
+               Al desaparecer, el recorrido de abajo se queda con TODAS las
+               fotografías de piezas en vez de con las que sobraban. -->
 
           <section id="modelo-detalles" class="modelo-seccion modelo-seccion--detalles" hidden></section>
 

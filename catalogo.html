@@ -37,6 +37,10 @@
     <!-- Favicon vacío provisional: evita el 404 automático a /favicon.ico -->
     <link rel="icon" href="data:," />
 
+    <!-- El catálogo vive en Apps Script, en otro dominio. Abrir la conexión
+         mientras el navegador aún lee la cabecera ahorra el saludo TLS
+         cuando después se pide de verdad. -->
+    <link rel="preconnect" href="https://script.google.com" crossorigin />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="assets/css/catalogo.css" />
     <link rel="canonical" href="https://arenasweb.github.io/catalogo.html" />
