@@ -1293,6 +1293,7 @@
   .dato-icono { width: 30px; height: 30px; }
 }
 
+
 /* ================================================================
    BOTÓN DE LA FICHA TÉCNICA
    Cierra el recorrido de piezas. Quien ha ido mirando el motor, los
@@ -1301,8 +1302,12 @@
    lectura, no antes.
 
    No compite con «Lo quiero». Ese botón es azul lleno y es la acción
-   comercial; este es de contorno. Dos botones llenos en la misma
-   página se anulan.
+   comercial; este tiene cuerpo pero no grita. Dos botones llenos en la
+   misma pantalla se anulan.
+
+   Está construido con los mismos recursos que el resto de la ficha —el
+   filo de luz de un píxel, el resplandor azul en diagonal, el borde
+   fino— para que parezca de la casa y no un añadido.
    ================================================================ */
 
 .ed-ficha-accion {
@@ -1313,56 +1318,112 @@
 }
 
 .ed-ficha-boton {
+  position: relative;
   display: inline-flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 14px 22px;
-  border: 1px solid rgba(91, 147, 255, 0.45);
-  border-radius: var(--radius-pill);
-  background: rgba(31, 107, 255, 0.10);
+  align-items: center;
+  gap: var(--space-4);
+  padding: 14px 20px;
+  border: 1px solid rgba(91, 147, 255, 0.3);
+  border-radius: var(--radius-md);
+  /* Resplandor en la esquina de entrada, no un relleno plano: la luz
+     viene de donde está el icono y se apaga hacia la flecha. */
+  background:
+    radial-gradient(120% 140% at 0% 0%, rgba(31, 107, 255, 0.22), transparent 62%),
+    linear-gradient(180deg, rgba(26, 34, 54, 0.6), rgba(9, 13, 22, 0.75));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 14px 30px -24px rgba(0, 0, 0, 0.95);
   color: var(--color-white);
   text-decoration: none;
-  /* 48px de alto mínimo: es la medida de un dedo. Un enlace más bajo
-     se falla al pulsar en un móvil. */
-  min-height: 48px;
-  justify-content: center;
-  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  /* 48 px es el ancho de un dedo. Por debajo, se falla al pulsar. */
+  min-height: 56px;
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
 }
 
+/* ---- El icono, en su propia caja ---- */
+.ed-ficha-boton__icono {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(91, 147, 255, 0.26);
+  background: rgba(31, 107, 255, 0.14);
+  color: var(--brand-blue-bright);
+}
+
+.ed-ficha-boton__icono svg { width: 20px; height: 20px; display: block; }
+
+/* ---- Las dos líneas de texto ---- */
 .ed-ficha-boton__texto {
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  display: grid;
+  gap: 2px;
+  text-align: left;
 }
 
-/* El nombre del modelo, debajo y en pequeño: el botón dice qué hace y
-   sobre cuál, sin convertirse en una frase larga. */
+.ed-ficha-boton__titulo {
+  font-weight: 700;
+  font-size: var(--text-base);
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+/* El modelo, en pequeño y espaciado: el botón dice qué hace y sobre
+   cuál, sin convertirse en una frase. */
 .ed-ficha-boton__modelo {
   font-size: var(--text-xs);
-  letter-spacing: 0.14em;
+  font-weight: 700;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--brand-blue-ice);
+  line-height: 1.2;
 }
 
+/* ---- La flecha ---- */
+.ed-ficha-boton__flecha {
+  display: grid;
+  place-items: center;
+  flex: none;
+  margin-left: var(--space-3);
+  color: var(--brand-blue-bright);
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.ed-ficha-boton__flecha svg { width: 18px; height: 18px; display: block; }
+
+/* ---- Estados ---- */
 .ed-ficha-boton:hover,
 .ed-ficha-boton:focus-visible {
-  background: rgba(31, 107, 255, 0.2);
-  border-color: rgba(91, 147, 255, 0.75);
+  border-color: rgba(91, 147, 255, 0.62);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 18px 38px -22px rgba(31, 107, 255, 0.55);
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .ed-ficha-boton:hover { transform: translateY(-1px); }
+  .ed-ficha-boton:hover,
+  .ed-ficha-boton:focus-visible { transform: translateY(-2px); }
+  .ed-ficha-boton:hover .ed-ficha-boton__flecha,
+  .ed-ficha-boton:focus-visible .ed-ficha-boton__flecha { transform: translateX(4px); }
 }
 
 .ed-ficha-accion__pie {
   margin: 0;
   font-size: var(--text-sm);
-  color: var(--color-text-muted);
+  color: var(--color-silver);
   max-width: 46ch;
 }
 
-/* En pantalla estrecha el botón ocupa el ancho: es el objetivo más
-   fácil de acertar con el pulgar, y aquí no compite con nada. */
+/* En pantalla estrecha ocupa el ancho y la flecha se va al extremo:
+   es el objetivo más fácil de acertar con el pulgar, y aquí no compite
+   con nada. */
 @media (max-width: 560px) {
   .ed-ficha-accion { justify-items: stretch; }
-  .ed-ficha-boton { align-items: center; text-align: center; }
+  .ed-ficha-boton { width: 100%; }
+  .ed-ficha-boton__texto { flex: 1 1 auto; }
+  .ed-ficha-boton__flecha { margin-left: auto; }
 }

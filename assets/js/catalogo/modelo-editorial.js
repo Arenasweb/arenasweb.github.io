@@ -333,6 +333,32 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
    * del sitio: volver atrás desde una imagen a pantalla completa no es
    * evidente en un móvil.
    */
+  var SVG_NS = "http://www.w3.org/2000/svg";
+
+  /** Icono en línea, sin dependencias ni peticiones. */
+  function icono(clase, viewBox, trazos, relleno) {
+    var svg = document.createElementNS(SVG_NS, "svg");
+    svg.setAttribute("class", clase);
+    svg.setAttribute("viewBox", viewBox);
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+    trazos.forEach(function (d) {
+      var p = document.createElementNS(SVG_NS, "path");
+      p.setAttribute("d", d);
+      if (relleno) {
+        p.setAttribute("fill", "currentColor");
+      } else {
+        p.setAttribute("fill", "none");
+        p.setAttribute("stroke", "currentColor");
+        p.setAttribute("stroke-width", "1.6");
+        p.setAttribute("stroke-linecap", "round");
+        p.setAttribute("stroke-linejoin", "round");
+      }
+      svg.appendChild(p);
+    });
+    return svg;
+  }
+
   function pintarBotonFicha(seccion, ruta, nombre) {
     var caja = U.el("div", { class: "ed-ficha-accion" });
     var enlace = U.el("a", {
@@ -341,9 +367,30 @@ window.ARENAS_CATALOGO = window.ARENAS_CATALOGO || {};
       target: "_blank",
       rel: "noopener noreferrer",
     });
-    enlace.appendChild(U.el("span", { class: "ed-ficha-boton__texto" },
+
+    // Una hoja con renglones: dice «documento» sin necesidad de leerlo.
+    var hoja = U.el("span", { class: "ed-ficha-boton__icono" });
+    hoja.appendChild(icono("", "0 0 24 24", [
+      "M6 3h8l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z",
+      "M14 3v4h4",
+      "M8.5 12.5h7",
+      "M8.5 16h4.5",
+    ]));
+
+    var texto = U.el("span", { class: "ed-ficha-boton__texto" });
+    texto.appendChild(U.el("span", { class: "ed-ficha-boton__titulo" },
       "Explorar ficha técnica"));
-    enlace.appendChild(U.el("span", { class: "ed-ficha-boton__modelo" }, nombre));
+    texto.appendChild(U.el("span", { class: "ed-ficha-boton__modelo" }, nombre));
+
+    // La flecha se desplaza al pasar por encima: el movimiento dice
+    // «esto abre algo» mejor que cualquier palabra añadida.
+    var flecha = U.el("span", { class: "ed-ficha-boton__flecha" });
+    flecha.appendChild(icono("", "0 0 24 24", ["M5 12h13", "M12.5 6.5 19 12l-6.5 5.5"]));
+
+    enlace.appendChild(hoja);
+    enlace.appendChild(texto);
+    enlace.appendChild(flecha);
+
     caja.appendChild(enlace);
     caja.appendChild(U.el("p", { class: "ed-ficha-accion__pie" },
       "Motor, potencia, frenos, tanque y llantas, en una sola lámina."));
